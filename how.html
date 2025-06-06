@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>How It Works - InvestSmart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #0c0c0c;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    header {
+      text-align: center;
+      padding: 50px 20px 20px;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .steps-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+    .step {
+      background: linear-gradient(to bottom right, #1f1f1f, #2d2d2d);
+      border: 1px solid #0072ff;
+      padding: 20px;
+      border-radius: 15px;
+      width: 90%;
+      box-shadow: 0 0 15px rgba(0,198,255,0.1);
+      text-align: center;
+    }
+    .step h2 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #00c6ff;
+    }
+    .step p {
+      color: #ccc;
+      font-size: 1rem;
+    }
+    .btn {
+      padding: 12px 30px;
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      color: #fff;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: 0.3s ease;
+      margin: 30px auto 50px;
+      display: inline-block;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0,198,255,0.5);
+    }
+    .back-button {
+      text-align: center;
+    }
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+      .step h2 {
+        font-size: 1.2rem;
+      }
+      .step p {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>How It Works</h1>
+  </header>
+
+  <div class="steps-container">
+    <div class="step">
+      <h2>Step 1: Create an Exness Account</h2>
+      <p>Sign up on Exness using your email and verify your identity.</p>
+    </div>
+    <div class="step">
+      <h2>Step 2: How do I give you money, what work do I do?</h2>
+      <p>We trade in the stock market, forex and crypto and earn income and you also get profit from that</p>
+    </div>
+    <div class="step">
+      <h2>Step 3: Transfer Your Investment</h2>
+      <p>Send your amount to the given Exness details via TRC20 or BEP20 network.</p>
+    </div>
+    <div class="step">
+      <h2>Step 4: Start Earning Daily</h2>
+      <p>Track your returns and earnings manually with your investor code.</p>
+    </div>
+  </div>
+
+  <div class="back-button">
+    <a href="index.html" class="btn">⬅ Back</a>
+  </div>
+
+</body>
+</html>
