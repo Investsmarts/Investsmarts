@@ -1,11 +1,11 @@
 // data.js
 const userData = {
-  "INV1234": {
-    name: "Ravi Sharma",
-    invested: 7000,
+  "TRINATH34": {
+    name: "Trinath",
+    invested: 15,000,
     dailyReturnPercent: 1,
-    durationDays: 10,
-    startDate: "2025-06-01"
+    durationDays: par day,
+    startDate: "2025-04-06"
   },
   "PLANX10K": {
     name: "Amit Verma",
