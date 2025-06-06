@@ -4,7 +4,7 @@ const userData = {
     name: "Trinath",
     invested: 15,000,
     dailyReturnPercent: 1,
-    durationDays: par day,
+    durationDays: 1,
     startDate: "2025-04-06"
   },
   "PLANX10K": {
