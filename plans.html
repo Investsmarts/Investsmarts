@@ -57,6 +57,32 @@
         width: 90%;
       }
     }
+    .animated-contact {
+  font-size: 1.2em;
+  font-family: 'Courier New', monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 3px solid #00c6ff;
+  text-align: center;
+  color: #00c6ff;
+  text-shadow: 
+    0 0 5px #00c6ff,
+    0 0 10px #0072ff,
+    0 0 15px #0072ff,
+    2px 2px 3px rgba(0, 198, 255, 0.6),
+    4px 4px 6px rgba(0, 114, 255, 0.4);
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.animated-contact:hover {
+  transform: scale(1.03);
+  text-shadow: 
+    0 0 8px #00e0ff,
+    0 0 15px #00c6ff,
+    0 0 25px #0072ff;
+}
+
   </style>
 </head>
 <body>
@@ -146,11 +172,41 @@
     </style>
   </head>
   <body>
-    <h3>Need Help?</h3>
-   
-      <button>contact your admin</button>
-    </a>
+   <div class="animated-contact" id="contactText"></div>
+
   </body>
+  <script>
+  const textEl = document.getElementById("contactText");
+  const message = "📩 Contact : SMARTFUNDAD137@gmail.com";
+  let i = 0;
+  let isDeleting = false;
+
+  function typeLoop() {
+    if (!isDeleting) {
+      textEl.textContent = message.substring(0, i + 1);
+      i++;
+      if (i === message.length) {
+        isDeleting = true;
+        setTimeout(typeLoop, 2000);
+        return;
+      }
+    } else {
+      textEl.textContent = message.substring(0, i - 1);
+      i--;
+      if (i === 0) {
+        isDeleting = false;
+      }
+    }
+    setTimeout(typeLoop, isDeleting ? 35 : 70);
+  }
+
+  textEl.addEventListener("click", function () {
+    window.location.href = "mailto:smartfundhelp@gmail.com";
+  });
+
+  typeLoop();
+</script>
+
 </html>
 
 
