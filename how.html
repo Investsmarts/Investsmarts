@@ -27,6 +27,60 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+
+    /* 💡 Stylish Animated Glowing Link Box */
+    .link-box {
+      position: relative;
+      background: #1e1e1e;
+      border: 2px solid #00f7ff;
+      padding: 18px 25px;
+      border-radius: 14px;
+      text-align: center;
+      margin: 25px auto 0;
+      width: fit-content;
+      box-shadow:
+        0 0 10px rgba(0, 198, 255, 0.3),
+        0 0 20px rgba(0, 198, 255, 0.2),
+        inset 0 0 10px rgba(0, 198, 255, 0.1);
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .link-box a {
+      color: #00f7ff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .link-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, #00f7ff, #00ff85, #ffc400, #ff006a, #00f7ff);
+      background-size: 400%;
+      animation: neonFlow 6s linear infinite;
+      filter: blur(40px);
+      opacity: 0.3;
+      z-index: 0;
+    }
+
+    @keyframes neonFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .link-box a:hover {
+      text-decoration: underline;
+      color: #ffffff;
+    }
+
     .steps-container {
       display: flex;
       flex-direction: column;
@@ -36,6 +90,7 @@
       margin: 30px auto;
       padding: 20px;
     }
+
     .step {
       background: linear-gradient(to bottom right, #1f1f1f, #2d2d2d);
       border: 1px solid #0072ff;
@@ -45,15 +100,18 @@
       box-shadow: 0 0 15px rgba(0,198,255,0.1);
       text-align: center;
     }
+
     .step h2 {
       font-size: 1.5rem;
       margin-bottom: 10px;
       color: #00c6ff;
     }
+
     .step p {
       color: #ccc;
       font-size: 1rem;
     }
+
     .btn {
       padding: 12px 30px;
       background: linear-gradient(to right, #00c6ff, #0072ff);
@@ -67,13 +125,16 @@
       margin: 30px auto 50px;
       display: inline-block;
     }
+
     .btn:hover {
       transform: scale(1.05);
       box-shadow: 0 0 20px rgba(0,198,255,0.5);
     }
+
     .back-button {
       text-align: center;
     }
+
     @media (max-width: 768px) {
       header h1 {
         font-size: 2rem;
@@ -91,6 +152,11 @@
 
   <header>
     <h1>How It Works</h1>
+
+    <!-- 💡 Fancy Neon Link Box -->
+    <div class="link-box">
+      <a href="https://one.exnesstrack.org/a/tmbj90o7ac" target="_blank">Click here to create your Exness account</a>
+    </div>
   </header>
 
   <div class="steps-container">
