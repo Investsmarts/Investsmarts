@@ -1,0 +1,269 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smartfundad | Wallet & Withdrawal History</title>
+
+  <!-- ✅ SEO -->
+  <meta name="description" content="Smartfundad wallet dashboard: check balance, income, withdrawals, and history." />
+  <meta name="keywords" content="wallet, smartfundad, withdrawal history, income, balance" />
+  <meta name="author" content="Smartfundad" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --primary: #1976d2;
+      --text-color: #333;
+      --border: #e0e0e0;
+      --bg: #ffffff;
+      --nav-glass: rgba(255, 255, 255, 0.7);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text-color);
+      padding-top: 70px;
+      padding-bottom: 90px;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 60px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--primary);
+      z-index: 100;
+    }
+
+    .wallet-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 18px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .wallet-box {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+
+    .wallet-box h4 {
+      font-size: 15px;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .wallet-box p {
+      font-size: 18px;
+      font-weight: bold;
+      color: #111;
+    }
+
+    h3 { text-align: center; margin: 20px 0 10px; color: var(--primary); }
+
+    .history-list {
+      max-width: 600px;
+      margin: auto;
+      padding: 0 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .history-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-left: 5px solid var(--primary);
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      padding: 14px 18px;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .history-card span { margin-bottom: 4px; }
+
+    .status {
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 8px;
+      display: inline-block;
+      width: fit-content;
+    }
+
+    .status.success { background: #c8f7c5; color: #2e7d32; }
+    .status.pending { background: #fff3cd; color: #b08900; }
+
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0;
+      width: 100%; height: 70px;
+      background: var(--nav-glass);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      z-index: 100;
+    }
+
+    .nav-item {
+      text-align: center; font-size: 12px;
+      color: var(--text-color); text-decoration: none;
+    }
+
+    .nav-item i {
+      font-size: 22px;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .nav-item.active i {
+      color: var(--primary);
+      transform: scale(1.2);
+      transition: 0.3s;
+    }
+
+    @media (max-width: 480px) {
+      .wallet-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <nav>Smartfundad Wallet</nav>
+
+  <div class="wallet-grid">
+    <div class="wallet-box">
+      <h4>Wallet Balance</h4>
+      <p id="walletBalance">$0.00</p>
+    </div>
+    <div class="wallet-box">
+      <h4>Total Income</h4>
+      <p id="totalIncome">$0.00</p>
+    </div>
+    <div class="wallet-box">
+      <h4>Withdrawn</h4>
+      <p id="totalWithdrawn">$0.00</p>
+    </div>
+    <div class="wallet-box">
+      <h4>Pending</h4>
+      <p id="pendingWithdraw">$0.00</p>
+    </div>
+  </div>
+
+  <h3>Withdrawal History</h3>
+  <div class="history-list" id="withdrawHistory">
+    <!-- history cards will appear here -->
+  </div>
+
+  <div class="bottom-nav">
+    <a href="index.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
+    <a href="tasks.html" class="nav-item"><i class='bx bx-task'></i><span>Tasks</span></a>
+    <a href="rrr.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
+    <a href="wallet.html" class="nav-item"><i class='bx bx-wallet'></i><span>Wallet</span></a>
+    <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
+  </div>
+
+  <!-- ✅ Active nav highlight JS -->
+  <script>
+    const navItems = document.querySelectorAll(".nav-item");
+    const current = location.pathname.split("/").pop();
+    navItems.forEach(item => {
+      const href = item.getAttribute("href");
+      if (href === current) {
+        item.classList.add("active");
+      }
+    });
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import {
+      getFirestore, doc, getDoc,
+      collection, query, where, getDocs, orderBy
+    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBJazg3yVQfDaSuloygIZSQPccFL4HIaMQ",
+      authDomain: "smartfundad-60227.firebaseapp.com",
+      databaseURL: "https://smartfundad-60227-default-rtdb.firebaseio.com",
+      projectId: "smartfundad-60227",
+      storageBucket: "smartfundad-60227.appspot.com",
+      messagingSenderId: "125738343496",
+      appId: "1:125738343496:web:328065e13d114cfd9f8c7d",
+      measurementId: "G-LE5QZREW1E"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "auth.html";
+        return;
+      }
+
+      const uid = user.uid;
+      const udoc = await getDoc(doc(db, "users", uid));
+      if (udoc.exists()) {
+        const data = udoc.data();
+        document.getElementById("walletBalance").innerText = `$${(data.wallet || 0).toFixed(2)}`;
+        document.getElementById("totalIncome").innerText = `$${(data.totalIncome || 0).toFixed(2)}`;
+        document.getElementById("totalWithdrawn").innerText = `$${(data.totalWithdrawn || 0).toFixed(2)}`;
+        document.getElementById("pendingWithdraw").innerText = `$${(data.pendingWithdraw || 0).toFixed(2)}`;
+      }
+
+      const histQ = query(
+        collection(db, "withdrawals"),
+        where("uid", "==", uid),
+        orderBy("date", "desc")
+      );
+      const snap = await getDocs(histQ);
+      const out = document.getElementById("withdrawHistory");
+
+      snap.forEach(d => {
+        const wd = d.data();
+        const date = wd.date?.seconds
+          ? new Date(wd.date.seconds * 1000).toLocaleDateString("en-IN")
+          : "";
+        const cls = wd.status === "Success" ? "success" : "pending";
+
+        out.innerHTML += `
+          <div class="history-card">
+            <span><strong>Name:</strong> ${wd.name}</span>
+            <span><strong>Amount:</strong> ₹${wd.amount}</span>
+            <span><strong>Date:</strong> ${date}</span>
+            <span><strong>Order ID:</strong> ${wd.orderId}</span>
+            <span><strong>Status:</strong> <span class="status ${cls}">${wd.status}</span></span>
+          </div>
+        `;
+      });
+    });
+  </script>
+</body>
+</html>

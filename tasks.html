@@ -1,0 +1,237 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Earn by Tasks – Smartfundad</title>
+
+  <!-- ✅ SEO -->
+  <meta name="description" content="Complete sponsor tasks and earn in dollars daily. Withdraw via UPI or Paytm. Tasks auto-replace after done." />
+  <meta name="keywords" content="task earn, daily income, smartfundad, paytm withdraw, upi earning, sponsor ad, referral" />
+  <meta name="author" content="Smartfundad" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Earn by Tasks – Smartfundad" />
+  <meta property="og:description" content="Do tasks, watch ads, and earn in dollars. Withdraw easily via UPI or Paytm." />
+  <meta property="og:url" content="https://smartfundad.in/tasks.html" />
+  <meta property="og:image" content="https://smartfundad.in/assets/task-banner.png" />
+  <link rel="canonical" href="https://smartfundad.in/tasks.html" />
+  <link rel="icon" href="/assets/favicon.png" type="image/png" />
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --primary: #1976d2;
+      --text-color: #333;
+      --sub-text: #666;
+      --border: #e0e0e0;
+      --bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text-color);
+      padding-top: 60px;
+      padding-bottom: 80px;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 55px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+
+    .task-section {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 12px;
+    }
+
+    .task-card {
+      background: #f4f4f4;
+      border-radius: 8px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 130px;
+      transition: 0.2s;
+    }
+
+    .task-card h3 {
+      font-size: 13px;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .task-card p {
+      font-size: 11.5px;
+      color: var(--sub-text);
+      flex-grow: 1;
+    }
+
+    .task-card button {
+      margin-top: 10px;
+      font-size: 12px;
+      padding: 6px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .task-card button:hover {
+      background: #1258a8;
+    }
+
+    /* Small Phones Fix */
+    @media (max-width: 360px) {
+      .task-card {
+        padding: 8px;
+        min-height: 115px;
+      }
+      .task-card h3 {
+        font-size: 11.5px;
+      }
+      .task-card p {
+        font-size: 10px;
+      }
+      .task-card button {
+        font-size: 10.5px;
+        padding: 4px;
+      }
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 65px;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid #ccc;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .nav-item {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-color);
+      text-decoration: none;
+    }
+
+    .nav-item i {
+      font-size: 20px;
+      display: block;
+    }
+
+    .nav-item:hover {
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <nav>Smartfundad Tasks</nav>
+
+  <div class="task-section" id="taskContainer"></div>
+
+  <div class="bottom-nav">
+    <a href="index.html" class="nav-item"><i class='bx bx-home'></i>Home</a>
+    <a href="tasks.html" class="nav-item"><i class='bx bx-task'></i>Tasks</a>
+    <a href="rrr.html" class="nav-item"><i class='bx bx-gift'></i>Refer</a>
+    <a href="wallet.html" class="nav-item"><i class='bx bx-wallet'></i>Wallet</a>
+    <a href="account.html" class="nav-item"><i class='bx bx-user'></i>Account</a>
+  </div>
+     
+
+  <script>
+    const tasks = [];
+
+    for (let i = 1; i <= 50; i++) {
+      const reward = (Math.random() * 1.2 + 0.3).toFixed(2);
+      tasks.push({
+        id: i,
+        title: `Ad Task #${i}`,
+        description: `Watch sponsor ad & earn $${reward}`,
+        link: `https://example.com/ad${i}`,
+        reward: reward
+      });
+    }
+
+    const taskContainer = document.getElementById('taskContainer');
+
+    function renderTasks() {
+      taskContainer.innerHTML = '';
+      tasks.forEach(task => {
+        const div = document.createElement('div');
+        div.className = 'task-card';
+        div.innerHTML = `
+          <h3>${task.title}</h3>
+          <p>${task.description}</p>
+          <button onclick="completeTask(${task.id})">Do Task</button>
+        `;
+        taskContainer.appendChild(div);
+      });
+    }
+
+    function completeTask(id) {
+      const task = tasks.find(t => t.id === id);
+      if (task) {
+        window.open(task.link, '_blank');
+        alert(`You earned $${task.reward}!`);
+
+        const index = tasks.findIndex(t => t.id === id);
+        tasks.splice(index, 1);
+
+        setTimeout(() => {
+          const newId = Math.floor(Math.random() * 10000);
+          const reward = (Math.random() * 1 + 0.5).toFixed(2);
+          tasks.push({
+            id: newId,
+            title: `Bonus Task #${newId}`,
+            description: `Click & earn $${reward}`,
+            link: `https://example.com/new${newId}`,
+            reward: reward
+          });
+          renderTasks();
+        }, 1500);
+
+        renderTasks();
+      }
+    }
+
+    renderTasks();
+  </script>
+</body>
+</html>
