@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -237,6 +237,16 @@
     window.goBack = () => {
       window.history.back();
     }
+    import { signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+window.logout = function () {
+  signOut(auth).then(() => {
+    window.location.href = "auth.html";
+  }).catch((error) => {
+    console.error("Logout error:", error);
+  });
+};
+
   </script>
 
 </body>
