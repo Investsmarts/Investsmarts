@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -194,6 +194,42 @@
     <a href="wallet.html" class="nav-item"><i class='bx bx-wallet'></i><span>Wallet</span></a>
     <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
   </div>
+
+  <!-- Firebase SDKs -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
+  const firebaseConfig = {
+      apiKey: "AIzaSyBJazg3yVQfDaSuloygIZSQPccFL4HIaMQ",
+      authDomain: "smartfundad-60227.firebaseapp.com",
+      databaseURL: "https://smartfundad-60227-default-rtdb.firebaseio.com",
+      projectId: "smartfundad-60227",
+      storageBucket: "smartfundad-60227.appspot.com",
+      messagingSenderId: "125738343496",
+      appId: "1:125738343496:web:328065e13d114cfd9f8c7d",
+      measurementId: "G-LE5QZREW1E"
+    };
+
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      // User not logged in, redirect
+      window.location.href = "auth.html";
+    }
+  });
+  
+   // ✅ Referral auto-save
+    const urlParams = new URLSearchParams(window.location.search);
+    const ref = urlParams.get("ref");
+    if (ref) {
+      localStorage.setItem("referralCode", ref);
+    }
+</script>
+
 
 </body>
 </html>
