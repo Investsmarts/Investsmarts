@@ -202,7 +202,8 @@
     <a href="wallet.html" class="nav-item"><i class='bx bx-wallet'></i><span>Wallet</span></a>
     <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
   </div>
-  <script type="module">
+
+    <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
   import {
     getAuth,
@@ -228,8 +229,16 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
+  // ✅ Auth check with console debug
   onAuthStateChanged(auth, async (user) => {
-    if (user) {
+    console.log("Auth state changed:", user);
+    if (!user) {
+      console.log("User not logged in. Redirecting to auth.html");
+      window.location.href = "auth.html";
+      return;
+    }
+
+    try {
       const uid = user.uid;
       const userRef = doc(db, "users", uid);
       const docSnap = await getDoc(userRef);
@@ -241,15 +250,14 @@
       } else {
         console.log("No such document!");
       }
-    } else {
-      window.location.href = "auth.html";
+    } catch (err) {
+      console.error("Error fetching user data:", err);
     }
   });
 
+  // ✅ Referral share logic
   window.shareReferral = function () {
     const code = document.getElementById("refCode").textContent.trim();
-    
-    // ✅ Fixed: Always use base URL without existing query params
     const baseUrl = "https://smartfundad.com";
     const referralLink = `${baseUrl}?ref=${encodeURIComponent(code)}`;
     const shareText = `Join Smartfundad and earn daily!\nUse my referral link: ${referralLink}`;
@@ -266,6 +274,7 @@
     }
   };
 
+  // ✅ Logout logic
   window.logout = function () {
     signOut(auth).then(() => {
       window.location.href = "auth.html";
@@ -277,4 +286,5 @@
 </body>
 </html>
 
+   
  
