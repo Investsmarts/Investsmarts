@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -181,6 +181,19 @@
       }, 1000);
     }
 
+    function getFriendlyFirebaseError(code) {
+      const map = {
+        "auth/email-already-in-use": "Email already registered. Please login.",
+        "auth/invalid-email": "Please enter a valid email address.",
+        "auth/weak-password": "Password should be at least 6 characters.",
+        "auth/user-not-found": "No account found. Please register.",
+        "auth/wrong-password": "Wrong password. Try again.",
+        "auth/too-many-requests": "Too many attempts. Try again later.",
+        "auth/network-request-failed": "Network error. Check connection."
+      };
+      return map[code] || "Something went wrong. Please try again.";
+    }
+
     async function register() {
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("reg-email").value.trim();
@@ -244,7 +257,7 @@
         showPopup("Registration Successful!");
         setTimeout(() => window.location.href = "index.html", 1000);
       } catch (err) {
-        showPopup(err.message, true);
+        showPopup(getFriendlyFirebaseError(err.code), true);
       }
     }
 
@@ -257,7 +270,7 @@
         showPopup("Login Successful!");
         setTimeout(() => window.location.href = "index.html", 1000);
       } catch (err) {
-        showPopup("Login failed: " + err.message, true);
+        showPopup(getFriendlyFirebaseError(err.code), true);
       }
     }
 
