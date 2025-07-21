@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -257,11 +257,11 @@
 
     window.shareReferral = function () {
       const code = document.getElementById("refCode").textContent;
-      const link = `https://smartfundad.com?ref=${code}`;
-      const text = `Join Smartfundad and earn daily! Use my referral link:\n${link}`;
+      const link = `https://smartfundad.com?com=${code}`;
+      const text = `Join Smartfundad and earn daily!\nUse my referral link:\n${link}`;
 
       if (navigator.share) {
-        navigator.share({ title: "Smartfundad", text, url: link });
+        navigator.share({ title: "Smartfundad", text }); // ✅ removed `url` to avoid duplication
       } else {
         navigator.clipboard.writeText(link);
         alert("Referral link copied!");
