@@ -38,6 +38,11 @@
       padding-bottom: 90px;
     }
 
+    body.loading {
+      opacity: 0;
+      pointer-events: none;
+    }
+
     nav {
       position: fixed;
       top: 0;
@@ -203,88 +208,91 @@
     <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
   </div>
 
-    <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-  import {
-    getAuth,
-    onAuthStateChanged,
-    signOut
-  } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-  import {
-    getFirestore,
-    doc,
-    getDoc
-  } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDzjZW_E4lWVgODp7y3HDT0LtqX6d1rTpg",
-    authDomain: "smartfundad-60227.firebaseapp.com",
-    projectId: "smartfundad-60227",
-    storageBucket: "smartfundad-60227.appspot.com",
-    messagingSenderId: "98956724016",
-    appId: "1:98956724016:web:cd11e15b7d4d78c5c9d37d"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyDzjZW_E4lWVgODp7y3HDT0LtqX6d1rTpg",
+      authDomain: "smartfundad-60227.firebaseapp.com",
+      projectId: "smartfundad-60227",
+      storageBucket: "smartfundad-60227.appspot.com",
+      messagingSenderId: "98956724016",
+      appId: "1:98956724016:web:cd11e15b7d4d78c5c9d37d"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  // ✅ Auth check with console debug
-  onAuthStateChanged(auth, async (user) => {
-    console.log("Auth state changed:", user);
-    if (!user) {
-      console.log("User not logged in. Redirecting to auth.html");
-      window.location.href = "auth.html";
-      return;
-    }
+    // ✅ Loading start
+    document.body.classList.add("loading");
 
-    try {
-      const uid = user.uid;
-      const userRef = doc(db, "users", uid);
-      const docSnap = await getDoc(userRef);
-
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        document.getElementById("refCode").textContent = userData.referralCode || "N/A";
-        document.getElementById("totalReferrals").textContent = userData.totalReferrals || 0;
-      } else {
-        console.log("No such document!");
+    // ✅ Auth check
+    onAuthStateChanged(auth, async (user) => {
+      console.log("Auth state changed:", user);
+      if (!user) {
+        console.log("User not logged in. Redirecting to auth.html");
+        window.location.href = "auth.html";
+        return;
       }
-    } catch (err) {
-      console.error("Error fetching user data:", err);
-    }
-  });
 
-  // ✅ Referral share logic
-  window.shareReferral = function () {
-    const code = document.getElementById("refCode").textContent.trim();
-    const baseUrl = "https://smartfundad.com";
-    const referralLink = `${baseUrl}?ref=${encodeURIComponent(code)}`;
-    const shareText = `Join Smartfundad and earn daily!\nUse my referral link: ${referralLink}`;
+      document.body.classList.remove("loading"); // ✅ Show content
 
-    if (navigator.share) {
-      navigator.share({
-        title: "Smartfundad",
-        text: shareText,
-        url: referralLink
-      });
-    } else {
-      navigator.clipboard.writeText(referralLink);
-      alert("Referral link copied!");
-    }
-  };
+      try {
+        const uid = user.uid;
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
 
-  // ✅ Logout logic
-  window.logout = function () {
-    signOut(auth).then(() => {
-      window.location.href = "auth.html";
-    }).catch((error) => {
-      console.error("Sign-out error:", error);
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          document.getElementById("refCode").textContent = userData.referralCode || "N/A";
+          document.getElementById("refCount").textContent = userData.totalReferrals || 0;
+          document.getElementById("refIncome").textContent = userData.referralIncome || "₹0";
+        } else {
+          console.log("User document not found");
+        }
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+      }
     });
-  };
-</script>
+
+    // ✅ Share logic
+    window.shareReferral = function () {
+      const code = document.getElementById("refCode").textContent.trim();
+      const baseUrl = "https://smartfundad.com";
+      const referralLink = `${baseUrl}?ref=${encodeURIComponent(code)}`;
+      const shareText = `Join Smartfundad and earn daily!\nUse my referral link: ${referralLink}`;
+
+      if (navigator.share) {
+        navigator.share({
+          title: "Smartfundad",
+          text: shareText,
+          url: referralLink
+        });
+      } else {
+        navigator.clipboard.writeText(referralLink);
+        alert("Referral link copied!");
+      }
+    };
+
+    // ✅ Logout
+    window.logout = function () {
+      signOut(auth).then(() => {
+        window.location.href = "auth.html";
+      }).catch((error) => {
+        console.error("Sign-out error:", error);
+      });
+    };
+  </script>
 </body>
 </html>
-
-   
- 
