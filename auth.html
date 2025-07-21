@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -183,174 +183,178 @@
 
   <div id="popup"></div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      sendPasswordResetEmail
-    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import {
-      getFirestore,
-      doc,
-      setDoc,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+   <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    sendPasswordResetEmail
+  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    setDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBJazg3yVQfDaSuloygIZSQPccFL4HIaMQ",
-      authDomain: "smartfundad-60227.firebaseapp.com",
-      databaseURL: "https://smartfundad-60227-default-rtdb.firebaseio.com",
-      projectId: "smartfundad-60227",
-      storageBucket: "smartfundad-60227.appspot.com",
-      messagingSenderId: "125738343496",
-      appId: "1:125738343496:web:328065e13d114cfd9f8c7d",
-      measurementId: "G-LE5QZREW1E"
-    };
-    
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  const firebaseConfig = {
+    apiKey: "AIzaSyBJazg3yVQfDaSuloygIZSQPccFL4HIaMQ",
+    authDomain: "smartfundad-60227.firebaseapp.com",
+    databaseURL: "https://smartfundad-60227-default-rtdb.firebaseio.com",
+    projectId: "smartfundad-60227",
+    storageBucket: "smartfundad-60227.appspot.com",
+    messagingSenderId: "125738343496",
+    appId: "1:125738343496:web:328065e13d114cfd9f8c7d",
+    measurementId: "G-LE5QZREW1E"
+  };
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const refCode = urlParams.get('ref');
-    if (refCode) {
-      document.getElementById('regReferral').value = refCode;
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const regCard = document.getElementById("registerCard");
+  const loginCard = document.getElementById("loginCard");
+
+  function showPopup(msg) {
+    const popup = document.getElementById("popup");
+    popup.innerText = msg;
+    popup.style.display = "block";
+    setTimeout(() => popup.style.display = "none", 3000);
+  }
+
+  function showLogin() {
+    regCard.style.display = "none";
+    loginCard.style.display = "block";
+  }
+
+  function showRegister() {
+    loginCard.style.display = "none";
+    regCard.style.display = "block";
+  }
+
+  window.showLogin = showLogin;
+  window.showRegister = showRegister;
+  window.login = login;
+  window.register = register;
+  window.forgotPassword = forgotPassword;
+
+  // 👇 Referral auto-fill + register show
+  const urlParams = new URLSearchParams(window.location.search);
+  const refCode = urlParams.get('ref');
+  if (refCode) {
+    const refInput = document.getElementById('regReferral');
+    refInput.value = refCode;
+    refInput.readOnly = true;
+
+    // Show register form directly
+    showRegister();
+  } else {
+    // default to login if no ref
+    showLogin();
+  }
+
+  async function register() {
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const confirm = document.getElementById('regConfirm').value;
+    const referral = document.getElementById('regReferral').value.trim();
+
+    if (!name || !email || !password || !confirm) {
+      showPopup("Please fill all required fields.");
+      return;
     }
 
-    const regCard = document.getElementById("registerCard");
-    const loginCard = document.getElementById("loginCard");
-
-    function showPopup(msg) {
-      const popup = document.getElementById("popup");
-      popup.innerText = msg;
-      popup.style.display = "block";
-      setTimeout(() => popup.style.display = "none", 3000);
+    if (password !== confirm) {
+      showPopup("Passwords do not match.");
+      return;
     }
 
-    function showLogin() {
-      regCard.style.display = "none";
-      loginCard.style.display = "block";
-    }
+    try {
+      const userCred = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCred.user;
 
-    function showRegister() {
-      loginCard.style.display = "none";
-      regCard.style.display = "block";
-    }
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        name: name,
+        email: email,
+        referral: referral || null,
+        createdAt: serverTimestamp()
+      });
 
-    window.showLogin = showLogin;
-    window.showRegister = showRegister;
-    window.login = login;
-    window.register = register;
-    window.forgotPassword = forgotPassword;
-
-    window.onload = () => {
-      showLogin();
-    }
-
-    async function register() {
-      const name = document.getElementById('regName').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
-      const password = document.getElementById('regPassword').value;
-      const confirm = document.getElementById('regConfirm').value;
-      const referral = document.getElementById('regReferral').value.trim();
-
-      if (!name || !email || !password || !confirm) {
-        showPopup("Please fill all required fields.");
-        return;
-      }
-
-      if (password !== confirm) {
-        showPopup("Passwords do not match.");
-        return;
-      }
-
-      try {
-        const userCred = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCred.user;
-
-        await setDoc(doc(db, "users", user.uid), {
-          uid: user.uid,
-          name: name,
-          email: email,
-          referral: referral || null,
-          createdAt: serverTimestamp()
-        });
-
-        showPopup("Registration successful!");
-        window.location.href = "index.html";
-      } catch (error) {
-        const code = error.code;
-        if (code === 'auth/email-already-in-use') {
-          showPopup("Email already registered. Please login.");
-          showLogin();
-        } else if (code === 'auth/invalid-email') {
-          showPopup("Invalid email format.");
-        } else if (code === 'auth/weak-password') {
-          showPopup("Password is too weak (min 6 characters).");
-        } else {
-          showPopup("Registration failed. Try again.");
-        }
-      }
-    }
-
-    async function login() {
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value;
-
-      if (!email || !password) {
-        showPopup("Please enter login details.");
-        return;
-      }
-
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        showPopup("Login successful!");
-        window.location.href = "index.html";
-      } catch (error) {
-        const code = error.code;
-        if (code === 'auth/wrong-password' || code === 'auth/invalid-login-credentials') {
-          showPopup("Email or password is incorrect.");
-        } else if (code === 'auth/user-not-found') {
-          showPopup("User not found. Please register.");
-          showRegister();
-        } else if (code === 'auth/invalid-email') {
-          showPopup("Invalid email format.");
-        } else if (code === 'auth/too-many-requests') {
-          showPopup("Too many attempts. Try again later.");
-        } else {
-          showPopup("Login failed. Please try again.");
-        }
-      }
-    }
-
-    async function forgotPassword() {
-      const email = document.getElementById('loginEmail').value.trim();
-      if (!email) {
-        showPopup("Enter your email above first.");
-        return;
-      }
-
-      try {
-        await sendPasswordResetEmail(auth, email);
-        showPopup("Password reset email sent.");
-      } catch (error) {
-        showPopup("Error sending reset email.");
-      }
-    }
-
-    window.togglePassword = function (fieldId, icon) {
-      const input = document.getElementById(fieldId);
-      if (input.type === "password") {
-        input.type = "text";
-        icon.textContent = "🙈";
+      showPopup("Registration successful!");
+      window.location.href = "index.html";
+    } catch (error) {
+      const code = error.code;
+      if (code === 'auth/email-already-in-use') {
+        showPopup("Email already registered. Please login.");
+        showLogin();
+      } else if (code === 'auth/invalid-email') {
+        showPopup("Invalid email format.");
+      } else if (code === 'auth/weak-password') {
+        showPopup("Password is too weak (min 6 characters).");
       } else {
-        input.type = "password";
-        icon.textContent = "👁";
+        showPopup("Registration failed. Try again.");
       }
     }
-  </script>
+  }
 
+  async function login() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+    if (!email || !password) {
+      showPopup("Please enter login details.");
+      return;
+    }
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      showPopup("Login successful!");
+      window.location.href = "index.html";
+    } catch (error) {
+      const code = error.code;
+      if (code === 'auth/wrong-password' || code === 'auth/invalid-login-credentials') {
+        showPopup("Email or password is incorrect.");
+      } else if (code === 'auth/user-not-found') {
+        showPopup("User not found. Please register.");
+        showRegister();
+      } else if (code === 'auth/invalid-email') {
+        showPopup("Invalid email format.");
+      } else if (code === 'auth/too-many-requests') {
+        showPopup("Too many attempts. Try again later.");
+      } else {
+        showPopup("Login failed. Please try again.");
+      }
+    }
+  }
+
+  async function forgotPassword() {
+    const email = document.getElementById('loginEmail').value.trim();
+    if (!email) {
+      showPopup("Enter your email above first.");
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      showPopup("Password reset email sent.");
+    } catch (error) {
+      showPopup("Error sending reset email.");
+    }
+  }
+
+  window.togglePassword = function (fieldId, icon) {
+    const input = document.getElementById(fieldId);
+    if (input.type === "password") {
+      input.type = "text";
+      icon.textContent = "🙈";
+    } else {
+      input.type = "password";
+      icon.textContent = "👁";
+    }
+  }
+</script>
 </body>
 </html>
