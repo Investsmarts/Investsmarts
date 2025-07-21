@@ -21,9 +21,7 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
     h2 { text-align: center; color: #000; }
-    .field-wrapper {
-      position: relative;
-    }
+    .field-wrapper { position: relative; }
     input, button {
       width: 100%;
       padding: 12px;
@@ -40,13 +38,40 @@
     button:hover { background-color: #d62828; }
     .switch { text-align: center; cursor: pointer; color: #0077cc; }
     .hidden { display: none; }
-    .error { color: red; font-size: 13px; text-align: center; }
     .eye-icon {
       position: absolute;
       top: 50%;
       right: 12px;
       transform: translateY(-50%);
       cursor: pointer;
+    }
+
+    /* Popup */
+    #popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 15px 25px;
+      background-color: #28a745;
+      color: white;
+      font-size: 16px;
+      border-radius: 10px;
+      z-index: 9999;
+      display: none;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      max-width: 80%;
+    }
+    #popup.error {
+      background-color: #dc3545;
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        margin: 20px;
+        padding: 20px;
+      }
     }
   </style>
 </head>
@@ -82,24 +107,25 @@
     </div>
 
     <p class="switch" onclick="toggleForm()">Switch to Login</p>
-    <p class="error" id="error-msg"></p>
   </div>
+
+  <!-- Popup -->
+  <div id="popup"></div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDocs, query, collection, where, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
-     const firebaseConfig = {
-  apiKey: "AIzaSyBJazg3yVQfDaSuloygIZSQPccFL4HIaMQ",
-  authDomain: "smartfundad-60227.firebaseapp.com",
-  projectId: "smartfundad-60227",
-  storageBucket: "smartfundad-60227.appspot.com",
-  messagingSenderId: "125738343496",
-  appId: "1:125738343496:web:328065e13d114cfd9f8c7d",
-  measurementId: "G-LE5QZREW1E"
-};
-
+    const firebaseConfig = {
+      apiKey: "AIzaSyBJazg3yVQfDaSuloygIZSQPccFL4HIaMQ",
+      authDomain: "smartfundad-60227.firebaseapp.com",
+      projectId: "smartfundad-60227",
+      storageBucket: "smartfundad-60227.appspot.com",
+      messagingSenderId: "125738343496",
+      appId: "1:125738343496:web:328065e13d114cfd9f8c7d",
+      measurementId: "G-LE5QZREW1E"
+    };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -144,21 +170,31 @@
       return Math.floor(100000 + Math.random() * 900000).toString();
     }
 
+    function showPopup(message, isError = false) {
+      const popup = document.getElementById("popup");
+      popup.textContent = message;
+      popup.classList.toggle("error", isError);
+      popup.style.display = "block";
+      setTimeout(() => {
+        popup.style.display = "none";
+        popup.classList.remove("error");
+      }, 1000);
+    }
+
     async function register() {
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("reg-email").value.trim();
       const password = document.getElementById("reg-pass").value.trim();
       const cpass = document.getElementById("reg-cpass").value.trim();
       const referralCode = document.getElementById("ref-code").value.trim().toUpperCase();
-      const errorMsg = document.getElementById("error-msg");
 
       if (!name || !email || !password || !cpass) {
-        errorMsg.textContent = "Please fill all fields.";
+        showPopup("Please fill all fields.", true);
         return;
       }
 
       if (password !== cpass) {
-        errorMsg.textContent = "Passwords do not match.";
+        showPopup("Passwords do not match.", true);
         return;
       }
 
@@ -166,7 +202,7 @@
       const q = query(usersRef, where("ip", "==", userIP));
       const querySnapshot = await getDocs(q);
       if (!querySnapshot.empty) {
-        errorMsg.textContent = "IP already registered. Please login.";
+        showPopup("IP already registered. Please login.", true);
         return;
       }
 
@@ -205,26 +241,26 @@
           }
         }
 
-        window.location.href = "index.html";
+        showPopup("Registration Successful!");
+        setTimeout(() => window.location.href = "index.html", 1000);
       } catch (err) {
-        errorMsg.textContent = err.message;
+        showPopup(err.message, true);
       }
     }
 
     async function login() {
       const email = document.getElementById("log-email").value.trim();
       const password = document.getElementById("log-pass").value.trim();
-      const errorMsg = document.getElementById("error-msg");
 
       try {
         await signInWithEmailAndPassword(auth, email, password);
-        window.location.href = "index.html";
+        showPopup("Login Successful!");
+        setTimeout(() => window.location.href = "index.html", 1000);
       } catch (err) {
-        errorMsg.textContent = "Login failed: " + err.message;
+        showPopup("Login failed: " + err.message, true);
       }
     }
 
-    // Make functions globally accessible
     window.register = register;
     window.login = login;
     window.toggleEye = toggleEye;
