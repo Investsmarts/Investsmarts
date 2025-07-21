@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -36,11 +36,6 @@
       color: var(--text-color);
       padding-top: 70px;
       padding-bottom: 90px;
-    }
-
-    body.loading {
-      opacity: 0;
-      pointer-events: none;
     }
 
     nav {
@@ -203,96 +198,81 @@
   <div class="bottom-nav">
     <a href="index.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
     <a href="tasks.html" class="nav-item"><i class='bx bx-task'></i><span>Tasks</span></a>
-    <a href="referral.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
+    <a href="rrr.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
     <a href="wallet.html" class="nav-item"><i class='bx bx-wallet'></i><span>Wallet</span></a>
     <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-    import {
-      getAuth,
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
     import {
       getFirestore,
       doc,
-      getDoc
-    } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+      getDoc,
+      collection,
+      query,
+      where,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyDzjZW_E4lWVgODp7y3HDT0LtqX6d1rTpg",
+      apiKey: "AIzaSyBJazg3yVQfDaSuloygIZSQPccFL4HIaMQ",
       authDomain: "smartfundad-60227.firebaseapp.com",
+      databaseURL: "https://smartfundad-60227-default-rtdb.firebaseio.com",
       projectId: "smartfundad-60227",
       storageBucket: "smartfundad-60227.appspot.com",
-      messagingSenderId: "98956724016",
-      appId: "1:98956724016:web:cd11e15b7d4d78c5c9d37d"
+      messagingSenderId: "125738343496",
+      appId: "1:125738343496:web:328065e13d114cfd9f8c7d",
+      measurementId: "G-LE5QZREW1E"
     };
+
+
+
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // ✅ Loading start
-    document.body.classList.add("loading");
-
-    // ✅ Auth check
     onAuthStateChanged(auth, async (user) => {
-      console.log("Auth state changed:", user);
       if (!user) {
-        console.log("User not logged in. Redirecting to auth.html");
         window.location.href = "auth.html";
         return;
       }
 
-      document.body.classList.remove("loading"); // ✅ Show content
+      const uid = user.uid;
+      const userRef = doc(db, "users", uid);
+      const userSnap = await getDoc(userRef);
 
-      try {
-        const uid = user.uid;
-        const userRef = doc(db, "users", uid);
-        const docSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        const refCode = userData.referralCode || uid.substring(0, 7).toUpperCase();
+        document.getElementById("refCode").textContent = refCode;
 
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
-          document.getElementById("refCode").textContent = userData.referralCode || "N/A";
-          document.getElementById("refCount").textContent = userData.totalReferrals || 0;
-          document.getElementById("refIncome").textContent = userData.referralIncome || "₹0";
-        } else {
-          console.log("User document not found");
-        }
-      } catch (err) {
-        console.error("Error fetching user data:", err);
+        // Count referrals
+        const q = query(collection(db, "users"), where("referral", "==", refCode));
+        const snap = await getDocs(q);
+        document.getElementById("refCount").textContent = `${snap.size} People Joined`;
+
+        // Income (assume income saved as "refIncome")
+        const income = userData.refIncome || 0;
+        document.getElementById("refIncome").textContent = `$${income.toFixed(2)} Earned`;
       }
     });
 
-    // ✅ Share logic
     window.shareReferral = function () {
-      const code = document.getElementById("refCode").textContent.trim();
-      const baseUrl = "https://smartfundad.com";
-      const referralLink = `${baseUrl}?ref=${encodeURIComponent(code)}`;
-      const shareText = `Join Smartfundad and earn daily!\nUse my referral link: ${referralLink}`;
+      const code = document.getElementById("refCode").textContent;
+      const link = `https://smartfundad.in?ref=${code}`;
+      const text = `Join Smartfundad and earn daily!\nUse my referral link: ${link}`;
 
       if (navigator.share) {
-        navigator.share({
-          title: "Smartfundad",
-          text: shareText,
-          url: referralLink
-        });
+        navigator.share({ title: "Smartfundad", text: text, url: link });
       } else {
-        navigator.clipboard.writeText(referralLink);
+        navigator.clipboard.writeText(link);
         alert("Referral link copied!");
       }
     };
-
-    // ✅ Logout
-    window.logout = function () {
-      signOut(auth).then(() => {
-        window.location.href = "auth.html";
-      }).catch((error) => {
-        console.error("Sign-out error:", error);
-      });
-    };
   </script>
+
 </body>
 </html>
