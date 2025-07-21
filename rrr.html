@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -227,9 +227,6 @@
       measurementId: "G-LE5QZREW1E"
     };
 
-
-
-
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
@@ -249,12 +246,10 @@
         const refCode = userData.referralCode || uid.substring(0, 7).toUpperCase();
         document.getElementById("refCode").textContent = refCode;
 
-        // Count referrals
         const q = query(collection(db, "users"), where("referral", "==", refCode));
         const snap = await getDocs(q);
         document.getElementById("refCount").textContent = `${snap.size} People Joined`;
 
-        // Income (assume income saved as "refIncome")
         const income = userData.refIncome || 0;
         document.getElementById("refIncome").textContent = `$${income.toFixed(2)} Earned`;
       }
@@ -263,10 +258,10 @@
     window.shareReferral = function () {
       const code = document.getElementById("refCode").textContent;
       const link = `https://smartfundad.in?ref=${code}`;
-      const text = `Join Smartfundad and earn daily!\nUse my referral link: ${link}`;
+      const text = `Join Smartfundad and earn daily! Use my referral link:\n${link}`;
 
       if (navigator.share) {
-        navigator.share({ title: "Smartfundad", text: text, url: link });
+        navigator.share({ title: "Smartfundad", text, url: link });
       } else {
         navigator.clipboard.writeText(link);
         alert("Referral link copied!");
