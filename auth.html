@@ -1,360 +1,234 @@
-    <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SmartFundAd - Auth</title>
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; font-family: Arial, sans-serif; }
     body {
       margin: 0;
       padding: 0;
-      background: url('https://wallpaperaccess.com/full/2637581.jpg') no-repeat center center fixed;
-      background-size: cover;
-      font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      color: white;
+      background: #f5f5f5;
     }
-
-    h2 {
-      font-size: 32px;
-      margin-bottom: 30px;
-      background: linear-gradient(90deg, #00f7ff, #ff00ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .card {
-      backdrop-filter: blur(25px);
-      background: rgba(255, 255, 255, 0.08);
+    .container {
+      max-width: 400px;
+      margin: 50px auto;
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 20px;
-      padding: 25px;
-      width: 320px;
-      box-shadow: 0 0 25px rgba(0, 247, 255, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      display: none;
+      backdrop-filter: blur(15px);
+      padding: 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
-
-    .card h3 {
-      text-align: center;
-      font-size: 22px;
-      margin-bottom: 20px;
-    }
-
-    .input-container {
+    h2 { text-align: center; color: #000; }
+    .field-wrapper {
       position: relative;
     }
-
-    input {
+    input, button {
       width: 100%;
       padding: 12px;
-      margin-bottom: 12px;
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 10px;
-      color: #fff;
-      font-size: 14px;
-      outline: none;
-      padding-right: 40px;
+      margin: 10px 0;
+      border: 1px solid #aaa;
+      border-radius: 8px;
     }
-
-    input::placeholder {
-      color: #eee;
-    }
-
-    .toggle-pass {
-      position: absolute;
-      right: 12px;
-      top: 11px;
-      cursor: pointer;
-      color: #00f7ff;
-      font-size: 16px;
-      user-select: none;
-    }
-
     button {
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(90deg, #00f7ff, #00ff94);
+      background-color: #e63946;
+      color: white;
+      cursor: pointer;
       border: none;
-      border-radius: 10px;
-      font-weight: bold;
-      color: black;
-      cursor: pointer;
-      font-size: 15px;
     }
-
-    .switch-link {
-      font-size: 13px;
-      text-align: center;
-      color: #ccc;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    .switch-link span {
-      color: #00f7ff;
-      text-decoration: underline;
-    }
-
-    #forgotBtn {
-      font-size: 13px;
-      color: #ddd;
-      text-align: right;
-      cursor: pointer;
-      margin-top: -10px;
-      margin-bottom: 10px;
-    }
-
-    #popup {
-      position: fixed;
+    button:hover { background-color: #d62828; }
+    .switch { text-align: center; cursor: pointer; color: #0077cc; }
+    .hidden { display: none; }
+    .error { color: red; font-size: 13px; text-align: center; }
+    .eye-icon {
+      position: absolute;
       top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 18px 25px;
-      background: rgba(0, 255, 200, 0.12);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 14px;
-      color: #fff;
-      font-weight: 600;
-      display: none;
-      z-index: 9999;
-      font-size: 14px;
-      box-shadow: 0 0 30px rgba(0,255,255,0.3);
-      text-align: center;
-      animation: fadeIn 0.3s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translate(-50%, -60%) scale(0.95); }
-      to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    }
-
-    @media (max-width: 768px) {
-      .card {
-        width: 90%;
-      }
+      right: 12px;
+      transform: translateY(-50%);
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-
-  <h2>SmartFundAd</h2>
-
-  <!-- Register -->
-  <div class="card" id="registerCard">
-    <h3>Register</h3>
-    <input type="text" id="regName" placeholder="Full Name" />
-    <input type="email" id="regEmail" placeholder="Email ID" />
+  <div class="container">
+    <h2 id="form-title">Register</h2>
     
-    <div class="input-container">
-      <input type="password" id="regPassword" placeholder="Password" />
-      <span class="toggle-pass" onclick="togglePassword('regPassword', this)">👁</span>
+    <div id="register-form">
+      <input type="text" id="name" placeholder="Full Name" required />
+      <input type="email" id="reg-email" placeholder="Email ID" required />
+
+      <div class="field-wrapper">
+        <input type="password" id="reg-pass" placeholder="Password" required />
+        <span class="eye-icon" onclick="toggleEye('reg-pass', this)">👁️</span>
+      </div>
+
+      <div class="field-wrapper">
+        <input type="password" id="reg-cpass" placeholder="Confirm Password" required />
+        <span class="eye-icon" onclick="toggleEye('reg-cpass', this)">👁️</span>
+      </div>
+
+      <input type="text" id="ref-code" placeholder="Referral Code (optional)" />
+      <button onclick="register()">Register</button>
     </div>
-    <div class="input-container">
-      <input type="password" id="regConfirm" placeholder="Confirm Password" />
-      <span class="toggle-pass" onclick="togglePassword('regConfirm', this)">👁</span>
+
+    <div id="login-form" class="hidden">
+      <input type="email" id="log-email" placeholder="Email ID" required />
+      <div class="field-wrapper">
+        <input type="password" id="log-pass" placeholder="Password" required />
+        <span class="eye-icon" onclick="toggleEye('log-pass', this)">👁️</span>
+      </div>
+      <button onclick="login()">Login</button>
     </div>
-    
-    <input type="text" id="regReferral" placeholder="Referral Code (optional)" />
-    <button onclick="register()">Register</button>
-    <div class="switch-link">Already have an account? <span onclick="showLogin()">Login here</span></div>
+
+    <p class="switch" onclick="toggleForm()">Switch to Login</p>
+    <p class="error" id="error-msg"></p>
   </div>
 
-  <!-- Login -->
-  <div class="card" id="loginCard">
-    <h3>Login</h3>
-    <input type="email" id="loginEmail" placeholder="Email ID" />
-    
-    <div class="input-container">
-      <input type="password" id="loginPassword" placeholder="Password" />
-      <span class="toggle-pass" onclick="togglePassword('loginPassword', this)">👁</span>
-    </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDocs, query, collection, where, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
-    <div id="forgotBtn" onclick="forgotPassword()">Forgot Password?</div>
-    <button onclick="login()">Login</button>
-    <div class="switch-link">New user? <span onclick="showRegister()">Register here</span></div>
-  </div>
+     const firebaseConfig = {
+  apiKey: "AIzaSyBJazg3yVQfDaSuloygIZSQPccFL4HIaMQ",
+  authDomain: "smartfundad-60227.firebaseapp.com",
+  projectId: "smartfundad-60227",
+  storageBucket: "smartfundad-60227.appspot.com",
+  messagingSenderId: "125738343496",
+  appId: "1:125738343496:web:328065e13d114cfd9f8c7d",
+  measurementId: "G-LE5QZREW1E"
+};
 
-  <div id="popup"></div>
 
-   <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    sendPasswordResetEmail
-  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-  import {
-    getFirestore,
-    doc,
-    setDoc,
-    serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBJazg3yVQfDaSuloygIZSQPccFL4HIaMQ",
-    authDomain: "smartfundad-60227.firebaseapp.com",
-    databaseURL: "https://smartfundad-60227-default-rtdb.firebaseio.com",
-    projectId: "smartfundad-60227",
-    storageBucket: "smartfundad-60227.appspot.com",
-    messagingSenderId: "125738343496",
-    appId: "1:125738343496:web:328065e13d114cfd9f8c7d",
-    measurementId: "G-LE5QZREW1E"
-  };
+    let userIP = "";
+    fetch("https://api.ipify.org?format=json")
+      .then(res => res.json())
+      .then(data => userIP = data.ip);
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+    function toggleForm() {
+      const regForm = document.getElementById("register-form");
+      const logForm = document.getElementById("login-form");
+      const title = document.getElementById("form-title");
+      const switchBtn = document.querySelector(".switch");
 
-  const regCard = document.getElementById("registerCard");
-  const loginCard = document.getElementById("loginCard");
-
-  function showPopup(msg) {
-    const popup = document.getElementById("popup");
-    popup.innerText = msg;
-    popup.style.display = "block";
-    setTimeout(() => popup.style.display = "none", 3000);
-  }
-
-  function showLogin() {
-    regCard.style.display = "none";
-    loginCard.style.display = "block";
-  }
-
-  function showRegister() {
-    loginCard.style.display = "none";
-    regCard.style.display = "block";
-  }
-
-  window.showLogin = showLogin;
-  window.showRegister = showRegister;
-  window.login = login;
-  window.register = register;
-  window.forgotPassword = forgotPassword;
-
-  // 👇 Referral auto-fill + register show
-  const urlParams = new URLSearchParams(window.location.search);
-  const refCode = urlParams.get('ref');
-  if (refCode) {
-    const refInput = document.getElementById('regReferral');
-    refInput.value = refCode;
-    refInput.readOnly = true;
-
-    // Show register form directly
-    showRegister();
-  } else {
-    // default to login if no ref
-    showLogin();
-  }
-
-  async function register() {
-    const name = document.getElementById('regName').value.trim();
-    const email = document.getElementById('regEmail').value.trim();
-    const password = document.getElementById('regPassword').value;
-    const confirm = document.getElementById('regConfirm').value;
-    const referral = document.getElementById('regReferral').value.trim();
-
-    if (!name || !email || !password || !confirm) {
-      showPopup("Please fill all required fields.");
-      return;
-    }
-
-    if (password !== confirm) {
-      showPopup("Passwords do not match.");
-      return;
-    }
-
-    try {
-      const userCred = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCred.user;
-
-      await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
-        name: name,
-        email: email,
-        referral: referral || null,
-        createdAt: serverTimestamp()
-      });
-
-      showPopup("Registration successful!");
-      window.location.href = "index.html";
-    } catch (error) {
-      const code = error.code;
-      if (code === 'auth/email-already-in-use') {
-        showPopup("Email already registered. Please login.");
-        showLogin();
-      } else if (code === 'auth/invalid-email') {
-        showPopup("Invalid email format.");
-      } else if (code === 'auth/weak-password') {
-        showPopup("Password is too weak (min 6 characters).");
+      if (regForm.classList.contains("hidden")) {
+        regForm.classList.remove("hidden");
+        logForm.classList.add("hidden");
+        title.textContent = "Register";
+        switchBtn.textContent = "Switch to Login";
       } else {
-        showPopup("Registration failed. Try again.");
+        regForm.classList.add("hidden");
+        logForm.classList.remove("hidden");
+        title.textContent = "Login";
+        switchBtn.textContent = "Switch to Register";
       }
     }
-  }
 
-  async function login() {
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value;
-
-    if (!email || !password) {
-      showPopup("Please enter login details.");
-      return;
-    }
-
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      showPopup("Login successful!");
-      window.location.href = "index.html";
-    } catch (error) {
-      const code = error.code;
-      if (code === 'auth/wrong-password' || code === 'auth/invalid-login-credentials') {
-        showPopup("Email or password is incorrect.");
-      } else if (code === 'auth/user-not-found') {
-        showPopup("User not found. Please register.");
-        showRegister();
-      } else if (code === 'auth/invalid-email') {
-        showPopup("Invalid email format.");
-      } else if (code === 'auth/too-many-requests') {
-        showPopup("Too many attempts. Try again later.");
+    function toggleEye(inputId, icon) {
+      const input = document.getElementById(inputId);
+      if (input.type === "password") {
+        input.type = "text";
+        icon.textContent = "🙈";
       } else {
-        showPopup("Login failed. Please try again.");
+        input.type = "password";
+        icon.textContent = "👁️";
       }
     }
-  }
 
-  async function forgotPassword() {
-    const email = document.getElementById('loginEmail').value.trim();
-    if (!email) {
-      showPopup("Enter your email above first.");
-      return;
+    function generateUID() {
+      return Math.floor(100000 + Math.random() * 900000).toString();
     }
 
-    try {
-      await sendPasswordResetEmail(auth, email);
-      showPopup("Password reset email sent.");
-    } catch (error) {
-      showPopup("Error sending reset email.");
-    }
-  }
+    async function register() {
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("reg-email").value.trim();
+      const password = document.getElementById("reg-pass").value.trim();
+      const cpass = document.getElementById("reg-cpass").value.trim();
+      const referralCode = document.getElementById("ref-code").value.trim().toUpperCase();
+      const errorMsg = document.getElementById("error-msg");
 
-  window.togglePassword = function (fieldId, icon) {
-    const input = document.getElementById(fieldId);
-    if (input.type === "password") {
-      input.type = "text";
-      icon.textContent = "🙈";
-    } else {
-      input.type = "password";
-      icon.textContent = "👁";
+      if (!name || !email || !password || !cpass) {
+        errorMsg.textContent = "Please fill all fields.";
+        return;
+      }
+
+      if (password !== cpass) {
+        errorMsg.textContent = "Passwords do not match.";
+        return;
+      }
+
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("ip", "==", userIP));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        errorMsg.textContent = "IP already registered. Please login.";
+        return;
+      }
+
+      try {
+        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+        const uid = generateUID();
+        const referral = referralCode || null;
+
+        const userData = {
+          name,
+          email,
+          uid,
+          referral,
+          wallet: 0,
+          total_earned: 0,
+          total_withdrawn: 0,
+          total_tasks: 0,
+          total_referrals: 0,
+          referral_income: 0,
+          created_at: new Date().toISOString(),
+          ip: userIP
+        };
+
+        await setDoc(doc(db, "users", userCred.user.uid), userData);
+
+        if (referral) {
+          const refQuery = query(usersRef, where("uid", "==", referral));
+          const refSnap = await getDocs(refQuery);
+          if (!refSnap.empty) {
+            const refDoc = refSnap.docs[0];
+            const refID = refDoc.id;
+            await updateDoc(doc(db, "users", refID), {
+              total_referrals: refDoc.data().total_referrals + 1,
+              referral_income: refDoc.data().referral_income + 0.25
+            });
+          }
+        }
+
+        window.location.href = "index.html";
+      } catch (err) {
+        errorMsg.textContent = err.message;
+      }
     }
-  }
-</script>
+
+    async function login() {
+      const email = document.getElementById("log-email").value.trim();
+      const password = document.getElementById("log-pass").value.trim();
+      const errorMsg = document.getElementById("error-msg");
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.href = "index.html";
+      } catch (err) {
+        errorMsg.textContent = "Login failed: " + err.message;
+      }
+    }
+
+    // Make functions globally accessible
+    window.register = register;
+    window.login = login;
+    window.toggleEye = toggleEye;
+    window.toggleForm = toggleForm;
+  </script>
 </body>
 </html>
