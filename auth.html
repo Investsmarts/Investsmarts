@@ -1,283 +1,253 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SmartFundAd - Auth</title>
+  <title>Register/Login</title>
   <style>
-    * { box-sizing: border-box; font-family: Arial, sans-serif; }
     body {
       margin: 0;
-      padding: 0;
-      background: #f5f5f5;
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
     .container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      width: 90%;
       max-width: 400px;
-      margin: 50px auto;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      backdrop-filter: blur(15px);
-      padding: 30px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
-    h2 { text-align: center; color: #000; }
-    .field-wrapper { position: relative; }
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .input-group {
+      position: relative;
+    }
     input, button {
       width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #aaa;
-      border-radius: 8px;
+      margin: 0.5rem 0;
+      padding: 0.75rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
     }
-    button {
-      background-color: #e63946;
-      color: white;
-      cursor: pointer;
-      border: none;
-    }
-    button:hover { background-color: #d62828; }
-    .switch { text-align: center; cursor: pointer; color: #0077cc; }
-    .hidden { display: none; }
     .eye-icon {
       position: absolute;
+      right: 10px;
       top: 50%;
-      right: 12px;
       transform: translateY(-50%);
       cursor: pointer;
+      font-size: 16px;
+      color: #555;
     }
-
-    /* Popup */
+    button {
+      background: #d32f2f;
+      color: #fff;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #toggle {
+      margin-top: 1rem;
+      background: none;
+      color: blue;
+      text-decoration: underline;
+      cursor: pointer;
+      border: none;
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
     #popup {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      padding: 15px 25px;
-      background-color: #28a745;
-      color: white;
-      font-size: 16px;
+      background: #333;
+      color: #fff;
+      padding: 1rem 2rem;
       border-radius: 10px;
-      z-index: 9999;
       display: none;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+      z-index: 999;
+      font-size: 14px;
+      opacity: 0.95;
       text-align: center;
-      max-width: 80%;
-    }
-    #popup.error {
-      background-color: #dc3545;
-    }
-
-    @media (max-width: 500px) {
-      .container {
-        margin: 20px;
-        padding: 20px;
-      }
+      min-width: 250px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2 id="form-title">Register</h2>
-    
-    <div id="register-form">
-      <input type="text" id="name" placeholder="Full Name" required />
-      <input type="email" id="reg-email" placeholder="Email ID" required />
 
-      <div class="field-wrapper">
-        <input type="password" id="reg-pass" placeholder="Password" required />
-        <span class="eye-icon" onclick="toggleEye('reg-pass', this)">👁️</span>
-      </div>
+<div class="container">
+  <h2 id="formTitle">Register</h2>
+  <form id="form">
+    <input type="text" name="username" placeholder="Username" required>
+    <input type="email" name="email" placeholder="Email" required>
 
-      <div class="field-wrapper">
-        <input type="password" id="reg-cpass" placeholder="Confirm Password" required />
-        <span class="eye-icon" onclick="toggleEye('reg-cpass', this)">👁️</span>
-      </div>
-
-      <input type="text" id="ref-code" placeholder="Referral Code (optional)" />
-      <button onclick="register()">Register</button>
+    <div class="input-group">
+      <input type="password" name="password" placeholder="Password" required>
+      <span class="eye-icon" onclick="togglePassword(this)">👁</span>
     </div>
 
-    <div id="login-form" class="hidden">
-      <input type="email" id="log-email" placeholder="Email ID" required />
-      <div class="field-wrapper">
-        <input type="password" id="log-pass" placeholder="Password" required />
-        <span class="eye-icon" onclick="toggleEye('log-pass', this)">👁️</span>
-      </div>
-      <button onclick="login()">Login</button>
+    <div class="input-group" id="confirmPassGroup">
+      <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+      <span class="eye-icon" onclick="togglePassword(this)">👁</span>
     </div>
 
-    <p class="switch" onclick="toggleForm()">Switch to Login</p>
-  </div>
+    <input type="text" name="referral" id="referral" placeholder="Referral Code (optional)">
+    <button id="submit" type="submit">Register</button>
+  </form>
+  <button id="toggle">Switch to Login</button>
+</div>
 
-  <!-- Popup -->
-  <div id="popup"></div>
+<div id="popup"></div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDocs, query, collection, where, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+  import { getFirestore, collection, setDoc, getDocs, query, where, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBJazg3yVQfDaSuloygIZSQPccFL4HIaMQ",
-      authDomain: "smartfundad-60227.firebaseapp.com",
-      projectId: "smartfundad-60227",
-      storageBucket: "smartfundad-60227.appspot.com",
-      messagingSenderId: "125738343496",
-      appId: "1:125738343496:web:328065e13d114cfd9f8c7d",
-      measurementId: "G-LE5QZREW1E"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyBJazg3yVQfDaSuloygIZSQPccFL4HIaMQ",
+    authDomain: "smartfundad-60227.firebaseapp.com",
+    databaseURL: "https://smartfundad-60227-default-rtdb.firebaseio.com",
+    projectId: "smartfundad-60227",
+    storageBucket: "smartfundad-60227.firebasestorage.app",
+    messagingSenderId: "125738343496",
+    appId: "1:125738343496:web:328065e13d114cfd9f8c7d",
+    measurementId: "G-LE5QZREW1E"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth();
+  const db = getFirestore();
+
+  let isLogin = false;
+
+  const form = document.getElementById("form");
+  const toggle = document.getElementById("toggle");
+  const title = document.getElementById("formTitle");
+  const refInput = document.getElementById("referral");
+  const popup = document.getElementById("popup");
+  const confirmPassGroup = document.getElementById("confirmPassGroup");
+  const submitBtn = document.getElementById("submit");
+
+  toggle.addEventListener("click", () => {
+    isLogin = !isLogin;
+    title.textContent = isLogin ? "Login" : "Register";
+    refInput.style.display = isLogin ? "none" : "block";
+    confirmPassGroup.style.display = isLogin ? "none" : "block";
+    form.username.style.display = isLogin ? "none" : "block";
+    submitBtn.textContent = isLogin ? "Login" : "Register";
+    toggle.textContent = isLogin ? "Switch to Register" : "Switch to Login";
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const username = form.username.value.trim();
+    const email = form.email.value.trim();
+    const password = form.password.value;
+    const confirmPassword = form.confirmPassword.value;
+    const referralCode = form.referral.value.trim();
+
+    if (!isLogin && (!username || !email || !password || !confirmPassword)) {
+      return showPopup("All fields are required");
+    }
+
+    if (!isLogin && password !== confirmPassword) {
+      return showPopup("Passwords do not match");
+    }
 
     let userIP = "";
-    fetch("https://api.ipify.org?format=json")
-      .then(res => res.json())
-      .then(data => userIP = data.ip);
-
-    function toggleForm() {
-      const regForm = document.getElementById("register-form");
-      const logForm = document.getElementById("login-form");
-      const title = document.getElementById("form-title");
-      const switchBtn = document.querySelector(".switch");
-
-      if (regForm.classList.contains("hidden")) {
-        regForm.classList.remove("hidden");
-        logForm.classList.add("hidden");
-        title.textContent = "Register";
-        switchBtn.textContent = "Switch to Login";
-      } else {
-        regForm.classList.add("hidden");
-        logForm.classList.remove("hidden");
-        title.textContent = "Login";
-        switchBtn.textContent = "Switch to Register";
-      }
+    try {
+      const res = await fetch("https://api.ipify.org?format=json");
+      const data = await res.json();
+      userIP = data.ip;
+    } catch {
+      return showPopup("Failed to get IP address");
     }
 
-    function toggleEye(inputId, icon) {
-      const input = document.getElementById(inputId);
-      if (input.type === "password") {
-        input.type = "text";
-        icon.textContent = "🙈";
-      } else {
-        input.type = "password";
-        icon.textContent = "👁️";
-      }
-    }
-
-    function generateUID() {
-      return Math.floor(100000 + Math.random() * 900000).toString();
-    }
-
-    function showPopup(message, isError = false) {
-      const popup = document.getElementById("popup");
-      popup.textContent = message;
-      popup.classList.toggle("error", isError);
-      popup.style.display = "block";
-      setTimeout(() => {
-        popup.style.display = "none";
-        popup.classList.remove("error");
-      }, 1000);
-    }
-
-    function getFriendlyFirebaseError(code) {
-      const map = {
-        "auth/email-already-in-use": "Email already registered. Please login.",
-        "auth/invalid-email": "Please enter a valid email address.",
-        "auth/weak-password": "Password should be at least 6 characters.",
-        "auth/user-not-found": "No account found. Please register.",
-        "auth/wrong-password": "Wrong password. Try again.",
-        "auth/too-many-requests": "Too many attempts. Try again later.",
-        "auth/network-request-failed": "Network error. Check connection."
-      };
-      return map[code] || "Something went wrong. Please try again.";
-    }
-
-    async function register() {
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("reg-email").value.trim();
-      const password = document.getElementById("reg-pass").value.trim();
-      const cpass = document.getElementById("reg-cpass").value.trim();
-      const referralCode = document.getElementById("ref-code").value.trim().toUpperCase();
-
-      if (!name || !email || !password || !cpass) {
-        showPopup("Please fill all fields.", true);
-        return;
-      }
-
-      if (password !== cpass) {
-        showPopup("Passwords do not match.", true);
-        return;
-      }
-
+    try {
       const usersRef = collection(db, "users");
-      const q = query(usersRef, where("ip", "==", userIP));
-      const querySnapshot = await getDocs(q);
-      if (!querySnapshot.empty) {
-        showPopup("IP already registered. Please login.", true);
-        return;
-      }
 
-      try {
-        const userCred = await createUserWithEmailAndPassword(auth, email, password);
-        const uid = generateUID();
-        const referral = referralCode || null;
+      if (isLogin) {
+        await signInWithEmailAndPassword(auth, email, password);
+        showPopup("Login successful");
+        window.location.href = "index.html"; // 👈 redirect after login
+      } else {
+        const q = query(usersRef, where("ip", "==", userIP));
+        const snapshot = await getDocs(q);
+        if (!snapshot.empty) return showPopup("IP already registered");
 
-        const userData = {
-          name,
-          email,
-          uid,
-          referral,
-          wallet: 0,
-          total_earned: 0,
-          total_withdrawn: 0,
-          total_tasks: 0,
-          total_referrals: 0,
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const userId = userCredential.user.uid;
+        const generatedCode = generateReferralCode();
+
+        await setDoc(doc(usersRef, userId), {
+          name: username,
+          email: email,
+          ip: userIP,
+          referralCode: generatedCode,
+          referredBy: referralCode || null,
           referral_income: 0,
-          created_at: new Date().toISOString(),
-          ip: userIP
-        };
+          total_earned: 0,
+          total_referrals: 0,
+          total_tasks: 0,
+          total_withdrawn: 0,
+          wallet: 0,
+          uid: userId,
+          created_at: serverTimestamp()
+        });
 
-        await setDoc(doc(db, "users", userCred.user.uid), userData);
-
-        if (referral) {
-          const refQuery = query(usersRef, where("uid", "==", referral));
+        if (referralCode) {
+          const refQuery = query(usersRef, where("referralCode", "==", referralCode));
           const refSnap = await getDocs(refQuery);
           if (!refSnap.empty) {
             const refDoc = refSnap.docs[0];
-            const refID = refDoc.id;
-            await updateDoc(doc(db, "users", refID), {
-              total_referrals: refDoc.data().total_referrals + 1,
-              referral_income: refDoc.data().referral_income + 0.25
+            await updateDoc(doc(usersRef, refDoc.id), {
+              total_referrals: (refDoc.data().total_referrals || 0) + 1
             });
           }
         }
 
-        showPopup("Registration Successful!");
-        setTimeout(() => window.location.href = "index.html", 1000);
-      } catch (err) {
-        showPopup(getFriendlyFirebaseError(err.code), true);
+        showPopup("Registration successful");
+        window.location.href = "index.html"; // 👈 redirect after registration
       }
+    } catch (error) {
+      const message = error.message.includes("auth/")
+        ? error.message.split("auth/")[1].replace(/[-_]/g, " ")
+        : error.message;
+      showPopup("Error: " + message);
     }
+  });
 
-    async function login() {
-      const email = document.getElementById("log-email").value.trim();
-      const password = document.getElementById("log-pass").value.trim();
+  function showPopup(message) {
+    popup.textContent = message;
+    popup.style.display = "block";
+    setTimeout(() => popup.style.display = "none", 3000);
+  }
 
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        showPopup("Login Successful!");
-        setTimeout(() => window.location.href = "index.html", 1000);
-      } catch (err) {
-        showPopup(getFriendlyFirebaseError(err.code), true);
-      }
+  function generateReferralCode() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length));
     }
+    return code;
+  }
 
-    window.register = register;
-    window.login = login;
-    window.toggleEye = toggleEye;
-    window.toggleForm = toggleForm;
-  </script>
+  window.togglePassword = function (icon) {
+    const input = icon.previousElementSibling;
+    input.type = input.type === "password" ? "text" : "password";
+    icon.textContent = input.type === "password" ? "👁" : "🙈";
+  };
+</script>
+
 </body>
 </html>
