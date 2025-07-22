@@ -188,12 +188,13 @@
       <p id="refIncome">--</p>
     </div>
     <div class="card">
-      <h2>Note</h2>
-      <p>Share your referral link. You earn 20% of every friend's income, for lifetime.</p>
+      <h2>𝐍𝐨𝐭𝐞</h2>
+      <p>𝐒𝐡𝐚𝐫𝐞 𝐲𝐨𝐮𝐫 𝐫𝐞𝐟𝐞𝐫𝐫𝐚𝐥 𝐥𝐢𝐧𝐤. 𝐘𝐨𝐮 𝐞𝐚𝐫𝐧 𝟏𝟎% 𝐨𝐟 𝐞𝐯𝐞𝐫𝐲 𝐟𝐫𝐢𝐞𝐧𝐝'𝐬 𝐢𝐧𝐜𝐨𝐦𝐞, 𝐟𝐨𝐫 𝐥𝐢𝐟𝐞𝐭𝐢𝐦𝐞.</p>
     </div>
   </div>
 
-  <button class="share-btn" onclick="shareReferral()">Share Referral Link</button>
+  <!-- ✅ Updated: Share Button now disabled until referralCode is loaded -->
+  <button class="share-btn" id="shareBtn" onclick="shareReferral()" disabled>Share Referral Link</button>
 
   <div class="bottom-nav">
     <a href="index.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
@@ -231,6 +232,11 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    const refCodeEl = document.getElementById("refCode");
+    const refCountEl = document.getElementById("refCount");
+    const refIncomeEl = document.getElementById("refIncome");
+    const shareBtn = document.getElementById("shareBtn");
+
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         window.location.href = "auth.html";
@@ -244,24 +250,34 @@
       if (userSnap.exists()) {
         const userData = userSnap.data();
         const refCode = userData.referralCode || uid.substring(0, 7).toUpperCase();
-        document.getElementById("refCode").textContent = refCode;
+        refCodeEl.textContent = refCode;
+
+        // ✅ Enable share button only after referral code is loaded
+        if (refCode && refCode !== "--") {
+          shareBtn.disabled = false;
+        }
 
         const q = query(collection(db, "users"), where("referral", "==", refCode));
         const snap = await getDocs(q);
-        document.getElementById("refCount").textContent = `${snap.size} People Joined`;
+        refCountEl.textContent = `${snap.size} People Joined`;
 
         const income = userData.refIncome || 0;
-        document.getElementById("refIncome").textContent = `$${income.toFixed(2)} Earned`;
+        refIncomeEl.textContent = `$${income.toFixed(2)} Earned`;
       }
     });
 
     window.shareReferral = function () {
-      const code = document.getElementById("refCode").textContent;
+      const code = refCodeEl.textContent.trim();
+      if (!code || code === "--") {
+        alert("Referral code not loaded yet. Please wait.");
+        return;
+      }
+
       const link = `https://smartfundad.com/auth.html?ref=${code}`;
       const text = `Join Smartfundad and earn daily!\nUse my referral link:\n${link}`;
 
       if (navigator.share) {
-        navigator.share({ title: "Smartfundad", text }); // ✅ removed `url` to avoid duplication
+        navigator.share({ title: "Smartfundad", text });
       } else {
         navigator.clipboard.writeText(link);
         alert("Referral link copied!");
