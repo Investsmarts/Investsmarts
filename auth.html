@@ -2,124 +2,118 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Register/Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | SmartFundAD</title>
+  <meta name="description" content="Secure login to access your SmartFundAD dashboard. Invest smartly, grow daily.">
+  <meta name="keywords" content="SmartFundAD login, investment dashboard, crypto staking login, smart fund login, register SmartFundAD">
+  <meta name="author" content="SmartFundAD Team">
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Login | SmartFundAD">
+  <meta property="og:description" content="Secure login to your SmartFundAD account and track your earnings.">
+  <meta property="og:image" content="https://Smartfundad.com/image/sf-logo.png">
+  <meta property="og:url" content="https://Smartfundad.com/login.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="image/sf-logo.png" type="image/png" />
+
   <style>
-  * {
-    box-sizing: border-box;
-  }
-
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: Arial, sans-serif;
-    background: #f2f2f2;
-  }
-
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    overflow: hidden; /* Prevent unwanted scroll */
-  }
-
-  .container {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 400px;
-    box-sizing: border-box;
-    animation: fadeIn 0.4s ease-in-out;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  h2 {
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-
-  .input-group {
-    position: relative;
-  }
-
-  input, button {
-    width: 100%;
-    margin: 0.5rem 0;
-    padding: 0.75rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-  }
-
-  .eye-icon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    font-size: 16px;
-    color: #555;
-  }
-
-  button {
-    background: #d32f2f;
-    color: #fff;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  button:hover {
-    background: #b71c1c;
-  }
-
-  #toggle {
-    margin-top: 1rem;
-    background: none;
-    color: blue;
-    text-decoration: underline;
-    cursor: pointer;
-    border: none;
-    display: block;
-    width: 100%;
-    text-align: center;
-  }
-
-  #popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #333;
-    color: #fff;
-    padding: 1rem 2rem;
-    border-radius: 10px;
-    display: none;
-    z-index: 999;
-    font-size: 14px;
-    opacity: 0.95;
-    text-align: center;
-    min-width: 250px;
-  }
-
-  @media (max-height: 500px) {
-    body {
-      align-items: flex-start;
-      padding-top: 20px;
-      overflow-y: auto;
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
     }
-  }
-</style>
-
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 400px;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .input-group {
+      position: relative;
+    }
+    input, button {
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.75rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    .eye-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 16px;
+      color: #555;
+    }
+    button {
+      background: #d32f2f;
+      color: #fff;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #b71c1c;
+    }
+    #toggle {
+      margin-top: 1rem;
+      background: none;
+      color: blue;
+      text-decoration: underline;
+      cursor: pointer;
+      border: none;
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+    #popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #333;
+      color: #fff;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      display: none;
+      z-index: 999;
+      font-size: 14px;
+      opacity: 0.95;
+      text-align: center;
+      min-width: 250px;
+    }
+    @media (max-height: 500px) {
+      body {
+        align-items: flex-start;
+        padding-top: 20px;
+        overflow-y: auto;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -157,7 +151,7 @@
     authDomain: "smartfundad-60227.firebaseapp.com",
     databaseURL: "https://smartfundad-60227-default-rtdb.firebaseio.com",
     projectId: "smartfundad-60227",
-    storageBucket: "smartfundad-60227.firebasestorage.app",
+    storageBucket: "smartfundad-60227.appspot.com",
     messagingSenderId: "125738343496",
     appId: "1:125738343496:web:328065e13d114cfd9f8c7d",
     measurementId: "G-LE5QZREW1E"
@@ -183,6 +177,11 @@
     refInput.style.display = isLogin ? "none" : "block";
     confirmPassGroup.style.display = isLogin ? "none" : "block";
     form.username.style.display = isLogin ? "none" : "block";
+
+    // 🔧 Fix: Toggle 'required' attribute
+    form.username.required = !isLogin;
+    form.confirmPassword.required = !isLogin;
+
     submitBtn.textContent = isLogin ? "Login" : "Register";
     toggle.textContent = isLogin ? "Switch to Register" : "Switch to Login";
   });
@@ -218,7 +217,7 @@
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
         showPopup("Login successful");
-        window.location.href = "index.html"; // 👈 redirect after login
+        window.location.href = "index.html";
       } else {
         const q = query(usersRef, where("ip", "==", userIP));
         const snapshot = await getDocs(q);
@@ -256,7 +255,7 @@
         }
 
         showPopup("Registration successful");
-        window.location.href = "index.html"; // 👈 redirect after registration
+        window.location.href = "index.html";
       }
     } catch (error) {
       const message = error.message.includes("auth/")
