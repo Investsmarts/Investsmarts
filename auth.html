@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -170,6 +170,19 @@
   const popup = document.getElementById("popup");
   const confirmPassGroup = document.getElementById("confirmPassGroup");
   const submitBtn = document.getElementById("submit");
+  
+   // ✅ Auto-fill referral code from URL and disable input
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const refFromURL = urlParams.get("ref");
+  if (refFromURL) {
+    refInput.value = refFromURL.toUpperCase();
+    refInput.readOnly = true;
+    refInput.style.backgroundColor = "#e0e0e0"; // optional: light gray to show it's locked
+    refInput.style.cursor = "not-allowed";
+  }
+});
+
 
   toggle.addEventListener("click", () => {
     isLogin = !isLogin;
