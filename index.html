@@ -5,13 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Smartfundad | Earn Tasks</title>
 
-  <!-- ✅ SEO -->
+  <link rel="icon" type="image/png" href="image/sf-logo.png">
+
+  <!-- Social Share -->
+  <meta property="og:title" content="Smartfundad | Earn Tasks">
+  <meta property="og:description" content="Earn daily by completing online tasks. Withdraw via UPI or Paytm.">
+  <meta property="og:image" content="sf-logo.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://Smartfundad.com">
+
   <meta name="description" content="Earn daily by completing online tasks. Withdraw via UPI or Paytm." />
   <meta name="keywords" content="earn money online, task earning, smartfundad, UPI income, refer & earn" />
   <meta name="author" content="Smartfundad" />
   <meta name="robots" content="index, follow" />
 
-  <!-- Boxicons -->
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 
   <style>
@@ -53,6 +60,18 @@
       font-weight: 600;
       z-index: 100;
       color: var(--primary);
+    }
+
+    nav::before {
+      content: "";
+      position: absolute;
+      left: 20px;
+      width: 36px;
+      height: 36px;
+      background-image: url('sf-logo.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
     }
 
     .marquee {
@@ -150,6 +169,67 @@
         font-size: 15px;
       }
     }
+
+    /* ✅ Popup Styles - Fixed Center */
+    #welcomePopup {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .popup-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    .popup-content {
+      position: relative;
+      background: #fff;
+      width: 90%;
+      max-width: 360px;
+      padding: 25px 20px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      z-index: 10000;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .popup-content h2 {
+      font-size: 20px;
+      color: #1976d2;
+      margin-bottom: 10px;
+    }
+
+    .popup-content p {
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .popup-content button {
+      background-color: #1976d2;
+      color: #fff;
+      border: none;
+      padding: 10px 22px;
+      font-size: 14px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .popup-content button:hover {
+      background-color: #125aa2;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
   </style>
 </head>
 <body>
@@ -161,30 +241,12 @@
   </div>
 
   <div class="grid">
-    <div class="card">
-      <h2>How It Works</h2>
-      <p>Complete daily tasks like app install, video watch, link visit etc.</p>
-    </div>
-    <div class="card">
-      <h2>Your Earnings</h2>
-      <p>Earn $0.50 to $5 per task. Withdraw anytime to UPI or Paytm.</p>
-    </div>
-    <div class="card">
-      <h2>Daily Limit</h2>
-      <p>Do up to 10 tasks per day. More tasks means more income.</p>
-    </div>
-    <div class="card">
-      <h2>Proof Submission</h2>
-      <p>Just upload screenshot proof. Fast verification, fast payout.</p>
-    </div>
-    <div class="card">
-      <h2>Referral Income</h2>
-      <p>Refer friends and get 20% from their earnings for lifetime.</p>
-    </div>
-    <div class="card">
-      <h2>Legal & Trusted</h2>
-      <p>All tasks are promotional. No gambling, 100% legal & real.</p>
-    </div>
+    <div class="card"><h2>How It Works</h2><p>Complete daily tasks like app install, video watch, link visit etc.</p></div>
+    <div class="card"><h2>Your Earnings</h2><p>Earn $0.50 to $5 per task. Withdraw anytime to UPI or Paytm.</p></div>
+    <div class="card"><h2>Daily Limit</h2><p>Do up to 10 tasks per day. More tasks means more income.</p></div>
+    <div class="card"><h2>Proof Submission</h2><p>Just upload screenshot proof. Fast verification, fast payout.</p></div>
+    <div class="card"><h2>Referral Income</h2><p>Refer friends and get 20% from their earnings for lifetime.</p></div>
+    <div class="card"><h2>Legal & Trusted</h2><p>All tasks are promotional. No gambling, 100% legal & real.</p></div>
   </div>
 
   <div class="bottom-nav">
@@ -194,13 +256,28 @@
     <a href="wallet.html" class="nav-item"><i class='bx bx-wallet'></i><span>Wallet</span></a>
     <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
   </div>
+ <!-- ✅ Welcome Warning Popup -->
+  <div id="welcomePopup" style="display: flex;">
+    <div class="popup-content">
+      <h2> कृपया ध्यान दें!</h2>
+      <p>
+         एक फोन में एक ही आईडी ओपन करें अगर एक से ज्यादा अकाउंट मिल जाए तो सीधा ब्लॉक हो जाएगा
+        <br><br>
+       आप नियमों का पालन करें , अच्छे खासे मुनाफ़ा कमाके ले जाएँ , ये हमारे लिए बहुत ख़ुशी की बात है
+        <br><br>
+        इस प्लेटफ़ॉर्म पर हर यूज़र को सिर्फ <strong>एक डिवाइस</strong> पर लॉगिन करने की अनुमति है।
+        <br><br>
+        इस नियम का पालन करें ताकि आपका खाता सुरक्षित और एक्टिव बना रहे।
+      </p>
+      <button onclick="closePopup()">मैं समझ गया</button>
+    </div>
 
-  <!-- Firebase SDKs -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+  <!-- ✅ Firebase Auth + Popup Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
-  const firebaseConfig = {
+    const firebaseConfig = {
       apiKey: "AIzaSyBJazg3yVQfDaSuloygIZSQPccFL4HIaMQ",
       authDomain: "smartfundad-60227.firebaseapp.com",
       databaseURL: "https://smartfundad-60227-default-rtdb.firebaseio.com",
@@ -211,25 +288,30 @@
       measurementId: "G-LE5QZREW1E"
     };
 
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "auth.html";
+      }
+    });
 
-  onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      // User not logged in, redirect
-      window.location.href = "auth.html";
-    }
-  });
-  
-   // ✅ Referral auto-save
     const urlParams = new URLSearchParams(window.location.search);
     const ref = urlParams.get("ref");
     if (ref) {
       localStorage.setItem("referralCode", ref);
     }
-</script>
 
+    // ✅ Show popup on load
+    window.onload = () => {
+      document.getElementById('welcomePopup').style.display = 'flex';
+    };
+
+    window.closePopup = function () {
+      document.getElementById('welcomePopup').style.display = 'none';
+    };
+  </script>
 
 </body>
 </html>
