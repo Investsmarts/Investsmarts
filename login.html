@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Login</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif; 
+      background: linear-gradient(135deg, #e3f2fd, #f9f9f9); 
+      margin:0; 
+      overflow-x: hidden;   /* 👈 Horizontal scroll hat gaya */
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;   /* ✅ dono side lock */
+      width: 100%;
+      text-align: center;
+      padding: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      background: linear-gradient(90deg,#4CAF50,#2c7);
+      color: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      z-index: 1000;
+
+      /* 👇 Extra fix for stability */
+      transform: translateZ(0);    
+      will-change: transform;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;   /* ✅ Left-right scroll band */
+      width: 100%;
+    }
+
+    .wrapper, .container, .info-box {
+      max-width: 100%;     
+      box-sizing: border-box;
+    }
+
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      margin-top: 70px; /* header ke neeche space */
+      padding: 15px;
+      padding-bottom: 80px;  /* ✅ extra safe space */
+      box-sizing: border-box;
+    }
+    
+    .tagline {
+      margin: 85px 0 20px 0;   /* pehle 65px tha, maine 85px kiya */
+      font-size: 15px; 
+      color: #222;
+      text-align: center; 
+      font-weight: 600;
+    }
+
+    .container {
+      background: #fff; padding: 20px 30px;
+      border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      width: 100%;          /* ✅ responsive */
+      max-width: 380px;     /* ✅ safe max size */
+      text-align:center;
+    }
+
+    h2 { margin:0 0 12px 0; font-size:22px; font-weight:bold; color:#333; }
+
+    input {
+      width: 100%; padding: 12px; margin: 10px 0;
+      border-radius: 5px; border: 1px solid #ccc;
+      box-sizing: border-box; font-size:15px;
+      color:#333; font-weight:500;
+    }
+    input::placeholder { color:#888; }
+
+    .password-container { position: relative; }
+    .password-container i {
+      position: absolute; right: 10px; top: 50%;
+      transform: translateY(-50%); cursor: pointer; font-size:16px;
+      color:#444;
+    }
+
+    button {
+      width: 100%; padding: 12px; margin-top: 10px;
+      border: none; border-radius: 5px;
+      background: #4CAF50; color: white;
+      font-size: 16px; font-weight:bold;
+      cursor: pointer; display:flex; align-items:center; justify-content:center;
+      gap:8px; transition: background 0.3s;
+    }
+    button:hover { background:#3a9440; }
+
+    .forgot-btn {
+      margin-top: 8px;
+      background: none; border: none;
+      color: #0066ff; font-size: 14px;
+      cursor: pointer; text-decoration: underline;
+    }
+    .forgot-btn:hover { color: #0040aa; }
+
+    .popup {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff; padding: 15px 25px;
+      border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      display: none; z-index: 2000; font-size: 15px;
+    }
+    .popup.success { border-left: 5px solid green; }
+    .popup.error { border-left: 5px solid red; }
+
+    .login-box {
+      margin-top: 14px; padding: 10px;
+      border: 1px solid #ccc; border-radius: 6px;
+      background: #f9f9f9; font-size: 14px; color: #333;
+    }
+    .login-box a { color: #0066ff; font-weight: bold; text-decoration: none; }
+    .login-box a:hover { text-decoration: underline; }
+
+    .info-box {
+      margin-top: 20px; background: #eef5ff;
+      border: 1px solid #cce0ff; border-radius: 8px;
+      padding: 15px; 
+      width: 100%;          /* ✅ responsive */
+      max-width: 380px;     /* ✅ safe max size */
+      font-size: 14px; color: #222;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    .info-box h3 {
+      margin-top: 0; font-size: 16px; color: #0066ff;
+    }
+    .info-box ul { text-align: left; padding-left: 18px; }
+    .info-box li { margin: 6px 0; }
+  </style>
+
+</head>
+<body>
+  <div class="header">𝐀𝐜𝐜𝐞𝐬𝐬 𝐘𝐨𝐮𝐫 𝐀𝐜𝐜𝐨𝐮𝐧𝐭 𝐒𝐚𝐟𝐞𝐥𝐲</div>
+
+  <div class="wrapper">
+    <!-- tagline -->
+    <div class="tagline">
+     🔒 Secure Blockchain-based Login – Protecting Your Digital Assets
+   </div>
+
+   <!-- login form -->
+   <div class="container">
+    <h2>Login</h2>
+    <input type="text" id="login-identifier" placeholder="Email / Mobile / Username">
+    <div class="password-container">
+      <input type="password" id="login-password" placeholder="Password">
+      <i id="toggle-password">👁️</i>
+    </div>
+
+    <button id="loginBtn">Login</button>
+    <button type="button" id="forgot-btn" class="forgot-btn">Forgot Password?</button>
+
+    <!-- Register box -->
+    <div class="login-box">
+      Don’t have an account? <a href="register.html">Register here</a>
+    </div>
+  </div>
+
+  <!-- Blockchain Info -->
+  <div class="info-box">
+    <h3>Why Choose Us?</h3>
+    <ul>
+      <li>✅ Powered by Blockchain Security</li>
+      <li>✅ Earn Referral Income up to 3 Levels</li>
+      <li>✅ Wallet Balance Stored Safely in USDT</li>
+      <li>✅ Instant and Transparent Transactions</li>
+    </ul>
+  </div>
+</div>
+
+<div id="popup" class="popup"></div>
+<style>
+/* Loader animation */
+.loader {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #fff;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  animation: spin 1s linear infinite;
+  display:inline-block;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+  import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+    authDomain: "btcinvest-c0e25.firebaseapp.com",
+    projectId: "btcinvest-c0e25",
+    storageBucket: "btcinvest-c0e25.firebasestorage.app",
+    messagingSenderId: "204937458487",
+    appId: "1:204937458487:web:cc27ece1249999279f60b2",
+    measurementId: "G-HG0Q8ZHT6G"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const popup = document.getElementById('popup');
+  function showPopup(msg, type='success'){
+    popup.textContent = msg;
+    popup.className = `popup ${type}`;
+    popup.style.display = 'block';
+    setTimeout(()=>{ popup.style.display='none'; },2000);
+  }
+
+// password toggle
+  document.getElementById("toggle-password").addEventListener("click", ()=>{
+    const pass = document.getElementById("login-password");
+    pass.type = pass.type === "password" ? "text" : "password";
+  });
+
+// login button
+  document.getElementById("loginBtn").addEventListener("click", async ()=>{
+    const loginBtn = document.getElementById("loginBtn");
+    const identifierInput = document.getElementById("login-identifier").value.trim();
+    let identifier = identifierInput;
+    
+  // 👇 Ye line add karo (email hamesha lowercase ho jayegi)
+    if(identifier.includes("@")){
+      identifier = identifier.toLowerCase();
+    }
+
+    const password = document.getElementById("login-password").value.trim();
+
+
+    if(!identifier || !password){
+      showPopup("Please enter details.","error"); 
+      return;
+    }
+
+  // turant popup show
+    showPopup("Checking credentials...","success");
+
+    try {
+      const usersRef = collection(db, "users");
+      let q, type="";
+      if(identifier.includes("@")){ 
+        q=query(usersRef, where("email", "==", identifier.toLowerCase())); 
+        type="email"; 
+      }
+      else if(/^\d{10}$/.test(identifier)){ 
+        q=query(usersRef, where("mobile", "==", identifier)); 
+        type="mobile"; 
+      }
+      else{ 
+        q=query(usersRef, where("username", "==", identifier)); 
+        type="username"; 
+      }
+
+      const snap = await getDocs(q);
+      if(snap.empty){ 
+        showPopup(" account No found  "+type,"error"); 
+        return; 
+      }
+
+      const userDoc = snap.docs[0];
+      const userEmail = userDoc.data().email;
+
+      try {
+        await signInWithEmailAndPassword(auth, userEmail, password);
+
+      // Success: disable + spinner
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = `<span class="loader"></span> Logging in...`;
+
+        showPopup("Login successful! Welcome "+(userDoc.data().name || ""), "success");
+        setTimeout(()=>{ window.location.href = "Dashboard.html"; },1500);
+
+      } catch(e){
+        showPopup("Incorrect password. Please try again.","error");
+        return;
+      }
+
+    } catch(err){
+      console.error(err);
+      showPopup(err.message || "Login error occurred","error");
+    }
+  });
+
+// forgot password
+  document.getElementById("forgot-btn").addEventListener("click", async ()=>{
+    const email = document.getElementById("login-identifier").value.trim();
+    if(!email.includes("@")){
+      showPopup("Please enter a valid Email to reset password.","error"); return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      showPopup("Password reset link sent to your email.","success");
+    } catch(err){
+      showPopup(err.message,"error");
+    }
+  });
+</script>
+<script>
+// ❌ Right-click disable
+  document.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+    
+  });
+
+// ❌ Disable text selection
+  document.addEventListener("selectstart", function(e) {
+    e.preventDefault();
+  });
+
+// ❌ Disable copy (Ctrl+C), cut (Ctrl+X), paste (Ctrl+V), view-source (Ctrl+U)
+  document.addEventListener("keydown", function(e) {
+    if (
+      (e.ctrlKey && (e.key === "c" || e.key === "C")) || 
+      (e.ctrlKey && (e.key === "x" || e.key === "X")) || 
+      (e.ctrlKey && (e.key === "v" || e.key === "V")) || 
+      (e.ctrlKey && (e.key === "u" || e.key === "U")) || 
+    (e.key === "F12") // DevTools
+    ) {
+      e.preventDefault();
+    
+  }
+});
+</script>
+
+<script>
+// ✅ Jab bhi input focus ho, usko visible karo
+  const inputs = document.querySelectorAll("input");
+  inputs.forEach(input => {
+    input.addEventListener("focus", () => {
+      setTimeout(() => {
+        input.scrollIntoView({
+          behavior: "smooth",
+        block: "nearest"   // 👈 sirf ye use karna
+      });
+      }, 300);
+    });
+  });
+
+</script>
+
+</body>
+</html>

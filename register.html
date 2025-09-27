@@ -1,0 +1,375 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Register/ Trustdollar / with - very Safe your fund //////</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      margin:0;
+    }
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;   /* ✅ dono side lock */
+      width: 100%;
+      text-align: center;
+      padding: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      background: linear-gradient(90deg,#4CAF50,#2c7);
+      color: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      z-index: 1000;
+
+      /* 👇 Extra fix for stability */
+      transform: translateZ(0);    
+      will-change: transform;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;   /* ✅ Left-right scroll band */
+      width: 100%;
+    }
+
+    .wrapper, .container, .info-box {
+      max-width: 100%;     
+      box-sizing: border-box;
+    }
+
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      margin-top: 70px; /* header ke neeche space */
+      padding: 15px;
+      padding-bottom: 80px;  /* ✅ extra safe space */
+      box-sizing: border-box;
+    }
+
+
+    
+    .container {
+      background: #fff;
+      padding: 20px 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h2 { margin:0 0 12px 0; font-size:22px; font-weight:bold; }
+    input {
+      width: 100%; padding: 10px; margin: 8px 0;
+      border-radius: 5px; border: 1px solid #ccc;
+      box-sizing: border-box; font-size:14px;
+    }
+    .password-container { position: relative; }
+    .password-container i {
+      position: absolute; right: 10px; top: 50%;
+      transform: translateY(-50%); cursor: pointer; font-size:16px;
+    }
+    button {
+      width: 100%; padding: 10px; margin-top: 10px;
+      border: none; border-radius: 5px;
+      background: #4CAF50; color: white;
+      font-size: 16px; font-weight:bold;
+      cursor: pointer; display:flex; align-items:center; justify-content:center;
+      gap:8px; transition: background 0.3s;
+    }
+    button:hover { background:#3a9440; }
+    .popup {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff; padding: 15px 25px;
+      border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      display: none; z-index: 2000; font-size: 15px;
+    }
+    .popup.success { border-left: 5px solid green; }
+    .popup.error { border-left: 5px solid red; }
+
+    .login-box {
+      margin-top: 14px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #f9f9f9;
+      font-size: 14px;
+      color: #333;
+    }
+    .login-box a {
+      color: #0066ff;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .login-box a:hover {
+      text-decoration: underline;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="header">𝐒𝐞𝐜𝐮𝐫𝐞 𝐘𝐨𝐮𝐫 𝐅𝐮𝐧𝐝𝐬 𝐰𝐢𝐭𝐡 𝐒𝐚𝐟𝐞</div>
+  <div class="wrapper">
+    <div class="container">
+      <h2>Register</h2>
+      <input type="text" id="name" placeholder="Name">
+      <input type="text" id="register-email" placeholder="Email">
+      <input type="text" id="username" placeholder="Username">
+      <input type="text" id="mobile" placeholder="Mobile Number">
+      <input type="text" id="aadhaar" placeholder="Aadhaar">
+      <input type="text" id="cheque" placeholder="Upline Cheque (Optional)">
+      <div class="password-container">
+        <input type="password" id="password" placeholder="Password">
+        <i id="toggle-password">👁️</i>
+      </div>
+      <div class="password-container">
+        <input type="password" id="confirm-password" placeholder="Confirm Password">
+        <i id="toggle-confirm-password">👁️</i>
+      </div>
+      <input type="text" id="referral" placeholder="Referral Code (Optional)">
+
+      <button id="registerBtn">Register</button>
+
+      <!-- ✅ Login redirect box -->
+      <div class="login-box">
+        Already have an account? 
+        <a href="login.html">Login here</a>
+      </div>
+
+    </div>
+    <div id="popup" class="popup"></div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+      import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+      import { 
+        getFirestore, collection, doc, setDoc, getDoc, getDocs, query, where, addDoc 
+      } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+        authDomain: "btcinvest-c0e25.firebaseapp.com",
+        projectId: "btcinvest-c0e25",
+        storageBucket: "btcinvest-c0e25.firebasestorage.app",
+        messagingSenderId: "204937458487",
+        appId: "1:204937458487:web:cc27ece1249999279f60b2",
+        measurementId: "G-HG0Q8ZHT6G"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      const popup = document.getElementById('popup');
+      function showPopup(msg, type='success'){
+        popup.textContent = msg;
+        popup.className = `popup ${type}`;
+        popup.style.display = 'block';
+        setTimeout(()=>{ popup.style.display='none'; },2000);
+      }
+
+// password toggle
+      document.getElementById("toggle-password").addEventListener("click", ()=>{
+        const pass = document.getElementById("password");
+        pass.type = pass.type === "password" ? "text" : "password";
+      });
+      document.getElementById("toggle-confirm-password").addEventListener("click", ()=>{
+        const pass = document.getElementById("confirm-password");
+        pass.type = pass.type === "password" ? "text" : "password";
+      });
+
+      function validateEmail(email){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+
+// ✅ Income distribution (3 Levels)
+      async function distributeIncome(newUserName, referredBy) {
+        let currentRef = referredBy;
+        for (let level = 1; level <= 3; level++) {
+          if (!currentRef) break;
+
+          const q = query(collection(db, "users"), where("referralCode", "==", currentRef));
+          const snap = await getDocs(q);
+          if (!snap.empty) {
+            const refUser = snap.docs[0].data();
+      const earning = level === 1 ? 50 : level === 2 ? 30 : 20; // ✅ income by level
+
+      await addDoc(collection(db, "referrals"), {
+        name: refUser.name,
+        userReferralCode: currentRef,
+        fromUser: newUserName,
+        level,
+        earning,
+        date: new Date().toLocaleDateString("en-GB"),
+        today: true
+      });
+
+      // next referrer (upar wala)
+      currentRef = refUser.referredBy;
+    } else {
+      break;
+    }
+  }
+}
+
+document.getElementById("registerBtn").addEventListener("click", async ()=>{
+    // 👇 button ko disable karna + text badalna
+  const btn = document.getElementById("registerBtn");
+  btn.disabled = true;
+  btn.textContent = "Please wait...";
+  const name = document.getElementById("name").value.trim();
+  const regEmail = document.getElementById("register-email").value.trim();
+  const username = document.getElementById("username").value.trim();
+  const mobile = document.getElementById("mobile").value.trim();
+  const aadhaar = document.getElementById("aadhaar").value.trim();
+  const cheque = document.getElementById("cheque").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const confirmPassword = document.getElementById("confirm-password").value.trim();
+  const referral = document.getElementById("referral").value.trim();
+
+  try {
+    if(!name || !regEmail || !username || !mobile || !aadhaar || !password || !confirmPassword){
+      showPopup("Please complete all required","error"); return;
+    }
+    if(!validateEmail(regEmail)){ showPopup("Invalid Email","error"); return; }
+    if(password !== confirmPassword){ showPopup("Passwords do not match","error"); return; }
+    if(password.length < 6){ showPopup("Password min 6 chars","error"); return; }
+    if(!/^\d{10}$/.test(mobile)){ showPopup("Mobile must be 10 digits","error"); return; }
+    if(!/^[a-zA-Z0-9]{3,}$/.test(username)){ showPopup("Username min 3 chars","error"); return; }
+    if(!/^\d{12}$/.test(aadhaar)){ showPopup("Aadhaar must be 12 digits","error"); return; }
+    if(cheque !== "" && !/^\d{6,20}$/.test(cheque)){ showPopup("Cheque No. must be 6-20 digits","error"); return; }
+
+    // check duplicates
+    const usersRef = collection(db, "users");
+    const checks = [
+      { field: "email", value: regEmail, msg: "Email already registered" },
+      { field: "mobile", value: mobile, msg: "Mobile already registered" },
+      { field: "username", value: username, msg: "Username already taken" },
+      { field: "name", value: name, msg: "Name already registered" }
+      ];
+    for(const c of checks){
+      const q = query(usersRef, where(c.field, "==", c.value));
+      const snap = await getDocs(q);
+      if(!snap.empty){ showPopup(c.msg,"error"); return; }
+    }
+
+    const userCredential = await createUserWithEmailAndPassword(auth, regEmail, password);
+    const user = userCredential.user;
+    const finalReferral = "REF" + Math.floor(Math.random()*900000+100000);
+
+    await setDoc(doc(db, "users", user.uid), {
+     name, 
+    email: regEmail.toLowerCase(),   // ✅ email hamesha lowercase me save hoga
+    username, 
+    mobile, 
+    aadhaar,
+    chequeNumber: cheque !== "" ? cheque : null,
+    referralCode: finalReferral,
+    referredBy: referral !== "" ? referral : null,
+    walletBalance: 0,
+    totalInvested: 0,
+    createdAt: new Date().toISOString()
+  });
+
+    // ✅ Google Apps Script URL (apna wala yahan daalo)
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyl--3mupFs7Twsm6Fi8S3ONl28eql6JbPAxum1bzUw_5Nikf0f2Mt3j6bnRrLsrlib/exec";
+
+// ✅ Firestore save ke turant baad ye add karo:
+    await fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        type: "auth_user",
+        uid: user.uid,
+        email: regEmail,
+        name: name,
+        username: username,
+        mobile: mobile,
+        aadhaar: aadhaar,
+        cheque: cheque,
+        referralCode: finalReferral,
+        referredBy: referral || null,
+        walletBalance: 0,
+        totalInvested: 0,
+        createdAt: new Date().toISOString()
+      }),
+      headers: { "Content-Type": "application/json" }
+    });
+
+
+    // ✅ distribute income to 3 levels
+    if (referral) {
+      await distributeIncome(name, referral);
+    }
+
+    showPopup("Registration Successful!");
+    setTimeout(()=>{ window.location.href = "Dashboard.html"; },1000);
+  } catch(err){
+    showPopup(err.message,"error");
+  }
+  // 👇 end me button ko wapas normal karo
+  btn.disabled = false;
+  btn.textContent = "Register";
+
+});
+
+// ✅ Auto set referral from URL if present
+const urlParams = new URLSearchParams(window.location.search);
+const refFromLink = urlParams.get("ref");
+const referralInput = document.getElementById("referral");
+
+if(refFromLink){
+  referralInput.value = refFromLink;
+  referralInput.readOnly = true; // user edit nahi kar sakta
+}
+</script>
+
+<script>
+// ❌ Right-click disable
+  document.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+    
+  });
+
+// ❌ Disable text selection
+  document.addEventListener("selectstart", function(e) {
+    e.preventDefault();
+  });
+
+// ❌ Disable copy (Ctrl+C), cut (Ctrl+X), paste (Ctrl+V), view-source (Ctrl+U)
+  document.addEventListener("keydown", function(e) {
+    if (
+      (e.ctrlKey && (e.key === "c" || e.key === "C")) || 
+      (e.ctrlKey && (e.key === "x" || e.key === "X")) || 
+      (e.ctrlKey && (e.key === "v" || e.key === "V")) || 
+      (e.ctrlKey && (e.key === "u" || e.key === "U")) || 
+    (e.key === "F12") // DevTools
+    ) {
+      e.preventDefault();
+    
+  }
+});
+</script>
+
+<script>
+// ✅ Jab bhi input focus ho, usko visible karo
+  const inputs = document.querySelectorAll("input");
+  inputs.forEach(input => {
+    input.addEventListener("focus", () => {
+      setTimeout(() => {
+        input.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
+    });
+  });
+</script>
+
+</body>
+</html>

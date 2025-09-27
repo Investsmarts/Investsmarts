@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+     
+      padding-bottom: 100px; /* 👈 navbar ke liye space fix */
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #222;
+    }
+    .dashboard {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    /* 🌊 Wallet Circle */
+    .wallet-container {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: auto;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid #28a745;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      margin-bottom: 15px;
+      background: #e9ecef;
+    }
+    .wave {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 200%;
+      height: 200%;
+      background: rgba(40,167,69,0.6); /* 👈 thoda light green */
+      border-radius: 40%;
+      animation: waveAnim 4s infinite linear;
+      transform: translateX(-25%);
+      transition: top 1s ease-in-out;
+    }
+    @keyframes waveAnim {
+      0%   { transform: translateX(-25%) rotate(0deg); }
+      100% { transform: translateX(-25%) rotate(360deg); }
+    }
+    .wallet-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #222; /* 👈 saf visibility */
+      font-weight: bold;
+      z-index: 2;
+    }
+    .wallet-text small {
+      font-size: 12px;
+      display: block;
+    }
+    .wallet-text span {
+      font-size: 22px;
+      display: block;
+    }
+    /* 🎖️ Level Badge */
+    .level-badge {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 14px;
+      color: #fff;
+      background: #6c757d;
+    }
+    .bronze { background: #cd7f32; }
+    .silver { background: #c0c0c0; color: #333; }
+    .gold { background: #ffd700; color: #333; }
+    .diamond { background: #00c6ff; }
+
+    /* ✅ Buttons */
+    .btn {
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      flex: 1;
+      min-width: 140px;
+    }
+    .btn-deposit { background: #28a745; }
+    .btn-deposit:hover { background: #218838; }
+    .btn-withdrawal { background: #dc3545; }
+    .btn-withdrawal:hover { background: #b52a37; }
+    .btn-invest {
+      background: linear-gradient(45deg, #007bff, #00c6ff);
+      margin-top: 20px;
+    }
+    .btn-invest:hover { opacity: 0.9; }
+
+    .action-row {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+    .btn {
+      flex: 0 0 auto;
+      min-width: 120px;
+    }
+
+    /* 📘 Info Card */
+    .info-card {
+      margin-top: 30px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      font-size: 15px;
+      line-height: 1.7;
+      color: #333;
+      text-align: left;
+    }
+    .info-card h2 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: #007bff;
+      text-align: center;
+    }
+    .info-card ul {
+      padding-left: 20px;
+      margin: 10px 0;
+    }
+ .bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+
+  background: #fff; /* ✅ white background for clean UI */
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  border-top: 2px solid #28a745; /* ✅ only green line */
+  z-index: 100;
+}
+
+.nav-item {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  color: #333; /* normal text color */
+  text-decoration: none;
+  transition: 0.3s;
+  position: relative;
+  padding: 10px 0;
+}
+
+.nav-item i {
+  font-size: 22px;
+  display: block;
+  margin-bottom: 3px;
+  color: #28a745; /* ✅ green icons */
+}
+
+.nav-item:hover {
+  color: #28a745;
+}
+
+.nav-item:hover i {
+  color: #218838; /* hover darker green */
+}
+
+/* ✨ Vertical Divider (light grey) */
+.nav-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 20%;
+  bottom: 20%;
+  width: 1px;
+  background: #e0e0e0;
+}
+
+
+  </style>
+</head>
+<body>
+
+
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+
+  <h1>My Dashboard</h1>
+
+  <div class="dashboard">
+    <!-- 🌊 Wallet -->
+    <div class="wallet-container">
+      <div class="wave" id="walletWave"></div>
+      <div class="wallet-text">
+        <small>Wallet</small>
+        <span id="walletBalance">0</span>
+      </div>
+    </div>
+    <div id="userLevel" class="level-badge">No Level</div>
+
+    <!-- ✅ Buttons -->
+    <div class="action-row">
+      <button class="btn btn-deposit" onclick="window.location.href='deposit.html'">Deposit</button>
+      <button class="btn btn-withdrawal" onclick="window.location.href='withdrawal.html'">Withdraw</button>
+    </div>
+
+    <!-- 📈 Investment -->
+    <button class="btn btn-invest" onclick="window.location.href='investment.html'"> Start Investment</button>
+
+    <!-- 📘 Info Card -->
+    <div class="info-card">
+      <h2>ℹ️ Investment Information</h2>
+      <p><b>Daily Return:</b> You will earn <span style="color:#28a745;">0.5% per day</span> on your invested balance.</p>
+      <p><b>Levels:</b> Your level is based on <span style="color:#007bff;">lifetime deposits</span>. Once you unlock a level, it stays forever.</p>
+      <ul>
+        <li>🥉 <b>Bronze:</b> $5,000 – $9,999 lifetime deposit</li>
+        <li>🥈 <b>Silver:</b> $10,000 – $19,999 lifetime deposit</li>
+        <li>🥇 <b>Gold:</b> $20,000 – $39,999 lifetime deposit</li>
+        <li>💎 <b>Diamond:</b> $40,000+ lifetime deposit</li>
+      </ul>
+      <p><b>Withdrawals:</b> You can withdraw anytime. Requests are processed within <span style="color:#dc3545;">24 hours</span>.</p>
+      <p><b>Example:</b> If you deposit $10,000, your level will be <b>Silver</b> and you’ll earn $50 every day.</p>
+      <p style="margin-top:20px; font-weight:bold; text-align:center; color:#555;">
+         The more you invest, the faster you reach higher levels & rewards!
+      </p>
+    </div>
+  </div>
+
+ <div class="bottom-nav">
+    <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
+     <a href="invest.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
+     <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
+     <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
+  </div>
+   <script>
+    // JS for active highlight
+    const links = document.querySelectorAll("nav a");
+    links.forEach(link => {
+      link.addEventListener("click", function() {
+        links.forEach(l => l.classList.remove("active"));
+        this.classList.add("active");
+      });
+    });
+  </script>
+
+  <!-- ✅ Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script> lucide.createIcons(); </script>
+
+  <!-- ✅ Firebase Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+      authDomain: "btcinvest-c0e25.firebaseapp.com",
+      projectId: "btcinvest-c0e25",
+      storageBucket: "btcinvest-c0e25.firebasestorage.app",
+      messagingSenderId: "204937458487",
+      appId: "1:204937458487:web:cc27ece1249999279f60b2",
+      measurementId: "G-HG0Q8ZHT6G"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const walletBalanceEl = document.getElementById("walletBalance");
+    const walletWaveEl = document.getElementById("walletWave");
+    const userLevelEl = document.getElementById("userLevel");
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const userRef = doc(db, "users", user.uid);
+          const userDoc = await getDoc(userRef);
+
+          if (userDoc.exists()) {
+            const data = userDoc.data();
+            const balance = data.walletBalance || 0;
+            walletBalanceEl.textContent = balance.toLocaleString();
+
+            let percent = Math.min((balance / 40000) * 100, 100);
+            walletWaveEl.style.top = (100 - percent) + "%";
+
+            let lifetimeDeposit = data.lifetimeDeposit ?? 0;
+            if (data.lifetimeDeposit === undefined) {
+              await updateDoc(userRef, { lifetimeDeposit: balance });
+              lifetimeDeposit = balance;
+            }
+
+            let level = "No Level", cls = "";
+            if (lifetimeDeposit >= 5000 && lifetimeDeposit < 10000) { level = "Bronze"; cls = "bronze"; }
+            else if (lifetimeDeposit >= 10000 && lifetimeDeposit < 20000) { level = "Silver"; cls = "silver"; }
+            else if (lifetimeDeposit >= 20000 && lifetimeDeposit < 40000) { level = "Gold"; cls = "gold"; }
+            else if (lifetimeDeposit >= 40000) { level = "Diamond"; cls = "diamond"; }
+
+            userLevelEl.textContent = level;
+            userLevelEl.className = "level-badge" + (cls ? " " + cls : "");
+          }
+        } catch (err) {
+          console.error("Error fetching user data:", err);
+          userLevelEl.textContent = "No Level";
+          userLevelEl.className = "level-badge";
+        }
+      } else {
+        window.location.href = "register.html";
+      }
+    });
+  </script>
+</body>
+</htm
