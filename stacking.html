@@ -194,22 +194,22 @@
       <div class="staking-header"><span>Plan = 1</span><span>Per Day</span></div>
       <div class="staking-img"><img src="myphoto/1414.png" alt="vault"></div>
       <div class="staking-title">TrustDollar Amount Staking</div>
-      <div class="staking-info"><p>Amount: <span>100 - 50,000 USDT</span></p><p>Daily Return: <span>1%</span></p></div>
-      <button class="stake-btn" onclick="openModal('Per Day',100,50000,1,'myphoto/1414.png')">Stake Now</button>
+      <div class="staking-info"><p>Amount: <span>200 - 10,000 USDT</span></p><p>Daily Return: <span>1%</span></p></div>
+      <button class="stake-btn" onclick="openModal('Per Day',200,10000,1,'myphoto/1414.png')">Stake Now</button>
     </div>
     <div class="staking-box">
-      <div class="staking-header"><span>Plan = 2</span><span>15 Din</span></div>
+      <div class="staking-header"><span>Plan = 2</span><span>15 Days</span></div>
       <div class="staking-img"><img src="myphoto/star.png" alt="vault"></div>
       <div class="staking-title">TrustDollar Amount Staking</div>
-      <div class="staking-info"><p>Amount: <span>200 - 30,000 USDT</span></p><p>Daily Return: <span>1.2%</span></p></div>
-      <button class="stake-btn" onclick="openModal('15 Din',200,30000,1.2,'myphoto/star.png')">Stake Now</button>
+      <div class="staking-info"><p>Amount: <span>500 - 20,000 USDT</span></p><p>Daily Return: <span>1.2%</span></p></div>
+      <button class="stake-btn" onclick="openModal('15 Days',500,20000,1.2,'myphoto/star.png')">Stake Now</button>
     </div>
     <div class="staking-box">
-      <div class="staking-header"><span>Plan = 3</span><span>30 Din</span></div>
+      <div class="staking-header"><span>Plan = 3</span><span>30 days</span></div>
       <div class="staking-img"><img src="myphoto/112211.png" alt="vault"></div>
       <div class="staking-title">TrustDollar Amount Staking</div>
-      <div class="staking-info"><p>Amount: <span>500 - 10,000 USDT</span></p><p>Daily Return: <span>1.3%</span></p></div>
-      <button class="stake-btn" onclick="openModal('30 Din',500,10000,1.3,'myphoto/112211.png')">Stake Now</button>
+      <div class="staking-info"><p>Amount: <span>1500 - 150,000 USDT</span></p><p>Daily Return: <span>1.4%</span></p></div>
+      <button class="stake-btn" onclick="openModal('30 Days',1500,150000,1.3,'myphoto/112211.png')">Stake Now</button>
     </div>
   </div>
 </div>
@@ -275,7 +275,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import {
   getFirestore, doc, setDoc, addDoc, collection, serverTimestamp,
-  getDoc, onSnapshot, runTransaction, query, orderBy, where, getDocs, updateDoc
+  getDoc, onSnapshot, runTransaction, query, orderBy, where, getDocs, updateDoc,Timestamp
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 // ====== CONFIG ======
@@ -318,6 +318,7 @@ onAuthStateChanged(auth, user => {
   currentUserId = user.uid;
   listenWallet();
   listenInvestments();
+  listenUserSummary();   // ✅ summary function call
   setInterval(()=>processMatured(currentUserId), 60000);
   processMatured(currentUserId).catch(e=>console.error(e));
 });
@@ -383,48 +384,57 @@ function listenInvestments(){
       }
 
       // ✅ Card UI like screenshot
-historyList.innerHTML += `
-  <div class="invest-card">
-    <img src="${d.imgSrc || 'myphoto/1414.png'}" alt="plan"/>
-    <div class="invest-title">${d.planName || "TrustDollar Staking"}</div>
+      historyList.innerHTML += `
+        <div class="invest-card">
+          <img src="${d.imgSrc || 'myphoto/1414.png'}" alt="plan"/>
+          <div class="invest-title">${d.planName || "TrustDollar Staking"}</div>
 
-    <div class="invest-info">
-      <p>
-        <span class="invest-label">Order Status</span>
-        <span class="invest-value"><span class="status-badge ${cls}">${d.status}</span></span>
-      </p>
+          <div class="invest-info">
+            <p>
+              <span class="invest-label">Order Status</span>
+              <span class="invest-value"><span class="status-badge ${cls}">${d.status}</span></span>
+            </p>
 
-      <p>
-        <span class="invest-label">Investment Amount</span>
-        <span class="invest-value">${numberFmt(d.amount)} USDT</span>
-      </p>
+            <p>
+              <span class="invest-label">Investment Amount</span>
+              <span class="invest-value">${numberFmt(d.amount)} USDT</span>
+            </p>
 
-      <p>
-        <span class="invest-label">Income</span>
-        <span class="invest-value">${numberFmt(d.possibleIncome || 0)} USDT</span>
-      </p>
+            <p>
+              <span class="invest-label">Income</span>
+              <span class="invest-value">${numberFmt(d.possibleIncome || 0)} USDT</span>
+            </p>
 
-      <p>
-        <span class="invest-label">Application Time</span>
-        <span class="invest-value">${when}</span>
-      </p>
+            <p>
+              <span class="invest-label">Application Time</span>
+              <span class="invest-value">${when}</span>
+            </p>
 
-      <p>
-        <span class="invest-label">Expiry Time</span>
-        <span class="invest-value">${d.endTime ? new Date(d.endTime.seconds*1000).toLocaleString() : "-"}</span>
-      </p>
-    </div>
+            <p>
+              <span class="invest-label">Expiry Time</span>
+              <span class="invest-value">${d.endTime ? new Date(d.endTime.seconds*1000).toLocaleString() : "-"}</span>
+            </p>
+          </div>
 
-    ${countdownHtml ? `<div class="countdown-box">${countdownHtml}</div>` : ""}
-  </div>
-`;
-
-
+          ${countdownHtml ? `<div class="countdown-box">${countdownHtml}</div>` : ""}
+        </div>
+      `;
     });
 
-    // ✅ Update totals
+    // ✅ Update totals (local calc)
     document.getElementById("totalInvested").textContent = numberFmt(totalInvested) + " USDT";
     document.getElementById("totalIncome").textContent = numberFmt(totalIncome) + " USDT";
+  });
+}
+
+// ✅ listen user summary (global)
+function listenUserSummary(){
+  const uRef = doc(db, "users", currentUserId);
+  onSnapshot(uRef, snap => {
+    if(!snap.exists()) return;
+    const d = snap.data();
+    document.getElementById("totalInvested").textContent = numberFmt(d.totalStack || 0) + " USDT";
+    document.getElementById("totalIncome").textContent = numberFmt(d.totalIncome || 0) + " USDT";
   });
 }
 
@@ -463,6 +473,50 @@ window.openModal = function(planName, minAmount, maxAmount, dailyRate, imgSrc){
 };
 window.closeModal = function(){ document.getElementById("stakeModal").style.display = "none"; };
 
+// ---- Validate stake amount live ----
+const stakeInputEl = document.getElementById("stakeInput");
+const errorMsg = document.createElement("div");
+errorMsg.style.color = "red";
+errorMsg.style.fontSize = "12px";
+errorMsg.style.marginTop = "4px";
+stakeInputEl.parentNode.appendChild(errorMsg);
+
+stakeInputEl.addEventListener("input", async () => {
+if (!currentPlanObj) return;
+  errorMsg.textContent = "";
+  stakeInputEl.style.border = "1px solid #d6dbe0"; // reset border
+
+  const val = parseFloat(stakeInputEl.value);
+  if (isNaN(val) || val <= 0) {
+    stakeInputEl.style.border = "2px solid red";
+    errorMsg.textContent = "⚠️ Please enter a valid amount";
+    return;
+  }
+
+  // ✅ check min–max
+  if (val < currentPlanObj.minAmount || val > currentPlanObj.maxAmount) {
+    stakeInputEl.style.border = "2px solid red";
+    errorMsg.textContent = `⚠️ Amount must be between ${currentPlanObj.minAmount} and ${currentPlanObj.maxAmount} USDT`;
+    return;
+  }
+
+  // ✅ check wallet balance
+  const uRef = doc(db, "users", currentUserId);
+  const snap = await getDoc(uRef);
+  if (snap.exists()) {
+    const balance = snap.data().walletBalance || 0;
+    if (val > balance) {
+      stakeInputEl.style.border = "2px solid red";
+      errorMsg.textContent = `⚠️ Insufficient balance (Available: ${balance} USDT)`;
+      return;
+    }
+  }
+
+  // ✅ sab sahi hai
+  stakeInputEl.style.border = "2px solid green";
+  errorMsg.textContent = "";
+});
+
 // ---- Create stake ----
 window.confirmStake = async function(){
   if(!currentUserId){ showPopup("User not authenticated"); return; }
@@ -485,15 +539,22 @@ window.confirmStake = async function(){
       const balance = uSnap.data().walletBalance || 0;
       if(balance < amount) throw "Insufficient balance";
 
-      tx.update(userRef, { walletBalance: balance - amount });
-
+      // ✅ update wallet + totalStack
+      tx.update(userRef, { 
+        walletBalance: balance - amount,
+        totalStack: (uSnap.data().totalStack || 0) + amount
+      });
+       
+      const expiryMs = Date.now() + 24*60*60*1000; 
+      const expiryDate = new Date(expiryMs);
       const stakeDoc = {
         amount,
         startTime: serverTimestamp(),
+        endTime: Timestamp.fromDate(expiryDate),  // Firestore Timestamp
         status: "Active",
         dailyRate: currentPlanObj.dailyRate,
         planName: currentPlanObj.planName,
-        imgSrc: currentPlanObj.imgSrc || "default.png",  // ✅ save img
+        imgSrc: currentPlanObj.imgSrc || "default.png",
         possibleIncome: 0,
         closingTimeCalculated: null,
         userPercent: 0.70,
@@ -510,27 +571,6 @@ window.confirmStake = async function(){
     console.error(err);
     showPopup(typeof err === "string" ? err : "Error creating stake");
   }
-};
-
-// ---- Cancel stake ----
-window.cancelStake = async function(){
-  if(!currentUserId){ showPopup("Not signed in"); return; }
-  const invCol = collection(db, "users", currentUserId, "investments");
-  const q = query(invCol, where("status","==","Active"), orderBy("startTime","desc"));
-  const snap = await getDocs(q);
-  if(snap.empty){ showPopup("No active investment"); return; }
-  const inv = snap.docs[0]; const data = inv.data();
-  const invRef = doc(db, "users", currentUserId, "investments", inv.id);
-  const userRef = doc(db, "users", currentUserId);
-  try{
-    await runTransaction(db, async (tx)=>{
-      tx.update(invRef, { status: "Canceled" });
-      const uSnap = await tx.get(userRef);
-      const bal = uSnap.data().walletBalance || 0;
-      tx.update(userRef, { walletBalance: bal + data.amount });
-    });
-    showPopup("Canceled & principal refunded");
-  }catch(e){ console.error(e); showPopup("Error canceling"); }
 };
 
 // ---- process matured ----
@@ -583,7 +623,10 @@ async function processMatured(uid){
 
         const uSnap = await tx.get(userRef);
         const userBal = (uSnap.exists() && uSnap.data().walletBalance) ? uSnap.data().walletBalance : 0;
-        tx.update(userRef, { walletBalance: userBal + amount + userShare });
+        tx.update(userRef, { 
+          walletBalance: userBal + amount + userShare,
+          totalIncome: (uSnap.data().totalIncome || 0) + profit   // ✅ add income
+        });
 
         const userDocSnap = uSnap;
         const upline1 = userDocSnap.exists() ? userDocSnap.data().upline1 : null;
@@ -638,7 +681,6 @@ window.onclick = function(e){
 };
 
 // ✅ Section switch fix
- // ✅ Section switch fix
 window.showSection = function(sectionId, event){
   // Sab sections hide kar do safely
   document.querySelectorAll(".section").forEach(s => {
@@ -670,8 +712,7 @@ window.showSection = function(sectionId, event){
     if(historyWrap) historyWrap.style.display = "block";
   }
 };
-
-
 </script>
+
 </body>
 </html>
