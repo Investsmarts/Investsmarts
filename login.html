@@ -109,16 +109,7 @@
     }
     .forgot-btn:hover { color: #0040aa; }
 
-    .popup {
-      position: fixed; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: #fff; padding: 15px 25px;
-      border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      display: none; z-index: 2000; font-size: 15px;
-    }
-    .popup.success { border-left: 5px solid green; }
-    .popup.error { border-left: 5px solid red; }
-
+    
     .login-box {
       margin-top: 14px; padding: 10px;
       border: 1px solid #ccc; border-radius: 6px;
@@ -143,19 +134,19 @@
     .info-box li { margin: 6px 0; }
 
     /* Overlay (background dim + blur) */
-     /* Overlay (background dim only, blur hata diya) */
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.4); /* sirf halka dark background */
-  display: none; /* by default hidden */
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-}
+    /* Overlay (background dim only, blur hata diya) */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4); /* sirf halka dark background */
+      display: none; /* by default hidden */
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
 
 /* Popup Box */
 .popup {
@@ -182,7 +173,7 @@
 .popup.success { border-left: 6px solid #28a745; }
 .popup.error { border-left: 6px solid #dc3545; }
 
-  </style>
+</style>
 
 </head>
 <body>
@@ -191,44 +182,44 @@
   <div class="header">𝐀𝐜𝐜𝐞𝐬𝐬 𝐘𝐨𝐮𝐫 𝐀𝐜𝐜𝐨𝐮𝐧𝐭 𝐒𝐚𝐟𝐞𝐥𝐲</div>
 
   <div id="popupOverlay" class="popup-overlay">
- <div id="popup" class="popup"></div>
+   <div id="popup" class="popup"></div>
+ </div>
+
+
+ <div class="wrapper">
+  <!-- tagline -->
+  <div class="tagline">
+   🔒 Secure Blockchain-based Login – Protecting Your Digital Assets
+ </div>
+
+ <!-- login form -->
+ <div class="container">
+  <h2>Login</h2>
+  <input type="text" id="login-identifier" placeholder="Email / Mobile / Username">
+  <div class="password-container">
+    <input type="password" id="login-password" placeholder="Password">
+    <i id="toggle-password">👁️</i>
+  </div>
+
+  <button id="loginBtn">Login</button>
+  <button type="button" id="forgot-btn" class="forgot-btn">Forgot Password?</button>
+
+  <!-- Register box -->
+  <div class="login-box">
+    Don’t have an account? <a href="register.html">Register here</a>
+  </div>
 </div>
 
-
-  <div class="wrapper">
-    <!-- tagline -->
-    <div class="tagline">
-     🔒 Secure Blockchain-based Login – Protecting Your Digital Assets
-   </div>
-
-   <!-- login form -->
-   <div class="container">
-    <h2>Login</h2>
-    <input type="text" id="login-identifier" placeholder="Email / Mobile / Username">
-    <div class="password-container">
-      <input type="password" id="login-password" placeholder="Password">
-      <i id="toggle-password">👁️</i>
-    </div>
-
-    <button id="loginBtn">Login</button>
-    <button type="button" id="forgot-btn" class="forgot-btn">Forgot Password?</button>
-
-    <!-- Register box -->
-    <div class="login-box">
-      Don’t have an account? <a href="register.html">Register here</a>
-    </div>
-  </div>
-
-  <!-- Blockchain Info -->
-  <div class="info-box">
-    <h3>Why Choose Us?</h3>
-    <ul>
-      <li>✅ Powered by Blockchain Security</li>
-      <li>✅ Earn Referral Income up to 3 Levels</li>
-      <li>✅ Wallet Balance Stored Safely in USDT</li>
-      <li>✅ Instant and Transparent Transactions</li>
-    </ul>
-  </div>
+<!-- Blockchain Info -->
+<div class="info-box">
+  <h3>Why Choose Us?</h3>
+  <ul>
+    <li>✅ Powered by Blockchain Security</li>
+    <li>✅ Earn Referral Income up to 3 Levels</li>
+    <li>✅ Wallet Balance Stored Safely in USDT</li>
+    <li>✅ Instant and Transparent Transactions</li>
+  </ul>
+</div>
 </div>
 
 
@@ -272,104 +263,110 @@
   const popupOverlay = document.getElementById('popupOverlay');
 
   function showPopup(msg, type='success'){
-  popup.textContent = msg;
-  popup.className = `popup ${type} show`;
+    popup.textContent = msg;
+
+  // ✅ pehle sirf base class rakho
+    popup.className = "popup";
+
+  // ✅ fir alag se classes add karo
+    popup.classList.add(type, "show");
+
   popupOverlay.style.display = 'flex'; // ✅ center effect
 
   setTimeout(()=>{
-    popup.classList.remove("show");
+    popup.classList.remove("show", "success", "error");
     popupOverlay.style.display = 'none';
   }, 2000);
-  }
+}
 
 
 // password toggle
-  document.getElementById("toggle-password").addEventListener("click", ()=>{
-    const pass = document.getElementById("login-password");
-    pass.type = pass.type === "password" ? "text" : "password";
-  });
+document.getElementById("toggle-password").addEventListener("click", ()=>{
+  const pass = document.getElementById("login-password");
+  pass.type = pass.type === "password" ? "text" : "password";
+});
 
 // login button
-  document.getElementById("loginBtn").addEventListener("click", async ()=>{
-    const loginBtn = document.getElementById("loginBtn");
-    const identifierInput = document.getElementById("login-identifier").value.trim();
-    let identifier = identifierInput;
-    
+document.getElementById("loginBtn").addEventListener("click", async ()=>{
+  const loginBtn = document.getElementById("loginBtn");
+  const identifierInput = document.getElementById("login-identifier").value.trim();
+  let identifier = identifierInput;
+  
   // 👇 Ye line add karo (email hamesha lowercase ho jayegi)
-    if(identifier.includes("@")){
-      identifier = identifier.toLowerCase();
+  if(identifier.includes("@")){
+    identifier = identifier.toLowerCase();
+  }
+
+  const password = document.getElementById("login-password").value.trim();
+
+
+  if(!identifier || !password){
+    showPopup("Please enter details.","error"); 
+    return;
+  }
+
+  // turant popup show
+  showPopup("Checking credentials...","success");
+
+  try {
+    const usersRef = collection(db, "users");
+    let q, type="";
+    if(identifier.includes("@")){ 
+      q=query(usersRef, where("email", "==", identifier.toLowerCase())); 
+      type="email"; 
+    }
+    else if(/^\d{10}$/.test(identifier)){ 
+      q=query(usersRef, where("mobile", "==", identifier)); 
+      type="mobile"; 
+    }
+    else{ 
+      q=query(usersRef, where("username", "==", identifier)); 
+      type="username"; 
     }
 
-    const password = document.getElementById("login-password").value.trim();
+    const snap = await getDocs(q);
+    if(snap.empty){ 
+      showPopup(" account No found  "+type,"error"); 
+      return; 
+    }
 
+    const userDoc = snap.docs[0];
+    const userEmail = userDoc.data().email;
 
-    if(!identifier || !password){
-      showPopup("Please enter details.","error"); 
+    try {
+      await signInWithEmailAndPassword(auth, userEmail, password);
+
+      // Success: disable + spinner
+      loginBtn.disabled = true;
+      loginBtn.innerHTML = `<span class="loader"></span> Logging in...`;
+
+      showPopup(" Welcome "+(userDoc.data().name || ""), "success");
+      setTimeout(()=>{ window.location.href = "Dashboard.html"; },1500);
+
+    } catch(e){
+      showPopup("Incorrect password. Please try again.","error");
       return;
     }
 
-  // turant popup show
-    showPopup("Checking credentials...","success");
-
-    try {
-      const usersRef = collection(db, "users");
-      let q, type="";
-      if(identifier.includes("@")){ 
-        q=query(usersRef, where("email", "==", identifier.toLowerCase())); 
-        type="email"; 
-      }
-      else if(/^\d{10}$/.test(identifier)){ 
-        q=query(usersRef, where("mobile", "==", identifier)); 
-        type="mobile"; 
-      }
-      else{ 
-        q=query(usersRef, where("username", "==", identifier)); 
-        type="username"; 
-      }
-
-      const snap = await getDocs(q);
-      if(snap.empty){ 
-        showPopup(" account No found  "+type,"error"); 
-        return; 
-      }
-
-      const userDoc = snap.docs[0];
-      const userEmail = userDoc.data().email;
-
-      try {
-        await signInWithEmailAndPassword(auth, userEmail, password);
-
-      // Success: disable + spinner
-        loginBtn.disabled = true;
-        loginBtn.innerHTML = `<span class="loader"></span> Logging in...`;
-
-        showPopup(" Welcome "+(userDoc.data().name || ""), "success");
-        setTimeout(()=>{ window.location.href = "Dashboard.html"; },1500);
-
-      } catch(e){
-        showPopup("Incorrect password. Please try again.","error");
-        return;
-      }
-
-    } catch(err){
-      console.error(err);
-      showPopup(err.message || "Login error occurred","error");
-    }
-  });
+  } catch(err){
+    console.error(err);
+    showPopup(err.message || "Login error occurred","error");
+  }
+});
 
 // forgot password
-  document.getElementById("forgot-btn").addEventListener("click", async ()=>{
-    const email = document.getElementById("login-identifier").value.trim();
-    if(!email.includes("@")){
-      showPopup("Please enter a valid Email to reset password.","error"); return;
-    }
-    try {
-      await sendPasswordResetEmail(auth, email);
-      showPopup("Password reset link sent to your email.","success");
-    } catch(err){
-      showPopup(err.message,"error");
-    }
-  });
+document.getElementById("forgot-btn").addEventListener("click", async ()=>{
+  const email = document.getElementById("login-identifier").value.trim();
+  if(!email.includes("@")){
+    showPopup("Please enter a valid Email to reset password.","error"); return;
+  }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showPopup("Password reset link sent to your email.","success");
+  } catch(err){
+    showPopup(err.message,"error");
+  }
+});
 </script>
 <script>
 // ❌ Right-click disable
