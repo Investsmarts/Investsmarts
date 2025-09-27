@@ -11,67 +11,171 @@
   body{font-family:'Poppins',sans-serif;background:#f8fafc;color:#111}
 
   /* ✅ Navbar */
-  .nav{display:flex;justify-content:center;gap:18px;background:#fff;padding:12px 0;position:fixed;top:0;left:0;width:100%;z-index:1000;border-bottom:2px solid #e5e7eb}
-  .nav a{padding:10px 14px;text-decoration:none;color:#333;font-weight:600;transition:all 0.3s ease;border-bottom:3px solid transparent;cursor:pointer}
+  .nav{
+    display:flex;justify-content:center;gap:18px;
+    background:#fff;padding:12px 0;
+    position:fixed;top:0;left:0;width:100%;z-index:1000;
+    border-bottom:2px solid #e5e7eb
+  }
+  .nav a{
+    padding:10px 14px;text-decoration:none;color:#333;
+    font-weight:600;transition:all 0.3s ease;
+    border-bottom:3px solid transparent;cursor:pointer
+  }
   .nav a.active{color:#0b7a4f;border-bottom:3px solid #0b7a4f}
 
   /* ✅ Sections */
-  .section{max-width:1200px;margin:0 auto;padding:20px;margin-top:70px;display:none;transition:opacity 0.3s ease,transform 0.3s ease}
+  .section{
+    max-width:1200px;margin:0 auto;padding:20px;margin-top:70px;
+    display:none;transition:opacity 0.3s ease,transform 0.3s ease
+  }
   .section.active{display:block;opacity:1;transform:translateY(0)}
-
   h2{text-align:center;margin:18px 0 22px;font-size:20px}
 
   /* ✅ Staking cards */
-  .staking-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;max-width:1100px;margin:0 auto}
-  .staking-box{background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(16,24,40,0.06);padding:16px;transition:all .22s;display:flex;flex-direction:column}
+  .staking-container{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:18px;max-width:1100px;margin:0 auto
+  }
+  .staking-box{
+    background:#fff;border-radius:14px;
+    box-shadow:0 6px 20px rgba(16,24,40,0.06);
+    padding:16px;transition:all .22s;
+    display:flex;flex-direction:column
+  }
   .staking-box:hover{transform:translateY(-6px)}
   .staking-header{display:flex;justify-content:space-between;color:#168b65;font-weight:600;margin-bottom:10px}
-  .staking-img{display:flex;justify-content:center;align-items:center;height:200px;background:#fff;border-radius:12px;border:1px solid #e6edf0;overflow:hidden;padding:8px;margin-bottom:12px}
+  .staking-img{
+    display:flex;justify-content:center;align-items:center;
+    height:200px;background:#fff;border-radius:12px;
+    border:1px solid #e6edf0;overflow:hidden;padding:8px;margin-bottom:12px
+  }
   .staking-img img{width:100%;height:100%;object-fit:contain}
   .staking-title{text-align:center;font-weight:700;font-size:16px;margin-bottom:8px}
   .staking-info{color:#555;font-size:14px;margin-bottom:12px;text-align:center}
   .staking-info p{margin:4px 0}
   .staking-info span{font-weight:700;color:#1f7f63}
-  .stake-btn{margin-top:auto;width:100%;padding:12px;border:0;border-radius:10px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-weight:700;cursor:pointer;font-size:15px;transition:all .3s}
+  .stake-btn{
+    margin-top:auto;width:100%;padding:12px;border:0;border-radius:10px;
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+    color:#fff;font-weight:700;cursor:pointer;font-size:15px;transition:all .3s
+  }
   .stake-btn:hover{background:linear-gradient(135deg,#15803d,#16a34a)}
 
   /* ✅ History */
   .history-wrap{max-width:1100px;margin:18px auto;display:none}
-  .history-item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:#fff;margin-bottom:10px;border:1px solid #eef2f4}
-  .status-active{color:#0b7a4f;font-weight:700}
-  .status-complete{color:#0b6be0;font-weight:700}
-  .status-cancel{color:#e03a3a;font-weight:700}
+  .history-item{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:12px;border-radius:10px;background:#fff;
+    margin-bottom:10px;border:1px solid #eef2f4
+  }
   .countdown{font-size:13px;color:#666;margin-top:6px}
   .center-msg{text-align:center;color:#666;padding:14px;background:#fff;border-radius:8px}
 
   /* ✅ Popup */
   #popup{display:none;position:fixed;inset:0;align-items:center;justify-content:center;z-index:12000}
-  #popup .pbox{background:#111;color:#fff;padding:12px 16px;border-radius:8px;animation:fadeIn 0.3s ease}
+  #popup .pbox{
+    background:#111;color:#fff;padding:12px 16px;border-radius:8px;
+    animation:fadeIn 0.3s ease
+  }
   @keyframes fadeIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
 
   /* ✅ Modal */
-  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;padding:20px}
-  .modal-content{width:100%;max-width:420px;background:#fff;border-radius:12px;padding:18px;box-shadow:0 20px 50px rgba(2,6,23,0.2);animation:fadeIn 0.3s ease}
+  .modal{
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);
+    z-index:9999;align-items:center;justify-content:center;padding:20px
+  }
+  .modal-content{
+    width:100%;max-width:420px;background:#fff;border-radius:12px;
+    padding:18px;box-shadow:0 20px 50px rgba(2,6,23,0.2);animation:fadeIn 0.3s ease
+  }
   .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
   .modal-header h3{font-size:18px}
   .close-btn{cursor:pointer;font-size:20px}
-  .modal-img{display:flex;justify-content:center;align-items:center;height:220px;background:#fff;border-radius:12px;border:1px solid #e6edf0;overflow:hidden;margin-bottom:12px}
+  .modal-img{
+    display:flex;justify-content:center;align-items:center;
+    height:220px;background:#fff;border-radius:12px;
+    border:1px solid #e6edf0;overflow:hidden;margin-bottom:12px
+  }
   .modal-img img{width:100%;height:100%;object-fit:contain}
   .info-box{margin:8px 0}
   .info-box label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
-  .info-box input{width:100%;padding:10px;border:1px solid #d6dbe0;border-radius:10px;background:#fbfdff}
+  .info-box input{
+    width:100%;padding:10px;border:1px solid #d6dbe0;
+    border-radius:10px;background:#fbfdff
+  }
   .stake-action{margin-top:12px}
-  .stake-action input[type="number"]{width:100%;padding:10px;border-radius:10px;border:1px solid #d6dbe0;margin-bottom:10px}
-  .stake-action button{width:100%;padding:12px;border-radius:10px;border:0;background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;font-weight:700;cursor:pointer;transition:all .3s}
+  .stake-action input[type="number"]{
+    width:100%;padding:10px;border-radius:10px;
+    border:1px solid #d6dbe0;margin-bottom:10px
+  }
+  .stake-action button{
+    width:100%;padding:12px;border-radius:10px;border:0;
+    background:linear-gradient(135deg,#16a34a,#22c55e);
+    color:#fff;font-weight:700;cursor:pointer;transition:all .3s
+  }
   .stake-action button:hover{background:linear-gradient(135deg,#15803d,#16a34a)}
 
-  /* ✅ Mobile fix */
+  /* ✅ Investment History Cards */
+  #historyList{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:18px
+  }
+  .invest-card{
+    background:#fff;border-radius:16px;
+    box-shadow:0 6px 20px rgba(16,24,40,0.08);
+    padding:18px;margin-bottom:20px;
+    display:flex;flex-direction:column;align-items:center
+  }
+  .invest-card img{
+    width:100%;max-height:220px;object-fit:contain;
+    border-radius:12px;margin-bottom:14px
+  }
+  .invest-title{font-weight:700;font-size:18px;margin-bottom:12px;text-align:center}
+  .invest-info{width:100%;font-size:14px;color:#444;margin-top:12px}
+  .invest-info p{
+    margin:8px 0;display:flex;justify-content:space-between;align-items:center;
+    border-bottom:1px solid #f1f1f1;padding-bottom:6px
+  }
+  .invest-info p:last-child{border-bottom:none}
+  .invest-label{flex:1;font-weight:600;color:#555}
+  .invest-value{flex:1;text-align:right;font-weight:700;color:#111}
+
+  .status-badge{
+    display:inline-block;padding:4px 12px;border-radius:8px;
+    font-size:13px;font-weight:600
+  }
+  .status-active{background:#dcfce7;color:#166534}
+  .status-complete{background:#dbeafe;color:#1e40af}
+  .status-cancel{background:#fee2e2;color:#b91c1c}
+
+  .countdown-box{
+    width:100%;text-align:center;padding:12px;margin-top:16px;
+    border-radius:12px;background:linear-gradient(135deg,#dbeafe,#e0f7f4);
+    font-weight:600;font-size:14px
+  }
+
+  /* ✅ Responsive Fix */
+  @media(max-width:768px){
+    .invest-card{padding:14px}
+    .invest-title{font-size:16px}
+    .invest-info p{font-size:13px;flex-direction:column;align-items:flex-start}
+    .invest-info span{margin-top:2px}
+    .countdown-box{font-size:13px;padding:8px}
+  }
   @media(max-width:600px){
     .staking-img{height:160px}
     .staking-title{font-size:15px}
     .nav{gap:12px;font-size:14px}
   }
+  @media(max-width:480px){
+    .invest-card{padding:12px}
+    .invest-title{font-size:15px}
+    .invest-info{font-size:12px}
+  }
 </style>
+
 </head>
 <body>
 
@@ -134,6 +238,33 @@
     </div>
   </div>
 </div>
+<div id="record" class="section">
+  <h2>Your Investments</h2>
+  
+  <!-- ✅ Summary Section -->
+  <div id="recordSummary" style="
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 6px 20px rgba(16,24,40,0.08);
+    padding:16px;
+    margin-bottom:20px;
+    display:flex;
+    justify-content:space-between;
+    text-align:center;
+  ">
+    <div>
+      <div style="font-size:14px;color:#666;">Total Invested</div>
+      <div id="totalInvested" style="font-weight:700;font-size:18px;color:#0b7a4f;">0 USDT</div>
+    </div>
+    <div>
+      <div style="font-size:14px;color:#666;">Total Income</div>
+      <div id="totalIncome" style="font-weight:700;font-size:18px;color:#0b6be0;">0 USDT</div>
+    </div>
+  </div>
+
+  <div id="historyList"></div>
+</div>
+
 
 <!-- small popup -->
 <div id="popup"><div class="pbox" id="popupMessage"></div></div>
@@ -209,6 +340,9 @@ function listenInvestments(){
   onSnapshot(q, snap => {
     historyList.innerHTML = "";
 
+    let totalInvested = 0;
+    let totalIncome = 0;
+
     if(snap.empty){
       historyList.innerHTML = `
         <div style="text-align:center;color:#666;padding:20px;
@@ -216,12 +350,18 @@ function listenInvestments(){
                     border:1px solid #eee;">
           No record found
         </div>`;
+      document.getElementById("totalInvested").textContent = "0 USDT";
+      document.getElementById("totalIncome").textContent = "0 USDT";
       return;
     }
 
     snap.forEach(docSnap => {
       const d = docSnap.data();
       const id = docSnap.id;
+
+      // ✅ Add totals
+      totalInvested += d.amount || 0;
+      if(d.possibleIncome) totalIncome += d.possibleIncome;
 
       // ✅ startTime fix
       let startMs = null;
@@ -242,25 +382,49 @@ function listenInvestments(){
         setTimeout(()=>startCountdown(cdId, endTime), 200);
       }
 
-      historyList.innerHTML += `
-        <div class="history-item">
-          <div style="display:flex;align-items:center;gap:12px">
-            <img src="${d.imgSrc || 'myphoto/1414.png'}"
+      // ✅ Card UI like screenshot
+historyList.innerHTML += `
+  <div class="invest-card">
+    <img src="${d.imgSrc || 'myphoto/1414.png'}" alt="plan"/>
+    <div class="invest-title">${d.planName || "TrustDollar Staking"}</div>
 
-                 style="width:60px;height:60px;object-fit:contain;
-                        border-radius:8px;border:1px solid #eee">
-            <div>
-              <div><b>${numberFmt(d.amount)} USDT</b></div>
-              <div style="font-size:13px;color:#555;">
-                ${d.planName} | ${when}
-              </div>
-              ${countdownHtml}
-            </div>
-          </div>
-          <div class="${cls}">${d.status}</div>
-        </div>
-      `;
+    <div class="invest-info">
+      <p>
+        <span class="invest-label">Order Status</span>
+        <span class="invest-value"><span class="status-badge ${cls}">${d.status}</span></span>
+      </p>
+
+      <p>
+        <span class="invest-label">Investment Amount</span>
+        <span class="invest-value">${numberFmt(d.amount)} USDT</span>
+      </p>
+
+      <p>
+        <span class="invest-label">Income</span>
+        <span class="invest-value">${numberFmt(d.possibleIncome || 0)} USDT</span>
+      </p>
+
+      <p>
+        <span class="invest-label">Application Time</span>
+        <span class="invest-value">${when}</span>
+      </p>
+
+      <p>
+        <span class="invest-label">Expiry Time</span>
+        <span class="invest-value">${d.endTime ? new Date(d.endTime.seconds*1000).toLocaleString() : "-"}</span>
+      </p>
+    </div>
+
+    ${countdownHtml ? `<div class="countdown-box">${countdownHtml}</div>` : ""}
+  </div>
+`;
+
+
     });
+
+    // ✅ Update totals
+    document.getElementById("totalInvested").textContent = numberFmt(totalInvested) + " USDT";
+    document.getElementById("totalIncome").textContent = numberFmt(totalIncome) + " USDT";
   });
 }
 
