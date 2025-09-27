@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>TrustDollar Staking</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Poppins',sans-serif;background:#f8fafc;color:#111}
+
+  /* ✅ Navbar */
+  .nav{display:flex;justify-content:center;gap:18px;background:#fff;padding:12px 0;position:fixed;top:0;left:0;width:100%;z-index:1000;border-bottom:2px solid #e5e7eb}
+  .nav a{padding:10px 14px;text-decoration:none;color:#333;font-weight:600;transition:all 0.3s ease;border-bottom:3px solid transparent;cursor:pointer}
+  .nav a.active{color:#0b7a4f;border-bottom:3px solid #0b7a4f}
+
+  /* ✅ Sections */
+  .section{max-width:1200px;margin:0 auto;padding:20px;margin-top:70px;display:none;transition:opacity 0.3s ease,transform 0.3s ease}
+  .section.active{display:block;opacity:1;transform:translateY(0)}
+
+  h2{text-align:center;margin:18px 0 22px;font-size:20px}
+
+  /* ✅ Staking cards */
+  .staking-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;max-width:1100px;margin:0 auto}
+  .staking-box{background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(16,24,40,0.06);padding:16px;transition:all .22s;display:flex;flex-direction:column}
+  .staking-box:hover{transform:translateY(-6px)}
+  .staking-header{display:flex;justify-content:space-between;color:#168b65;font-weight:600;margin-bottom:10px}
+  .staking-img{display:flex;justify-content:center;align-items:center;height:200px;background:#fff;border-radius:12px;border:1px solid #e6edf0;overflow:hidden;padding:8px;margin-bottom:12px}
+  .staking-img img{width:100%;height:100%;object-fit:contain}
+  .staking-title{text-align:center;font-weight:700;font-size:16px;margin-bottom:8px}
+  .staking-info{color:#555;font-size:14px;margin-bottom:12px;text-align:center}
+  .staking-info p{margin:4px 0}
+  .staking-info span{font-weight:700;color:#1f7f63}
+  .stake-btn{margin-top:auto;width:100%;padding:12px;border:0;border-radius:10px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-weight:700;cursor:pointer;font-size:15px;transition:all .3s}
+  .stake-btn:hover{background:linear-gradient(135deg,#15803d,#16a34a)}
+
+  /* ✅ History */
+  .history-wrap{max-width:1100px;margin:18px auto;display:none}
+  .history-item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:#fff;margin-bottom:10px;border:1px solid #eef2f4}
+  .status-active{color:#0b7a4f;font-weight:700}
+  .status-complete{color:#0b6be0;font-weight:700}
+  .status-cancel{color:#e03a3a;font-weight:700}
+  .countdown{font-size:13px;color:#666;margin-top:6px}
+  .center-msg{text-align:center;color:#666;padding:14px;background:#fff;border-radius:8px}
+
+  /* ✅ Popup */
+  #popup{display:none;position:fixed;inset:0;align-items:center;justify-content:center;z-index:12000}
+  #popup .pbox{background:#111;color:#fff;padding:12px 16px;border-radius:8px;animation:fadeIn 0.3s ease}
+  @keyframes fadeIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+
+  /* ✅ Modal */
+  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;padding:20px}
+  .modal-content{width:100%;max-width:420px;background:#fff;border-radius:12px;padding:18px;box-shadow:0 20px 50px rgba(2,6,23,0.2);animation:fadeIn 0.3s ease}
+  .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .modal-header h3{font-size:18px}
+  .close-btn{cursor:pointer;font-size:20px}
+  .modal-img{display:flex;justify-content:center;align-items:center;height:220px;background:#fff;border-radius:12px;border:1px solid #e6edf0;overflow:hidden;margin-bottom:12px}
+  .modal-img img{width:100%;height:100%;object-fit:contain}
+  .info-box{margin:8px 0}
+  .info-box label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+  .info-box input{width:100%;padding:10px;border:1px solid #d6dbe0;border-radius:10px;background:#fbfdff}
+  .stake-action{margin-top:12px}
+  .stake-action input[type="number"]{width:100%;padding:10px;border-radius:10px;border:1px solid #d6dbe0;margin-bottom:10px}
+  .stake-action button{width:100%;padding:12px;border-radius:10px;border:0;background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;font-weight:700;cursor:pointer;transition:all .3s}
+  .stake-action button:hover{background:linear-gradient(135deg,#15803d,#16a34a)}
+
+  /* ✅ Mobile fix */
+  @media(max-width:600px){
+    .staking-img{height:160px}
+    .staking-title{font-size:15px}
+    .nav{gap:12px;font-size:14px}
+  }
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<div class="nav">
+  <a class="active" onclick="showSection('staking')">Staking</a>
+  <a href="stacklong.html">Stack Long</a>
+  <a onclick="showSection('record')">Record</a>
+</div>
+
+<!-- Sections -->
+<div id="staking" class="section active">
+  <h2>TrustDollar Amount Staking</h2>
+  <div class="staking-container">
+    <div class="staking-box">
+      <div class="staking-header"><span>Plan = 1</span><span>Per Day</span></div>
+      <div class="staking-img"><img src="1414.png" alt="vault"></div>
+      <div class="staking-title">TrustDollar Amount Staking</div>
+      <div class="staking-info"><p>Amount: <span>100 - 50,000 USDT</span></p><p>Daily Return: <span>1%</span></p></div>
+      <button class="stake-btn" onclick="openModal('Per Day',100,50000,1,'1414.png')">Stake Now</button>
+    </div>
+    <div class="staking-box">
+      <div class="staking-header"><span>Plan = 2</span><span>15 Din</span></div>
+      <div class="staking-img"><img src="star.png" alt="vault"></div>
+      <div class="staking-title">TrustDollar Amount Staking</div>
+      <div class="staking-info"><p>Amount: <span>200 - 30,000 USDT</span></p><p>Daily Return: <span>1.2%</span></p></div>
+      <button class="stake-btn" onclick="openModal('15 Din',200,30000,1.2,'star.png')">Stake Now</button>
+    </div>
+    <div class="staking-box">
+      <div class="staking-header"><span>Plan = 3</span><span>30 Din</span></div>
+      <div class="staking-img"><img src="112211.png" alt="vault"></div>
+      <div class="staking-title">TrustDollar Amount Staking</div>
+      <div class="staking-info"><p>Amount: <span>500 - 10,000 USDT</span></p><p>Daily Return: <span>1.3%</span></p></div>
+      <button class="stake-btn" onclick="openModal('30 Din',500,10000,1.3,'112211.png')">Stake Now</button>
+    </div>
+  </div>
+</div>
+
+<div id="record" class="section">
+  <h2>Your Investments</h2>
+  <div id="historyList"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="stakeModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalPlan">Staking</h3>
+      <div class="close-btn" onclick="closeModal()">✕</div>
+    </div>
+    <div class="modal-img"><img id="modalImg" src="" alt="vault"></div>
+    <div class="modal-info">
+      <div class="info-box"><label>Balance</label><input type="text" id="userBalance" readonly value="Loading..."></div>
+      <div class="info-box"><label>Amount (min - max)</label><input type="text" id="modalAmount" readonly></div>
+      <div class="info-box"><label>Daily Return</label><input type="text" id="modalReturn" readonly></div>
+    </div>
+    <div class="stake-action">
+      <input type="number" id="stakeInput" placeholder="Enter amount to stake (USDT)">
+      <button onclick="confirmStake()">Confirm Stake</button>
+    </div>
+  </div>
+</div>
+
+<!-- small popup -->
+<div id="popup"><div class="pbox" id="popupMessage"></div></div>
+
+<!-- Firebase + App logic -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import {
+  getFirestore, doc, setDoc, addDoc, collection, serverTimestamp,
+  getDoc, onSnapshot, runTransaction, query, orderBy, where, getDocs, updateDoc
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+// ====== CONFIG ======
+const firebaseConfig = {
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25",
+  storageBucket: "btcinvest-c0e25.firebasestorage.app",
+  messagingSenderId: "204937458487",
+  appId: "1:204937458487:web:cc27ece1249999279f60b2",
+  measurementId: "G-HG0Q8ZHT6G"
+};
+// =======================================================
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// UI elements
+const historyList = document.getElementById("historyList");
+const walletBalanceEl = document.getElementById("userBalance");
+const stakeInput = document.getElementById("stakeInput");
+
+let currentUserId = null;
+let currentPlanObj = null;
+
+// small popup
+window.showPopup = (msg) => {
+  document.getElementById("popupMessage").textContent = msg;
+  document.getElementById("popup").style.display = "flex";
+  setTimeout(()=>{ document.getElementById("popup").style.display = "none"; }, 2500);
+};
+
+// Auth listener
+onAuthStateChanged(auth, user => {
+  if(!user){
+    showPopup("Not signed in. Redirect to login.");
+    return;
+  }
+  currentUserId = user.uid;
+  listenWallet();
+  listenInvestments();
+  setInterval(()=>processMatured(currentUserId), 60000);
+  processMatured(currentUserId).catch(e=>console.error(e));
+});
+
+// listen wallet
+function listenWallet(){
+  const uRef = doc(db, "users", currentUserId);
+  onSnapshot(uRef, snap => {
+    if(!snap.exists()){ walletBalanceEl.value = "0.00 USDT"; return; }
+    const bal = snap.data().walletBalance || 0;
+    walletBalanceEl.value = numberFmt(bal) + " USDT";
+  });
+}
+
+// listen investments history
+function listenInvestments(){
+  const invCol = collection(db, "users", currentUserId, "investments");
+  const q = query(invCol, orderBy("startTime","desc"));
+
+  onSnapshot(q, snap => {
+    historyList.innerHTML = "";
+
+    if(snap.empty){
+      historyList.innerHTML = `
+        <div style="text-align:center;color:#666;padding:20px;
+                    background:#fff;border-radius:10px;
+                    border:1px solid #eee;">
+          No record found
+        </div>`;
+      return;
+    }
+
+    snap.forEach(docSnap => {
+      const d = docSnap.data();
+      const id = docSnap.id;
+
+      // ✅ startTime fix
+      let startMs = null;
+      if (d.startTime) {
+        const sec = d.startTime.seconds || d.startTime._seconds;
+        startMs = sec * 1000;
+      }
+      const when = startMs ? new Date(startMs).toLocaleString() : "-";
+
+      const cls = d.status==="Completed" ? "status-complete" : 
+                  d.status==="Active" ? "status-active" : "status-cancel";
+
+      let countdownHtml = "";
+      if(d.status==="Active" && startMs){
+        const endTime = startMs + 24*60*60*1000;
+        const cdId = "cd_"+id;
+        countdownHtml = `<div class="countdown" id="${cdId}">Loading...</div>`;
+        setTimeout(()=>startCountdown(cdId, endTime), 200);
+      }
+
+      historyList.innerHTML += `
+        <div class="history-item">
+          <div style="display:flex;align-items:center;gap:12px">
+            <img src="${d.imgSrc || '1414.png'}"
+
+                 style="width:60px;height:60px;object-fit:contain;
+                        border-radius:8px;border:1px solid #eee">
+            <div>
+              <div><b>${numberFmt(d.amount)} USDT</b></div>
+              <div style="font-size:13px;color:#555;">
+                ${d.planName} | ${when}
+              </div>
+              ${countdownHtml}
+            </div>
+          </div>
+          <div class="${cls}">${d.status}</div>
+        </div>
+      `;
+    });
+  });
+}
+
+// countdown
+function startCountdown(elId, endTime){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  function tick(){
+    const now = Date.now();
+    const diff = endTime - now;
+    if(diff <= 0){
+      el.textContent = "Completed soon";
+      return;
+    }
+    const hrs = Math.floor(diff / (1000*60*60));
+    const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+    const secs = Math.floor((diff % (1000*60)) / 1000);
+    el.textContent = `${hrs}h ${mins}m ${secs}s`;
+    setTimeout(tick, 1000);
+  }
+  tick();
+}
+
+// Utility
+function numberFmt(n){ return Number(n||0).toFixed(2); }
+
+// ---- Modal open / close ----
+window.openModal = function(planName, minAmount, maxAmount, dailyRate, imgSrc){
+  currentPlanObj = { planName, minAmount, maxAmount, dailyRate, imgSrc };
+  document.getElementById("modalPlan").innerText = planName;
+  document.getElementById("modalAmount").value = `${minAmount} - ${maxAmount} USDT`;
+  document.getElementById("modalReturn").value = `${dailyRate}%`;
+  document.getElementById("modalImg").src = imgSrc || "";
+  document.getElementById("stakeModal").style.display = "flex";
+  stakeInput.value = "";
+};
+window.closeModal = function(){ document.getElementById("stakeModal").style.display = "none"; };
+
+// ---- Create stake ----
+window.confirmStake = async function(){
+  if(!currentUserId){ showPopup("User not authenticated"); return; }
+  if(!currentPlanObj){ showPopup("Plan not selected"); return; }
+
+  const amount = parseFloat(stakeInput.value);
+  if(isNaN(amount) || amount <= 0){ showPopup("Enter valid amount"); return; }
+  if(amount < currentPlanObj.minAmount || amount > currentPlanObj.maxAmount){
+    showPopup(`Amount must be between ${currentPlanObj.minAmount} and ${currentPlanObj.maxAmount}`);
+    return;
+  }
+
+  closeModal(); // ✅ close instantly
+
+  const userRef = doc(db, "users", currentUserId);
+  try{
+    await runTransaction(db, async (tx) => {
+      const uSnap = await tx.get(userRef);
+      if(!uSnap.exists()) throw "User data missing";
+      const balance = uSnap.data().walletBalance || 0;
+      if(balance < amount) throw "Insufficient balance";
+
+      tx.update(userRef, { walletBalance: balance - amount });
+
+      const stakeDoc = {
+        amount,
+        startTime: serverTimestamp(),
+        status: "Active",
+        dailyRate: currentPlanObj.dailyRate,
+        planName: currentPlanObj.planName,
+        imgSrc: currentPlanObj.imgSrc || "default.png",  // ✅ save img
+        possibleIncome: 0,
+        closingTimeCalculated: null,
+        userPercent: 0.70,
+        upline1Percent: 0.17,
+        upline2Percent: 0.08,
+        upline3Percent: 0.05
+      };
+
+      const invCol = collection(db, "users", currentUserId, "investments");
+      await addDoc(invCol, stakeDoc);
+    });
+    showPopup("✅ Stake created!");
+  }catch(err){
+    console.error(err);
+    showPopup(typeof err === "string" ? err : "Error creating stake");
+  }
+};
+
+// ---- Cancel stake ----
+window.cancelStake = async function(){
+  if(!currentUserId){ showPopup("Not signed in"); return; }
+  const invCol = collection(db, "users", currentUserId, "investments");
+  const q = query(invCol, where("status","==","Active"), orderBy("startTime","desc"));
+  const snap = await getDocs(q);
+  if(snap.empty){ showPopup("No active investment"); return; }
+  const inv = snap.docs[0]; const data = inv.data();
+  const invRef = doc(db, "users", currentUserId, "investments", inv.id);
+  const userRef = doc(db, "users", currentUserId);
+  try{
+    await runTransaction(db, async (tx)=>{
+      tx.update(invRef, { status: "Canceled" });
+      const uSnap = await tx.get(userRef);
+      const bal = uSnap.data().walletBalance || 0;
+      tx.update(userRef, { walletBalance: bal + data.amount });
+    });
+    showPopup("Canceled & principal refunded");
+  }catch(e){ console.error(e); showPopup("Error canceling"); }
+};
+
+// ---- process matured ----
+async function processMatured(uid){
+  if(!uid) return;
+  const invCol = collection(db, "users", uid, "investments");
+  const q = query(invCol, where("status","==","Active"));
+  const snap = await getDocs(q);
+  if(snap.empty) return;
+  const now = Date.now();
+
+  for(const docSnap of snap.docs){
+    const d = docSnap.data();
+    const id = docSnap.id;
+    if(!d.startTime) continue;
+    const sec = d.startTime.seconds || d.startTime._seconds;
+    const startMs = sec * 1000;
+    if(now < startMs + 24*60*60*1000) continue;
+
+    const invRef = doc(db, "users", uid, "investments", id);
+    const userRef = doc(db, "users", uid);
+
+    try{
+      await runTransaction(db, async (tx) => {
+        const inv = await tx.get(invRef);
+        if(!inv.exists()) return;
+        const invData = inv.data();
+        if(invData.status !== "Active") return;
+
+        const amount = invData.amount || 0;
+        const dailyRate = Number(invData.dailyRate) || 0;
+        const profit = (amount * dailyRate / 100);
+        const possibleIncome = Number(profit.toFixed(6));
+
+        const userPercent = invData.userPercent ?? 0.70;
+        const u1p = invData.upline1Percent ?? 0.17;
+        const u2p = invData.upline2Percent ?? 0.08;
+        const u3p = invData.upline3Percent ?? 0.05;
+
+        const userShare = +(profit * userPercent).toFixed(6);
+        const u1Share = +(profit * u1p).toFixed(6);
+        const u2Share = +(profit * u2p).toFixed(6);
+        const u3Share = +(profit * u3p).toFixed(6);
+
+        tx.update(invRef, {
+          status: "Completed",
+          possibleIncome,
+          endTime: serverTimestamp()
+        });
+
+        const uSnap = await tx.get(userRef);
+        const userBal = (uSnap.exists() && uSnap.data().walletBalance) ? uSnap.data().walletBalance : 0;
+        tx.update(userRef, { walletBalance: userBal + amount + userShare });
+
+        const userDocSnap = uSnap;
+        const upline1 = userDocSnap.exists() ? userDocSnap.data().upline1 : null;
+        const upline2 = userDocSnap.exists() ? userDocSnap.data().upline2 : null;
+        const upline3 = userDocSnap.exists() ? userDocSnap.data().upline3 : null;
+
+        if(upline1){
+          const up1Ref = doc(db, "users", upline1);
+          const up1Snap = await tx.get(up1Ref);
+          const up1Bal = (up1Snap.exists() && up1Snap.data().walletBalance) ? up1Snap.data().walletBalance : 0;
+          tx.update(up1Ref, { walletBalance: up1Bal + u1Share });
+        }
+        if(upline2){
+          const up2Ref = doc(db, "users", upline2);
+          const up2Snap = await tx.get(up2Ref);
+          const up2Bal = (up2Snap.exists() && up2Snap.data().walletBalance) ? up2Snap.data().walletBalance : 0;
+          tx.update(up2Ref, { walletBalance: up2Bal + u2Share });
+        }
+        if(upline3){
+          const up3Ref = doc(db, "users", upline3);
+          const up3Snap = await tx.get(up3Ref);
+          const up3Bal = (up3Snap.exists() && up3Snap.data().walletBalance) ? up3Snap.data().walletBalance : 0;
+          tx.update(up3Ref, { walletBalance: up3Bal + u3Share });
+        }
+
+        const stakeRecordRef = doc(db, "stakes", `stake_${uid}_${id}`);
+        tx.set(stakeRecordRef, {
+          uid,
+          investId: id,
+          amount,
+          profit,
+          userShare,
+          u1Share,u2Share,u3Share,
+          startTime: invData.startTime,
+          endTime: serverTimestamp(),
+          status: "Completed",
+          planName: invData.planName || null
+        });
+      });
+
+      console.log("Processed matured stake", uid, id);
+    }catch(err){
+      console.error("Error processing matured", err);
+    }
+  }
+}
+
+// modal background click to close
+window.onclick = function(e){
+  const modal = document.getElementById("stakeModal");
+  if(e.target === modal) modal.style.display = "none";
+};
+
+// ✅ Section switch fix
+ // ✅ Section switch fix
+window.showSection = function(sectionId, event){
+  // Sab sections hide kar do safely
+  document.querySelectorAll(".section").forEach(s => {
+    if(s) s.style.display = "none";
+  });
+
+  // Sirf selected section dikhana
+  const sec = document.getElementById(sectionId);
+  if(sec){  
+    sec.style.display = "block";
+  } else {
+    console.warn("Section not found: ", sectionId);
+    return;
+  }
+
+  // Navbar active class set karna
+  document.querySelectorAll(".nav a").forEach(a => a.classList.remove("active"));
+  if(event && event.target) event.target.classList.add("active");
+
+  // Record section ke liye special handling
+  const stakingContainer = document.querySelector(".staking-container");
+  const historyWrap = document.querySelector(".history-wrap");
+
+  if(sectionId === "record"){
+    if(stakingContainer) stakingContainer.style.display = "none";
+    if(historyWrap) historyWrap.style.display = "block";
+  } else {
+    if(stakingContainer) stakingContainer.style.display = "grid";
+    if(historyWrap) historyWrap.style.display = "block";
+  }
+};
+
+
+</script>
+</body>
+</html>
