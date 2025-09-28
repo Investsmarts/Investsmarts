@@ -14,29 +14,114 @@
     }
 
     /* HEADER */
-    .header {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      display: flex;
-      align-items: center;
-      padding: 12px 20px;
-      background: linear-gradient(90deg,#4CAF50,#2c7);
-      color: #fff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      z-index: 1000;
-    }
-    .stylish-logo { 
-      display:inline-flex; align-items:center; gap:6px;
-      font-weight:800; font-size:18px;
-      padding: 8px 14px; border-radius: 10px;
-      background: linear-gradient(90deg,#062b12,#1f7a3a); 
-      color:#eaffea; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    .stylish-logo .small {
-      background: rgba(255,255,255,0.1);
-      padding: 2px 6px; border-radius: 6px;
-      font-size: 12px; font-weight: 700;
-    }
+      /* HEADER STYLE */
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  color: #000;
+  padding: 10px 30px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  height: 60px;
+  width: auto;
+}
+
+.brand-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111;
+}
+
+.nav-links {
+  display: flex;
+  gap: 25px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-weight: 600;
+  color: #111;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-right a {
+  text-decoration: none;
+  color: #111;
+  font-weight: 500;
+}
+
+.header-right .icon {
+  height: 28px;
+  width: 28px;
+}
+
+.menu-toggle {
+  font-size: 22px;
+  cursor: pointer;
+  display: none;
+}
+
+/* ✅ Mobile style */
+@media(max-width: 768px){
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 60px; left: 0; right: 0;
+    background: #fff;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
+
+  .nav-links a {
+    padding: 10px 0;
+    width: 100%;
+    border-bottom: 1px solid #eee;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+}
+
+/* Desktop */
+.header-right { display: none; } /* ❌ remove old header-right */
+
+/* Mobile Menu Items */
+.nav-links a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-links a img.icon {
+  height: 20px;
+  width: 20px;
+}
+
 
     /* HERO */
     .hero {
@@ -45,54 +130,45 @@
       background: #e8f5e9;
     }
 
-    /* IMAGE SLIDER */
+    /* ✅ Slider Box */
     .slider {
       position: relative;
-      max-width: 600px;
+      max-width: 400px;
       margin: 0 auto 30px;
+      border-radius: 20px;
       overflow: hidden;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-    }
-    .slides {
-      display: flex;
-      width: 300%;
-      animation: slide 12s infinite;
-    }
-    .slides img {
-      width: 100%;
-      border-radius: 12px;
-    }
-    @keyframes slide {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(0); }
-      33% { transform: translateX(-100%); }
-      58% { transform: translateX(-100%); }
-      66% { transform: translateX(-200%); }
-      91% { transform: translateX(-200%); }
-      100% { transform: translateX(0); }
+      border: 4px solid orange;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
     }
 
+    .slides {
+      display: flex;
+      transition: transform 0.6s ease-in-out;
+    }
+
+    .slide-card {
+      flex: 0 0 100%;
+    }
+
+    .slide-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 16px;
+      object-fit: cover; /* ✅ image fit karega */
+    }
+
+    /* HERO TEXT */
     .hero h1 {
       font-size: 28px;
       color: #2c7;
       margin-bottom: 15px;
-      animation: fadeInDown 1.2s ease;
     }
     .hero p {
       font-size: 16px;
       max-width: 600px;
       margin: auto;
       color: #444;
-      animation: fadeInUp 1.2s ease;
-    }
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     /* HERO BUTTONS */
@@ -101,6 +177,7 @@
       display: flex;
       justify-content: center;
       gap: 15px;
+      flex-wrap: wrap;
     }
     .hero-buttons a {
       text-decoration: none;
@@ -122,7 +199,6 @@
     }
     .hero-buttons a.register:hover { background: #e68900; }
 
-
     /* FEATURES */
     .features {
       display: flex;
@@ -131,7 +207,6 @@
       gap: 25px;
       padding: 50px 20px;
     }
-
     .feature {
       background: #fff;
       border-radius: 16px;
@@ -143,106 +218,234 @@
       position: relative;
       overflow: hidden;
     }
+    .feature::before {
+      content: "";
+      position: absolute;
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      border-radius: 18px;
+      background: linear-gradient(135deg,#4CAF50,#2c7,#66bb6a);
+      z-index: -1;
+      opacity: 0.4;
+      transition: opacity 0.4s;
+    }
+    .feature:hover::before { opacity: 1; }
+    .feature h3 {
+      color: #2c7;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .feature p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #555;
+    }
+    .feature:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 12px 28px rgba(76,175,80,0.25);
+    }
 
-/* ✅ Gradient border effect */
-.feature::before {
-  content: "";
-  position: absolute;
-  top: -2px; left: -2px; right: -2px; bottom: -2px;
-  border-radius: 18px;
-  background: linear-gradient(135deg,#4CAF50,#2c7,#66bb6a);
-  z-index: -1;
-  opacity: 0.4;
-  transition: opacity 0.4s;
-}
+    /* BLOCKCHAIN */
+    .blockchain-section {
+      text-align: center;
+      padding: 50px 15px;
+      background: #eef9f1;
+    }
+    .blockchain {
+      display: flex; justify-content: center; align-items: center; gap: 15px;
+      flex-wrap: wrap;
+    }
+    .block {
+      width: 90px; height: 90px; background: #fff;
+      border: 2px solid #2c7; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: bold;
+      animation: pulse 3s infinite;
+    }
+    .chain {
+      width: 40px; height: 3px;
+      background: linear-gradient(90deg,#2c7,#4CAF50);
+      position: relative; overflow: hidden;
+    }
+    .chain::before {
+      content: ""; position: absolute; left: -40px; top: 0;
+      height: 100%; width: 40px;
+      background: rgba(255,255,255,0.8);
+      animation: flow 2s linear infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    @keyframes flow {
+      0% { left: -40px; }
+      100% { left: 40px; }
+    }
 
-.feature:hover::before {
-  opacity: 1;
-}
+    /* FOOTER */
+    .footer {
+      background: #e8f5e9;
+      color: #333;
+      padding: 50px 20px 20px;
+    }
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+      gap: 30px;
+      max-width: 1100px;
+      margin: auto;
+    }
+    .footer h2, .footer h3 { margin-bottom: 12px; color: #2c7; }
+    .footer p { font-size: 14px; line-height: 1.6; }
+    .footer ul { list-style: none; padding: 0; }
+    .footer ul li { margin: 6px 0; }
+    .footer ul li a {
+      color: #444; text-decoration: none; font-size: 14px;
+    }
+    .footer ul li a:hover { color: #2c7; font-weight: 600; }
+    .links { display: flex; gap: 40px; justify-content: flex-start; flex-wrap: wrap; }
+    .link-group { flex: 1; }
+    .subscribe-form {
+      display: flex; margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px; overflow: hidden;
+    }
+    .subscribe-form input {
+      flex: 1; padding: 10px; border: none; outline: none;
+      font-size: 14px; background: #fff; color: #333;
+    }
+    .subscribe-form button {
+      background: linear-gradient(90deg,#4CAF50,#2c7);
+      color: #fff; border: none; padding: 10px 16px;
+      cursor: pointer; font-weight: bold;
+    }
+    .subscribe-form button:hover { opacity: 0.9; }
+    .footer-bottom {
+      text-align: center;
+      border-top: 1px solid #ccc;
+      padding-top: 15px;
+      font-size: 13px;
+      margin-top: 30px;
+      color: #444;
+    }
 
-.feature h3 {
-  color: #2c7;
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
+    /* Popup Style */
+    .popup {
+      display: none; 
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #4CAF50;
+      color: #fff;
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      z-index: 2000;
+      animation: fadeIn 0.4s ease;
+    }
+    /* Mobile menu */
+    @media(max-width: 768px){
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    position: fixed;
+    top: 0; left: 0;
+    width: 80%;   /* ✅ 80% width drawer */
+    height: 100%;
+    background: linear-gradient(135deg, #4CAF50, #2c7);
+    padding: 80px 25px;
+    z-index: 1000;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+    transform: translateX(-100%);
+    transition: transform 0.4s ease-in-out;
+  }
 
-.feature p {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #555;
-}
+  .nav-links.show {
+    display: flex;
+    transform: translateX(0); /* ✅ slide-in */
+  }
 
-/* ✅ Hover lift + glow */
-.feature:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 12px 28px rgba(76,175,80,0.25);
-}
+  .nav-links a {
+    opacity: 0;
+    transform: translateX(-20px);
+    font-size: 18px;
+    font-weight: 600;
+    padding: 15px 0;
+    color: #fff;
+    text-decoration: none;
+    width: 100%;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    animation: fadeSlide 0.4s ease forwards;
+  }
 
-/* BLOCKCHAIN */
-.blockchain-section {
-  text-align: center;
-  padding: 50px 15px;
-  background: #eef9f1;
-}
-.blockchain {
-  display: flex; justify-content: center; align-items: center; gap: 15px;
-  flex-wrap: wrap;
-}
-.block {
-  width: 90px; height: 90px; background: #fff;
-  border: 2px solid #2c7; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: bold;
-  animation: pulse 3s infinite;
-}
-.chain {
-  width: 40px; height: 3px;
-  background: linear-gradient(90deg,#2c7,#4CAF50);
-  position: relative; overflow: hidden;
-}
-.chain::before {
-  content: ""; position: absolute; left: -40px; top: 0;
-  height: 100%; width: 40px;
-  background: rgba(255,255,255,0.8);
-  animation: flow 2s linear infinite;
-}
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-@keyframes flow {
-  0% { left: -40px; }
-  100% { left: 40px; }
-}
+  /* ✅ Delay ek-ek karke */
+  .nav-links a:nth-child(1) { animation-delay: 0.1s; }
+  .nav-links a:nth-child(2) { animation-delay: 0.2s; }
+  .nav-links a:nth-child(3) { animation-delay: 0.3s; }
+  .nav-links a:nth-child(4) { animation-delay: 0.4s; }
+  .nav-links a:nth-child(5) { animation-delay: 0.5s; }
+  .nav-links a:nth-child(6) { animation-delay: 0.6s; }
 
-/* FOOTER */
-.footer {
-  text-align: center;
-  padding: 20px;
-  font-size: 13px;
-  background: #2c7;
-  color: #fff;
-  margin-top: 40px;
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .menu-toggle {
+    display: block;
+    font-size: 26px;
+    color: #000;
+    cursor: pointer;
+    z-index: 1100;
+  }
+
+  /* ✅ Right side dim background */
+  .menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.3);
+    z-index: 900;
+  }
+
+  .menu-overlay.show {
+    display: block;
+  }
 }
 </style>
 </head>
 <body>
 
   <!-- HEADER -->
-  <div class="header">
-    <div class="stylish-logo">TrustDollar <span class="small">v2</span></div>
-  </div>
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+     <img src="logo.png" alt="TrustDollar Logo" class="logo-img">
+</div>
 
+ <div class="menu-toggle" id="menuToggle">☰</div>
+<div class="menu-overlay" id="menuOverlay"></div>
+<nav class="nav-links" id="navLinks">
+  <a href="explore.html">Explore</a>
+  <a href="earn.html">Earn</a>
+  <a href="#">Reserve</a>
+  <a href="terms.html">Term</a>
+  <a href="Privacy.html">Privacy Policy</a>
+</nav>
+
+</header>
   <!-- HERO -->
   <div class="hero">
-    <!-- ✅ Auto-scrolling image slider -->
-    <div class="slider">
+    <div class="slider" id="slider">
       <div class="slides">
-        <img src="trustwllet.png" alt="slide1">
-        <img src="https://via.placeholder.com/600x300/2c7/ffffff?text=Safe+Wallet" alt="slide2">
-        <img src="https://via.placeholder.com/600x300/3e8e41/ffffff?text=3+Level+Income" alt="slide3">
+        <div class="slide-card"><img src="myphoto/11.png" alt="slide1"></div>
+        <div class="slide-card"><img src="myphoto/22.png" alt="slide2"></div>
+        <div class="slide-card"><img src="myphoto/33.png" alt="slide3"></div>
       </div>
     </div>
 
@@ -250,7 +453,6 @@
     <p>Blockchain-powered platform designed to keep your investments safe and transparent. 
     Start today and earn referral income up to 3 levels.</p>
 
-    <!-- ✅ Buttons directly under hero -->
     <div class="hero-buttons">
       <a href="login.html" class="login">Login</a>
       <a href="register.html" class="register">Register</a>
@@ -273,7 +475,7 @@
     </div>
   </div>
 
-  <!-- BLOCKCHAIN DEMO -->
+  <!-- BLOCKCHAIN -->
   <div class="blockchain-section">
     <h2>How Blockchain Works</h2>
     <div class="blockchain">
@@ -290,15 +492,11 @@
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-container">
-
-      <!-- Left: Logo + About -->
       <div class="footer-col about">
         <h2>TrustDollar <span class="small">V2</span></h2>
         <p>TrustDollar is a BTC Mining & Staking platform. 
         Earn 1% daily and referral income up to 3 levels.</p>
       </div>
-
-      <!-- Middle: Resources + Company (side by side) -->
       <div class="footer-col links">
         <div class="link-group">
           <h3>Resources</h3>
@@ -317,175 +515,124 @@
           </ul>
         </div>
       </div>
+      <div class="footer-col">
+        <h3>Stay Updated</h3>
+        <p>Subscribe for updates, news & earning tips.</p>
+        <form id="subscribeForm" class="subscribe-form">
+          <input type="email" name="email" placeholder="Enter your email" required>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+      <div id="successPopup" class="popup">
+        Thank you for subscribing.
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2025 TrustDollar V2 | All Rights Reserved
+    </div>
+  </footer>
 
-       <!-- Newsletter -->
-<div class="footer-col">
-  <h3>Stay Updated</h3>
-  <p>Subscribe for updates, news & earning tips.</p>
+  <script>
+    // ✅ Auto + manual slider
+    let index = 0;
+    const slides = document.querySelector(".slides");
+    const totalSlides = document.querySelectorAll(".slide-card").length;
 
-  <form id="subscribeForm" class="subscribe-form">
-    <input type="email" name="email" placeholder="Enter your email" required>
-    <button type="submit">Submit</button>
-  </form>
-</div>
-
-<!-- ✅ Hidden Popup -->
-<div id="successPopup" class="popup">
-   Thank you for subscribing.
-</div>
-
-<style>
-/* Popup Style */
-.popup {
-  display: none; 
-  position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  background: #4CAF50;
-  color: #fff;
-  padding: 15px 25px;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  z-index: 2000;
-  animation: fadeIn 0.4s ease;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translate(-50%, -60%); }
-  to { opacity: 1; transform: translate(-50%, -50%); }
-}
-</style>
-
-<script>
-document.getElementById("subscribeForm").addEventListener("submit", function(e){
-  e.preventDefault(); // 🚫 default redirect band
-
-  const formData = new FormData(this);
-
-  fetch("https://formsubmit.co/trustdollarteam@gmail.com", {
-    method: "POST",
-    body: formData
-  })
-  .then(response => {
-    if(response.ok){
-      showPopup();  // ✅ popup call
-      this.reset(); // form clear
-    } else {
-      alert("❌ Something went wrong, try again!");
+    function showSlide(i) {
+      if (i < 0) index = totalSlides - 1;
+      else if (i >= totalSlides) index = 0;
+      else index = i;
+      slides.style.transform = `translateX(-${index * 100}%)`;
     }
-  })
-  .catch(error => {
-    alert("⚠ Error: " + error.message);
-  });
+
+    setInterval(() => { showSlide(index + 1); }, 4000);
+
+    // ✅ Touch swipe
+    let startX = 0;
+    const slider = document.getElementById("slider");
+    slider.addEventListener("touchstart", e => {
+      startX = e.touches[0].clientX;
+    });
+    slider.addEventListener("touchend", e => {
+      let endX = e.changedTouches[0].clientX;
+      if (startX - endX > 50) showSlide(index + 1);
+      if (endX - startX > 50) showSlide(index - 1);
+    });
+
+    // ✅ Mouse drag
+    let isDown = false;
+    slider.addEventListener("mousedown", e => {
+      isDown = true; startX = e.clientX;
+    });
+    document.addEventListener("mouseup", e => {
+      if (!isDown) return;
+      isDown = false;
+      let endX = e.clientX;
+      if (startX - endX > 50) showSlide(index + 1);
+      if (endX - startX > 50) showSlide(index - 1);
+    });
+
+    // ✅ Subscribe form
+    document.getElementById("subscribeForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const formData = new FormData(this);
+      fetch("https://formsubmit.co/trustdollarteam@gmail.com", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => {
+        if(response.ok){
+          showPopup();
+          this.reset();
+        } else {
+          alert("❌ Something went wrong, try again!");
+        }
+      })
+      .catch(error => {
+        alert("⚠ Error: " + error.message);
+      });
+    });
+
+    function showPopup(){
+      const popup = document.getElementById("successPopup");
+      popup.style.display = "block";
+      setTimeout(() => { popup.style.display = "none"; }, 3000);
+    }
+
+    // ✅ Referral logic
+    const urlParams = new URLSearchParams(window.location.search);
+    const referral = urlParams.get("ref");
+    const loginBtn = document.querySelector(".login");
+    const registerBtn = document.querySelector(".register");
+    if (referral) {
+      loginBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        alert("⚠ You came via referral. Please Register first.");
+      });
+      registerBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.location.href = `register.html?ref=${referral}`;
+      });
+    }
+  </script>
+    
+    <script>
+    const menuToggle = document.getElementById("menuToggle");
+const navLinks = document.getElementById("navLinks");
+const menuOverlay = document.getElementById("menuOverlay");
+
+menuToggle.addEventListener("click", () => {
+  navLinks.classList.toggle("show");
+  menuOverlay.classList.toggle("show");
 });
 
-function showPopup(){
-  const popup = document.getElementById("successPopup");
-  popup.style.display = "block";
+// ✅ Overlay pe click karne se bhi menu close ho jaye
+menuOverlay.addEventListener("click", () => {
+  navLinks.classList.remove("show");
+  menuOverlay.classList.remove("show");
+});
 
-  // 3 sec baad hide ho jaye
-  setTimeout(() => {
-    popup.style.display = "none";
-  }, 3000);
-}
 </script>
-
-
-<!-- Bottom Bar -->
-<div class="footer-bottom">
-  © 2025 TrustDollar V2 | All Rights Reserved
-</div>
-</footer>
-
-<style>
-  .footer {
-    background: #e8f5e9;   /* ✅ light green theme */
-    color: #333;
-    padding: 50px 20px 20px;
-  }
-  .footer-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
-    gap: 30px;
-    max-width: 1100px;
-    margin: auto;
-  }
-  .footer h2, .footer h3 {
-    margin-bottom: 12px;
-    color: #2c7;
-  }
-  .footer p { font-size: 14px; line-height: 1.6; }
-  .footer ul { list-style: none; padding: 0; }
-  .footer ul li { margin: 6px 0; }
-  .footer ul li a {
-    color: #444; text-decoration: none; font-size: 14px;
-  }
-  .footer ul li a:hover { color: #2c7; font-weight: 600; }
-
-  /* ✅ Side by side for Resources + Company */
-  .links {
-    display: flex;
-    gap: 40px;
-    justify-content: flex-start;
-  }
-  .link-group { flex: 1; }
-
-  /* Subscribe form */
-  .subscribe-form {
-    display: flex; margin-top: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px; overflow: hidden;
-  }
-  .subscribe-form input {
-    flex: 1; padding: 10px; border: none; outline: none;
-    font-size: 14px; background: #fff; color: #333;
-  }
-  .subscribe-form button {
-    background: linear-gradient(90deg,#4CAF50,#2c7);
-    color: #fff; border: none; padding: 10px 16px;
-    cursor: pointer; font-weight: bold;
-  }
-  .subscribe-form button:hover { opacity: 0.9; }
-
-  /* Bottom bar */
-  .footer-bottom {
-    text-align: center;
-    border-top: 1px solid #ccc;
-    padding-top: 15px;
-    font-size: 13px;
-    margin-top: 30px;
-    color: #444;
-  }
-</style>
-
-<script>
-// Get referral from URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const referral = urlParams.get("ref");
-
-// Login & Register buttons
-  const loginBtn = document.querySelector(".login");
-  const registerBtn = document.querySelector(".register");
-
-  if (referral) {
-  // Referral mila hai ✅
-    console.log("Referral detected: " + referral);
-
-  // Login disable
-    loginBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      alert("⚠ You came via referral. Please Register first.");
-    });
-
-  // Register button → referral code chipak jaye
-    registerBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      window.location.href = `register.html?ref=${referral}`;
-    });
-  }
-</script>
-
 
 </body>
 </html>
