@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Terms &amp; Conditions — TrustDollar V2</title>
+  <style>
+    :root{
+      --green-1: #2c7;       /* light green */
+      --green-2: #4CAF50;    /* darker green */
+      --bg: #eef9f1;
+      --card-bg: #ffffff;
+      --muted: #666;
+      --max-width: 1100px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: "Poppins", system-ui, Arial, sans-serif;
+      background: linear-gradient(180deg, #f6faf6 0%, #eef9f1 100%);
+      color:#222;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* top small header */
+    .topbar{
+      background: linear-gradient(90deg, var(--green-2), var(--green-1));
+      color:#fff;
+      padding:14px 20px;
+      display:flex;
+      align-items:center;
+      gap:14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+    .brand-text{
+      font-weight:700;
+      font-size:18px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .brand-text .trust{ color: #ff8a00; } /* small accent */
+    .brand-text .dollar{ color: #fff; filter: drop-shadow(0 1px 0 rgba(0,0,0,0.03)); }
+
+    .container{
+      max-width:var(--max-width);
+      margin:28px auto;
+      padding:0 18px 80px;
+      display:grid;
+      grid-template-columns: 1fr 380px;
+      gap:28px;
+      align-items:start;
+    }
+
+    /* left content */
+    .card{
+      background: var(--card-bg);
+      border-radius:14px;
+      padding:28px;
+      box-shadow: 0 10px 30px rgba(14, 54, 17, 0.06);
+    }
+    h1{
+      margin:0 0 10px;
+      color:var(--green-2);
+      font-size:26px;
+    }
+    .lead{
+      color:var(--muted);
+      margin-bottom:18px;
+      line-height:1.55;
+    }
+
+    h2{
+      color: var(--green-1);
+      font-size:18px;
+      margin-top:22px;
+      margin-bottom:8px;
+    }
+    p{ color:#333; line-height:1.6; margin:10px 0; }
+
+    ul{ margin:8px 0 14px 20px; color:#333; }
+    li{ margin:8px 0; }
+
+    /* table-like box for important points */
+    .note{
+      background: linear-gradient(90deg, #f8fff8, #fbfffdf0);
+      border-left:4px solid var(--green-2);
+      padding:14px 16px;
+      border-radius:8px;
+      margin:16px 0;
+      color:#2b2b2b;
+    }
+
+    /* right sidebar */
+    .sidebar{
+      position:sticky;
+      top:86px;
+    }
+    .toc{
+      padding:16px;
+      border-radius:10px;
+      background:linear-gradient(180deg,#ffffff,#f9fffa);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+    }
+    .toc h3{ margin:0 0 12px; color:var(--green-2); }
+    .toc a{
+      display:block;
+      text-decoration:none;
+      color:#0b3b20;
+      padding:8px 0;
+      border-bottom:1px solid rgba(0,0,0,0.04);
+    }
+
+    .footer-links{
+      margin-top:18px;
+      font-size:14px;
+      color:var(--muted);
+    }
+    .footer-links a{ color:var(--green-2); text-decoration:none; font-weight:600; }
+
+    /* responsive */
+    @media(max-width: 980px){
+      .container{ grid-template-columns: 1fr; padding:0 16px 60px; }
+      .sidebar{ position:static; margin-top:16px; }
+    }
+
+    @media(max-width:480px){
+      h1{ font-size:22px; }
+      .brand-text{ font-size:16px; }
+      .card{ padding:18px; border-radius:12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand-text"><span class="trust">Trust</span><span class="dollar">Dollar</span></div>
+    <div style="margin-left:auto; font-size:14px; color:rgba(255,255,255,0.95)">Terms &amp; Conditions</div>
+  </div>
+
+  <main class="container">
+    <section class="card">
+      <h1>Terms &amp; Conditions</h1>
+      <p class="lead">Welcome to TrustDollar V2. Please read these terms carefully before using our website or services. By accessing or using our platform you agree to be bound by these terms.</p>
+
+      <div id="scope">
+        <h2>1. Scope of Services</h2>
+        <p>TrustDollar provides crypto staking and referral services. The platform allows users to deposit supported tokens, track earnings and manage referrals. Use of the website is subject to these terms and all applicable laws.</p>
+      </div>
+
+      <div id="accounts">
+        <h2>2. Accounts and Registration</h2>
+        <p>To use certain features you must register an account. You are responsible for keeping your account secure and for all activity that occurs under your account.</p>
+
+        <ul>
+          <li>Provide accurate information during registration.</li>
+          <li>Keep your login credentials secret; we are not responsible for unauthorized access.</li>
+        </ul>
+      </div>
+
+      <div id="fees">
+        <h2>3. Fees &amp; Payments</h2>
+        <p>All fees, payouts and referral commissions are described within your dashboard. TrustDollar may change fees with prior notice on the website.</p>
+      </div>
+
+      <div id="risk">
+        <h2>4. Risk Disclosure</h2>
+        <p>Cryptocurrency and staking involve risks. Prices may fluctuate and past performance is not a guarantee of future returns. Do not invest more than you can afford to lose.</p>
+
+        <div class="note">
+          <strong>Important:</strong> TrustDollar does not provide financial advice. Consult a professional before making investment decisions.
+        </div>
+      </div>
+
+      <div id="termination">
+        <h2>5. Termination</h2>
+        <p>We may suspend or terminate accounts for violations of these terms or suspicious activity. Users can close their accounts following the account settings workflow.</p>
+      </div>
+
+      <div id="changes">
+        <h2>6. Changes to Terms</h2>
+        <p>We may update these terms occasionally. Continued use after changes constitutes acceptance. When material changes are made, we'll post notice on the site.</p>
+      </div>
+
+      <div id="contact">
+        <h2>7. Contact</h2>
+        <p>If you have questions about these Terms, contact: <strong style="color:var(--green-2)">trustdollarteam@gmail.com</strong></p>
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <div class="toc card">
+        <h3>On this page</h3>
+        <a href="#scope">Scope of Services</a>
+        <a href="#accounts">Accounts &amp; Registration</a>
+        <a href="#fees">Fees &amp; Payments</a>
+        <a href="#risk">Risk Disclosure</a>
+        <a href="#termination">Termination</a>
+        <a href="#changes">Changes to Terms</a>
+        <a href="#contact">Contact</a>
+
+        <div class="footer-links" style="margin-top:14px">
+          <div>Also see</div>
+          <a href="privacy.html">Privacy Policy</a>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <footer style="text-align:center; padding:24px 12px; color:var(--muted); font-size:14px;">
+    © 2025 TrustDollar V2 — <a href="index.html" style="color:var(--green-2); text-decoration:none;">Home</a>
+  </footer>
+
+</body>
+</html>
