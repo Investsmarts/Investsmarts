@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Deposit</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-<style>
-body {
-  font-family: 'Poppins', sans-serif;
-  background: #f5f7fa;
-  margin: 0;
-  padding-bottom: 100px;
-  color: #333;
-}
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding-bottom: 100px;
+      color: #333;
+    }
 
 /* 🔥 Dashboard Container */
 .dashboard {
@@ -195,6 +195,7 @@ body {
 .nav-item:hover i {color:#218838;}
 .nav-item:not(:last-child)::after {content:"";position:absolute;right:0;top:20%;bottom:20%;width:1px;background:#e0e0e0;}
 
+
 .btn-deposit {
   background: #28a745;   /* Green */
   color: #fff;
@@ -211,57 +212,100 @@ body {
   background: #218838;   /* Darker Green on hover */
 }
 
+/* ✅ Balance Card */
+.balance-card {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  border-radius: 16px;
+  padding: 20px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  margin-bottom: 20px;
+}
+.balance-icon {
+  font-size: 48px;
+  margin-right: 15px;
+}
+.balance-info h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.balance-info .amount {
+  font-size: 26px;
+  font-weight: bold;
+  margin: 5px 0;
+}
+.balance-info small {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+
 </style>
 </head>
 <body>
-<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-<div class="dashboard">
+  <div class="dashboard">
+    <!-- ✅ Total Deposit Card -->
+    <div class="balance-card">
+      <div class="balance-icon">
+        <i class='bx bxs-dollar-circle'></i>
+      </div>
+      <div class="balance-info">
+        <h3>Total Deposit (USDT)</h3>
+        <p class="amount">$<span id="totalDeposit">0.00</span></p>
+        <small id="userLevel">My Level: No Level</small>
+      </div>
+    </div>
 
- <!-- Deposit Info -->
-   <div class="info-card">
-    <h3>Deposit Section</h3>
-    <p>Click below to get your <b>BEP20 deposit address</b> with QR code.</p>
-    <button class="btn-deposit" onclick="openPopup()">Get Deposit Address</button>
+
+    <!-- Deposit Info -->
+    <div class="info-card">
+      <h3>Deposit Section</h3>
+      <p>Click below to get your <b>BEP20 deposit address</b> with QR code.</p>
+      <button class="btn-deposit" onclick="openPopup()">Get Deposit Address</button>
+    </div>
+
+    <!-- History -->
+    <div class="history-section">
+      <h2 style="color:#007bff; text-align:center;">Deposit History</h2>
+      <button class="refresh-btn" onclick="manualRefresh()">🔄 Refresh History</button>
+      <div id="historyList"><p style="text-align:center; color:#666;">Loading...</p></div>
+    </div>
+
   </div>
 
-  <!-- History -->
-  <div class="history-section">
-    <h2 style="color:#007bff; text-align:center;">Deposit History</h2>
-    <button class="refresh-btn" onclick="manualRefresh()">🔄 Refresh History</button>
-    <div id="historyList"><p style="text-align:center; color:#666;">Loading...</p></div>
-  </div>
-
-</div>
-
-<!-- ✅ Popup -->
-<div class="popup-overlay" id="popupOverlay">
-  <div class="popup">
-    <h2>Deposit Funds</h2>
-    <input type="number" id="depositAmount" class="amount-input" placeholder="Enter amount to deposit">
-    <div id="amountInstruction" class="amount-instruction"></div>
-    <div id="qrcode" class="qr-code"></div>
-    <div class="address-box" id="depositAddress"></div>
-    <button class="copy-btn" onclick="copyAddress()">Copy Address</button>
-    <div class="action-buttons">
-      <button class="close-btn" onclick="cancelDeposit()">Cancel</button>
-      <button class="paid-btn" onclick="markPaid()">I Have Paid</button>
+  <!-- ✅ Popup -->
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup">
+      <h2>Deposit Funds</h2>
+      <input type="number" id="depositAmount" class="amount-input" placeholder="Enter amount to deposit">
+      <div id="amountInstruction" class="amount-instruction"></div>
+      <div id="qrcode" class="qr-code"></div>
+      <div class="address-box" id="depositAddress"></div>
+      <button class="copy-btn" onclick="copyAddress()">Copy Address</button>
+      <div class="action-buttons">
+        <button class="close-btn" onclick="cancelDeposit()">Cancel</button>
+        <button class="paid-btn" onclick="markPaid()">I Have Paid</button>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="thankyou-popup" id="thankyouPopup">Thank you for paying</div>
-<div class="error-popup" id="errorPopup">Enter valid amount</div>
+  <div class="thankyou-popup" id="thankyouPopup">Thank you for paying</div>
+  <div class="error-popup" id="errorPopup">Enter valid amount</div>
 
-<div class="bottom-nav">
-  <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
-  <a href="invest.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
-  <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
-  <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
-</div>
+  <div class="bottom-nav">
+    <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
+    <a href="invest.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
+    <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
+    <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
+  </div>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
-<!-- ✅ Firebase + Logic -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <!-- ✅ Firebase + Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -277,49 +321,50 @@ body {
       measurementId: "G-HG0Q8ZHT6G"
     };
     const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-const popupOverlay = document.getElementById("popupOverlay");
-const depositAddressEl = document.getElementById("depositAddress");
-const qrCodeEl = document.getElementById("qrcode");
-const historyList = document.getElementById("historyList");
-const thankyouPopup = document.getElementById("thankyouPopup");
-const errorPopup = document.getElementById("errorPopup");
-const instructionEl = document.getElementById("amountInstruction");
+    const popupOverlay = document.getElementById("popupOverlay");
+    const depositAddressEl = document.getElementById("depositAddress");
+    const qrCodeEl = document.getElementById("qrcode");
+    const historyList = document.getElementById("historyList");
+    const thankyouPopup = document.getElementById("thankyouPopup");
+    const errorPopup = document.getElementById("errorPopup");
+    const instructionEl = document.getElementById("amountInstruction");
 
-function generateOrderId() {
-  const randomNum = Math.floor(1000000000 + Math.random() * 9000000000);
-  return "DPBHGR" + randomNum + "G";
-}
+    function generateOrderId() {
+      const randomNum = Math.floor(1000000000 + Math.random() * 9000000000);
+      return "DPBHGR" + randomNum + "G";
+    }
 
-const depositAddresses = [
-  "0x6cf5f8F9564205C6AB3dE1694F54374e70dD135A",
-  "0x9ad288c9835Cfe30141677444A0A637a434Cd9bC",
-  "0x9d6Dc16a1E5aC1CC3b4e7F500f4BdB51D8fBc301",
-  "0x1E807c2AeC3165C37A8b47034839654033bD8cf2"
-];
+    const depositAddresses = [
+      "0x6cf5f8F9564205C6AB3dE1694F54374e70dD135A",
+      "0x9ad288c9835Cfe30141677444A0A637a434Cd9bC",
+      "0x9d6Dc16a1E5aC1CC3b4e7F500f4BdB51D8fBc301",
+      "0x1E807c2AeC3165C37A8b47034839654033bD8cf2"
+      ];
 
-let currentDepositAddress = "";
-let currentUserId = null;
-let currentDepositId = null;
+    let currentDepositAddress = "";
+    let currentUserId = null;
+    let currentDepositId = null;
 
-function showError(msg) {
-  errorPopup.textContent = msg;
-  errorPopup.style.display = "block";
-  setTimeout(() => { errorPopup.style.display = "none"; }, 1500);
-}
+    function showError(msg) {
+      errorPopup.textContent = msg;
+      errorPopup.style.display = "block";
+      setTimeout(() => { errorPopup.style.display = "none"; }, 1500);
+    }
 
 // ✅ QR Code ko update karne ka function
-function updateQRCode() {
-  const amountInput = document.getElementById("depositAmount");
-  const amount = parseFloat(amountInput.value) || 0;
-  let qrText = `ethereum:${currentDepositAddress}`;
+    function updateQRCode() {
+      const amountInput = document.getElementById("depositAmount");
+      const amount = parseFloat(amountInput.value) || 0;
+      let qrText = `${currentDepositAddress}`;
 
-  if (amount > 0) {
-    if (amount < 200) {
+
+      if (amount > 0) {
+        if (amount < 200) {
       // ❌ Agar 200 se kam hai → red border + error
-      amountInput.style.border = "2px solid red";
+          amountInput.style.border = "2px solid red";
       qrCodeEl.innerHTML = ""; // QR mat banao
       return;
     } else {
@@ -411,58 +456,96 @@ window.manualRefresh = function() {
 };
 
 
-    async function loadDepositHistory(userId) {
-      historyList.innerHTML = "<p style='text-align:center; color:#666;'>Loading...</p>";
-      try {
-        const q = query(collection(db, "users", userId, "deposits"), orderBy("date", "desc"));
-        const querySnapshot = await getDocs(q);
-        if (querySnapshot.empty) {
-          historyList.innerHTML = "<p style='text-align:center; color:#666;'>No deposits yet.</p>";
-          return;
-        }
-        historyList.innerHTML = "";
-        querySnapshot.forEach(docSnap => {
-          const data = docSnap.data();
-          const dateStr = data.date ? new Date(data.date.seconds*1000).toLocaleString() : "-";
-          const statusClass = (data.status || "Pending").toLowerCase();
-          historyList.innerHTML += `
-            <div class="history-card">
-              <div class="history-card-header">
-                <span class="badge">Deposit</span>
-                <span class="status ${statusClass}">${data.status || "Pending"}</span>
-              </div>
-              <div class="history-card-row"><span class="label">Balance</span><span class="value">$${data.amount || 0}</span></div>
-              <div class="history-card-row"><span class="label">Type</span><span>BEP20</span></div>
-              <div class="history-card-row"><span class="label">Time</span><small>${dateStr}</small></div>
-              <div class="history-card-row"><span class="label"> ID</span>
-                <span><small id="order-${docSnap.id}">${data.orderId || docSnap.id}</small>
-                <button onclick="copyOrderId('${data.orderId || docSnap.id}')">Copy</button></span>
-              </div>
-            </div>`;
-        });
-      } catch (err) {
-        console.error("Error:", err);
-        historyList.innerHTML = "<p style='text-align:center; color:red;'>Error loading history</p>";
-      }
+async function loadDepositHistory(userId) {
+  historyList.innerHTML = "<p style='text-align:center; color:#666;'>Loading...</p>";
+  try {
+    const q = query(collection(db, "users", userId, "deposits"), orderBy("date", "desc"));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+      historyList.innerHTML = "<p style='text-align:center; color:#666;'>No deposits yet.</p>";
+      return;
     }
+    historyList.innerHTML = "";
+    querySnapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      const dateStr = data.date ? new Date(data.date.seconds*1000).toLocaleString() : "-";
+      const statusClass = (data.status || "Pending").toLowerCase();
+      historyList.innerHTML += `
+      <div class="history-card">
+      <div class="history-card-header">
+      <span class="badge">Deposit</span>
+      <span class="status ${statusClass}">${data.status || "Pending"}</span>
+      </div>
+      <div class="history-card-row"><span class="label">Balance</span><span class="value">$${data.amount || 0}</span></div>
+      <div class="history-card-row"><span class="label">Type</span><span>BEP20</span></div>
+      <div class="history-card-row"><span class="label">Time</span><small>${dateStr}</small></div>
+      <div class="history-card-row"><span class="label"> ID</span>
+      <span><small id="order-${docSnap.id}">${data.orderId || docSnap.id}</small>
+      <button onclick="copyOrderId('${data.orderId || docSnap.id}')">Copy</button></span>
+      </div>
+      </div>`;
+    });
+  } catch (err) {
+    console.error("Error:", err);
+    historyList.innerHTML = "<p style='text-align:center; color:red;'>Error loading history</p>";
+  }
+}
 
-    onAuthStateChanged(auth, (user) => {
-      if (!user) window.location.href = "auth.html";
-      else { currentUserId = user.uid; loadDepositHistory(user.uid); }
+onAuthStateChanged(auth, (user) => {
+  if (!user) window.location.href = "auth.html";
+  else { currentUserId = user.uid; loadDepositHistory(user.uid); 
+  loadTotalDeposit(user.uid);}
+});
+
+window.copyOrderId = function(orderId) {
+  navigator.clipboard.writeText(orderId);
+  showError("Order ID copied!");
+};
+      // ✅ Navbar Highlight Logic
+document.querySelectorAll(".wave-nav a").forEach(link => {
+  if (link.href === window.location.href) {
+    link.classList.add("active");
+  } else {
+    link.classList.remove("active");
+  }
+});
+
+  // ✅ Total Deposit Calculation
+async function loadTotalDeposit(userId) {
+  try {
+    const q = query(collection(db, "users", userId, "deposits"));
+    const querySnapshot = await getDocs(q);
+
+    let total = 0;
+    querySnapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      const status = (data.status || "").toLowerCase();
+
+      // ✅ sirf completed + success wale hi count karna
+      if ((status === "completed" || status === "success") && data.amount) {
+        total += parseFloat(data.amount);
+      }
     });
 
-    window.copyOrderId = function(orderId) {
-      navigator.clipboard.writeText(orderId);
-      showError("Order ID copied!");
-    };
-      // ✅ Navbar Highlight Logic
-  document.querySelectorAll(".wave-nav a").forEach(link => {
-    if (link.href === window.location.href) {
-      link.classList.add("active");
+    document.getElementById("totalDeposit").textContent = total.toFixed(2);
+
+    // ✅ level set karne ka logic
+    if (total >= 1000) {
+      document.getElementById("userLevel").textContent = "My Level: Gold";
+    } else if (total >= 500) {
+      document.getElementById("userLevel").textContent = "My Level: Silver";
+    } else if (total >= 200) {
+      document.getElementById("userLevel").textContent = "My Level: Bronze";
     } else {
-      link.classList.remove("active");
+      document.getElementById("userLevel").textContent = "My Level: No Level";
     }
-  });
-  </script>
+
+  } catch (err) {
+    console.error("Error loading total:", err);
+  }
+}
+
+
+</script>
 </body>
 </html>
