@@ -1,248 +1,248 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>TrustDollar Staking</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TrustDollar Staking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Poppins',sans-serif;background:#f8fafc;color:#111}
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Poppins',sans-serif;background:#f8fafc;color:#111}
 
-  /* ✅ Navbar */
-  .nav{
-    display:flex;justify-content:center;gap:18px;
-    background:#fff;padding:12px 0;
-    position:fixed;top:0;left:0;width:100%;z-index:1000;
-    border-bottom:2px solid #e5e7eb
-  }
-  .nav a{
-    padding:10px 14px;text-decoration:none;color:#333;
-    font-weight:600;transition:all 0.3s ease;
-    border-bottom:3px solid transparent;cursor:pointer
-  }
-  .nav a.active{color:#0b7a4f;border-bottom:3px solid #0b7a4f}
+    /* ✅ Navbar */
+    .nav{
+      display:flex;justify-content:center;gap:18px;
+      background:#fff;padding:12px 0;
+      position:fixed;top:0;left:0;width:100%;z-index:1000;
+      border-bottom:2px solid #e5e7eb
+    }
+    .nav a{
+      padding:10px 14px;text-decoration:none;color:#333;
+      font-weight:600;transition:all 0.3s ease;
+      border-bottom:3px solid transparent;cursor:pointer
+    }
+    .nav a.active{color:#0b7a4f;border-bottom:3px solid #0b7a4f}
 
-  /* ✅ Sections */
-  .section{
-    max-width:1200px;margin:0 auto;padding:20px;margin-top:70px;
-    display:none;transition:opacity 0.3s ease,transform 0.3s ease
-  }
-  .section.active{display:block;opacity:1;transform:translateY(0)}
-  h2{text-align:center;margin:18px 0 22px;font-size:20px}
+    /* ✅ Sections */
+    .section{
+      max-width:1200px;margin:0 auto;padding:20px;margin-top:70px;
+      display:none;transition:opacity 0.3s ease,transform 0.3s ease
+    }
+    .section.active{display:block;opacity:1;transform:translateY(0)}
+    h2{text-align:center;margin:18px 0 22px;font-size:20px}
 
-  /* ✅ Staking cards */
-  .staking-container{
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:18px;max-width:1100px;margin:0 auto
-  }
-  .staking-box{
-    background:#fff;border-radius:14px;
-    box-shadow:0 6px 20px rgba(16,24,40,0.06);
-    padding:16px;transition:all .22s;
-    display:flex;flex-direction:column
-  }
-  .staking-box:hover{transform:translateY(-6px)}
-  .staking-header{display:flex;justify-content:space-between;color:#168b65;font-weight:600;margin-bottom:10px}
-  .staking-img{
-    display:flex;justify-content:center;align-items:center;
-    height:200px;background:#fff;border-radius:12px;
-    border:1px solid #e6edf0;overflow:hidden;padding:8px;margin-bottom:12px
-  }
-  .staking-img img{width:100%;height:100%;object-fit:contain}
-  .staking-title{text-align:center;font-weight:700;font-size:16px;margin-bottom:8px}
-  .staking-info{color:#555;font-size:14px;margin-bottom:12px;text-align:center}
-  .staking-info p{margin:4px 0}
-  .staking-info span{font-weight:700;color:#1f7f63}
-  .stake-btn{
-    margin-top:auto;width:100%;padding:12px;border:0;border-radius:10px;
-    background:linear-gradient(135deg,#22c55e,#16a34a);
-    color:#fff;font-weight:700;cursor:pointer;font-size:15px;transition:all .3s
-  }
-  .stake-btn:hover{background:linear-gradient(135deg,#15803d,#16a34a)}
+    /* ✅ Staking cards */
+    .staking-container{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:18px;max-width:1100px;margin:0 auto
+    }
+    .staking-box{
+      background:#fff;border-radius:14px;
+      box-shadow:0 6px 20px rgba(16,24,40,0.06);
+      padding:16px;transition:all .22s;
+      display:flex;flex-direction:column
+    }
+    .staking-box:hover{transform:translateY(-6px)}
+    .staking-header{display:flex;justify-content:space-between;color:#168b65;font-weight:600;margin-bottom:10px}
+    .staking-img{
+      display:flex;justify-content:center;align-items:center;
+      height:200px;background:#fff;border-radius:12px;
+      border:1px solid #e6edf0;overflow:hidden;padding:8px;margin-bottom:12px
+    }
+    .staking-img img{width:100%;height:100%;object-fit:contain}
+    .staking-title{text-align:center;font-weight:700;font-size:16px;margin-bottom:8px}
+    .staking-info{color:#555;font-size:14px;margin-bottom:12px;text-align:center}
+    .staking-info p{margin:4px 0}
+    .staking-info span{font-weight:700;color:#1f7f63}
+    .stake-btn{
+      margin-top:auto;width:100%;padding:12px;border:0;border-radius:10px;
+      background:linear-gradient(135deg,#22c55e,#16a34a);
+      color:#fff;font-weight:700;cursor:pointer;font-size:15px;transition:all .3s
+    }
+    .stake-btn:hover{background:linear-gradient(135deg,#15803d,#16a34a)}
 
-  /* ✅ History */
-  .history-wrap{max-width:1100px;margin:18px auto;display:none}
-  .history-item{
-    display:flex;justify-content:space-between;align-items:center;
-    padding:12px;border-radius:10px;background:#fff;
-    margin-bottom:10px;border:1px solid #eef2f4
-  }
-  .countdown{font-size:13px;color:#666;margin-top:6px}
-  .center-msg{text-align:center;color:#666;padding:14px;background:#fff;border-radius:8px}
+    /* ✅ History */
+    .history-wrap{max-width:1100px;margin:18px auto;display:none}
+    .history-item{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:12px;border-radius:10px;background:#fff;
+      margin-bottom:10px;border:1px solid #eef2f4
+    }
+    .countdown{font-size:13px;color:#666;margin-top:6px}
+    .center-msg{text-align:center;color:#666;padding:14px;background:#fff;border-radius:8px}
 
-  /* ✅ Popup */
-  #popup{display:none;position:fixed;inset:0;align-items:center;justify-content:center;z-index:12000}
-  #popup .pbox{
-    background:#111;color:#fff;padding:12px 16px;border-radius:8px;
-    animation:fadeIn 0.3s ease
-  }
-  @keyframes fadeIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+    /* ✅ Popup */
+    #popup{display:none;position:fixed;inset:0;align-items:center;justify-content:center;z-index:12000}
+    #popup .pbox{
+      background:#111;color:#fff;padding:12px 16px;border-radius:8px;
+      animation:fadeIn 0.3s ease
+    }
+    @keyframes fadeIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
 
-  /* ✅ Modal */
-  .modal{
-    display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);
-    z-index:9999;align-items:center;justify-content:center;padding:20px
-  }
-  .modal-content{
-    width:100%;max-width:420px;background:#fff;border-radius:12px;
-    padding:18px;box-shadow:0 20px 50px rgba(2,6,23,0.2);animation:fadeIn 0.3s ease
-  }
-  .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-  .modal-header h3{font-size:18px}
-  .close-btn{cursor:pointer;font-size:20px}
-  .modal-img{
-    display:flex;justify-content:center;align-items:center;
-    height:220px;background:#fff;border-radius:12px;
-    border:1px solid #e6edf0;overflow:hidden;margin-bottom:12px
-  }
-  .modal-img img{width:100%;height:100%;object-fit:contain}
-  .info-box{margin:8px 0}
-  .info-box label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
-  .info-box input{
-    width:100%;padding:10px;border:1px solid #d6dbe0;
-    border-radius:10px;background:#fbfdff
-  }
-  .stake-action{margin-top:12px}
-  .stake-action input[type="number"]{
-    width:100%;padding:10px;border-radius:10px;
-    border:1px solid #d6dbe0;margin-bottom:10px
-  }
-  .stake-action button{
-    width:100%;padding:12px;border-radius:10px;border:0;
-    background:linear-gradient(135deg,#16a34a,#22c55e);
-    color:#fff;font-weight:700;cursor:pointer;transition:all .3s
-  }
-  .stake-action button:hover{background:linear-gradient(135deg,#15803d,#16a34a)}
+    /* ✅ Modal */
+    .modal{
+      display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);
+      z-index:9999;align-items:center;justify-content:center;padding:20px
+    }
+    .modal-content{
+      width:100%;max-width:420px;background:#fff;border-radius:12px;
+      padding:18px;box-shadow:0 20px 50px rgba(2,6,23,0.2);animation:fadeIn 0.3s ease
+    }
+    .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .modal-header h3{font-size:18px}
+    .close-btn{cursor:pointer;font-size:20px}
+    .modal-img{
+      display:flex;justify-content:center;align-items:center;
+      height:220px;background:#fff;border-radius:12px;
+      border:1px solid #e6edf0;overflow:hidden;margin-bottom:12px
+    }
+    .modal-img img{width:100%;height:100%;object-fit:contain}
+    .info-box{margin:8px 0}
+    .info-box label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+    .info-box input{
+      width:100%;padding:10px;border:1px solid #d6dbe0;
+      border-radius:10px;background:#fbfdff
+    }
+    .stake-action{margin-top:12px}
+    .stake-action input[type="number"]{
+      width:100%;padding:10px;border-radius:10px;
+      border:1px solid #d6dbe0;margin-bottom:10px
+    }
+    .stake-action button{
+      width:100%;padding:12px;border-radius:10px;border:0;
+      background:linear-gradient(135deg,#16a34a,#22c55e);
+      color:#fff;font-weight:700;cursor:pointer;transition:all .3s
+    }
+    .stake-action button:hover{background:linear-gradient(135deg,#15803d,#16a34a)}
 
-  /* ✅ Investment History Cards */
-  #historyList{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:18px
-  }
-  .invest-card{
-    background:#fff;border-radius:16px;
-    box-shadow:0 6px 20px rgba(16,24,40,0.08);
-    padding:18px;margin-bottom:20px;
-    display:flex;flex-direction:column;align-items:center
-  }
-  .invest-card img{
-    width:100%;max-height:220px;object-fit:contain;
-    border-radius:12px;margin-bottom:14px
-  }
-  .invest-title{font-weight:700;font-size:18px;margin-bottom:12px;text-align:center}
-  .invest-info{width:100%;font-size:14px;color:#444;margin-top:12px}
-  .invest-info p{
-    margin:8px 0;display:flex;justify-content:space-between;align-items:center;
-    border-bottom:1px solid #f1f1f1;padding-bottom:6px
-  }
-  .invest-info p:last-child{border-bottom:none}
-  .invest-label{flex:1;font-weight:600;color:#555}
-  .invest-value{flex:1;text-align:right;font-weight:700;color:#111}
+    /* ✅ Investment History Cards */
+    #historyList{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:18px
+    }
+    .invest-card{
+      background:#fff;border-radius:16px;
+      box-shadow:0 6px 20px rgba(16,24,40,0.08);
+      padding:18px;margin-bottom:20px;
+      display:flex;flex-direction:column;align-items:center
+    }
+    .invest-card img{
+      width:100%;max-height:220px;object-fit:contain;
+      border-radius:12px;margin-bottom:14px
+    }
+    .invest-title{font-weight:700;font-size:18px;margin-bottom:12px;text-align:center}
+    .invest-info{width:100%;font-size:14px;color:#444;margin-top:12px}
+    .invest-info p{
+      margin:8px 0;display:flex;justify-content:space-between;align-items:center;
+      border-bottom:1px solid #f1f1f1;padding-bottom:6px
+    }
+    .invest-info p:last-child{border-bottom:none}
+    .invest-label{flex:1;font-weight:600;color:#555}
+    .invest-value{flex:1;text-align:right;font-weight:700;color:#111}
 
-  .status-badge{
-    display:inline-block;padding:4px 12px;border-radius:8px;
-    font-size:13px;font-weight:600
-  }
-  .status-active{background:#dcfce7;color:#166534}
-  .status-complete{background:#dbeafe;color:#1e40af}
-  .status-cancel{background:#fee2e2;color:#b91c1c}
+    .status-badge{
+      display:inline-block;padding:4px 12px;border-radius:8px;
+      font-size:13px;font-weight:600
+    }
+    .status-active{background:#dcfce7;color:#166534}
+    .status-complete{background:#dbeafe;color:#1e40af}
+    .status-cancel{background:#fee2e2;color:#b91c1c}
 
-  .countdown-box{
-    width:100%;text-align:center;padding:12px;margin-top:16px;
-    border-radius:12px;background:linear-gradient(135deg,#dbeafe,#e0f7f4);
-    font-weight:600;font-size:14px
-  }
+    .countdown-box{
+      width:100%;text-align:center;padding:12px;margin-top:16px;
+      border-radius:12px;background:linear-gradient(135deg,#dbeafe,#e0f7f4);
+      font-weight:600;font-size:14px
+    }
 
-  /* ✅ Responsive Fix */
-  @media(max-width:768px){
-    .invest-card{padding:14px}
-    .invest-title{font-size:16px}
-    .invest-info p{font-size:13px;flex-direction:column;align-items:flex-start}
-    .invest-info span{margin-top:2px}
-    .countdown-box{font-size:13px;padding:8px}
-  }
-  @media(max-width:600px){
-    .staking-img{height:160px}
-    .staking-title{font-size:15px}
-    .nav{gap:12px;font-size:14px}
-  }
-  @media(max-width:480px){
-    .invest-card{padding:12px}
-    .invest-title{font-size:15px}
-    .invest-info{font-size:12px}
-  }
-</style>
+    /* ✅ Responsive Fix */
+    @media(max-width:768px){
+      .invest-card{padding:14px}
+      .invest-title{font-size:16px}
+      .invest-info p{font-size:13px;flex-direction:column;align-items:flex-start}
+      .invest-info span{margin-top:2px}
+      .countdown-box{font-size:13px;padding:8px}
+    }
+    @media(max-width:600px){
+      .staking-img{height:160px}
+      .staking-title{font-size:15px}
+      .nav{gap:12px;font-size:14px}
+    }
+    @media(max-width:480px){
+      .invest-card{padding:12px}
+      .invest-title{font-size:15px}
+      .invest-info{font-size:12px}
+    }
+  </style>
 
 </head>
 <body>
 
-<!-- Top Navigation -->
-<div class="nav">
-  <a class="active" onclick="showSection('staking')">Staking</a>
-  <a href="stacklong.html">Stack Long</a>
-  <a onclick="showSection('record')">Record</a>
-</div>
+  <!-- Top Navigation -->
+  <div class="nav">
+    <a class="active" onclick="showSection('staking')">Staking</a>
+    <a href="stacklong.html">Stack Long</a>
+    <a onclick="showSection('record')">Record</a>
+  </div>
 
-<!-- Sections -->
-<div id="staking" class="section active">
-  <h2>TrustDollar Amount Staking</h2>
-  <div class="staking-container">
-    <div class="staking-box">
-      <div class="staking-header"><span>Plan = 1</span><span>Per Day</span></div>
-      <div class="staking-img"><img src="myphoto/1414.png" alt="vault"></div>
-      <div class="staking-title">TrustDollar Amount Staking</div>
-      <div class="staking-info"><p>Amount: <span>200 - 10,000 USDT</span></p><p>Daily Return: <span>1%</span></p></div>
-      <button class="stake-btn" onclick="openModal('Per Day',200,10000,1,'myphoto/1414.png')">Stake Now</button>
-    </div>
-    <div class="staking-box">
-      <div class="staking-header"><span>Plan = 2</span><span>15 Days</span></div>
-      <div class="staking-img"><img src="myphoto/star.png" alt="vault"></div>
-      <div class="staking-title">TrustDollar Amount Staking</div>
-      <div class="staking-info"><p>Amount: <span>500 - 20,000 USDT</span></p><p>Daily Return: <span>1.2%</span></p></div>
-      <button class="stake-btn" onclick="openModal('15 Days',500,20000,1.2,'myphoto/star.png')">Stake Now</button>
-    </div>
-    <div class="staking-box">
-      <div class="staking-header"><span>Plan = 3</span><span>30 days</span></div>
-      <div class="staking-img"><img src="myphoto/112211.png" alt="vault"></div>
-      <div class="staking-title">TrustDollar Amount Staking</div>
-      <div class="staking-info"><p>Amount: <span>1500 - 150,000 USDT</span></p><p>Daily Return: <span>1.4%</span></p></div>
-      <button class="stake-btn" onclick="openModal('30 Days',1500,150000,1.3,'myphoto/112211.png')">Stake Now</button>
+  <!-- Sections -->
+  <div id="staking" class="section active">
+    <h2>TrustDollar Amount Staking</h2>
+    <div class="staking-container">
+      <div class="staking-box">
+        <div class="staking-header"><span>Plan = 1</span><span>Per Day</span></div>
+        <div class="staking-img"><img src="myphoto/1414.png" alt="vault"></div>
+        <div class="staking-title">TrustDollar Amount Staking</div>
+        <div class="staking-info"><p>Amount: <span>200 - 10,000 USDT</span></p><p>Daily Return: <span>1%</span></p></div>
+        <button class="stake-btn" onclick="openModal('Per Day',200,10000,1,'myphoto/1414.png')">Stake Now</button>
+      </div>
+      <div class="staking-box">
+        <div class="staking-header"><span>Plan = 2</span><span>15 Days</span></div>
+        <div class="staking-img"><img src="myphoto/star.png" alt="vault"></div>
+        <div class="staking-title">TrustDollar Amount Staking</div>
+        <div class="staking-info"><p>Amount: <span>500 - 20,000 USDT</span></p><p>Daily Return: <span>1.2%</span></p></div>
+        <button class="stake-btn" onclick="openModal('15 Days',500,20000,1.2,'myphoto/star.png')">Stake Now</button>
+      </div>
+      <div class="staking-box">
+        <div class="staking-header"><span>Plan = 3</span><span>30 days</span></div>
+        <div class="staking-img"><img src="myphoto/112211.png" alt="vault"></div>
+        <div class="staking-title">TrustDollar Amount Staking</div>
+        <div class="staking-info"><p>Amount: <span>1500 - 150,000 USDT</span></p><p>Daily Return: <span>1.4%</span></p></div>
+        <button class="stake-btn" onclick="openModal('30 Days',1500,150000,1.3,'myphoto/112211.png')">Stake Now</button>
+      </div>
     </div>
   </div>
-</div>
 
-<div id="record" class="section">
-  <h2>Your Investments</h2>
-  <div id="historyList"></div>
-</div>
+  <div id="record" class="section">
+    <h2>Your Investments</h2>
+    <div id="historyList"></div>
+  </div>
 
-<!-- Modal -->
-<div class="modal" id="stakeModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3 id="modalPlan">Staking</h3>
-      <div class="close-btn" onclick="closeModal()">✕</div>
-    </div>
-    <div class="modal-img"><img id="modalImg" src="" alt="vault"></div>
-    <div class="modal-info">
-      <div class="info-box"><label>Balance</label><input type="text" id="userBalance" readonly value="Loading..."></div>
-      <div class="info-box"><label>Amount (min - max)</label><input type="text" id="modalAmount" readonly></div>
-      <div class="info-box"><label>Daily Return</label><input type="text" id="modalReturn" readonly></div>
-    </div>
-    <div class="stake-action">
-      <input type="number" id="stakeInput" placeholder="Enter amount to stake (USDT)">
-      <button onclick="confirmStake()">Confirm Stake</button>
+  <!-- Modal -->
+  <div class="modal" id="stakeModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalPlan">Staking</h3>
+        <div class="close-btn" onclick="closeModal()">✕</div>
+      </div>
+      <div class="modal-img"><img id="modalImg" src="" alt="vault"></div>
+      <div class="modal-info">
+        <div class="info-box"><label>Balance</label><input type="text" id="userBalance" readonly value="Loading..."></div>
+        <div class="info-box"><label>Amount (min - max)</label><input type="text" id="modalAmount" readonly></div>
+        <div class="info-box"><label>Daily Return</label><input type="text" id="modalReturn" readonly></div>
+      </div>
+      <div class="stake-action">
+        <input type="number" id="stakeInput" placeholder="Enter amount to stake (USDT)">
+        <button onclick="confirmStake()">Confirm Stake</button>
+      </div>
     </div>
   </div>
-</div>
-<div id="record" class="section">
-  <h2>Your Investments</h2>
-  
-  <!-- ✅ Summary Section -->
-  <div id="recordSummary" style="
+  <div id="record" class="section">
+    <h2>Your Investments</h2>
+    
+    <!-- ✅ Summary Section -->
+    <div id="recordSummary" style="
     background:#fff;
     border-radius:12px;
     box-shadow:0 6px 20px rgba(16,24,40,0.08);
@@ -251,7 +251,7 @@
     display:flex;
     justify-content:space-between;
     text-align:center;
-  ">
+    ">
     <div>
       <div style="font-size:14px;color:#666;">Total Invested</div>
       <div id="totalInvested" style="font-weight:700;font-size:18px;color:#0b7a4f;">0 USDT</div>
@@ -271,232 +271,233 @@
 
 <!-- Firebase + App logic -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import {
-  getFirestore, doc, setDoc, addDoc, collection, serverTimestamp,
-  getDoc, onSnapshot, runTransaction, query, orderBy, where, getDocs, updateDoc,Timestamp
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  import {
+    getFirestore, doc, setDoc, addDoc, collection, serverTimestamp,
+    getDoc, onSnapshot, runTransaction, query, orderBy, where, getDocs, updateDoc,Timestamp
+  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 // ====== CONFIG ======
-const firebaseConfig = {
-  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
-  authDomain: "btcinvest-c0e25.firebaseapp.com",
-  projectId: "btcinvest-c0e25",
-  storageBucket: "btcinvest-c0e25.firebasestorage.app",
-  messagingSenderId: "204937458487",
-  appId: "1:204937458487:web:cc27ece1249999279f60b2",
-  measurementId: "G-HG0Q8ZHT6G"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+    authDomain: "btcinvest-c0e25.firebaseapp.com",
+    projectId: "btcinvest-c0e25",
+    storageBucket: "btcinvest-c0e25.firebasestorage.app",
+    messagingSenderId: "204937458487",
+    appId: "1:204937458487:web:cc27ece1249999279f60b2",
+    measurementId: "G-HG0Q8ZHT6G"
+  };
 // =======================================================
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
 // UI elements
-const historyList = document.getElementById("historyList");
-const walletBalanceEl = document.getElementById("userBalance");
-const stakeInput = document.getElementById("stakeInput");
+  const historyList = document.getElementById("historyList");
+  const walletBalanceEl = document.getElementById("userBalance");
+  const stakeInput = document.getElementById("stakeInput");
 
-let currentUserId = null;
-let currentPlanObj = null;
+  let currentUserId = null;
+  let currentPlanObj = null;
 
 // small popup
-window.showPopup = (msg) => {
-  document.getElementById("popupMessage").textContent = msg;
-  document.getElementById("popup").style.display = "flex";
-  setTimeout(()=>{ document.getElementById("popup").style.display = "none"; }, 2500);
-};
+  window.showPopup = (msg) => {
+    document.getElementById("popupMessage").textContent = msg;
+    document.getElementById("popup").style.display = "flex";
+    setTimeout(()=>{ document.getElementById("popup").style.display = "none"; }, 2500);
+  };
 
 // Auth listener
-onAuthStateChanged(auth, user => {
-  if(!user){
-    showPopup("Not signed in. Redirect to login.");
-    return;
-  }
-  currentUserId = user.uid;
-  listenWallet();
-  listenInvestments();
+  onAuthStateChanged(auth, user => {
+    if(!user){
+      showPopup("Not signed in. Redirect to login.");
+      return;
+    }
+    currentUserId = user.uid;
+    listenWallet();
+    listenInvestments();
   listenUserSummary();   // ✅ summary function call
   setInterval(()=>processMatured(currentUserId), 60000);
   processMatured(currentUserId).catch(e=>console.error(e));
 });
 
 // listen wallet
-function listenWallet(){
-  const uRef = doc(db, "users", currentUserId);
-  onSnapshot(uRef, snap => {
-    if(!snap.exists()){ walletBalanceEl.value = "0.00 USDT"; return; }
-    const bal = snap.data().walletBalance || 0;
-    walletBalanceEl.value = numberFmt(bal) + " USDT";
-  });
-}
+  function listenWallet(){
+    const uRef = doc(db, "users", currentUserId);
+    onSnapshot(uRef, snap => {
+      if(!snap.exists()){ walletBalanceEl.value = "0.00 USDT"; return; }
+      const bal = snap.data().walletBalance || 0;
+      walletBalanceEl.value = numberFmt(bal) + " USDT";
+    });
+  }
 
 // listen investments history
-function listenInvestments(){
-  const invCol = collection(db, "users", currentUserId, "investments");
-  const q = query(invCol, orderBy("startTime","desc"));
+  function listenInvestments(){
+    const invCol = collection(db, "users", currentUserId, "investments");
+    const q = query(invCol, orderBy("startTime","desc"));
 
-  onSnapshot(q, snap => {
-    historyList.innerHTML = "";
+    onSnapshot(q, snap => {
+      historyList.innerHTML = "";
 
-    let totalInvested = 0;
-    let totalIncome = 0;
+      let totalInvested = 0;
+      let totalIncome = 0;
 
-    if(snap.empty){
-      historyList.innerHTML = `
+      if(snap.empty){
+        historyList.innerHTML = `
         <div style="text-align:center;color:#666;padding:20px;
-                    background:#fff;border-radius:10px;
-                    border:1px solid #eee;">
-          No record found
+        background:#fff;border-radius:10px;
+        border:1px solid #eee;">
+        No record found
         </div>`;
-      document.getElementById("totalInvested").textContent = "0 USDT";
-      document.getElementById("totalIncome").textContent = "0 USDT";
-      return;
-    }
+        document.getElementById("totalInvested").textContent = "0 USDT";
+        document.getElementById("totalIncome").textContent = "0 USDT";
+        return;
+      }
 
-    snap.forEach(docSnap => {
-      const d = docSnap.data();
-      const id = docSnap.id;
+      snap.forEach(docSnap => {
+        const d = docSnap.data();
+        const id = docSnap.id;
 
       // ✅ Add totals
-      totalInvested += d.amount || 0;
-      if(d.possibleIncome) totalIncome += d.possibleIncome;
+        totalInvested += d.amount || 0;
+        if(d.possibleIncome) totalIncome += d.possibleIncome;
 
       // ✅ startTime fix
-      let startMs = null;
-      if (d.startTime) {
-        const sec = d.startTime.seconds || d.startTime._seconds;
-        startMs = sec * 1000;
-      }
-      const when = startMs ? new Date(startMs).toLocaleString() : "-";
+        let startMs = null;
+        if (d.startTime) {
+          const sec = d.startTime.seconds || d.startTime._seconds;
+          startMs = sec * 1000;
+        }
+        const when = startMs ? new Date(startMs).toLocaleString() : "-";
 
-      const cls = d.status==="Completed" ? "status-complete" : 
-                  d.status==="Active" ? "status-active" : "status-cancel";
+        const cls = d.status==="Completed" ? "status-complete" : 
+        d.status==="Active" ? "status-active" : "status-cancel";
 
-      let countdownHtml = "";
-      if(d.status==="Active" && startMs){
-        const endTime = startMs + 24*60*60*1000;
-        const cdId = "cd_"+id;
-        countdownHtml = `<div class="countdown" id="${cdId}">Loading...</div>`;
-        setTimeout(()=>startCountdown(cdId, endTime), 200);
-      }
+        let countdownHtml = "";
+        if(d.status==="Active" && d.endTime){
+  const endTime = d.endTime.seconds * 1000;  // ✅ actual expiry time
+  const cdId = "cd_"+id;
+  countdownHtml = `<div class="countdown" id="${cdId}">Loading...</div>`;
+  setTimeout(()=>startCountdown(cdId, endTime), 200);
+}
+
 
       // ✅ Card UI like screenshot
-      historyList.innerHTML += `
-        <div class="invest-card">
-          <img src="${d.imgSrc || 'myphoto/1414.png'}" alt="plan"/>
-          <div class="invest-title">${d.planName || "TrustDollar Staking"}</div>
+historyList.innerHTML += `
+<div class="invest-card">
+<img src="${d.imgSrc || 'myphoto/1414.png'}" alt="plan"/>
+<div class="invest-title">${d.planName || "TrustDollar Staking"}</div>
 
-          <div class="invest-info">
-            <p>
-              <span class="invest-label">Order Status</span>
-              <span class="invest-value"><span class="status-badge ${cls}">${d.status}</span></span>
-            </p>
+<div class="invest-info">
+<p>
+<span class="invest-label">Order Status</span>
+<span class="invest-value"><span class="status-badge ${cls}">${d.status}</span></span>
+</p>
 
-            <p>
-              <span class="invest-label">Investment Amount</span>
-              <span class="invest-value">${numberFmt(d.amount)} USDT</span>
-            </p>
+<p>
+<span class="invest-label">Investment Amount</span>
+<span class="invest-value">${numberFmt(d.amount)} USDT</span>
+</p>
 
-            <p>
-              <span class="invest-label">Income</span>
-              <span class="invest-value">${numberFmt(d.possibleIncome || 0)} USDT</span>
-            </p>
+<p>
+<span class="invest-label">Income</span>
+<span class="invest-value">${numberFmt(d.possibleIncome || 0)} USDT</span>
+</p>
 
-            <p>
-              <span class="invest-label">Application Time</span>
-              <span class="invest-value">${when}</span>
-            </p>
+<p>
+<span class="invest-label">Application Time</span>
+<span class="invest-value">${when}</span>
+</p>
 
-            <p>
-              <span class="invest-label">Expiry Time</span>
-              <span class="invest-value">${d.endTime ? new Date(d.endTime.seconds*1000).toLocaleString() : "-"}</span>
-            </p>
-          </div>
+<p>
+<span class="invest-label">Expiry Time</span>
+<span class="invest-value">${d.endTime ? new Date(d.endTime.seconds*1000).toLocaleString() : "-"}</span>
+</p>
+</div>
 
-          ${countdownHtml ? `<div class="countdown-box">${countdownHtml}</div>` : ""}
-        </div>
-      `;
-    });
+${countdownHtml ? `<div class="countdown-box">${countdownHtml}</div>` : ""}
+</div>
+`;
+});
 
     // ✅ Update totals (local calc)
-    document.getElementById("totalInvested").textContent = numberFmt(totalInvested) + " USDT";
-    document.getElementById("totalIncome").textContent = numberFmt(totalIncome) + " USDT";
-  });
-}
+      document.getElementById("totalInvested").textContent = numberFmt(totalInvested) + " USDT";
+      document.getElementById("totalIncome").textContent = numberFmt(totalIncome) + " USDT";
+    });
+  }
 
 // ✅ listen user summary (global)
-function listenUserSummary(){
-  const uRef = doc(db, "users", currentUserId);
-  onSnapshot(uRef, snap => {
-    if(!snap.exists()) return;
-    const d = snap.data();
-    document.getElementById("totalInvested").textContent = numberFmt(d.totalStack || 0) + " USDT";
-    document.getElementById("totalIncome").textContent = numberFmt(d.totalIncome || 0) + " USDT";
-  });
-}
+  function listenUserSummary(){
+    const uRef = doc(db, "users", currentUserId);
+    onSnapshot(uRef, snap => {
+      if(!snap.exists()) return;
+      const d = snap.data();
+      document.getElementById("totalInvested").textContent = numberFmt(d.totalStack || 0) + " USDT";
+      document.getElementById("totalIncome").textContent = numberFmt(d.totalIncome || 0) + " USDT";
+    });
+  }
 
 // countdown
-function startCountdown(elId, endTime){
-  const el = document.getElementById(elId);
-  if(!el) return;
-  function tick(){
-    const now = Date.now();
-    const diff = endTime - now;
-    if(diff <= 0){
-      el.textContent = "Completed soon";
-      return;
+  function startCountdown(elId, endTime){
+    const el = document.getElementById(elId);
+    if(!el) return;
+    function tick(){
+      const now = Date.now();
+      const diff = endTime - now;
+      if(diff <= 0){
+        el.textContent = "Completed soon";
+        return;
+      }
+      const hrs = Math.floor(diff / (1000*60*60));
+      const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+      const secs = Math.floor((diff % (1000*60)) / 1000);
+      el.textContent = `${hrs}h ${mins}m ${secs}s`;
+      setTimeout(tick, 1000);
     }
-    const hrs = Math.floor(diff / (1000*60*60));
-    const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
-    const secs = Math.floor((diff % (1000*60)) / 1000);
-    el.textContent = `${hrs}h ${mins}m ${secs}s`;
-    setTimeout(tick, 1000);
+    tick();
   }
-  tick();
-}
 
 // Utility
-function numberFmt(n){ return Number(n||0).toFixed(2); }
+  function numberFmt(n){ return Number(n||0).toFixed(2); }
 
 // ---- Modal open / close ----
-window.openModal = function(planName, minAmount, maxAmount, dailyRate, imgSrc){
-  currentPlanObj = { planName, minAmount, maxAmount, dailyRate, imgSrc };
-  document.getElementById("modalPlan").innerText = planName;
-  document.getElementById("modalAmount").value = `${minAmount} - ${maxAmount} USDT`;
-  document.getElementById("modalReturn").value = `${dailyRate}%`;
-  document.getElementById("modalImg").src = imgSrc || "";
-  document.getElementById("stakeModal").style.display = "flex";
-  stakeInput.value = "";
-};
-window.closeModal = function(){ document.getElementById("stakeModal").style.display = "none"; };
+  window.openModal = function(planName, minAmount, maxAmount, dailyRate, imgSrc){
+    currentPlanObj = { planName, minAmount, maxAmount, dailyRate, imgSrc };
+    document.getElementById("modalPlan").innerText = planName;
+    document.getElementById("modalAmount").value = `${minAmount} - ${maxAmount} USDT`;
+    document.getElementById("modalReturn").value = `${dailyRate}%`;
+    document.getElementById("modalImg").src = imgSrc || "";
+    document.getElementById("stakeModal").style.display = "flex";
+    stakeInput.value = "";
+  };
+  window.closeModal = function(){ document.getElementById("stakeModal").style.display = "none"; };
 
 // ---- Validate stake amount live ----
-const stakeInputEl = document.getElementById("stakeInput");
-const errorMsg = document.createElement("div");
-errorMsg.style.color = "red";
-errorMsg.style.fontSize = "12px";
-errorMsg.style.marginTop = "4px";
-stakeInputEl.parentNode.appendChild(errorMsg);
+  const stakeInputEl = document.getElementById("stakeInput");
+  const errorMsg = document.createElement("div");
+  errorMsg.style.color = "red";
+  errorMsg.style.fontSize = "12px";
+  errorMsg.style.marginTop = "4px";
+  stakeInputEl.parentNode.appendChild(errorMsg);
 
-stakeInputEl.addEventListener("input", async () => {
-if (!currentPlanObj) return;
-  errorMsg.textContent = "";
+  stakeInputEl.addEventListener("input", async () => {
+    if (!currentPlanObj) return;
+    errorMsg.textContent = "";
   stakeInputEl.style.border = "1px solid #d6dbe0"; // reset border
 
   const val = parseFloat(stakeInputEl.value);
   if (isNaN(val) || val <= 0) {
     stakeInputEl.style.border = "2px solid red";
-    errorMsg.textContent = "⚠️ Please enter a valid amount";
+    errorMsg.textContent = " Please enter a valid amount";
     return;
   }
 
   // ✅ check min–max
   if (val < currentPlanObj.minAmount || val > currentPlanObj.maxAmount) {
     stakeInputEl.style.border = "2px solid red";
-    errorMsg.textContent = `⚠️ Amount must be between ${currentPlanObj.minAmount} and ${currentPlanObj.maxAmount} USDT`;
+    errorMsg.textContent = ` Amount must be between ${currentPlanObj.minAmount} and ${currentPlanObj.maxAmount} USDT`;
     return;
   }
 
@@ -507,7 +508,7 @@ if (!currentPlanObj) return;
     const balance = snap.data().walletBalance || 0;
     if (val > balance) {
       stakeInputEl.style.border = "2px solid red";
-      errorMsg.textContent = `⚠️ Insufficient balance (Available: ${balance} USDT)`;
+      errorMsg.textContent = ` Insufficient balance (Available: ${balance} USDT)`;
       return;
     }
   }
@@ -518,16 +519,16 @@ if (!currentPlanObj) return;
 });
 
 // ---- Create stake ----
-window.confirmStake = async function(){
-  if(!currentUserId){ showPopup("User not authenticated"); return; }
-  if(!currentPlanObj){ showPopup("Plan not selected"); return; }
+  window.confirmStake = async function(){
+    if(!currentUserId){ showPopup("User not authenticated"); return; }
+    if(!currentPlanObj){ showPopup("Plan not selected"); return; }
 
-  const amount = parseFloat(stakeInput.value);
-  if(isNaN(amount) || amount <= 0){ showPopup("Enter valid amount"); return; }
-  if(amount < currentPlanObj.minAmount || amount > currentPlanObj.maxAmount){
-    showPopup(`Amount must be between ${currentPlanObj.minAmount} and ${currentPlanObj.maxAmount}`);
-    return;
-  }
+    const amount = parseFloat(stakeInput.value);
+    if(isNaN(amount) || amount <= 0){ showPopup("Enter valid amount"); return; }
+    if(amount < currentPlanObj.minAmount || amount > currentPlanObj.maxAmount){
+      showPopup(`Amount must be between ${currentPlanObj.minAmount} and ${currentPlanObj.maxAmount}`);
+      return;
+    }
 
   closeModal(); // ✅ close instantly
 
@@ -544,9 +545,15 @@ window.confirmStake = async function(){
         walletBalance: balance - amount,
         totalStack: (uSnap.data().totalStack || 0) + amount
       });
-       
-      const expiryMs = Date.now() + 24*60*60*1000; 
+
+      // ✅ expiry din calculate karo (1, 15, 30 days)
+      let days = 1; // default 1
+      if(currentPlanObj.planName.includes("15")) days = 15;
+      else if(currentPlanObj.planName.includes("30")) days = 30;
+
+      const expiryMs = Date.now() + days*24*60*60*1000;
       const expiryDate = new Date(expiryMs);
+
       const stakeDoc = {
         amount,
         startTime: serverTimestamp(),
@@ -566,12 +573,14 @@ window.confirmStake = async function(){
       const invCol = collection(db, "users", currentUserId, "investments");
       await addDoc(invCol, stakeDoc);
     });
-    showPopup("✅ Stake created!");
+    showPopup(" Stake created!");
   }catch(err){
     console.error(err);
     showPopup(typeof err === "string" ? err : "Error creating stake");
   }
 };
+
+
 
 // ---- process matured ----
 async function processMatured(uid){
@@ -585,10 +594,10 @@ async function processMatured(uid){
   for(const docSnap of snap.docs){
     const d = docSnap.data();
     const id = docSnap.id;
-    if(!d.startTime) continue;
-    const sec = d.startTime.seconds || d.startTime._seconds;
-    const startMs = sec * 1000;
-    if(now < startMs + 24*60*60*1000) continue;
+    if(!d.startTime || !d.endTime) continue;
+
+    const endMs = d.endTime.seconds * 1000;
+    if(now < endMs) continue;  // ✅ ab endTime ke hisaab se close hoga
 
     const invRef = doc(db, "users", uid, "investments", id);
     const userRef = doc(db, "users", uid);
@@ -602,8 +611,13 @@ async function processMatured(uid){
 
         const amount = invData.amount || 0;
         const dailyRate = Number(invData.dailyRate) || 0;
-        const profit = (amount * dailyRate / 100);
+         // ✅ duration days calculate karo
+        const durationDays = Math.round((invData.endTime.seconds - invData.startTime.seconds) / (24*60*60));
+
+        // ✅ total profit nikaalo
+        const profit = (amount * dailyRate / 100) * durationDays;
         const possibleIncome = Number(profit.toFixed(6));
+
 
         const userPercent = invData.userPercent ?? 0.70;
         const u1p = invData.upline1Percent ?? 0.17;
@@ -623,10 +637,14 @@ async function processMatured(uid){
 
         const uSnap = await tx.get(userRef);
         const userBal = (uSnap.exists() && uSnap.data().walletBalance) ? uSnap.data().walletBalance : 0;
+        
+          // ✅ User update
         tx.update(userRef, { 
           walletBalance: userBal + amount + userShare,
-          totalIncome: (uSnap.data().totalIncome || 0) + profit   // ✅ add income
-        });
+        stakingIncome: (uSnap.data().stakingIncome || 0) + userShare,  // ✅ staking profit
+        totalIncome: (uSnap.data().totalIncome || 0) + profit          // ✅ total profit
+      });
+
 
         const userDocSnap = uSnap;
         const upline1 = userDocSnap.exists() ? userDocSnap.data().upline1 : null;
@@ -637,35 +655,49 @@ async function processMatured(uid){
           const up1Ref = doc(db, "users", upline1);
           const up1Snap = await tx.get(up1Ref);
           const up1Bal = (up1Snap.exists() && up1Snap.data().walletBalance) ? up1Snap.data().walletBalance : 0;
-          tx.update(up1Ref, { walletBalance: up1Bal + u1Share });
-        }
-        if(upline2){
-          const up2Ref = doc(db, "users", upline2);
-          const up2Snap = await tx.get(up2Ref);
-          const up2Bal = (up2Snap.exists() && up2Snap.data().walletBalance) ? up2Snap.data().walletBalance : 0;
-          tx.update(up2Ref, { walletBalance: up2Bal + u2Share });
-        }
-        if(upline3){
-          const up3Ref = doc(db, "users", upline3);
-          const up3Snap = await tx.get(up3Ref);
-          const up3Bal = (up3Snap.exists() && up3Snap.data().walletBalance) ? up3Snap.data().walletBalance : 0;
-          tx.update(up3Ref, { walletBalance: up3Bal + u3Share });
+          tx.update(up1Ref, { 
+            walletBalance: up1Bal + u1Share,
+        teamIncome: (up1Snap.data().teamIncome || 0) + u1Share,     // ✅ team income
+        totalIncome: (up1Snap.data().totalIncome || 0) + u1Share
+      });
         }
 
-        const stakeRecordRef = doc(db, "stakes", `stake_${uid}_${id}`);
-        tx.set(stakeRecordRef, {
-          uid,
-          investId: id,
-          amount,
-          profit,
-          userShare,
-          u1Share,u2Share,u3Share,
-          startTime: invData.startTime,
-          endTime: serverTimestamp(),
-          status: "Completed",
-          planName: invData.planName || null
+        if(upline2){
+         const up2Ref = doc(db, "users", upline2);
+         const up2Snap = await tx.get(up2Ref);
+         const up2Bal = (up2Snap.exists() && up2Snap.data().walletBalance) ? up2Snap.data().walletBalance : 0;
+         tx.update(up2Ref, { 
+          walletBalance: up2Bal + u2Share,
+          teamIncome: (up2Snap.data().teamIncome || 0) + u2Share,
+          totalIncome: (up2Snap.data().totalIncome || 0) + u2Share
         });
+       }
+       if(upline3){
+        const up3Ref = doc(db, "users", upline3);
+        const up3Snap = await tx.get(up3Ref);
+        const up3Bal = (up3Snap.exists() && up3Snap.data().walletBalance) ? up3Snap.data().walletBalance : 0;
+        tx.update(up3Ref, { 
+          walletBalance: up3Bal + u3Share,
+          teamIncome: (up3Snap.data().teamIncome || 0) + u3Share,
+          totalIncome: (up3Snap.data().totalIncome || 0) + u3Share
+        });
+      }
+
+
+      const stakeRecordRef = doc(db, "stakes", `stake_${uid}_${id}`);
+      tx.set(stakeRecordRef, {
+        uid,
+        investId: id,
+        amount,
+        profit,
+        userShare,
+        u1Share,u2Share,u3Share,
+        startTime: invData.startTime,
+        endTime: serverTimestamp(),
+        status: "Completed",
+        planName: invData.planName || null
       });
+    });
 
       console.log("Processed matured stake", uid, id);
     }catch(err){
@@ -673,6 +705,7 @@ async function processMatured(uid){
     }
   }
 }
+
 
 // modal background click to close
 window.onclick = function(e){
