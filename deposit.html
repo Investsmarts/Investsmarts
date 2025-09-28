@@ -5,47 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Deposit</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-<style > 
-/* ✅ Same CSS as tumne diya tha (no change) */
+<style>
 body {
   font-family: 'Poppins', sans-serif;
   background: #f5f7fa;
   margin: 0;
- 
   padding-bottom: 100px;
   color: #333;
 }
-h1 {text-align: center; margin-bottom: 20px; color: #222;}
-.dashboard {
-  max-width: 800px;
-  margin: auto;
-  background: #fff;
-  border-radius: 16px;
-  padding: 25px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  text-align: center;
-}
-.info-card {
-  margin-top: 20px;
-  background: #fff;
-  border-radius: 16px;
-  padding: 25px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-}
-.btn {
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  color: #fff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-.btn-deposit {background: #28a745;}
-.btn-deposit:hover {background: #218838;}
 
-/* ✅ Popup optimized */
+/* 🔥 Dashboard Container */
+.dashboard {
+  max-width: 420px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+
+/* 🔥 Info Card */
+.info-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  text-align: left;
+}
+.info-card h3 {
+  margin-bottom: 12px;
+  color: #007bff;
+}
+.info-card .row {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0;
+}
+.info-card .row span.label {
+  font-weight: 500;
+}
+.info-card .row span.value {
+  font-weight: bold;
+  color: #444;
+}
+
+/* ✅ Popup etc (same as before) */
 .popup-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -56,14 +59,17 @@ h1 {text-align: center; margin-bottom: 20px; color: #222;}
   align-items: center;
   z-index: 2000;
 }
+
+/* ✅ Popup box center me chhota rahe */
 .popup {
   background: #fff;
-  border-radius: 14px;
-  padding: 15px;
+  border-radius: 16px;
+  padding: 20px;
   width: 90%;
-  max-width: 300px;    /* 👈 pehle 350px tha */
-  max-height: 90vh;    /* 👈 screen ke andar hi rahe */
-  overflow-y: auto;    /* 👈 agar content jada ho to scroll ho */
+  max-width: 360px;        /* ✅ max width fixed */
+  height: auto;            /* ✅ content ke hisaab se height */
+  max-height: none;        /* ❌ pura screen na le */
+  overflow: visible;       /* ❌ scroll hata diya */
   text-align: center;
   box-shadow: 0 6px 18px rgba(0,0,0,0.25);
   animation: fadeIn 0.25s ease;
@@ -71,272 +77,191 @@ h1 {text-align: center; margin-bottom: 20px; color: #222;}
   flex-direction: column;
   align-items: center;
 }
-@keyframes fadeIn {from {opacity: 0; transform: scale(0.9);} to {opacity: 1; transform: scale(1);}}
 
-/* ✅ QR code chhota */
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.9);}
+  to {opacity: 1; transform: scale(1);}
+}
+
 .qr-code {
-  margin: 10px auto;
-  padding: 6px;
+  margin: 15px auto;
+  padding: 10px;
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 12px;
   background: #fafafa;
-  display: inline-block;
 }
 .qr-code canvas {
-  width: 150px !important;   /* 👈 pehle 180px tha */
-  height: 150px !important;
+  width: 160px !important;
+  height: 160px !important;
 }
 
 .address-box {
   background: #f5f7fa;
-  padding: 10px;
-  border-radius: 10px;
+  padding: 12px;
+  border-radius: 12px;
   font-size: 14px;
   word-break: break-all;
-  margin-top: 10px;
+  margin: 10px 0;
   width: 100%;
+  text-align: center;
 }
+
 .amount-input {
   width: 100%;
-  padding: 8px;
-  margin-top: 10px;
+  padding: 10px;
+  margin-top: 12px;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 13px;
+  border-radius: 10px;
+  font-size: 15px;
   outline: none;
   text-align: center;
 }
-.amount-input:disabled {
-  background: #e9ecef;
-  color: #555;
-  font-weight: bold;
-}
-.amount-instruction {
-  font-size: 13px;
-  font-weight: bold;
-  color: #007bff;
-  margin-top: 8px;
-  display: none;
-}
+
 .copy-btn {
   background: #28a745;
   color: #fff;
-  padding: 8px;
+  padding: 10px;
   border: none;
-  border-radius: 8px;
-  margin-top: 10px;
+  border-radius: 10px;
+  margin-top: 12px;
   cursor: pointer;
   font-weight: bold;
   width: 100%;
+  font-size: 15px;
 }
+
 .action-buttons {
   display: flex;
-  justify-content: space-between;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 12px;
   width: 100%;
 }
 .action-buttons button {
   flex: 1;
-  padding: 8px;
+  padding: 12px;
   border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  color: #fff;
-  font-size: 14px;
-}
-.close-btn {background: #dc3545;}
-.paid-btn {background: #007bff;}
-
-.history-section {margin-top: 30px;}
-.history-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  font-size: 14px;
-}
-.history-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.badge {
-  background: #28a745;
-  color: #fff;
-  padding: 3px 10px;
-  border-radius: 6px;
-  font-weight: bold;
-  font-size: 13px;
-}
-.status.complete {color: green; font-weight: bold;}
-.status.pending {color: #ff8800; font-weight: bold;}
-.status.canceled {color: red; font-weight: bold;}
-.status.paid {color: #007bff; font-weight: bold;}
-.history-card-row {
-  display: flex;
-  justify-content: space-between;
-  margin: 6px 0;
-}
-.history-card-row span.label {font-weight: 600; color: #444;}
-.history-card-row span.value {font-weight: bold; color: #ff8800;}
-.history-card-row small {color: #666;}
-
-.thankyou-popup,.error-popup {
-  position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 12px 20px;
   border-radius: 10px;
-  font-weight: bold;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-  z-index: 3000;
-  display: none;
-  animation: fadeInOut 1.5s ease forwards;
-}
-.thankyou-popup {background: #28a745; color: #fff;}
-.error-popup {background: #dc3545; color: #fff;}
-@keyframes fadeInOut {
-  0%{opacity:0;transform:translate(-50%,-50%) scale(0.9);}
-  20%{opacity:1;transform:translate(-50%,-50%) scale(1);}
-  80%{opacity:1;}
-  100%{opacity:0;transform:translate(-50%,-50%) scale(0.9);}
-}
-
-.refresh-btn {
-  background: #17a2b8;
-  color: #fff;
-  padding: 10px 18px;
-  border: none;
-  border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
-  margin: 10px auto;
-  display: block;
+  color: #fff;
+  font-size: 15px;
 }
-.refresh-btn:hover {background: #138496;}
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 70px;
+.close-btn { background: #dc3545; }
+.paid-btn { background: #007bff; }
 
-  background: #fff; /* ✅ white background for clean UI */
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-
-  border-top: 2px solid #28a745; /* ✅ only green line */
-  z-index: 100;
+/* ✅ Mobile optimization */
+@media (max-width: 480px) {
+  .popup {
+    width: 95%;
+    max-width: 260px;
+    padding: 25px;
+  }
+  .qr-code canvas {
+    width: 140px !important;
+    height: 140px !important;
+  }
 }
 
-.nav-item {
-  flex: 1;
-  text-align: center;
-  font-size: 12px;
-  color: #333; /* normal text color */
-  text-decoration: none;
+
+/* History */
+.history-section {margin-top:30px;}
+.history-card {background:#fff;border-radius:12px;padding:15px;margin-bottom:15px;box-shadow:0 4px 12px rgba(0,0,0,0.08);font-size:14px;}
+.history-card-header {display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.badge {background:#28a745;color:#fff;padding:3px 10px;border-radius:6px;font-weight:bold;font-size:13px;}
+.status.complete {color:green;font-weight:bold;}
+.status.pending {color:#ff8800;font-weight:bold;}
+.status.canceled {color:red;font-weight:bold;}
+.status.paid {color:#007bff;font-weight:bold;}
+.history-card-row {display:flex;justify-content:space-between;margin:6px 0;}
+.history-card-row span.label {font-weight:600;color:#444;}
+.history-card-row span.value {font-weight:bold;color:#ff8800;}
+.history-card-row small {color:#666;}
+
+/* Popup alerts */
+.thankyou-popup,.error-popup {position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);padding:12px 20px;border-radius:10px;font-weight:bold;box-shadow:0 6px 20px rgba(0,0,0,0.3);z-index:3000;display:none;animation:fadeInOut 1.5s ease forwards;}
+.thankyou-popup {background:#28a745;color:#fff;}
+.error-popup {background:#dc3545;color:#fff;}
+@keyframes fadeInOut {0%{opacity:0;transform:translate(-50%,-50%) scale(0.9);}20%{opacity:1;transform:translate(-50%,-50%) scale(1);}80%{opacity:1;}100%{opacity:0;transform:translate(-50%,-50%) scale(0.9);}}
+
+/* Refresh Button */
+.refresh-btn {background:#17a2b8;color:#fff;padding:10px 18px;border:none;border-radius:8px;cursor:pointer;font-weight:bold;margin:10px auto;display:block;}
+.refresh-btn:hover {background:#138496;}
+
+/* Bottom Nav */
+.bottom-nav {position:fixed;bottom:0;left:0;width:100%;height:70px;background:#fff;display:flex;justify-content:space-around;align-items:center;border-top:2px solid #28a745;z-index:100;}
+.nav-item {flex:1;text-align:center;font-size:12px;color:#333;text-decoration:none;transition:0.3s;position:relative;padding:10px 0;}
+.nav-item i {font-size:22px;display:block;margin-bottom:3px;color:#28a745;}
+.nav-item:hover {color:#28a745;}
+.nav-item:hover i {color:#218838;}
+.nav-item:not(:last-child)::after {content:"";position:absolute;right:0;top:20%;bottom:20%;width:1px;background:#e0e0e0;}
+
+.btn-deposit {
+  background: #28a745;   /* Green */
+  color: #fff;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   transition: 0.3s;
-  position: relative;
-  padding: 10px 0;
+}
+.btn-deposit:hover {
+  background: #218838;   /* Darker Green on hover */
 }
 
-.nav-item i {
-  font-size: 22px;
-  display: block;
-  margin-bottom: 3px;
-  color: #28a745; /* ✅ green icons */
-}
-
-.nav-item:hover {
-  color: #28a745;
-}
-
-.nav-item:hover i {
-  color: #218838; /* hover darker green */
-}
-
-/* ✨ Vertical Divider (light grey) */
-.nav-item:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 20%;
-  bottom: 20%;
-  width: 1px;
-  background: #e0e0e0;
-}
-
-
-
-  </style>
+</style>
 </head>
 <body>
- <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-  
-  <div class="dashboard">
-    <div class="info-card">
-     
-      <p>Click below to get your <b>BEP20 deposit address</b> with QR code.</p>
-      <button class="btn btn-deposit" onclick="openPopup()">Get Deposit Address</button>
-    </div>
+<div class="dashboard">
 
-    <div class="history-section">
-      <h2 style="color:#007bff; text-align:center;"> Deposit History</h2>
-      <button class="refresh-btn" onclick="manualRefresh()">🔄 Refresh History</button>
-      <div id="historyList"><p style="text-align:center; color:#666;">Loading...</p></div>
-    </div>
-  </div>
-   
-   <!-- ✅ Popup -->
-  <div class="popup-overlay" id="popupOverlay">
-    <div class="popup">
-      <h2>Deposit Funds</h2>
-      <input type="number" id="depositAmount" class="amount-input" placeholder="Enter amount to deposit">
-      <div id="amountInstruction" class="amount-instruction"></div>
-      <div id="qrcode" class="qr-code"></div>
-      <div class="address-box" id="depositAddress"></div>
-      <button class="copy-btn" onclick="copyAddress()">Copy Address</button>
-      <div class="action-buttons">
-        <button class="close-btn" onclick="cancelDeposit()">Cancel</button>
-        <button class="paid-btn" onclick="markPaid()">I Have Paid</button>
-      </div>
-    </div>
+ <!-- Deposit Info -->
+   <div class="info-card">
+    <h3>Deposit Section</h3>
+    <p>Click below to get your <b>BEP20 deposit address</b> with QR code.</p>
+    <button class="btn-deposit" onclick="openPopup()">Get Deposit Address</button>
   </div>
 
-  <div class="thankyou-popup" id="thankyouPopup">Thank you for paying </div>
-  <div class="error-popup" id="errorPopup">Enter valid amount</div>
+  <!-- History -->
+  <div class="history-section">
+    <h2 style="color:#007bff; text-align:center;">Deposit History</h2>
+    <button class="refresh-btn" onclick="manualRefresh()">🔄 Refresh History</button>
+    <div id="historyList"><p style="text-align:center; color:#666;">Loading...</p></div>
+  </div>
+
+</div>
+
+<!-- ✅ Popup -->
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup">
+    <h2>Deposit Funds</h2>
+    <input type="number" id="depositAmount" class="amount-input" placeholder="Enter amount to deposit">
+    <div id="amountInstruction" class="amount-instruction"></div>
+    <div id="qrcode" class="qr-code"></div>
+    <div class="address-box" id="depositAddress"></div>
+    <button class="copy-btn" onclick="copyAddress()">Copy Address</button>
+    <div class="action-buttons">
+      <button class="close-btn" onclick="cancelDeposit()">Cancel</button>
+      <button class="paid-btn" onclick="markPaid()">I Have Paid</button>
+    </div>
+  </div>
+</div>
+
+<div class="thankyou-popup" id="thankyouPopup">Thank you for paying</div>
+<div class="error-popup" id="errorPopup">Enter valid amount</div>
 
 <div class="bottom-nav">
-    <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
-     <a href="invest.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
-     <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
-     <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
-  </div>
-   <script>
-    // JS for active highlight
-    const links = document.querySelectorAll("nav a");
-    links.forEach(link => {
-      link.addEventListener("click", function() {
-        links.forEach(l => l.classList.remove("active"));
-        this.classList.add("active");
-      });
-    });
-  </script>
-  <!-- ✅ Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script> lucide.createIcons(); </script>
+  <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
+  <a href="invest.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
+  <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
+  <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
+</div>
 
-
-  <!-- ✅ QRCode Library -->
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
-
-  <!-- ✅ Firebase + Logic -->
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+<!-- ✅ Firebase + Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -351,108 +276,140 @@ h1 {text-align: center; margin-bottom: 20px; color: #222;}
       appId: "1:204937458487:web:cc27ece1249999279f60b2",
       measurementId: "G-HG0Q8ZHT6G"
     };
-
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-    const popupOverlay = document.getElementById("popupOverlay");
-    const depositAddressEl = document.getElementById("depositAddress");
-    const qrCodeEl = document.getElementById("qrcode");
-    const historyList = document.getElementById("historyList");
-    const thankyouPopup = document.getElementById("thankyouPopup");
-    const errorPopup = document.getElementById("errorPopup");
-    const instructionEl = document.getElementById("amountInstruction");
+const popupOverlay = document.getElementById("popupOverlay");
+const depositAddressEl = document.getElementById("depositAddress");
+const qrCodeEl = document.getElementById("qrcode");
+const historyList = document.getElementById("historyList");
+const thankyouPopup = document.getElementById("thankyouPopup");
+const errorPopup = document.getElementById("errorPopup");
+const instructionEl = document.getElementById("amountInstruction");
 
-    function generateOrderId() {
-      const randomNum = Math.floor(1000000000 + Math.random() * 9000000000);
-      return "DPBHGR" + randomNum + "G";
+function generateOrderId() {
+  const randomNum = Math.floor(1000000000 + Math.random() * 9000000000);
+  return "DPBHGR" + randomNum + "G";
+}
+
+const depositAddresses = [
+  "0x6cf5f8F9564205C6AB3dE1694F54374e70dD135A",
+  "0x9ad288c9835Cfe30141677444A0A637a434Cd9bC",
+  "0x9d6Dc16a1E5aC1CC3b4e7F500f4BdB51D8fBc301",
+  "0x1E807c2AeC3165C37A8b47034839654033bD8cf2"
+];
+
+let currentDepositAddress = "";
+let currentUserId = null;
+let currentDepositId = null;
+
+function showError(msg) {
+  errorPopup.textContent = msg;
+  errorPopup.style.display = "block";
+  setTimeout(() => { errorPopup.style.display = "none"; }, 1500);
+}
+
+// ✅ QR Code ko update karne ka function
+function updateQRCode() {
+  const amountInput = document.getElementById("depositAmount");
+  const amount = parseFloat(amountInput.value) || 0;
+  let qrText = `ethereum:${currentDepositAddress}`;
+
+  if (amount > 0) {
+    if (amount < 200) {
+      // ❌ Agar 200 se kam hai → red border + error
+      amountInput.style.border = "2px solid red";
+      qrCodeEl.innerHTML = ""; // QR mat banao
+      return;
+    } else {
+      // ✅ Agar 200 ya zyada hai → green border + QR with amount
+      amountInput.style.border = "2px solid green";
+      qrText += `?value=${amount}`;
     }
+  } else {
+    // Default border grey
+    amountInput.style.border = "1px solid #ccc";
+  }
 
-    const depositAddresses = [
-      "0x6cf5f8F9564205C6AB3dE1694F54374e70dD135A",
-      "0x9ad288c9835Cfe30141677444A0A637a434Cd9bC",
-      "0x9d6Dc16a1E5aC1CC3b4e7F500f4BdB51D8fBc301",
-      "0x1E807c2AeC3165C37A8b47034839654033bD8cf2"
-    ];
+  qrCodeEl.innerHTML = ""; // purana QR clear karo
+  new QRCode(qrCodeEl, { text: qrText, width: 180, height: 180 });
+}
 
-    let currentDepositAddress = "";
-    let currentUserId = null;
-    let currentDepositId = null;
+window.openPopup = async function() {
+  popupOverlay.style.display = "flex";
+  const amountInput = document.getElementById("depositAmount");
+  amountInput.value = "";
+  amountInput.disabled = false;
+  amountInput.style.border = "1px solid #ccc"; // reset border
+  instructionEl.style.display = "none";
 
-    function showError(msg) {
-      errorPopup.textContent = msg;
-      errorPopup.style.display = "block";
-      setTimeout(() => { errorPopup.style.display = "none"; }, 1500);
-    }
+  // ✅ Address pehle set karo
+  currentDepositAddress = depositAddresses[Math.floor(Math.random() * depositAddresses.length)];
+  depositAddressEl.textContent = currentDepositAddress;
 
-    window.openPopup = async function() {
-      popupOverlay.style.display = "flex";
-      const amountInput = document.getElementById("depositAmount");
-      amountInput.value = "";
-      amountInput.disabled = false;
-      instructionEl.style.display = "none";
+  // ✅ Default QR (sirf address)
+  updateQRCode();
 
-      currentDepositAddress = depositAddresses[Math.floor(Math.random() * depositAddresses.length)];
-      depositAddressEl.textContent = currentDepositAddress;
-      qrCodeEl.innerHTML = "";
-      new QRCode(qrCodeEl, { text: currentDepositAddress, width: 180, height: 180 });
+  // ✅ Jab bhi user type kare → QR update
+  amountInput.addEventListener("input", updateQRCode);
 
-      if (currentUserId) {
-        const orderId = generateOrderId();
-        const ref = await addDoc(collection(db, "users", currentUserId, "deposits"), {
-          amount: 0,
-          address: currentDepositAddress,
-          date: serverTimestamp(),
-          status: "Pending",
-          orderId: orderId
-        });
-        currentDepositId = ref.id;
-        loadDepositHistory(currentUserId);
-      }
-    };
+  if (currentUserId) {
+    const orderId = generateOrderId();
+    const ref = await addDoc(collection(db, "users", currentUserId, "deposits"), {
+      amount: 0,
+      address: currentDepositAddress,
+      date: serverTimestamp(),
+      status: "Pending",
+      orderId: orderId
+    });
+    currentDepositId = ref.id;
+    loadDepositHistory(currentUserId);
+  }
+};
 
-    window.cancelDeposit = async function() {
-      popupOverlay.style.display = "none";
-      qrCodeEl.innerHTML = "";
-      if (currentUserId && currentDepositId) {
-        const ref = doc(db, "users", currentUserId, "deposits", currentDepositId);
-        await updateDoc(ref, { status: "Canceled" });
-        loadDepositHistory(currentUserId);
-      }
-    };
+window.cancelDeposit = async function() {
+  popupOverlay.style.display = "none";
+  qrCodeEl.innerHTML = "";
+  if (currentUserId && currentDepositId) {
+    const ref = doc(db, "users", currentUserId, "deposits", currentDepositId);
+    await updateDoc(ref, { status: "Canceled" });
+    loadDepositHistory(currentUserId);
+  }
+};
 
-    window.copyAddress = function() {
-      navigator.clipboard.writeText(currentDepositAddress);
-      showError("Address copied!");
-    };
+window.copyAddress = function() {
+  navigator.clipboard.writeText(currentDepositAddress);
+  showError("Address copied!");
+};
 
-    window.markPaid = async function() {
-      const amountInput = document.getElementById("depositAmount");
-      const amount = parseFloat(amountInput.value) || 0;
-      if (amount <= 0) { showError("Enter valid amount"); return; }
-      if (amount < 200) { showError("Minimum is $200"); return; }
+window.markPaid = async function() {
+  const amountInput = document.getElementById("depositAmount");
+  const amount = parseFloat(amountInput.value) || 0;
+  if (amount <= 0) { showError("Enter valid amount"); return; }
+  if (amount < 200) { showError("Minimum is $200"); amountInput.style.border = "2px solid red"; return; }
 
-      amountInput.disabled = true;
-      instructionEl.style.display = "block";
-      instructionEl.textContent = `Send the exact amount you entered: $${amount}`;
+  amountInput.disabled = true;
+  instructionEl.style.display = "block";
+  instructionEl.textContent = `Send the exact amount you entered: $${amount}`;
 
-      popupOverlay.style.display = "none";
-      qrCodeEl.innerHTML = "";
+  popupOverlay.style.display = "none";
+  qrCodeEl.innerHTML = "";
 
-      if (currentUserId && currentDepositId) {
-        const ref = doc(db, "users", currentUserId, "deposits", currentDepositId);
-        await updateDoc(ref, { status: "Paid", amount: amount });
-        loadDepositHistory(currentUserId);
-      }
+  if (currentUserId && currentDepositId) {
+    const ref = doc(db, "users", currentUserId, "deposits", currentDepositId);
+    await updateDoc(ref, { status: "Paid", amount: amount });
+    loadDepositHistory(currentUserId);
+  }
 
-      thankyouPopup.style.display = "block";
-      setTimeout(() => { thankyouPopup.style.display = "none"; }, 2000);
-    };
+  thankyouPopup.style.display = "block";
+  setTimeout(() => { thankyouPopup.style.display = "none"; }, 2000);
+};
 
-    window.manualRefresh = function() {
-      if (currentUserId) loadDepositHistory(currentUserId);
-    };
+window.manualRefresh = function() {
+  if (currentUserId) loadDepositHistory(currentUserId);
+};
+
 
     async function loadDepositHistory(userId) {
       historyList.innerHTML = "<p style='text-align:center; color:#666;'>Loading...</p>";
