@@ -170,10 +170,11 @@
   .popup.error { border-left: 5px solid red; }
 </style>
 
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-  import { getFirestore, collection, doc, setDoc, getDocs, query, where, addDoc } 
+  import { getFirestore, collection, doc, setDoc, getDocs, query, where, addDoc, orderBy, limit } 
     from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -197,7 +198,78 @@
     setTimeout(() => { popup.classList.remove("show"); }, 2500);
   }
 
-  function validateEmail(email){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+  function validateEmailFormat(email){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+
+  // normalize email: lowercase, trim, for gmail remove dots and +tag
+  function normalizeEmail(email) {
+    if(!email) return "";
+    email = email.trim().toLowerCase();
+    const parts = email.split("@");
+    if(parts.length !== 2) return email;
+    let [local, domain] = parts;
+    // remove trailing/leading dots in local
+    local = local.replace(/^\.+|\.+$/g, "");
+    // gmail / googlemail canonicalization
+    if(domain === "gmail.com" || domain === "googlemail.com") {
+      // remove everything after + and remove dots
+      local = local.split("+")[0].replace(/\./g, "");
+      domain = "gmail.com";
+    } else {
+      // for other providers, remove +tag but keep dots (optional)
+      local = local.split("+")[0];
+    }
+    return `${local}@${domain}`;
+  }
+
+  // normalize simple text (name/username)
+  function normalizeText(txt) {
+    if(!txt) return "";
+    // lowercase, trim, collapse multiple spaces
+    return txt.trim().toLowerCase().replace(/\s+/g, " ");
+  }
+
+  // Levenshtein distance (for fuzzy)
+  function levenshtein(a, b) {
+    if(a === b) return 0;
+    const al = a.length, bl = b.length;
+    if(al === 0) return bl;
+    if(bl === 0) return al;
+    const v0 = new Array(bl + 1);
+    const v1 = new Array(bl + 1);
+    for (let i = 0; i <= bl; i++) v0[i] = i;
+    for (let i = 0; i < al; i++) {
+      v1[0] = i + 1;
+      for (let j = 0; j < bl; j++) {
+        const cost = a[i] === b[j] ? 0 : 1;
+        v1[j + 1] = Math.min(v1[j] + 1, v0[j + 1] + 1, v0[j] + cost);
+      }
+      for (let k = 0; k <= bl; k++) v0[k] = v1[k];
+    }
+    return v1[bl];
+  }
+
+  // fuzzy check: query by prefix (first 3-4 chars) and compare levenshtein
+  async function fuzzyCheck(field, normalizedValue) {
+    if(!normalizedValue) return null;
+    const prefix = normalizedValue.slice(0, 4); // first 4 chars
+    if(prefix.length === 0) return null;
+    const usersRef = collection(db, "users");
+    // Firestore range query for prefix (field >= prefix and field <= prefix + '\uf8ff')
+    // Note: ensure the field is stored normalized in Firestore (lowercase)
+    const start = prefix;
+    const end = prefix + '\uf8ff';
+    const q = query(usersRef, where(field, ">=", start), where(field, "<=", end), limit(20));
+    const snap = await getDocs(q);
+    if(snap.empty) return null;
+    let closest = null;
+    snap.forEach(d => {
+      const data = d.data();
+      const val = (data[field] || "").toString().toLowerCase();
+      const dist = levenshtein(val, normalizedValue);
+      if(closest === null || dist < closest.dist) closest = { dist, val, id: d.id, data };
+    });
+    return closest; // object or null
+  }
 
   async function distributeIncome(newUserName, referredBy) {
     let currentRef = referredBy;
@@ -226,74 +298,98 @@
     btn.disabled = true;
     btn.textContent = "Please wait...";
 
-    const name = document.getElementById("name").value.trim();
-    const regEmail = document.getElementById("register-email").value.trim();
-    const username = document.getElementById("username").value.trim();
+    let name = document.getElementById("name").value;
+    let regEmail = document.getElementById("register-email").value;
+    let username = document.getElementById("username").value;
     const mobile = document.getElementById("mobile").value.trim();
     const aadhaar = document.getElementById("aadhaar").value.trim();
     const cheque = document.getElementById("cheque").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const confirmPassword = document.getElementById("confirm-password").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
     const referral = document.getElementById("referral").value.trim();
 
     try {
-      // ✅ Validations
+      // basic presence checks
       if(!name || !regEmail || !username || !mobile || !aadhaar || !password || !confirmPassword)
         throw new Error("Please complete all required fields");
-      if(!validateEmail(regEmail)) throw new Error("Invalid Email");
+
+      // normalize
+      const normEmail = normalizeEmail(regEmail);
+      const normUsername = normalizeText(username);
+      const normName = normalizeText(name);
+
+      // validations
+      if(!validateEmailFormat(regEmail)) throw new Error("Invalid Email format");
       if(password !== confirmPassword) throw new Error("Passwords do not match");
       if(password.length < 6) throw new Error("Password must be at least 6 chars");
       if(!/^\d{10}$/.test(mobile)) throw new Error("Mobile must be 10 digits");
-      if(!/^[a-zA-Z0-9]{3,}$/.test(username)) throw new Error("Username min 3 chars");
       if(!/^\d{12}$/.test(aadhaar)) throw new Error("Aadhaar must be 12 digits");
       if(cheque !== "" && !/^\d{6,20}$/.test(cheque)) throw new Error("Cheque must be 6-20 digits");
 
-      // ✅ Duplicate check
       const usersRef = collection(db, "users");
-      const checks = [
-        { field: "email", value: regEmail, msg: "Email already registered" },
+
+      // 1) Exact duplicate checks (normalized)
+      const exactChecks = [
+        { field: "email", value: normEmail, msg: "Email already registered" },
         { field: "mobile", value: mobile, msg: "Mobile already registered" },
-        { field: "username", value: username, msg: "Username already taken" },
-        { field: "name", value: name, msg: "Name already registered" }
+        { field: "username", value: normUsername, msg: "Username already taken" },
+        { field: "aadhaar", value: aadhaar, msg: "Aadhaar already registered" }
       ];
-      for(const c of checks){
+
+      for(const c of exactChecks) {
         const q = query(usersRef, where(c.field, "==", c.value));
         const snap = await getDocs(q);
         if(!snap.empty) throw new Error(c.msg);
       }
 
-      // ✅ Firebase Auth
-      const userCredential = await createUserWithEmailAndPassword(auth, regEmail, password);
+      // 2) Fuzzy checks for name & username (catch typos like chaitanya/chaitnaya)
+      // name fuzzy
+      const nameCandidate = await fuzzyCheck("name", normName);
+      if(nameCandidate && nameCandidate.dist <= 2) { // threshold: 2 edits
+        throw new Error("Similar name already registered: " + nameCandidate.val);
+      }
+      // username fuzzy
+      const usernameCandidate = await fuzzyCheck("username", normUsername);
+      if(usernameCandidate && usernameCandidate.dist <= 1) { // stricter for username
+        throw new Error("Similar username already exists: " + usernameCandidate.val);
+      }
+
+      // ✅ Create user
+      const userCredential = await createUserWithEmailAndPassword(auth, normEmail, password);
       const user = userCredential.user;
       const finalReferral = "REF" + Math.floor(Math.random()*900000+100000);
 
-      // ✅ Firestore Save
+      // Save normalized fields in Firestore
       await setDoc(doc(db, "users", user.uid), {
-        name, email: regEmail.toLowerCase(), username, mobile, aadhaar,
+        name: normName,
+        email: normEmail,
+        username: normUsername,
+        mobile,
+        aadhaar,
         chequeNumber: cheque !== "" ? cheque : null,
         referralCode: finalReferral,
         referredBy: referral !== "" ? referral : null,
-        walletBalance: 0, totalInvested: 0,
+        walletBalance: 0,
+        totalInvested: 0,
         createdAt: new Date().toISOString()
       });
 
-      // ✅ Referral Income
-      if(referral) await distributeIncome(name, referral);
+      // distribute income if any
+      if(referral) await distributeIncome(normName, referral);
 
       showPopup("Registration Successful!");
       setTimeout(()=> window.location.href="Dashboard.html", 1500);
 
     } catch(err) {
-      console.error("❌ Error:", err.message);
-      showPopup(err.message,"error");
+      console.error("❌ Register error:", err.message);
+      showPopup(err.message, "error");
     } finally {
-      // ✅ Button always reset
       btn.disabled = false;
       btn.textContent = "Register";
     }
   });
 
-  // ✅ Auto set referral
+  // Auto set referral if present in URL
   const urlParams = new URLSearchParams(window.location.search);
   const refFromLink = urlParams.get("ref");
   if(refFromLink){
@@ -302,9 +398,32 @@
     referralInput.readOnly = true;
   }
 </script>
+<script>
+// ❌ Right-click disable
+  document.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+    
+  });
 
+// ❌ Disable text selection
+  document.addEventListener("selectstart", function(e) {
+    e.preventDefault();
+  });
 
-
+// ❌ Disable copy (Ctrl+C), cut (Ctrl+X), paste (Ctrl+V), view-source (Ctrl+U)
+  document.addEventListener("keydown", function(e) {
+    if (
+      (e.ctrlKey && (e.key === "c" || e.key === "C")) || 
+      (e.ctrlKey && (e.key === "x" || e.key === "X")) || 
+      (e.ctrlKey && (e.key === "v" || e.key === "V")) || 
+      (e.ctrlKey && (e.key === "u" || e.key === "U")) || 
+    (e.key === "F12") // DevTools
+    ) {
+      e.preventDefault();
+    
+  }
+});
+</script>
 
 <script>
 // ✅ Jab bhi input focus ho, usko visible karo
