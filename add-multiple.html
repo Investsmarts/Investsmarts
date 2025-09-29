@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Add Multiple Wallets</title>
+  <title>Add Wallet Address</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
@@ -10,164 +10,392 @@
       margin: 0;
       background: #f5f7fa;
       color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px;
+      box-sizing: border-box;
     }
 
     .popup {
       background: #fff;
       border-radius: 14px;
       padding: 20px;
-      max-width: 340px;
-      margin: 40px auto;
+      width: 100%;
+      max-width: 420px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.15);
       text-align: center;
     }
 
     h2 {
       margin-bottom: 15px;
-      font-size: 18px;
+      font-size: 20px;
       color: #28a745;
     }
 
     label {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
       display: block;
       text-align: left;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
-    select, input {
+    input {
       width: 100%;
-      padding: 10px;
+      padding: 14px;
       margin-top: 6px;
       border: 1.5px solid #ccc;
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 15px;
       outline: none;
+      box-sizing: border-box;
+    }
+
+    input::placeholder {
+      color: #888;
+    }
+
+    /* Custom dropdown */
+    .dropdown-container {
+      position: relative;
+      margin-top: 6px;
+    }
+
+    .dropdown-btn {
+      width: 100%;
+      padding: 12px;               /* thoda kam padding taki border fit rahe */
+      border: 1.5px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      text-align: left;
+      cursor: pointer;
+      background: #fff;
+      box-sizing: border-box;       /* border andar hi count hoga */
+    }
+
+    .dropdown-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      max-height: 0;
+      overflow: hidden;
+      background: #fff;
+      border: 1.5px solid #ccc;
+      border-radius: 8px;
+      margin-top: 6px;
+      opacity: 0;
+      transition: max-height 0.4s ease, opacity 0.4s ease;
+      z-index: 1000;
+    }
+
+    .dropdown-list.show {
+      max-height: 250px;
+      opacity: 1;
+      overflow-y: auto;
+    }
+
+    /* Search box + button inside dropdown */
+    /* Search box + button inside dropdown */
+    .dropdown-top {
+      display: flex;
+      align-items: center;          /* input aur button perfectly align */
+      padding: 6px;
+      border-bottom: 1px solid #ddd;
+      gap: 6px;
+      background: #fafafa;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .dropdown-top input {
+      flex: 1;
+      padding: 10px;               /* input aur button equal height */
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+    .dropdown-top button {
+      height: 38px;                /* input ke equal height */
+      padding: 0 14px;
+      border: none;
+      border-radius: 6px;
+      background: #007bff;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
+    }
+
+    .dropdown-top button:hover {
+      background: #0056b3;         /* hover pe thoda dark blue */
+    }
+
+    .dropdown-list ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .dropdown-list li {
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 14px;
+    }
+
+    .dropdown-list li:hover {
+      background: #f0f0f0;
     }
 
     .action-buttons {
       display: flex;
-      gap: 10px;
       margin-top: 18px;
     }
 
     .action-buttons button {
       flex: 1;
-      padding: 10px;
+      padding: 14px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
-      font-size: 13px;
+      font-size: 15px;
       color: #fff;
       transition: 0.3s;
+      background: #007bff;
     }
 
-    .add-btn { background: #007bff; }
-    .add-btn:hover { background: #0069d9; }
-
-    .primary-btn { background: #28a745; }
-    .primary-btn:hover { background: #218838; }
-
-    .msg {
-      margin-top: 12px;
-      font-size: 13px;
-      color: #666;
+    .action-buttons button:hover {
+      background: #0069d9;
     }
+
+    /* Center Popup Message */
+    #message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 14px 24px;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      font-size: 15px;
+      font-weight: 600;
+      display: none;
+      z-index: 9999;
+      max-width: 80%;
+      text-align: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -60%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    /* Info Box Styling */
+    .info-box {
+      margin-top: 15px;
+      padding: 12px 18px;
+      border: 2px solid #28a745;
+      border-radius: 10px;
+      background: #f9fff9;
+      color: #28a745;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      line-height: 1.4;
+    }
+
   </style>
 </head>
 <body>
 
-<div class="popup">
-  <h2>Add Wallet Address</h2>
+  <div class="popup">
+    <h2>Add Wallet Address</h2>
+    <!-- Info Box -->
+    <div class="info-box">
+      You can add up to <b>20 wallet addresses</b> here to avoid delays during withdrawals.
+    </div>
 
-  <label>Select Wallet Type</label>
-  <select id="walletType">
-    <option value="USDT (BEP20)">USDT (BEP20)</option>
-    <option value="USDT (TRC20)">USDT (TRC20)</option>
-    <option value="BTC">Bitcoin (BTC)</option>
-    <option value="ETH">Ethereum (ETH)</option>
-  </select>
 
-  <label>Wallet Address</label>
-  <input type="text" id="walletAddress" placeholder="Paste wallet address here">
+    <label>Wallet App</label>
+    <div class="dropdown-container">
+      <div class="dropdown-btn" onclick="toggleDropdown()">Select Wallet</div>
+      <div class="dropdown-list" id="dropdownList">
+        <div class="dropdown-top">
+          <input type="text" id="walletSearch" placeholder="Search wallet...">
+          <button onclick="doSearch()">🔍</button>
+        </div>
+        <ul id="walletOptions">
+          <li>MetaMask</li>
+          <li>Trust Wallet</li>
+          <li>Binance Wallet</li>
+          <li>OKX Wallet</li>
+          <li>Coinbase Wallet</li>
+          <li>Phantom Wallet</li>
+          <li>Kraken Wallet</li>
+          <li>Gemini Wallet</li>
+          <li>Ledger Live</li>
+          <li>Trezor Wallet</li>
+          <li>Exodus Wallet</li>
+          <li>Atomic Wallet</li>
+          <li>BitGo Wallet</li>
+          <li>Math Wallet</li>
+          <li>TokenPocket</li>
+          <li>Zerion Wallet</li>
+          <li>Rainbow Wallet</li>
+          <li>SafePal</li>
+          <li>Ellipal Wallet</li>
+          <li>Other</li>
+        </ul>
+      </div>
+    </div>
 
-  <div class="action-buttons">
-    <button class="add-btn" onclick="addWallet()">➕ Add Address</button>
-    <button class="primary-btn" onclick="setPrimary()">⭐ Set Primary</button>
+    <label>BEP20 Wallet Address</label>
+    <input type="text" id="walletAddress" placeholder="Paste BEP20 address here">
+
+    <div class="action-buttons">
+      <button onclick="addWallet()">➕ Add Address</button>
+    </div>
   </div>
 
-  <div id="message" class="msg"></div>
-</div>
+  <!-- Popup message box -->
+  <div id="message"></div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-  import { getFirestore, collection, addDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
-    authDomain: "btcinvest-c0e25.firebaseapp.com",
-    projectId: "btcinvest-c0e25",
-    storageBucket: "btcinvest-c0e25.firebasestorage.app",
-    messagingSenderId: "204937458487",
-    appId: "1:204937458487:web:cc27ece1249999279f60b2",
-    measurementId: "G-HG0Q8ZHT6G"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+      authDomain: "btcinvest-c0e25.firebaseapp.com",
+      projectId: "btcinvest-c0e25",
+      storageBucket: "btcinvest-c0e25.firebasestorage.app",
+      messagingSenderId: "204937458487",
+      appId: "1:204937458487:web:cc27ece1249999279f60b2",
+      measurementId: "G-HG0Q8ZHT6G"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  let currentUserId = null;
+    let currentUserId = null;
+    let selectedWallet = "";
+    const msg = document.getElementById("message");
+    const dropdownList = document.getElementById("dropdownList");
+    const searchInput = document.getElementById("walletSearch");
 
-  const msg = document.getElementById("message");
-
-  function showMessage(text, color="#28a745") {
-    msg.textContent = text;
-    msg.style.color = color;
-  }
-
-  window.addWallet = async function() {
-    const type = document.getElementById("walletType").value;
-    const address = document.getElementById("walletAddress").value.trim();
-
-    if (!address || address.length < 15) {
-      showMessage("⚠️ Enter a valid wallet address", "red");
-      return;
+    function showMessage(text, color="#28a745") {
+      msg.textContent = text;
+      msg.style.color = color;
+      msg.style.display = "block";
+      setTimeout(() => { msg.style.display = "none"; }, 1200);
     }
 
-    if (currentUserId) {
-      await addDoc(collection(db, "users", currentUserId, "wallets"), {
-        type: type,
-        address: address,
-        addedAt: new Date()
+  // Toggle dropdown
+    window.toggleDropdown = function() {
+      dropdownList.classList.toggle("show");
+    };
+
+  // Close dropdown if click outside
+    document.addEventListener("click", function(e) {
+      if (!e.target.closest(".dropdown-container")) {
+        dropdownList.classList.remove("show");
+      }
+    });
+
+  // Select wallet
+    document.querySelectorAll("#walletOptions li").forEach(item => {
+      item.addEventListener("click", function() {
+        selectedWallet = this.textContent;
+        document.querySelector(".dropdown-btn").textContent = selectedWallet;
+        dropdownList.classList.remove("show");
       });
-      showMessage("✅ Wallet added successfully!");
-      document.getElementById("walletAddress").value = "";
+    });
+
+  // Search filter
+    function filterWallets(filter) {
+      let found = false;
+      document.querySelectorAll("#walletOptions li").forEach(li => {
+        if (li.textContent.toLowerCase().includes(filter)) {
+          li.style.display = "block";
+          found = true;
+        } else {
+          li.style.display = "none";
+        }
+      });
+      if (!found && filter) {
+        showMessage(" No wallet found", "red");
+      }
     }
-  }
 
-  window.setPrimary = async function() {
-    const address = document.getElementById("walletAddress").value.trim();
+    searchInput.addEventListener("input", function() {
+      filterWallets(this.value.toLowerCase());
+    });
 
-    if (!address || address.length < 15) {
-      showMessage("⚠️ Enter a valid wallet address", "red");
-      return;
+  // Search button action with validation
+    window.doSearch = function() {
+      let filter = searchInput.value.trim().toLowerCase();
+      if (!filter) {
+        showMessage(" Please enter wallet name", "red");
+        return;
+      }
+      filterWallets(filter);
+    };
+
+  // Add Wallet
+    window.addWallet = async function() {
+      const address = document.getElementById("walletAddress").value.trim();
+
+      if (!selectedWallet) {
+        showMessage(" Please select a wallet", "red");
+        return;
+      }
+      if (!address || address.length < 15) {
+        showMessage(" Enter a valid BEP20 address", "red");
+        return;
+      }
+
+      if (currentUserId) {
+        const q = query(
+          collection(db, "users", currentUserId, "wallets"),
+          where("walletApp", "==", selectedWallet),
+          where("address", "==", address)
+          );
+        const snapshot = await getDocs(q);
+
+        if (!snapshot.empty) {
+          showMessage(` Already added in ${selectedWallet}`, "red");
+          return;
+        }
+
+        await addDoc(collection(db, "users", currentUserId, "wallets"), {
+          walletApp: selectedWallet,
+          type: "USDT (BEP20)",
+          address: address,
+          addedAt: new Date()
+        });
+
+        showMessage("  added successfully!");
+        document.getElementById("walletAddress").value = "";
+      }
     }
 
-    if (currentUserId) {
-      const ref = doc(db, "users", currentUserId);
-      await updateDoc(ref, { primaryAddress: address });
-      showMessage("⭐ Primary address updated!");
-    }
-  }
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) currentUserId = user.uid;
-  });
-</script>
+    onAuthStateChanged(auth, (user) => {
+      if (user) currentUserId = user.uid;
+    });
+  </script>
 
 </body>
 </html>
