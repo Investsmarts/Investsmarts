@@ -65,31 +65,33 @@
 
     .dropdown-btn {
       width: 100%;
-      padding: 12px;               /* thoda kam padding taki border fit rahe */
+      padding: 12px;
       border: 1.5px solid #ccc;
       border-radius: 8px;
       font-size: 15px;
       text-align: left;
       cursor: pointer;
       background: #fff;
-      box-sizing: border-box;       /* border andar hi count hoga */
+      box-sizing: border-box;
     }
 
     .dropdown-list {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      max-height: 0;
-      overflow: hidden;
-      background: #fff;
-      border: 1.5px solid #ccc;
-      border-radius: 8px;
-      margin-top: 6px;
-      opacity: 0;
-      transition: max-height 0.4s ease, opacity 0.4s ease;
-      z-index: 1000;
-    }
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  width: 100%;       /* ✅ mobile me proper width */
+  max-height: 250px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  margin-top: 4px;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+  z-index: 2000;      /* ✅ upar dikhe */
+  box-sizing: border-box;
+}
 
     .dropdown-list.show {
       max-height: 250px;
@@ -98,10 +100,9 @@
     }
 
     /* Search box + button inside dropdown */
-    /* Search box + button inside dropdown */
     .dropdown-top {
       display: flex;
-      align-items: center;          /* input aur button perfectly align */
+      align-items: center;
       padding: 6px;
       border-bottom: 1px solid #ddd;
       gap: 6px;
@@ -113,14 +114,16 @@
 
     .dropdown-top input {
       flex: 1;
-      padding: 10px;               /* input aur button equal height */
+      padding: 10px;
       font-size: 14px;
       border: 1px solid #ccc;
       border-radius: 6px;
       box-sizing: border-box;
+      min-width: 0;  
     }
+
     .dropdown-top button {
-      height: 38px;                /* input ke equal height */
+      height: 38px;
       padding: 0 14px;
       border: none;
       border-radius: 6px;
@@ -135,7 +138,7 @@
     }
 
     .dropdown-top button:hover {
-      background: #0056b3;         /* hover pe thoda dark blue */
+      background: #0056b3;
     }
 
     .dropdown-list ul {
@@ -214,7 +217,6 @@
       text-align: center;
       line-height: 1.4;
     }
-
   </style>
 </head>
 <body>
@@ -226,14 +228,13 @@
       You can add up to <b>20 wallet addresses</b> here to avoid delays during withdrawals.
     </div>
 
-
     <label>Wallet App</label>
     <div class="dropdown-container">
-      <div class="dropdown-btn" onclick="toggleDropdown()">Select Wallet</div>
+      <div class="dropdown-btn">Select Wallet</div>
       <div class="dropdown-list" id="dropdownList">
         <div class="dropdown-top">
           <input type="text" id="walletSearch" placeholder="Search wallet...">
-          <button onclick="doSearch()">🔍</button>
+          <button id="searchBtn">🔍</button>
         </div>
         <ul id="walletOptions">
           <li>MetaMask</li>
@@ -264,7 +265,7 @@
     <input type="text" id="walletAddress" placeholder="Paste BEP20 address here">
 
     <div class="action-buttons">
-      <button onclick="addWallet()">➕ Add Address</button>
+      <button id="addBtn">➕ Add Address</button>
     </div>
   </div>
 
@@ -293,8 +294,11 @@
     let currentUserId = null;
     let selectedWallet = "";
     const msg = document.getElementById("message");
+    const dropdownBtn = document.querySelector(".dropdown-btn");
     const dropdownList = document.getElementById("dropdownList");
     const searchInput = document.getElementById("walletSearch");
+    const searchBtn = document.getElementById("searchBtn");
+    const addBtn = document.getElementById("addBtn");
 
     function showMessage(text, color="#28a745") {
       msg.textContent = text;
@@ -303,28 +307,28 @@
       setTimeout(() => { msg.style.display = "none"; }, 1200);
     }
 
-  // Toggle dropdown
-    window.toggleDropdown = function() {
+    // Toggle dropdown
+    dropdownBtn.addEventListener("click", () => {
       dropdownList.classList.toggle("show");
-    };
+    });
 
-  // Close dropdown if click outside
+    // Close dropdown if click outside
     document.addEventListener("click", function(e) {
       if (!e.target.closest(".dropdown-container")) {
         dropdownList.classList.remove("show");
       }
     });
 
-  // Select wallet
+    // Select wallet
     document.querySelectorAll("#walletOptions li").forEach(item => {
       item.addEventListener("click", function() {
         selectedWallet = this.textContent;
-        document.querySelector(".dropdown-btn").textContent = selectedWallet;
+        dropdownBtn.textContent = selectedWallet;
         dropdownList.classList.remove("show");
       });
     });
 
-  // Search filter
+    // Search filter
     function filterWallets(filter) {
       let found = false;
       document.querySelectorAll("#walletOptions li").forEach(li => {
@@ -344,18 +348,17 @@
       filterWallets(this.value.toLowerCase());
     });
 
-  // Search button action with validation
-    window.doSearch = function() {
+    searchBtn.addEventListener("click", () => {
       let filter = searchInput.value.trim().toLowerCase();
       if (!filter) {
         showMessage("⚠️ Please enter wallet name", "red");
         return;
       }
       filterWallets(filter);
-    };
+    });
 
-  // Add Wallet
-    window.addWallet = async function() {
+    // Add Wallet
+    addBtn.addEventListener("click", async () => {
       const address = document.getElementById("walletAddress").value.trim();
 
       if (!selectedWallet) {
@@ -372,7 +375,7 @@
           collection(db, "users", currentUserId, "wallets"),
           where("walletApp", "==", selectedWallet),
           where("address", "==", address)
-          );
+        );
         const snapshot = await getDocs(q);
 
         if (!snapshot.empty) {
@@ -390,7 +393,7 @@
         showMessage("✅ Wallet added successfully!");
         document.getElementById("walletAddress").value = "";
       }
-    }
+    });
 
     onAuthStateChanged(auth, (user) => {
       if (user) currentUserId = user.uid;
