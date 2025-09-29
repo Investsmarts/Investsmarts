@@ -8,7 +8,7 @@
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #eef2ff, #f8fafc);
+      background: #f1f5f9;
       margin: 0;
       padding-bottom: 100px;
       color: #333;
@@ -16,33 +16,60 @@
     .container { max-width: 950px; margin: auto; padding: 20px; }
     h1 { text-align: center; margin-bottom: 20px; color: #1e293b; }
 
+    /* Generic Card */
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
     /* Referral Section */
-    .referral-card { background: #fff; padding: 20px; border-radius: 16px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); text-align: center; margin-bottom: 20px; }
-    .referral-link { word-break: break-all; font-size: 14px; background: #f9fafb; padding: 10px; border-radius: 8px; margin: 12px auto; }
+    .referral-link { 
+      word-break: break-all; 
+      font-size: 14px; 
+      background: #f9fafb; 
+      padding: 12px; 
+      border-radius: 10px; 
+      margin: 15px auto; 
+      border: 1px solid #e5e7eb;
+    }
     .btn-row { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-    .btn { padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: #fff; }
+    .btn { padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: #fff; transition: 0.3s; }
     .btn-copy { background: #00aaff; }
     .btn-share { background: #ff9800; }
     .btn:hover { opacity: 0.9; }
 
     /* Stats */
-    .stats { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; flex-wrap: nowrap; }
-    .stat-card { background: #fff; padding: 20px; border-radius: 14px; text-align: center; box-shadow: 0 6px 16px rgba(0,0,0,0.06); font-weight: bold; flex: 1; cursor: pointer; transition: transform 0.2s ease; }
-    .stat-card:hover { transform: scale(1.05); }
+    .stats-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 14px;
+      color: #555;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .stats-header div { flex: 1; }
+    .stats { display: flex; justify-content: space-between; gap: 10px; flex-wrap: nowrap; }
+    .stat-card { 
+      background: #fff; 
+      padding: 20px; 
+      border-radius: 14px; 
+      text-align: center; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06); 
+      font-weight: bold; 
+      flex: 1; 
+      cursor: pointer; 
+      transition: transform 0.2s ease; 
+    }
+    .stat-card:hover { transform: translateY(-4px); }
     .level1 { border-top: 5px solid #22c55e; }
     .level2 { border-top: 5px solid #f59e0b; }
     .level3 { border-top: 5px solid #3b82f6; }
     .stat-card h2 { color: #111; margin: 0; font-size: 22px; }
-
-    /* History */
-    .history { margin-top: 30px; }
-    .history h2 { text-align: center; margin-bottom: 15px; color: #1e293b; }
-    .history-header { display: flex; justify-content: space-between; background: #f3f4f6; padding: 10px 15px; border-radius: 8px; font-weight: 600; font-size: 14px; }
-    .history-header span { flex: 1; text-align: center; }
-    .history-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
-    .history-item { display: flex; justify-content: space-between; background: #fff; padding: 10px 15px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); font-size: 13px; }
-    .history-item span { flex: 1; text-align: center; }
-    .history-item .today { color: green; font-weight: bold; }
 
     /* Navbar */
     .bottom-nav {
@@ -51,79 +78,86 @@
       left: 0;
       width: 100%;
       height: 70px;
-
-      background: #fff; /* ✅ white background for clean UI */
+      background: #fff;
       display: flex;
       justify-content: space-around;
       align-items: center;
-
-      border-top: 2px solid #28a745; /* ✅ only green line */
+      border-top: 2px solid #28a745;
       z-index: 100;
     }
-
     .nav-item {
       flex: 1;
       text-align: center;
       font-size: 12px;
-      color: #333; /* normal text color */
+      color: #333;
       text-decoration: none;
       transition: 0.3s;
       position: relative;
       padding: 10px 0;
     }
-
     .nav-item i {
       font-size: 22px;
       display: block;
       margin-bottom: 3px;
-      color: #28a745; /* ✅ green icons */
-    }
-
-    .nav-item:hover {
       color: #28a745;
     }
-
-    .nav-item:hover i {
-      color: #218838; /* hover darker green */
+    .nav-item:hover { color: #28a745; }
+    .nav-item:hover i { color: #218838; }
+    .nav-item:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 20%;
+      bottom: 20%;
+      width: 1px;
+      background: #e0e0e0;
     }
 
-/* ✨ Vertical Divider (light grey) */
-.nav-item:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 20%;
-  bottom: 20%;
-  width: 1px;
-  background: #e0e0e0;
-}
-
-
-.stats-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin: 10px 0 -10px 0; /* box ke upar chipka ke */
-  padding: 0 5px;
-  font-weight: 600;
-  font-size: 14px;
-  color: #555;
-  text-align: center;
-}
-.stats-header div {
-  flex: 1;
-}
-
-</style>
+    /* Popup */
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+      width: 90%;
+      max-width: 350px;
+      text-align: center;
+      z-index: 1000;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      z-index: 999;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -60%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+  </style>
 </head>
 <body>
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+  <!-- Overlay & Popup -->
+  <div class="overlay" id="overlay"></div>
+  <div class="popup" id="popupMsg"></div>
 
   <div class="container">
     <h1>Promote & Earn</h1>
 
     <!-- Referral -->
-    <div class="referral-card">
+    <div class="card referral-card">
       <p>Invite your friends and earn commissions (3 Levels).</p>
       <div class="referral-link" id="refLink"></div>
       <div class="btn-row">
@@ -132,57 +166,42 @@
       </div>
     </div>
 
-    <!-- Stats Heading -->
-    <div class="stats-header">
-      <div>LV1</div>
-      <div>LV2</div>
-      <div>LV3</div>
-    </div>
-
     <!-- Stats -->
-    <div class="stats">
-      <div class="stat-card level1" onclick="showHistory(1)">
-        <h2 id="level1Users">1</h2>
-        <p style="color:green;" id="level1Earning">$0</p>
+    <div class="card">
+      <div class="stats-header">
+        <div>LV1</div><div>LV2</div><div>LV3</div>
       </div>
-      <div class="stat-card level2" onclick="showHistory(2)">
-        <h2 id="level2Users">2</h2>
-        <p style="color:#f59e0b;" id="level2Earning">$0</p>
-      </div>
-      <div class="stat-card level3" onclick="showHistory(3)">
-        <h2 id="level3Users">3</h2>
-        <p style="color:#3b82f6;" id="level3Earning">$0</p>
+      <div class="stats">
+        <div class="stat-card level1" onclick="showHistory(1)">
+          <h2 id="level1Users">0</h2>
+          <p style="color:green;" id="level1Earning">$0</p>
+        </div>
+        <div class="stat-card level2" onclick="showHistory(2)">
+          <h2 id="level2Users">0</h2>
+          <p style="color:#f59e0b;" id="level2Earning">$0</p>
+        </div>
+        <div class="stat-card level3" onclick="showHistory(3)">
+          <h2 id="level3Users">0</h2>
+          <p style="color:#3b82f6;" id="level3Earning">$0</p>
+        </div>
       </div>
     </div>
-
-    <!-- Dynamic History -->
-    <div id="dynamicHistory" class="history"></div>
   </div>
 
+  <!-- Navbar -->
   <div class="bottom-nav">
     <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
     <a href="invest.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
     <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
     <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
   </div>
-  <script>
-    // JS for active highlight
-    const links = document.querySelectorAll("nav a");
-    links.forEach(link => {
-      link.addEventListener("click", function() {
-        links.forEach(l => l.classList.remove("active"));
-        this.classList.add("active");
-      });
-    });
-  </script>
 
   <!-- Firebase Script -->
   <script type="module">
-    // Firebase SDK
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, query, where, getDocs ,addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // 🔑 Tumhara Firebase Config yaha paste karo
+    // ✅ Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
       authDomain: "btcinvest-c0e25.firebaseapp.com",
@@ -193,34 +212,59 @@
       measurementId: "G-HG0Q8ZHT6G"
     };
 
-    // Init Firebase
+    // ✅ Init Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Referral link show
-    const baseRegisterLink = "https://trustdollar.github.io/Trustdollarpattener/register.html";
-    const userId = "USER123";  
-    const finalRefLink = `${baseRegisterLink}?ref=${userId}`;
-    document.getElementById("refLink").textContent = finalRefLink;
+    // Referral link
+    const baseRegisterLink = "https://smartfundad.com/index.html";
+const userId = "USER123";  
+const finalRefLink = `${baseRegisterLink}?ref=${userId}`;
+
+// ✅ Professional styled text + link
+document.getElementById("refLink").innerHTML = `
+  <strong>🎁 Your Exclusive Invitation Link:</strong><br>
+  <span style="color:#2563eb; font-weight:bold; word-break:break-all;">
+    ${finalRefLink}
+  </span>
+  <br><small style="color:#555;">Share this link with friends & earn multi-level rewards!</small>
+`;
+
+    // Popup function
+    function showPopup(message) {
+      const popup = document.getElementById("popupMsg");
+      const overlay = document.getElementById("overlay");
+
+      popup.innerHTML = `<p>${message}</p>`;
+      popup.style.display = "block";
+      overlay.style.display = "block";
+
+      setTimeout(() => {
+        popup.style.display = "none";
+        overlay.style.display = "none";
+      }, 2000);
+    }
 
     // Copy & Share
     window.copyReferral = function() {
       navigator.clipboard.writeText(finalRefLink);
-      alert("Referral link copied!");
-    };
-    window.shareReferral = function() {
-      if (navigator.share) {
-        navigator.share({
-          title: "Join TrustDollar",
-          text: "Register now and earn with me!",
-          url: finalRefLink
-        });
-      } else {
-        alert("Sharing not supported in this browser.");
-      }
+      showPopup("✅ Referral link copied!");
     };
 
-    // Stats + History from Firebase
+  window.shareReferral = function() {
+  if (navigator.share) {
+    navigator.share({
+      title: "🔥 TrustDollar Invitation",
+      text: `🎁 Join TrustDollar & start earning!\n\nHere’s my exclusive invitation link:\n${finalRefLink}\n\n Sign up now and enjoy rewards on multiple levels!`,
+      url: finalRefLink
+    });
+  } else {
+    showPopup("⚠️ Sharing not supported in this browser.");
+  }
+};
+
+
+    // ✅ Load Stats
     async function loadStats() {
       let level1Count = 0, level2Count = 0, level3Count = 0;
       let level1Earning = 0, level2Earning = 0, level3Earning = 0;
@@ -244,11 +288,8 @@
       document.getElementById("level3Earning").textContent = `$${level3Earning}`;
     }
 
-    // Show History by Level
+    // ✅ Show History in popup
     window.showHistory = async function(level) {
-      const historyBox = document.getElementById("dynamicHistory");
-      historyBox.innerHTML = "<p>Loading...</p>";
-
       const q = query(collection(db, "referrals"), where("level", "==", level));
       const querySnapshot = await getDocs(q);
 
@@ -256,30 +297,17 @@
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         items += `
-        <div class="history-item">
-        <span>${data.name}</span>
-        <span>${data.date}</span>
-        <span class="${data.today ? "today" : ""}">$${data.earning}${data.today ? " (Today)" : ""}</span>
-        </div>
+          <div style="margin-bottom:8px;">
+            <strong>${data.name}</strong><br>
+            ${data.date} - <b>$${data.earning}</b>
+          </div>
         `;
       });
 
-      historyBox.innerHTML = `
-      <h2>Referral  (Level ${level})</h2>
-      <div class="history-header">
-      <span>Name</span>
-      <span>Date</span>
-      <span>Earning</span>
-      </div>
-      <div class="history-list">
-      ${items || "<p>No data found</p>"}
-      </div>
-      `;
+      showPopup(items || `No data found for Level ${level}`);
     };
 
-    // First time load
-    loadStats();
-    // Jab user register ho jaye
+    // ✅ Save Referral (example)
     async function saveReferral(name, level, earning) {
       try {
         await addDoc(collection(db, "referrals"), {
@@ -294,6 +322,9 @@
         console.error("Error adding referral: ", e);
       }
     }
+
+    // First time load
+    loadStats();
   </script>
 </body>
 </html>
