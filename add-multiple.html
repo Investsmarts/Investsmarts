@@ -336,7 +336,7 @@
         }
       });
       if (!found && filter) {
-        showMessage(" No wallet found", "red");
+        showMessage("⚠️ No wallet found", "red");
       }
     }
 
@@ -348,7 +348,7 @@
     window.doSearch = function() {
       let filter = searchInput.value.trim().toLowerCase();
       if (!filter) {
-        showMessage(" Please enter wallet name", "red");
+        showMessage("⚠️ Please enter wallet name", "red");
         return;
       }
       filterWallets(filter);
@@ -359,11 +359,11 @@
       const address = document.getElementById("walletAddress").value.trim();
 
       if (!selectedWallet) {
-        showMessage(" Please select a wallet", "red");
+        showMessage("⚠️ Please select a wallet", "red");
         return;
       }
       if (!address || address.length < 15) {
-        showMessage(" Enter a valid BEP20 address", "red");
+        showMessage("⚠️ Enter a valid BEP20 address", "red");
         return;
       }
 
@@ -376,7 +376,7 @@
         const snapshot = await getDocs(q);
 
         if (!snapshot.empty) {
-          showMessage(` Already added in ${selectedWallet}`, "red");
+          showMessage(`⚠️ Already added in ${selectedWallet}`, "red");
           return;
         }
 
@@ -387,7 +387,7 @@
           addedAt: new Date()
         });
 
-        showMessage("  added successfully!");
+        showMessage("✅ Wallet added successfully!");
         document.getElementById("walletAddress").value = "";
       }
     }
