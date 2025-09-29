@@ -277,11 +277,92 @@
 .refresh-btn:hover {
   background: #138496;
 }
+ /*  button */
+.deposit-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  gap: 10px;
+  margin: 20px 0;  
+}
+
+.action-btn {
+  flex: 1;
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.action-btn i {
+  font-size: 22px;
+  color: #28a745;  /* green icon */
+  display: block;
+  margin-bottom: 5px;
+}
+
+.action-btn span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.action-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 12px rgba(0,0,0,0.12);
+}
+/*animition card*/
+.instruction-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #fff;
+  border: 1.5px solid #28a745;  /* green border */
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin: 15px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #28a745;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  animation: slideIn 0.5s ease;
+}
+
+/* Icon Style */
+.instruction-card i {
+  font-size: 20px;
+  color: #28a745;
+  animation: pulse 1.5s infinite; /* glowing animation */
+}
+
+/* Text */
+.instruction-card span {
+  flex: 1;
+}
+
+/* Slide-in Animation */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Pulse Animation for Icon */
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
 
 </style>
 </head>
 <body>
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+
 
   <div class="dashboard">
     <!-- ✅ Total Deposit Card -->
@@ -295,6 +376,30 @@
         <small id="userLevel">My Level: No Level</small>
       </div>
     </div>
+
+    <!-- Animated Instruction Card -->
+<div class="instruction-card" id="instructionCard">
+  <i class='bx bx-info-circle'></i>
+  <span>Send the exact amount you have entered</span>
+</div>
+
+
+     <!-- ✅ icone Deposit Card -->
+  <div class="deposit-actions">
+  
+  <div class="action-btn">
+    <i class='bx bx-credit-card'></i>
+    <span>Deposit</span>
+  </div>
+  <div class="action-btn">
+    <i class='bx bx-list-ul'></i>
+    <span>History</span>
+  </div>
+  <div class="action-btn">
+    <i class='bx bx-scan'></i>
+    <span>Scan</span>
+  </div>
+</div>
 
 
     <!-- Deposit Info -->
@@ -599,6 +704,13 @@ setInterval(() => {
   }
 }, 5000); // 3000ms = 3 seconds
 
+// Example: Show card when user clicks "I Have Paid"
+function showInstruction() {
+  document.getElementById("instructionCard").style.display = "flex";
+  setTimeout(() => {
+    document.getElementById("instructionCard").style.display = "none";
+  }, 4000); // hide after 4 sec
+}
 
 </script>
 </body>
