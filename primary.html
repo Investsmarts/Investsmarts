@@ -44,34 +44,59 @@
     measurementId: "G-HG0Q8ZHT6G"
   };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-  const primaryBox = document.getElementById("primaryBox");
-  const copyBtn = document.getElementById("copyBtn");
-  let currentAddress = "";
+const primaryBox = document.getElementById("primaryBox");
+const copyBtn = document.getElementById("copyBtn");
+let currentAddress = "";
+let currentWallet = "";
 
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const ref = doc(db, "users", user.uid);
-      const snap = await getDoc(ref);
-      if (snap.exists()) {
-        const data = snap.data();
-        currentAddress = data.walletAddress || "❌ No address saved yet";
-        primaryBox.textContent = currentAddress;
-      } else {
-        primaryBox.textContent = "❌ No user data found";
-      }
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const ref = doc(db, "users", user.uid);
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      const data = snap.data();
+      currentWallet = data.primaryWallet || "❌ No wallet selected";
+      currentAddress = data.primaryAddress || "❌ No address saved yet";
+
+      primaryBox.innerHTML = `
+        <div style="margin-bottom:8px; font-size:14px; color:#28a745;">
+          <b>Wallet:</b> ${currentWallet} 
+          ${currentWallet !== "❌ No wallet selected" 
+            ? '<span style="background:#28a745;color:#fff;font-size:11px;padding:3px 6px;border-radius:6px;margin-left:6px;">Primary</span>' 
+            : ""}
+        </div>
+        <div style="
+          font-size:13px;
+          color:#333;
+          border:1px solid #ccc;
+          padding:6px 10px;
+          border-radius:6px;
+          background:#fff;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        ">
+          <b>Address:</b> ${currentAddress}
+        </div>
+      `;
     } else {
-      primaryBox.textContent = "⚠️ Please login first";
+      primaryBox.textContent = "❌ No user data found";
     }
-  });
+  } else {
+    primaryBox.textContent = "⚠️ Please login first";
+  }
+});
 
-  copyBtn.addEventListener("click", () => {
-    if (currentAddress) {
-      navigator.clipboard.writeText(currentAddress);
-      alert("✅ Address copied!");
-    }
-  });
+copyBtn.addEventListener("click", () => {
+  if (currentAddress && currentAddress !== "❌ No address saved yet") {
+    navigator.clipboard.writeText(currentAddress);
+    alert("✅ Address copied!");
+  }
+});
+
+
 </script>
