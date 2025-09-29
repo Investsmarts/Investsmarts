@@ -23,16 +23,16 @@
 
     /* Info Card */
     /* Info Card */
-.info-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  text-align: center;
-  margin-top: 20px;   /* 🔥 upar se gap milega */
-  margin-bottom: 20px;
-}
+    .info-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      text-align: center;
+      margin-top: 20px;   /* 🔥 upar se gap milega */
+      margin-bottom: 20px;
+    }
 
 /* Heading */
 .info-card h3 {
@@ -77,167 +77,167 @@
 }
 
 
-    /* History Header Box */
-    .history-header-box {
-      background: #fff;
-      border-radius: 12px;
-      padding: 12px 16px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      border: 1.5px solid #c3e6cb;
-    }
-    .history-header-box .title {
-      color: #28a745;
-      font-size: 17px;
-      font-weight: 600;
-    }
-    .refresh-btn {
-      background: #17a2b8;
-      color: #fff;
-      padding: 6px 12px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .refresh-btn:hover {
-      background: #138496;
-    }
+/* History Header Box */
+.history-header-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border: 1.5px solid #c3e6cb;
+}
+.history-header-box .title {
+  color: #28a745;
+  font-size: 17px;
+  font-weight: 600;
+}
+.refresh-btn {
+  background: #17a2b8;
+  color: #fff;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.refresh-btn:hover {
+  background: #138496;
+}
 
-    /* Popup Overlay */
-    .popup-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-    }
-    .popup {
-      background: #fff;
-      border-radius: 12px;
-      padding: 20px;
-      width: 90%;
-      max-width: 260px;
-      text-align: center;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-      animation: fadeIn 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    @keyframes fadeIn {
-      from {opacity: 0; transform: scale(0.9);}
-      to {opacity: 1; transform: scale(1);}
-    }
+/* Popup Overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+.popup {
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px;
+  width: 90%;
+  max-width: 260px;
+  text-align: center;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+  animation: fadeIn 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.9);}
+  to {opacity: 1; transform: scale(1);}
+}
 
-    .popup label {
-      font-size: 13px;
-      font-weight: 600;
-      color: #333;
-      align-self: flex-start;
-      margin-top: 8px;
-    }
-    .amount-input, .address-input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
-      outline: none;
-      text-align: center;
-    }
+.popup label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  align-self: flex-start;
+  margin-top: 8px;
+}
+.amount-input, .address-input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  text-align: center;
+}
 
-    /* Action Buttons */
-    .action-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 14px;
-      width: 100%;
-    }
-    .action-buttons button {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 13px;
-      color: #fff;
-    }
-    .close-btn { background: #dc3545; }
-    .submit-btn { background: #28a745; }
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  width: 100%;
+}
+.action-buttons button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 13px;
+  color: #fff;
+}
+.close-btn { background: #dc3545; }
+.submit-btn { background: #28a745; }
 
-    /* Success & Error Popups */
-    .thankyou-popup, .error-popup {
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%,-50%);
-      padding: 12px 20px;
-      border-radius: 10px;
-      font-weight: bold;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-      z-index: 3000;
-      display: none;
-      animation: fadeInOut 1.5s ease forwards;
-    }
-    .thankyou-popup { background: #28a745; color: #fff; }
-    .error-popup { background: #dc3545; color: #fff; }
-    @keyframes fadeInOut {
-      0% {opacity: 0; transform: translate(-50%,-50%) scale(0.9);}
-      20% {opacity: 1; transform: translate(-50%,-50%) scale(1);}
-      80% {opacity: 1;}
-      100% {opacity: 0; transform: translate(-50%,-50%) scale(0.9);}
-    }
+/* Success & Error Popups */
+.thankyou-popup, .error-popup {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: bold;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  z-index: 3000;
+  display: none;
+  animation: fadeInOut 1.5s ease forwards;
+}
+.thankyou-popup { background: #28a745; color: #fff; }
+.error-popup { background: #dc3545; color: #fff; }
+@keyframes fadeInOut {
+  0% {opacity: 0; transform: translate(-50%,-50%) scale(0.9);}
+  20% {opacity: 1; transform: translate(-50%,-50%) scale(1);}
+  80% {opacity: 1;}
+  100% {opacity: 0; transform: translate(-50%,-50%) scale(0.9);}
+}
 
-    /* Bottom Nav */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0; left: 0;
-      width: 100%; height: 70px;
-      background: #fff;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      border-top: 2px solid #28a745;
-      z-index: 100;
-    }
-    .nav-item {
-      flex: 1;
-      text-align: center;
-      font-size: 12px;
-      color: #333;
-      text-decoration: none;
-      transition: 0.3s;
-      position: relative;
-      padding: 10px 0;
-    }
-    .nav-item i {
-      font-size: 22px;
-      display: block;
-      margin-bottom: 3px;
-      color: #28a745;
-    }
-    .nav-item:hover { color: #28a745; }
-    .nav-item:hover i { color: #218838; }
-    .nav-item:not(:last-child)::after {
-      content: "";
-      position: absolute;
-      right: 0; top: 20%; bottom: 20%;
-      width: 1px; background: #e0e0e0;
-    }
-  /* ✅ Balance Card */
-  .balance-card {
+/* Bottom Nav */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0;
+  width: 100%; height: 70px;
+  background: #fff;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 2px solid #28a745;
+  z-index: 100;
+}
+.nav-item {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  color: #333;
+  text-decoration: none;
+  transition: 0.3s;
+  position: relative;
+  padding: 10px 0;
+}
+.nav-item i {
+  font-size: 22px;
+  display: block;
+  margin-bottom: 3px;
+  color: #28a745;
+}
+.nav-item:hover { color: #28a745; }
+.nav-item:hover i { color: #218838; }
+.nav-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0; top: 20%; bottom: 20%;
+  width: 1px; background: #e0e0e0;
+}
+/* ✅ Balance Card */
+.balance-card {
   background: linear-gradient(135deg, #28a745, #20c997);
   border-radius: 16px;
   padding: 20px;
@@ -306,7 +306,7 @@
   color: #333;
 }
 
-  #contentArea {
+#contentArea {
   margin-top: 20px;
   background: #fff;
   padding: 20px;
@@ -319,111 +319,111 @@
   overflow-y: auto;    /* data jyada hoga to andar scroll hoga */
 }
 
-  </style>
+</style>
 </head>
 <body>
-<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-<div class="dashboard">
+  <div class="dashboard">
 
-  <!-- ✅ Withdrawal Card -->
-<div class="balance-card">
-  <div class="balance-icon">
-    <i class='bx bx-up-arrow-circle'></i>
-  </div>
-  <div class="balance-info">
-    <h3>Total Withdrawal (USDT)</h3>
-    <p class="amount">$<span id="totalWithdraw">0.00</span></p>
-    <small id="withdrawLevel">My Level: No Level</small>
-  </div>
-</div>
-
-<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
-<!-- ✅ Buttons Row -->
-<div class="clean-buttons">
-  <div class="clean-btn" onclick="loadPage('primary.html')">
-    <i class='bx bx-star'></i>
-    <p>Primary </p>
-  </div>
-  <div class="clean-btn" onclick="loadPage('add-multiple.html')">
-    <i class='bx bx-plus-circle'></i>
-    <p> Multiple</p>
-  </div>
-  <div class="clean-btn" onclick="loadPage('records.html')">
-    <i class='bx bx-book'></i>
-    <p> Record</p>
-  </div>
-</div>
-
-<!-- ✅ Content Area -->
-<div id="contentArea">📄 Select a menu above to load content</div>
-
-
-
- <!-- Withdrawal Info Card -->
-<div class="info-card">
-  <h3>Withdrawal Section</h3>
-
-  <!-- Green info box -->
-  <div class="info-text-box">
-    Click below to <b>Withdraw Funds</b> securely.
-  </div>
-
-  <!-- Withdraw Button -->
-  <button class="btn-withdraw" onclick="openPopup()">
-    <i class='bx bx-up-arrow-circle'></i> Request Withdrawal
-  </button>
-</div>
-
-  <!-- Withdrawal History -->
-  <div class="history-section">
-    <div class="history-header-box">
-      <span class="title"> History</span>
-      <button class="refresh-btn" onclick="manualRefresh()">🔄 Refresh</button>
+    <!-- ✅ Withdrawal Card -->
+    <div class="balance-card">
+      <div class="balance-icon">
+        <i class='bx bx-up-arrow-circle'></i>
+      </div>
+      <div class="balance-info">
+        <h3>Total Withdrawal (USDT)</h3>
+        <p class="amount">$<span id="totalWithdraw">0.00</span></p>
+        <small id="withdrawLevel">My Level: No Level</small>
+      </div>
     </div>
-    <div id="withdrawHistoryList">
-      <p style="text-align:center; color:#666;">Loading...</p>
+
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- ✅ Buttons Row -->
+    <div class="clean-buttons">
+      <div class="clean-btn" onclick="loadPage('primary.html')">
+        <i class='bx bx-star'></i>
+        <p>Primary </p>
+      </div>
+      <div class="clean-btn" onclick="loadPage('add-multiple.html')">
+        <i class='bx bx-plus-circle'></i>
+        <p> Multiple</p>
+      </div>
+      <div class="clean-btn" onclick="loadPage('records.html')">
+        <i class='bx bx-book'></i>
+        <p> Record</p>
+      </div>
+    </div>
+
+    <!-- ✅ Content Area -->
+    <div id="contentArea">📄 Select a menu above to load content</div>
+
+
+
+    <!-- Withdrawal Info Card -->
+    <div class="info-card">
+      <h3>Withdrawal Section</h3>
+
+      <!-- Green info box -->
+      <div class="info-text-box">
+        Click below to <b>Withdraw Funds</b> securely.
+      </div>
+
+      <!-- Withdraw Button -->
+      <button class="btn-withdraw" onclick="openPopup()">
+        <i class='bx bx-up-arrow-circle'></i> Request Withdrawal
+      </button>
+    </div>
+
+    <!-- Withdrawal History -->
+    <div class="history-section">
+      <div class="history-header-box">
+        <span class="title"> History</span>
+        <button class="refresh-btn" onclick="manualRefresh()">🔄 Refresh</button>
+      </div>
+      <div id="withdrawHistoryList">
+        <p style="text-align:center; color:#666;">Loading...</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Popup -->
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup">
+      <h2 style="margin-bottom:8px;color:#222;">Withdraw Funds</h2>
+      <p style="font-size:13px;color:#666;margin-bottom:10px;">
+        Minimum withdrawal: <b style="color:#28a745;">$20</b><br>
+        Available balance: <b id="popupBalance" style="color:#007bff;">0</b>
+      </p>
+
+      <label>Amount ($)</label>
+      <input type="number" id="withdrawAmount" class="amount-input" placeholder="Enter withdrawal amount">
+
+      <label>Type</label>
+      <input type="text" value="USDT (BEP20)" disabled class="address-input">
+
+      <label>Your Wallet Address</label>
+      <input type="text" id="withdrawAddress" class="address-input" placeholder="Enter your BEP20 address">
+
+      <div class="action-buttons">
+        <button class="close-btn" onclick="cancelWithdraw()">Cancel</button>
+        <button class="submit-btn" onclick="submitWithdraw()">Submit</button>
+      </div>
     </div>
   </div>
 
-</div>
+  <div class="thankyou-popup" id="thankyouPopup">Withdrawal Requested</div>
+  <div class="error-popup" id="errorPopup">Enter valid details</div>
 
-<!-- Popup -->
-<div class="popup-overlay" id="popupOverlay">
-  <div class="popup">
-    <h2 style="margin-bottom:8px;color:#222;">Withdraw Funds</h2>
-    <p style="font-size:13px;color:#666;margin-bottom:10px;">
-      Minimum withdrawal: <b style="color:#28a745;">$20</b><br>
-      Available balance: <b id="popupBalance" style="color:#007bff;">0</b>
-    </p>
-
-    <label>Amount ($)</label>
-    <input type="number" id="withdrawAmount" class="amount-input" placeholder="Enter withdrawal amount">
-
-    <label>Type</label>
-    <input type="text" value="USDT (BEP20)" disabled class="address-input">
-
-    <label>Your Wallet Address</label>
-    <input type="text" id="withdrawAddress" class="address-input" placeholder="Enter your BEP20 address">
-
-    <div class="action-buttons">
-      <button class="close-btn" onclick="cancelWithdraw()">Cancel</button>
-      <button class="submit-btn" onclick="submitWithdraw()">Submit</button>
-    </div>
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
+    <a href="invest.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
+    <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
+    <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
   </div>
-</div>
-
-<div class="thankyou-popup" id="thankyouPopup">Withdrawal Requested</div>
-<div class="error-popup" id="errorPopup">Enter valid details</div>
-
-<!-- Bottom Navigation -->
-<div class="bottom-nav">
-  <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
-  <a href="invest.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
-  <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
-  <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
-</div>
 
   <script>
     // Highlight active nav
@@ -456,11 +456,11 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-   const popupOverlay = document.getElementById("popupOverlay");
-const thankyouPopup = document.getElementById("thankyouPopup");
-const errorPopup = document.getElementById("errorPopup");
-const popupBalance = document.getElementById("popupBalance");
-const addressInput = document.getElementById("withdrawAddress");
+    const popupOverlay = document.getElementById("popupOverlay");
+    const thankyouPopup = document.getElementById("thankyouPopup");
+    const errorPopup = document.getElementById("errorPopup");
+    const popupBalance = document.getElementById("popupBalance");
+    const addressInput = document.getElementById("withdrawAddress");
 
     let currentUserId = null;
     let userBalance = 0;
@@ -484,11 +484,11 @@ const addressInput = document.getElementById("withdrawAddress");
     }
 
     async function loadUserProfile(uid) {
-    const ref = doc(db, "users", uid);
-    const snap = await getDoc(ref);
-   if (snap.exists()) {
-    const data = snap.data();
-    userBalance = data.walletBalance || 0; 
+      const ref = doc(db, "users", uid);
+      const snap = await getDoc(ref);
+      if (snap.exists()) {
+        const data = snap.data();
+        userBalance = data.walletBalance || 0; 
     userWalletAddress = data.primaryAddress || ""; // 🔥 primary address use karenge
 
     // ✅ Balance update
@@ -504,18 +504,18 @@ const addressInput = document.getElementById("withdrawAddress");
   }
 }
 
-      window.openPopup = function() {
-      popupOverlay.style.display = "flex";
-      document.getElementById("withdrawAmount").value = "";
-      addressInput.value = userWalletAddress || "";
-    };
+window.openPopup = function() {
+  popupOverlay.style.display = "flex";
+  document.getElementById("withdrawAmount").value = "";
+  addressInput.value = userWalletAddress || "";
+};
 
-    window.cancelWithdraw = function() {
-      popupOverlay.style.display = "none";
-    };
+window.cancelWithdraw = function() {
+  popupOverlay.style.display = "none";
+};
 
-    
- window.submitWithdraw = async function() {
+
+window.submitWithdraw = async function() {
   const amount = parseFloat(document.getElementById("withdrawAmount").value) || 0;
   const address = addressInput.value.trim();
 
@@ -556,7 +556,7 @@ const addressInput = document.getElementById("withdrawAddress");
   showSuccess("Withdrawal Requested!");
 };
 
-    window.manualRefresh = function() {
+window.manualRefresh = function() {
   const historyList = document.getElementById("withdrawHistoryList");
 
   // Feedback dikhane ke liye
@@ -571,59 +571,59 @@ const addressInput = document.getElementById("withdrawAddress");
 };
 
 
-    async function loadWithdrawHistory(userId) {
-      const historyList = document.getElementById("withdrawHistoryList");
+async function loadWithdrawHistory(userId) {
+  const historyList = document.getElementById("withdrawHistoryList");
 
-      try {
-        const q = query(collection(db, "users", userId, "withdrawals"), orderBy("date", "desc"));
-        const querySnapshot = await getDocs(q);
-        if (querySnapshot.empty) {
-          historyList.innerHTML = "<p style='text-align:center; color:#666;'>No withdrawals yet.</p>";
-          return;
-        }
-        historyList.innerHTML = "";
-        querySnapshot.forEach(docSnap => {
-          const data = docSnap.data();
-          const dateStr = data.date ? new Date(data.date.seconds*1000).toLocaleString() : "-";
-          const statusClass = (data.status || "Pending").toLowerCase();
-          historyList.innerHTML += `
-            <div class="history-card">
-              <div class="history-card-header">
-                <span class="badge">Withdraw</span>
-                <span class="status ${statusClass}">${data.status || "Pending"}</span>
-              </div>
-              <div class="history-card-row"><span class="label">Amount</span><span class="value">$${data.amount || 0}</span></div>
-              <div class="history-card-row"><span class="label">Type</span><small>${data.type || "USDT (BEP20)"}</small></div>
-              <div class="history-card-row"><span class="label">Address</span><small>${data.address || "-"}</small>
-                 </div>
-
-              <div class="history-card-row"><span class="label">Time</span><small>${dateStr}</small></div>
-              <div class="history-card-row"><span class="label">ID</span>
-                <span><small>${data.orderId || docSnap.id}</small>
-                <button class="copy-btn" onclick="copyOrderId('${data.orderId || docSnap.id}')">Copy</button></span>
-              </div>
-            </div>`;
-        });
-      } catch (err) {
-        console.error("Error:", err);
-        historyList.innerHTML = "<p style='text-align:center; color:red;'>Error loading history</p>";
-      }
+  try {
+    const q = query(collection(db, "users", userId, "withdrawals"), orderBy("date", "desc"));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+      historyList.innerHTML = "<p style='text-align:center; color:#666;'>No withdrawals yet.</p>";
+      return;
     }
+    historyList.innerHTML = "";
+    querySnapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      const dateStr = data.date ? new Date(data.date.seconds*1000).toLocaleString() : "-";
+      const statusClass = (data.status || "Pending").toLowerCase();
+      historyList.innerHTML += `
+      <div class="history-card">
+      <div class="history-card-header">
+      <span class="badge">Withdraw</span>
+      <span class="status ${statusClass}">${data.status || "Pending"}</span>
+      </div>
+      <div class="history-card-row"><span class="label">Amount</span><span class="value">$${data.amount || 0}</span></div>
+      <div class="history-card-row"><span class="label">Type</span><small>${data.type || "USDT (BEP20)"}</small></div>
+      <div class="history-card-row"><span class="label">Address</span><small>${data.address || "-"}</small>
+      </div>
 
-    window.copyOrderId = function(orderId) {
-      navigator.clipboard.writeText(orderId);
-      showError("Order ID copied!");
-    };
-
-    onAuthStateChanged(auth, (user) => {
-      if (!user) window.location.href = "auth.html";
-      else { 
-        currentUserId = user.uid; 
-        loadUserProfile(user.uid);
-        loadWithdrawHistory(user.uid); 
-      }
+      <div class="history-card-row"><span class="label">Time</span><small>${dateStr}</small></div>
+      <div class="history-card-row"><span class="label">ID</span>
+      <span><small>${data.orderId || docSnap.id}</small>
+      <button class="copy-btn" onclick="copyOrderId('${data.orderId || docSnap.id}')">Copy</button></span>
+      </div>
+      </div>`;
     });
-    async function loadWithdrawCard(uid) {
+  } catch (err) {
+    console.error("Error:", err);
+    historyList.innerHTML = "<p style='text-align:center; color:red;'>Error loading history</p>";
+  }
+}
+
+window.copyOrderId = function(orderId) {
+  navigator.clipboard.writeText(orderId);
+  showError("Order ID copied!");
+};
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) window.location.href = "auth.html";
+  else { 
+    currentUserId = user.uid; 
+    loadUserProfile(user.uid);
+    loadWithdrawHistory(user.uid); 
+  }
+});
+async function loadWithdrawCard(uid) {
   try {
 
     // 1️⃣ Load user info
@@ -632,7 +632,7 @@ const addressInput = document.getElementById("withdrawAddress");
     if (snap.exists()) {
       const data = snap.data();
       document.getElementById("withdrawLevel").textContent =
-        "My Level: " + (data.level || "No Level");
+      "My Level: " + (data.level || "No Level");
     }
 
     // 2️⃣ Calculate total completed withdrawals
@@ -666,15 +666,30 @@ onAuthStateChanged(auth, (user) => {
 // 🔥 yaha paste kar
 window.loadPage = function(page) {
   fetch(page)
-    .then(res => res.text())
-    .then(data => {
-      document.getElementById("contentArea").innerHTML = data;
-    })
-    .catch(() => {
-      document.getElementById("contentArea").innerHTML = "<p style='color:red'>Error loading page</p>";
+  .then(res => res.text())
+  .then(data => {
+    const content = document.getElementById("contentArea");
+    content.innerHTML = data;
+
+      // 👇 Agar loaded page me <script> hai, to unhe manually run karna hoga
+    const scripts = content.querySelectorAll("script");
+    scripts.forEach(oldScript => {
+      const newScript = document.createElement("script");
+      if (oldScript.type) newScript.type = oldScript.type;
+      if (oldScript.src) {
+        newScript.src = oldScript.src;
+      } else {
+        newScript.textContent = oldScript.textContent;
+      }
+      document.body.appendChild(newScript);
+      oldScript.remove();
     });
-}
-  </script>
+  })
+  .catch(() => {
+    document.getElementById("contentArea").innerHTML = "<p style='color:red'>Error loading page</p>";
+  });
+};
+
+</script>
 </body>
 </html>
-
