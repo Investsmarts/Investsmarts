@@ -666,9 +666,51 @@ window.loadPage = function(page) {
     document.getElementById("contentArea").innerHTML = "<p style='color:red'>Error loading page</p>";
   });
 };
+<script>
+  const withdrawBtn = document.querySelector(".btn-withdraw");
+
+  // ✅ Page load karte waqt call hota hai
+  window.loadPage = function(page) {
+    fetch(page)
+      .then(res => res.text())
+      .then(data => {
+        const content = document.getElementById("contentArea");
+        content.innerHTML = data;
+
+        // 👇 Agar loaded page me <script> hai, to unhe manually run karna hoga
+        const scripts = content.querySelectorAll("script");
+        scripts.forEach(oldScript => {
+          const newScript = document.createElement("script");
+          if (oldScript.type) newScript.type = oldScript.type;
+          if (oldScript.src) {
+            newScript.src = oldScript.src;
+          } else {
+            newScript.textContent = oldScript.textContent;
+          }
+          document.body.appendChild(newScript);
+          oldScript.remove();
+        });
+
+        // ✅ Ab logic: Multiple pe ho to Withdraw disable, warna enable
+        if (page.includes("add-multiple")) {
+          withdrawBtn.disabled = true;
+          withdrawBtn.style.opacity = "0.5";   // thoda grey dikhega
+          withdrawBtn.style.cursor = "not-allowed";
+        } else {
+          withdrawBtn.disabled = false;
+          withdrawBtn.style.opacity = "1";
+          withdrawBtn.style.cursor = "pointer";
+        }
+      })
+      .catch(() => {
+        document.getElementById("contentArea").innerHTML = "<p style='color:red'>Error loading page</p>";
+      });
+  };
+</script>
 
 </script>
 </body>
 </html>
+
 
 
