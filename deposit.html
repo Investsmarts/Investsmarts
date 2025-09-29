@@ -242,6 +242,41 @@
   opacity: 0.9;
 }
 
+/* White card style for heading + refresh */
+.history-header-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  display: flex;
+  justify-content: space-between;
+  justify-content: space-between; /* left-right alignment */
+  align-items: center;
+  margin-bottom: 20px;
+  border: 1.5px solid #c3e6cb; 
+}
+
+/* Heading text */
+.history-header-box .title {
+  color: #28a745;   /* green heading */
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Refresh button */
+.refresh-btn {
+  background: #17a2b8;
+  color: #fff;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+}
+.refresh-btn:hover {
+  background: #138496;
+}
 
 </style>
 </head>
@@ -269,12 +304,17 @@
       <button class="btn-deposit" onclick="openPopup()">Get Deposit Address</button>
     </div>
 
-    <!-- History -->
-    <div class="history-section">
-      <h2 style="color:#007bff; text-align:center;">Deposit History</h2>
-      <button class="refresh-btn" onclick="manualRefresh()">🔄 Refresh History</button>
-      <div id="historyList"><p style="text-align:center; color:#666;">Loading...</p></div>
-    </div>
+<!-- History -->
+<!-- History -->
+<div class="history-section">
+  <div class="history-header-box">
+    <span class="title">Deposit History</span>
+    <button class="refresh-btn" onclick="manualRefresh()">🔄 Refresh</button>
+  </div>
+  <div id="historyList">
+    <p style="text-align:center; color:#666;">Loading...</p>
+  </div>
+</div>
 
   </div>
 
