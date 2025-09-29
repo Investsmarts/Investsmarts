@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Wallet Records</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    header h2 {
+      color: #28a745;
+      margin: 0;
+      font-size: 20px;
+    }
+    .back-btn {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .back-btn:hover {
+      background: #0056b3;
+    }
+    .count-box {
+      background: #fff;
+      border: 2px solid #28a745;
+      border-radius: 10px;
+      padding: 10px 15px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .wallet-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .wallet-card {
+      background: #fff;
+      border: 1.5px solid #ddd;
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .wallet-info {
+      max-width: 65%;
+    }
+    .wallet-info b {
+      color: #28a745;
+      font-size: 14px;
+    }
+    .wallet-info p {
+      margin: 4px 0 0;
+      font-size: 13px;
+      word-break: break-all;
+      color: #444;
+    }
+    .wallet-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .wallet-actions button {
+      border: none;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .primary-btn {
+      background: #007bff;
+      color: #fff;
+    }
+    .primary-btn:hover {
+      background: #0056b3;
+    }
+    .delete-btn {
+      background: #dc3545;
+      color: #fff;
+    }
+    .delete-btn:hover {
+      background: #a71d2a;
+    }
+    .primary-badge {
+      background: #28a745;
+      color: #fff;
+      font-size: 11px;
+      padding: 3px 6px;
+      border-radius: 6px;
+      margin-left: 6px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>My Wallet Records</h2>
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+  </header>
+
+  <div class="count-box">Total Wallets: <span id="walletCount">0</span></div>
+  <div class="wallet-list" id="walletList">
+    <p style="text-align:center;color:#666;">Loading...</p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, collection, getDocs, deleteDoc, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+      authDomain: "btcinvest-c0e25.firebaseapp.com",
+      projectId: "btcinvest-c0e25",
+      storageBucket: "btcinvest-c0e25.firebasestorage.app",
+      messagingSenderId: "204937458487",
+      appId: "1:204937458487:web:cc27ece1249999279f60b2",
+      measurementId: "G-HG0Q8ZHT6G"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const walletList = document.getElementById("walletList");
+    const walletCount = document.getElementById("walletCount");
+
+    let currentUserId = null;
+    let primaryAddress = null;
+
+    async function loadWallets(userId) {
+      const snapshot = await getDocs(collection(db, "users", userId, "wallets"));
+      walletList.innerHTML = "";
+      if (snapshot.empty) {
+        walletList.innerHTML = "<p style='text-align:center;color:#666;'>No wallets added yet.</p>";
+        walletCount.textContent = "0";
+        return;
+      }
+
+      let count = 0;
+      snapshot.forEach(docSnap => {
+        count++;
+        const data = docSnap.data();
+        const walletId = docSnap.id;
+
+        const card = document.createElement("div");
+        card.className = "wallet-card";
+
+        const info = document.createElement("div");
+        info.className = "wallet-info";
+        info.innerHTML = `
+          <b>${data.walletApp}</b> 
+          ${data.address === primaryAddress ? '<span class="primary-badge">Primary</span>' : ""}
+          <p>${data.address}</p>
+        `;
+
+        const actions = document.createElement("div");
+        actions.className = "wallet-actions";
+
+        const primaryBtn = document.createElement("button");
+        primaryBtn.className = "primary-btn";
+        primaryBtn.textContent = "Set Primary";
+        primaryBtn.onclick = async () => {
+          await updateDoc(doc(db, "users", userId), {
+            primaryAddress: data.address
+          });
+          primaryAddress = data.address;
+          loadWallets(userId);
+        };
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "delete-btn";
+        deleteBtn.textContent = "Delete";
+        deleteBtn.onclick = async () => {
+          if (confirm("Are you sure you want to delete this wallet?")) {
+            await deleteDoc(doc(db, "users", userId, "wallets", walletId));
+            loadWallets(userId);
+          }
+        };
+
+        actions.appendChild(primaryBtn);
+        actions.appendChild(deleteBtn);
+
+        card.appendChild(info);
+        card.appendChild(actions);
+
+        walletList.appendChild(card);
+      });
+
+      walletCount.textContent = count;
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUserId = user.uid;
+        const userRef = doc(db, "users", user.uid);
+        const profileSnap = await getDoc(userRef);
+        if (profileSnap.exists()) {
+          primaryAddress = profileSnap.data().primaryAddress || null;
+        }
+        loadWallets(user.uid);
+      } else {
+        walletList.innerHTML = "<p style='text-align:center;color:red;'>Please log in.</p>";
+      }
+    });
+
+    // Back button logic
+    window.goBack = function() {
+      window.location.href = "Withdrawal.html"; // apna dashboard ka path daal
+    }
+  </script>
+</body>
+</html>
