@@ -1,640 +1,441 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TrustDollar v2 - Secure Your Funds</title>
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Register/ Trustdollar / with - very Safe your fund //////</title>
   <style>
     body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: #f9f9f9;
-      color: #333;
-      overflow-x: hidden;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      margin:0;
     }
-
-    /* HEADER */
-      /* HEADER STYLE */
-.header {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #fff;
-  color: #000;
-  padding: 10px 30px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  z-index: 1000;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo-img {
-  height: 60px;
-  width: auto;
-}
-
-.brand-name {
-  font-size: 18px;
-  font-weight: 600;
-  color: #111;
-}
-
-.nav-links {
-  display: flex;
-  gap: 25px;
-}
-
-.nav-links a {
-  text-decoration: none;
-  font-weight: 600;
-  color: #111;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.header-right a {
-  text-decoration: none;
-  color: #111;
-  font-weight: 500;
-}
-
-.header-right .icon {
-  height: 28px;
-  width: 28px;
-}
-
-.menu-toggle {
-  font-size: 22px;
-  cursor: pointer;
-  display: none;
-}
-
-/* ✅ Mobile style */
-@media(max-width: 768px){
-  .nav-links {
-    display: none;
-    position: absolute;
-    top: 60px; left: 0; right: 0;
-    background: #fff;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 15px 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  }
-
-  .nav-links.show {
-    display: flex;
-  }
-
-  .nav-links a {
-    padding: 10px 0;
-    width: 100%;
-    border-bottom: 1px solid #eee;
-  }
-
-  .menu-toggle {
-    display: block;
-  }
-}
-
-/* Desktop */
-.header-right { display: none; } /* ❌ remove old header-right */
-
-/* Mobile Menu Items */
-.nav-links a {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.nav-links a img.icon {
-  height: 20px;
-  width: 20px;
-}
-
-
-    /* HERO */
-    .hero {
-      text-align: center;
-      padding: 120px 20px 60px;
-      background: #e8f5e9;
-    }
-
-    /* ✅ Slider Box */
-    .slider {
-      position: relative;
-      max-width: 400px;
-      margin: 0 auto 30px;
-      border-radius: 20px;
-      overflow: hidden;
-      border: 0px solid orange;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
-    }
-
-    .slides {
-      display: flex;
-      transition: transform 0.6s ease-in-out;
-    }
-
-    .slide-card {
-      flex: 0 0 100%;
-    }
-
-    .slide-card img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 16px;
-      object-fit: cover; /* ✅ image fit karega */
-    }
-
-    /* HERO TEXT */
-    .hero h1 {
-      font-size: 28px;
-      color: #2c7;
-      margin-bottom: 15px;
-    }
-    .hero p {
-      font-size: 16px;
-      max-width: 600px;
-      margin: auto;
-      color: #444;
-    }
-
-    /* HERO BUTTONS */
-    .hero-buttons {
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-    .hero-buttons a {
-      text-decoration: none;
-      padding: 12px 28px;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-    .hero-buttons a.login {
-      background: #fff;
-      color: #2c7;
-      border: 2px solid #2c7;
-    }
-    .hero-buttons a.login:hover { background: #eaeaea; }
-    .hero-buttons a.register {
-      background: #ff9800;
-      color: #fff;
-    }
-    .hero-buttons a.register:hover { background: #e68900; }
-
-    /* FEATURES */
-    .features {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 25px;
-      padding: 50px 20px;
-    }
-    .feature {
-      background: #fff;
-      border-radius: 16px;
-      padding: 28px 22px;
-      width: 280px;
-      text-align: center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    .feature::before {
-      content: "";
-      position: absolute;
-      top: -2px; left: -2px; right: -2px; bottom: -2px;
-      border-radius: 18px;
-      background: linear-gradient(135deg,#4CAF50,#2c7,#66bb6a);
-      z-index: -1;
-      opacity: 0.4;
-      transition: opacity 0.4s;
-    }
-    .feature:hover::before { opacity: 1; }
-    .feature h3 {
-      color: #2c7;
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-    .feature p {
-      font-size: 14px;
-      line-height: 1.6;
-      color: #555;
-    }
-    .feature:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 12px 28px rgba(76,175,80,0.25);
-    }
-
-    /* BLOCKCHAIN */
-    .blockchain-section {
-      text-align: center;
-      padding: 50px 15px;
-      background: #eef9f1;
-    }
-    .blockchain {
-      display: flex; justify-content: center; align-items: center; gap: 15px;
-      flex-wrap: wrap;
-    }
-    .block {
-      width: 90px; height: 90px; background: #fff;
-      border: 2px solid #2c7; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: bold;
-      animation: pulse 3s infinite;
-    }
-    .chain {
-      width: 40px; height: 3px;
-      background: linear-gradient(90deg,#2c7,#4CAF50);
-      position: relative; overflow: hidden;
-    }
-    .chain::before {
-      content: ""; position: absolute; left: -40px; top: 0;
-      height: 100%; width: 40px;
-      background: rgba(255,255,255,0.8);
-      animation: flow 2s linear infinite;
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-    @keyframes flow {
-      0% { left: -40px; }
-      100% { left: 40px; }
-    }
-
-    /* FOOTER */
-    .footer {
-      background: #e8f5e9;
-      color: #333;
-      padding: 50px 20px 20px;
-    }
-    .footer-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
-      gap: 30px;
-      max-width: 1100px;
-      margin: auto;
-    }
-    .footer h2, .footer h3 { margin-bottom: 12px; color: #2c7; }
-    .footer p { font-size: 14px; line-height: 1.6; }
-    .footer ul { list-style: none; padding: 0; }
-    .footer ul li { margin: 6px 0; }
-    .footer ul li a {
-      color: #444; text-decoration: none; font-size: 14px;
-    }
-    .footer ul li a:hover { color: #2c7; font-weight: 600; }
-    .links { display: flex; gap: 40px; justify-content: flex-start; flex-wrap: wrap; }
-    .link-group { flex: 1; }
-    .subscribe-form {
-      display: flex; margin-top: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px; overflow: hidden;
-    }
-    .subscribe-form input {
-      flex: 1; padding: 10px; border: none; outline: none;
-      font-size: 14px; background: #fff; color: #333;
-    }
-    .subscribe-form button {
-      background: linear-gradient(90deg,#4CAF50,#2c7);
-      color: #fff; border: none; padding: 10px 16px;
-      cursor: pointer; font-weight: bold;
-    }
-    .subscribe-form button:hover { opacity: 0.9; }
-    .footer-bottom {
-      text-align: center;
-      border-top: 1px solid #ccc;
-      padding-top: 15px;
-      font-size: 13px;
-      margin-top: 30px;
-      color: #444;
-    }
-
-    /* Popup Style */
-    .popup {
-      display: none; 
+    .header {
       position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: #4CAF50;
-      color: #fff;
-      padding: 15px 25px;
-      border-radius: 10px;
-      font-size: 16px;
+      top: 0;
+      left: 0;
+      right: 0;   /* ✅ dono side lock */
+      width: 100%;
+      text-align: center;
+      padding: 12px;
+      font-size: 18px;
       font-weight: bold;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      z-index: 2000;
-      animation: fadeIn 0.4s ease;
+      background: linear-gradient(90deg,#4CAF50,#2c7);
+      color: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      z-index: 1000;
+
+      /* 👇 Extra fix for stability */
+      transform: translateZ(0);    
+      will-change: transform;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
     }
-    /* Mobile menu */
-    @media(max-width: 768px){
-  .nav-links {
-    display: none;
-    flex-direction: column;
-    align-items: flex-start;
-    position: fixed;
-    top: 0; left: 0;
-    width: 80%;   /* ✅ 80% width drawer */
-    height: 100%;
-    background: linear-gradient(135deg, #4CAF50, #2c7);
-    padding: 80px 25px;
-    z-index: 1000;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.3);
-    transform: translateX(-100%);
-    transition: transform 0.4s ease-in-out;
-  }
 
-  .nav-links.show {
-    display: flex;
-    transform: translateX(0); /* ✅ slide-in */
-  }
 
-  .nav-links a {
-    opacity: 0;
-    transform: translateX(-20px);
-    font-size: 18px;
-    font-weight: 600;
-    padding: 15px 0;
-    color: #fff;
-    text-decoration: none;
-    width: 100%;
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-    animation: fadeSlide 0.4s ease forwards;
-  }
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;   /* ✅ Left-right scroll band */
+      width: 100%;
+    }
 
-  /* ✅ Delay ek-ek karke */
-  .nav-links a:nth-child(1) { animation-delay: 0.1s; }
-  .nav-links a:nth-child(2) { animation-delay: 0.2s; }
-  .nav-links a:nth-child(3) { animation-delay: 0.3s; }
-  .nav-links a:nth-child(4) { animation-delay: 0.4s; }
-  .nav-links a:nth-child(5) { animation-delay: 0.5s; }
-  .nav-links a:nth-child(6) { animation-delay: 0.6s; }
+    .wrapper, .container, .info-box {
+      max-width: 100%;     
+      box-sizing: border-box;
+    }
 
-  @keyframes fadeSlide {
-    from { opacity: 0; transform: translateX(-20px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      margin-top: 70px; /* header ke neeche space */
+      padding: 15px;
+      padding-bottom: 80px;  /* ✅ extra safe space */
+      box-sizing: border-box;
+    }
 
-  .menu-toggle {
-    display: block;
-    font-size: 26px;
-    color: #000;
-    cursor: pointer;
-    z-index: 1100;
-  }
 
-  /* ✅ Right side dim background */
-  .menu-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.3);
-    z-index: 900;
-  }
+    
+    .container {
+      background: #fff;
+      padding: 20px 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
 
-  .menu-overlay.show {
-    display: block;
-  }
-}
-</style>
+    h2 { margin:0 0 12px 0; font-size:22px; font-weight:bold; }
+    input {
+      width: 100%; padding: 10px; margin: 8px 0;
+      border-radius: 5px; border: 1px solid #ccc;
+      box-sizing: border-box; font-size:14px;
+    }
+    .password-container { position: relative; }
+    .password-container i {
+      position: absolute; right: 10px; top: 50%;
+      transform: translateY(-50%); cursor: pointer; font-size:16px;
+    }
+    button {
+      width: 100%; padding: 10px; margin-top: 10px;
+      border: none; border-radius: 5px;
+      background: #4CAF50; color: white;
+      font-size: 16px; font-weight:bold;
+      cursor: pointer; display:flex; align-items:center; justify-content:center;
+      gap:8px; transition: background 0.3s;
+    }
+    button:hover { background:#3a9440; }
+    .popup {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff; padding: 15px 25px;
+      border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      display: none; z-index: 2000; font-size: 15px;
+    }
+    .popup.success { border-left: 5px solid green; }
+    .popup.error { border-left: 5px solid red; }
+
+    .login-box {
+      margin-top: 14px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #f9f9f9;
+      font-size: 14px;
+      color: #333;
+    }
+    .login-box a {
+      color: #0066ff;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .login-box a:hover {
+      text-decoration: underline;
+    }
+
+  </style>
 </head>
 <body>
-
-  <!-- HEADER -->
-<!-- HEADER -->
-<header class="header">
-  <div class="header-left">
-     <img src="myphoto/logo.png" alt="TrustDollar Logo" class="logo-img">
-</div>
-
- <div class="menu-toggle" id="menuToggle">☰</div>
-<div class="menu-overlay" id="menuOverlay"></div>
-<nav class="nav-links" id="navLinks">
-  <a href="explore.html">Explore</a>
-  <a href="earn.html">Earn</a>
-  <a href="#">Reserve</a>
-  <a href="terms.html">Term</a>
-  <a href="Privacy.html">Privacy Policy</a>
-</nav>
-
-</header>
-  <!-- HERO -->
-  <div class="hero">
-    <div class="slider" id="slider">
-      <div class="slides">
-        <div class="slide-card"><img src="myphoto/11.png" alt="slide1"></div>
-        <div class="slide-card"><img src="myphoto/22.png" alt="slide2"></div>
-        <div class="slide-card"><img src="myphoto/33.png" alt="slide3"></div>
+  <div class="header">𝐒𝐞𝐜𝐮𝐫𝐞 𝐘𝐨𝐮𝐫 𝐅𝐮𝐧𝐝𝐬 𝐰𝐢𝐭𝐡 𝐒𝐚𝐟𝐞</div>
+  <div class="wrapper">
+    <div class="container">
+      <h2>Register</h2>
+      <input type="text" id="name" placeholder="Name">
+      <input type="text" id="register-email" placeholder="Email">
+      <input type="text" id="username" placeholder="Username">
+      <input type="text" id="mobile" placeholder="Mobile Number">
+      <input type="text" id="aadhaar" placeholder="Aadhaar">
+      <input type="text" id="cheque" placeholder="Upline Cheque (Optional)">
+      <div class="password-container">
+        <input type="password" id="password" placeholder="Password">
+        <i id="toggle-password">👁️</i>
       </div>
-    </div>
-
-    <h1>Secure Your Funds with TrustDollar V2</h1>
-    <p>Blockchain-powered platform designed to keep your investments safe and transparent. 
-    Start today and earn referral income up to 3 levels.</p>
-
-    <div class="hero-buttons">
-      <a href="login.html" class="login">Login</a>
-      <a href="register.html" class="register">Register</a>
-    </div>
-  </div>
-
-  <!-- FEATURES -->
-  <div class="features">
-    <div class="feature">
-      <h3>Blockchain Security</h3>
-      <p>Your funds are protected with cutting-edge blockchain technology.</p>
-    </div>
-    <div class="feature">
-      <h3>3 Level Income</h3>
-      <p>Earn referral income up to 3 levels and grow your network easily.</p>
-    </div>
-    <div class="feature">
-      <h3>Safe Wallet</h3>
-      <p>Wallet balances stored safely in USDT with full transparency.</p>
-    </div>
-  </div>
-
-  <!-- BLOCKCHAIN -->
-  <div class="blockchain-section">
-    <h2>How Blockchain Works</h2>
-    <div class="blockchain">
-      <div class="block">Block 1</div>
-      <div class="chain"></div>
-      <div class="block">Block 2</div>
-      <div class="chain"></div>
-      <div class="block">Block 3</div>
-      <div class="chain"></div>
-      <div class="block">Block 4</div>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="footer-container">
-      <div class="footer-col about">
-        <h2>TrustDollar <span class="small">V2</span></h2>
-        <p>TrustDollar is a BTC Mining & Staking platform. 
-        Earn 1% daily and referral income up to 3 levels.</p>
+      <div class="password-container">
+        <input type="password" id="confirm-password" placeholder="Confirm Password">
+        <i id="toggle-confirm-password">👁️</i>
       </div>
-      <div class="footer-col links">
-        <div class="link-group">
-          <h3>Resources</h3>
-          <ul>
-            <li><a href="#">Docs</a></li>
-            <li><a href="#">Tutorials</a></li>
-            <li><a href="#">Invite Friends</a></li>
-          </ul>
-        </div>
-        <div class="link-group">
-          <h3>Company</h3>
-          <ul>
-            <li><a href="terms.html">Terms of Service</a></li>
-            <li><a href="privacy.html">Privacy Policy</a></li>
-            <li><a href="#">About Us</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-col">
-        <h3>Stay Updated</h3>
-        <p>Subscribe for updates, news & earning tips.</p>
-        <form id="subscribeForm" class="subscribe-form">
-          <input type="email" name="email" placeholder="Enter your email" required>
-          <button type="submit">Submit</button>
-        </form>
-      </div>
-      <div id="successPopup" class="popup">
-        Thank you for subscribing.
-      </div>
-    </div>
-    <div class="footer-bottom">
-      © 2025 TrustDollar V2 | All Rights Reserved
-    </div>
-  </footer>
+      <input type="text" id="referral" placeholder="Referral Code (Optional)">
 
-  <script>
-    // ✅ Auto + manual slider
-    let index = 0;
-    const slides = document.querySelector(".slides");
-    const totalSlides = document.querySelectorAll(".slide-card").length;
+      <button id="registerBtn">Register</button>
 
-    function showSlide(i) {
-      if (i < 0) index = totalSlides - 1;
-      else if (i >= totalSlides) index = 0;
-      else index = i;
-      slides.style.transform = `translateX(-${index * 100}%)`;
+      <!-- ✅ Login redirect box -->
+      <div class="login-box">
+        Already have an account? 
+        <a href="login.html">Login here</a>
+      </div>
+
+    </div>
+<div id="popup" class="popup"></div>
+
+<style>
+  .popup {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 12px 22px;
+    border-radius: 8px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+    display: none;
+    font-size: 15px;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+  }
+  .popup.show { display:block; opacity:1; }
+  .popup.success { border-left: 5px solid green; }
+  .popup.error { border-left: 5px solid red; }
+</style>
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+  import { getFirestore, collection, doc, setDoc, getDocs, query, where, addDoc, orderBy, limit } 
+    from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+    authDomain: "btcinvest-c0e25.firebaseapp.com",
+    projectId: "btcinvest-c0e25",
+    storageBucket: "btcinvest-c0e25.firebasestorage.app",
+    messagingSenderId: "204937458487",
+    appId: "1:204937458487:web:cc27ece1249999279f60b2",
+    measurementId: "G-HG0Q8ZHT6G"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const popup = document.getElementById("popup");
+  function showPopup(msg, type="success") {
+    popup.textContent = msg;
+    popup.className = `popup ${type} show`;
+    setTimeout(() => { popup.classList.remove("show"); }, 2500);
+  }
+
+  function validateEmailFormat(email){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+
+  // normalize email: lowercase, trim, for gmail remove dots and +tag
+  function normalizeEmail(email) {
+    if(!email) return "";
+    email = email.trim().toLowerCase();
+    const parts = email.split("@");
+    if(parts.length !== 2) return email;
+    let [local, domain] = parts;
+    // remove trailing/leading dots in local
+    local = local.replace(/^\.+|\.+$/g, "");
+    // gmail / googlemail canonicalization
+    if(domain === "gmail.com" || domain === "googlemail.com") {
+      // remove everything after + and remove dots
+      local = local.split("+")[0].replace(/\./g, "");
+      domain = "gmail.com";
+    } else {
+      // for other providers, remove +tag but keep dots (optional)
+      local = local.split("+")[0];
     }
+    return `${local}@${domain}`;
+  }
 
-    setInterval(() => { showSlide(index + 1); }, 4000);
+  // normalize simple text (name/username)
+  function normalizeText(txt) {
+    if(!txt) return "";
+    // lowercase, trim, collapse multiple spaces
+    return txt.trim().toLowerCase().replace(/\s+/g, " ");
+  }
 
-    // ✅ Touch swipe
-    let startX = 0;
-    const slider = document.getElementById("slider");
-    slider.addEventListener("touchstart", e => {
-      startX = e.touches[0].clientX;
-    });
-    slider.addEventListener("touchend", e => {
-      let endX = e.changedTouches[0].clientX;
-      if (startX - endX > 50) showSlide(index + 1);
-      if (endX - startX > 50) showSlide(index - 1);
-    });
-
-    // ✅ Mouse drag
-    let isDown = false;
-    slider.addEventListener("mousedown", e => {
-      isDown = true; startX = e.clientX;
-    });
-    document.addEventListener("mouseup", e => {
-      if (!isDown) return;
-      isDown = false;
-      let endX = e.clientX;
-      if (startX - endX > 50) showSlide(index + 1);
-      if (endX - startX > 50) showSlide(index - 1);
-    });
-
-    // ✅ Subscribe form
-    document.getElementById("subscribeForm").addEventListener("submit", function(e){
-      e.preventDefault();
-      const formData = new FormData(this);
-      fetch("https://formsubmit.co/trustdollarteam@gmail.com", {
-        method: "POST",
-        body: formData
-      })
-      .then(response => {
-        if(response.ok){
-          showPopup();
-          this.reset();
-        } else {
-          alert("❌ Something went wrong, try again!");
-        }
-      })
-      .catch(error => {
-        alert("⚠ Error: " + error.message);
-      });
-    });
-
-    function showPopup(){
-      const popup = document.getElementById("successPopup");
-      popup.style.display = "block";
-      setTimeout(() => { popup.style.display = "none"; }, 3000);
+  // Levenshtein distance (for fuzzy)
+  function levenshtein(a, b) {
+    if(a === b) return 0;
+    const al = a.length, bl = b.length;
+    if(al === 0) return bl;
+    if(bl === 0) return al;
+    const v0 = new Array(bl + 1);
+    const v1 = new Array(bl + 1);
+    for (let i = 0; i <= bl; i++) v0[i] = i;
+    for (let i = 0; i < al; i++) {
+      v1[0] = i + 1;
+      for (let j = 0; j < bl; j++) {
+        const cost = a[i] === b[j] ? 0 : 1;
+        v1[j + 1] = Math.min(v1[j] + 1, v0[j + 1] + 1, v0[j] + cost);
+      }
+      for (let k = 0; k <= bl; k++) v0[k] = v1[k];
     }
+    return v1[bl];
+  }
 
-    // ✅ Referral logic
-    const urlParams = new URLSearchParams(window.location.search);
-    const referral = urlParams.get("ref");
-    const loginBtn = document.querySelector(".login");
-    const registerBtn = document.querySelector(".register");
-    if (referral) {
-      loginBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        alert("⚠ You came via referral. Please Register first.");
-      });
-      registerBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        window.location.href = `register.html?ref=${referral}`;
-      });
+  // fuzzy check: query by prefix (first 3-4 chars) and compare levenshtein
+  async function fuzzyCheck(field, normalizedValue) {
+    if(!normalizedValue) return null;
+    const prefix = normalizedValue.slice(0, 4); // first 4 chars
+    if(prefix.length === 0) return null;
+    const usersRef = collection(db, "users");
+    // Firestore range query for prefix (field >= prefix and field <= prefix + '\uf8ff')
+    // Note: ensure the field is stored normalized in Firestore (lowercase)
+    const start = prefix;
+    const end = prefix + '\uf8ff';
+    const q = query(usersRef, where(field, ">=", start), where(field, "<=", end), limit(20));
+    const snap = await getDocs(q);
+    if(snap.empty) return null;
+    let closest = null;
+    snap.forEach(d => {
+      const data = d.data();
+      const val = (data[field] || "").toString().toLowerCase();
+      const dist = levenshtein(val, normalizedValue);
+      if(closest === null || dist < closest.dist) closest = { dist, val, id: d.id, data };
+    });
+    return closest; // object or null
+  }
+
+  async function distributeIncome(newUserName, referredBy) {
+    let currentRef = referredBy;
+    for (let level = 1; level <= 3; level++) {
+      if (!currentRef) break;
+      const q = query(collection(db, "users"), where("referralCode", "==", currentRef));
+      const snap = await getDocs(q);
+      if (!snap.empty) {
+        const refUser = snap.docs[0].data();
+        const earning = level === 1 ? 50 : level === 2 ? 30 : 20;
+        await addDoc(collection(db, "referrals"), {
+          name: refUser.name,
+          userReferralCode: currentRef,
+          fromUser: newUserName,
+          level, earning,
+          date: new Date().toLocaleDateString("en-GB"),
+          today: true
+        });
+        currentRef = refUser.referredBy;
+      } else break;
     }
-  </script>
+  }
+
+  document.getElementById("registerBtn").addEventListener("click", async () => {
+    const btn = document.getElementById("registerBtn");
+    btn.disabled = true;
+    btn.textContent = "Please wait...";
+
+    let name = document.getElementById("name").value;
+    let regEmail = document.getElementById("register-email").value;
+    let username = document.getElementById("username").value;
+    const mobile = document.getElementById("mobile").value.trim();
+    const aadhaar = document.getElementById("aadhaar").value.trim();
+    const cheque = document.getElementById("cheque").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
+    const referral = document.getElementById("referral").value.trim();
+
+    try {
+      // basic presence checks
+      if(!name || !regEmail || !username || !mobile || !aadhaar || !password || !confirmPassword)
+        throw new Error("Please complete all required fields");
+
+      // normalize
+      const normEmail = normalizeEmail(regEmail);
+      const normUsername = normalizeText(username);
+      const normName = normalizeText(name);
+
+      // validations
+      if(!validateEmailFormat(regEmail)) throw new Error("Invalid Email format");
+      if(password !== confirmPassword) throw new Error("Passwords do not match");
+      if(password.length < 6) throw new Error("Password must be at least 6 chars");
+      if(!/^\d{10}$/.test(mobile)) throw new Error("Mobile must be 10 digits");
+      if(!/^\d{12}$/.test(aadhaar)) throw new Error("Aadhaar must be 12 digits");
+      if(cheque !== "" && !/^\d{6,20}$/.test(cheque)) throw new Error("Cheque must be 6-20 digits");
+
+      const usersRef = collection(db, "users");
+
+      // 1) Exact duplicate checks (normalized)
+      const exactChecks = [
+        { field: "email", value: normEmail, msg: "Email already registered" },
+        { field: "mobile", value: mobile, msg: "Mobile already registered" },
+        { field: "username", value: normUsername, msg: "Username already taken" },
+        { field: "aadhaar", value: aadhaar, msg: "Aadhaar already registered" }
+      ];
+
+      for(const c of exactChecks) {
+        const q = query(usersRef, where(c.field, "==", c.value));
+        const snap = await getDocs(q);
+        if(!snap.empty) throw new Error(c.msg);
+      }
+
+      // 2) Fuzzy checks for name & username (catch typos like chaitanya/chaitnaya)
+      // name fuzzy
+      const nameCandidate = await fuzzyCheck("name", normName);
+      if(nameCandidate && nameCandidate.dist <= 2) { // threshold: 2 edits
+        throw new Error("Similar name already registered: " + nameCandidate.val);
+      }
+      // username fuzzy
+      const usernameCandidate = await fuzzyCheck("username", normUsername);
+      if(usernameCandidate && usernameCandidate.dist <= 1) { // stricter for username
+        throw new Error("Similar username already exists: " + usernameCandidate.val);
+      }
+
+      // ✅ Create user
+      const userCredential = await createUserWithEmailAndPassword(auth, normEmail, password);
+      const user = userCredential.user;
+      const finalReferral = "REF" + Math.floor(Math.random()*900000+100000);
+
+      // Save normalized fields in Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        name: normName,
+        email: normEmail,
+        username: normUsername,
+        mobile,
+        aadhaar,
+        chequeNumber: cheque !== "" ? cheque : null,
+        referralCode: finalReferral,
+        referredBy: referral !== "" ? referral : null,
+        walletBalance: 0,
+        totalInvested: 0,
+        createdAt: new Date().toISOString()
+      });
+
+      // distribute income if any
+      if(referral) await distributeIncome(normName, referral);
+
+      showPopup("Registration Successful!");
+      setTimeout(()=> window.location.href="Dashboard.html", 1500);
+
+    } catch(err) {
+      console.error("❌ Register error:", err.message);
+      showPopup(err.message, "error");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Register";
+    }
+  });
+
+  // Auto set referral if present in URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const refFromLink = urlParams.get("ref");
+  if(refFromLink){
+    const referralInput = document.getElementById("referral");
+    referralInput.value = refFromLink;
+    referralInput.readOnly = true;
+  }
+</script>
+<script>
+// ❌ Right-click disable
+  document.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
     
-    <script>
-    const menuToggle = document.getElementById("menuToggle");
-const navLinks = document.getElementById("navLinks");
-const menuOverlay = document.getElementById("menuOverlay");
+  });
 
-menuToggle.addEventListener("click", () => {
-  navLinks.classList.toggle("show");
-  menuOverlay.classList.toggle("show");
+// ❌ Disable text selection
+  document.addEventListener("selectstart", function(e) {
+    e.preventDefault();
+  });
+
+// ❌ Disable copy (Ctrl+C), cut (Ctrl+X), paste (Ctrl+V), view-source (Ctrl+U)
+  document.addEventListener("keydown", function(e) {
+    if (
+      (e.ctrlKey && (e.key === "c" || e.key === "C")) || 
+      (e.ctrlKey && (e.key === "x" || e.key === "X")) || 
+      (e.ctrlKey && (e.key === "v" || e.key === "V")) || 
+      (e.ctrlKey && (e.key === "u" || e.key === "U")) || 
+    (e.key === "F12") // DevTools
+    ) {
+      e.preventDefault();
+    
+  }
 });
+</script>
 
-// ✅ Overlay pe click karne se bhi menu close ho jaye
-menuOverlay.addEventListener("click", () => {
-  navLinks.classList.remove("show");
-  menuOverlay.classList.remove("show");
-});
-
+<script>
+// ✅ Jab bhi input focus ho, usko visible karo
+  const inputs = document.querySelectorAll("input");
+  inputs.forEach(input => {
+    input.addEventListener("focus", () => {
+      setTimeout(() => {
+        input.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
+    });
+  });
 </script>
 
 </body>
 </html>
-
-
