@@ -1,4 +1,6 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="UTF-8">
   <title>Add Wallet Address</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -15,7 +17,6 @@
       padding: 10px;
       box-sizing: border-box;
     }
-
     .popup {
       background: #fff;
       border-radius: 14px;
@@ -25,202 +26,91 @@
       box-shadow: 0 6px 18px rgba(0,0,0,0.15);
       text-align: center;
     }
-
-    h2 {
-      margin-bottom: 15px;
-      font-size: 20px;
-      color: #28a745;
-    }
-
-    label {
-      font-size: 14px;
-      font-weight: 600;
-      display: block;
-      text-align: left;
-      margin-top: 12px;
-    }
-
+    h2 { margin-bottom: 15px; font-size: 20px; color: #28a745; }
+    label { font-size: 14px; font-weight: 600; display: block; text-align: left; margin-top: 12px; }
     input {
-      width: 100%;
-      padding: 14px;
-      margin-top: 6px;
-      border: 1.5px solid #ccc;
-      border-radius: 8px;
-      font-size: 15px;
-      outline: none;
-      box-sizing: border-box;
+      width: 100%; padding: 14px; margin-top: 6px;
+      border: 1.5px solid #ccc; border-radius: 8px;
+      font-size: 15px; outline: none; box-sizing: border-box;
     }
+    input::placeholder { color: #888; }
 
-    input::placeholder {
-      color: #888;
-    }
-
-    /* Custom dropdown */
-    .dropdown-container {
-      position: relative;
-      margin-top: 6px;
-    }
-
+    .dropdown-container { position: relative; margin-top: 6px; }
     .dropdown-btn {
-      width: 100%;
-      padding: 12px;
-      border: 1.5px solid #ccc;
-      border-radius: 8px;
-      font-size: 15px;
-      text-align: left;
-      cursor: pointer;
-      background: #fff;
-      box-sizing: border-box;
+      width: 100%; padding: 12px;
+      border: 1.5px solid #ccc; border-radius: 8px;
+      font-size: 15px; text-align: left; cursor: pointer;
+      background: #fff; box-sizing: border-box;
     }
-
     .dropdown-list {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  width: 100%;       /* ✅ mobile me proper width */
-  max-height: 250px;
-  overflow-y: auto;
-  background: #fff;
-  border: 1.5px solid #ccc;
-  border-radius: 8px;
-  margin-top: 4px;
-  opacity: 0;
-  transition: max-height 0.4s ease, opacity 0.4s ease;
-  z-index: 2000;      /* ✅ upar dikhe */
-  box-sizing: border-box;
-}
-
+      position: absolute; top: 100%; left: 0; right: 0;
+      width: 100%; max-height: 0; overflow: hidden;
+      background: #fff; border: 1.5px solid #ccc; border-radius: 8px;
+      margin-top: 4px; opacity: 0;
+      transition: max-height 0.4s ease, opacity 0.4s ease;
+      z-index: 2000; box-sizing: border-box;
+    }
     .dropdown-list.show {
-      max-height: 250px;
-      opacity: 1;
-      overflow-y: auto;
+      max-height: 250px; opacity: 1; overflow-y: auto;
     }
 
-    /* Search box + button inside dropdown */
     .dropdown-top {
-      display: flex;
-      align-items: center;
-      padding: 6px;
-      border-bottom: 1px solid #ddd;
-      gap: 6px;
-      background: #fafafa;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      display: flex; align-items: center; padding: 6px;
+      border-bottom: 1px solid #ddd; gap: 6px;
+      background: #fafafa; position: sticky; top: 0; z-index: 10;
     }
-
     .dropdown-top input {
-      flex: 1;
-      padding: 10px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      box-sizing: border-box;
-      min-width: 0;  
+      flex: 1; padding: 10px; font-size: 14px;
+      border: 1px solid #ccc; border-radius: 6px; min-width: 0;
     }
-
     .dropdown-top button {
-      height: 38px;
-      padding: 0 14px;
-      border: none;
-      border-radius: 6px;
-      background: #007bff;
-      color: #fff;
-      cursor: pointer;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      height: 38px; padding: 0 14px; border: none; border-radius: 6px;
+      background: #007bff; color: #fff; cursor: pointer; font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
       transition: background 0.3s ease;
     }
-
-    .dropdown-top button:hover {
-      background: #0056b3;
-    }
-
-    .dropdown-list ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
+    .dropdown-top button:hover { background: #0056b3; }
+    .dropdown-list ul { list-style: none; padding: 0; margin: 0; }
     .dropdown-list li {
-      padding: 10px 14px;
-      cursor: pointer;
-      transition: background 0.2s;
-      font-size: 14px;
+      padding: 10px 14px; cursor: pointer;
+      transition: background 0.2s; font-size: 14px;
     }
+    .dropdown-list li:hover { background: #f0f0f0; }
 
-    .dropdown-list li:hover {
-      background: #f0f0f0;
-    }
-
-    .action-buttons {
-      display: flex;
-      margin-top: 18px;
-    }
-
+    .action-buttons { display: flex; margin-top: 18px; }
     .action-buttons button {
-      flex: 1;
-      padding: 14px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 15px;
-      color: #fff;
-      transition: 0.3s;
-      background: #007bff;
+      flex: 1; padding: 14px; border: none; border-radius: 8px;
+      cursor: pointer; font-weight: bold; font-size: 15px; color: #fff;
+      transition: 0.3s; background: #007bff;
     }
+    .action-buttons button:hover { background: #0069d9; }
 
-    .action-buttons button:hover {
-      background: #0069d9;
-    }
-
-    /* Center Popup Message */
     #message {
-      position: fixed;
-      top: 50%;
-      left: 50%;
+      position: fixed; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      background: #fff;
-      padding: 14px 24px;
-      border-radius: 10px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-      font-size: 15px;
-      font-weight: 600;
-      display: none;
-      z-index: 9999;
-      max-width: 80%;
-      text-align: center;
+      background: #fff; padding: 14px 24px;
+      border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      font-size: 15px; font-weight: 600; display: none;
+      z-index: 9999; max-width: 80%; text-align: center;
       animation: fadeIn 0.3s ease;
     }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translate(-50%, -60%); }
       to { opacity: 1; transform: translate(-50%, -50%); }
     }
-
-    /* Info Box Styling */
     .info-box {
-      margin-top: 15px;
-      padding: 12px 18px;
-      border: 2px solid #28a745;
-      border-radius: 10px;
-      background: #f9fff9;
-      color: #28a745;
-      font-size: 14px;
-      font-weight: 500;
-      text-align: center;
+      margin-top: 15px; padding: 12px 18px;
+      border: 2px solid #28a745; border-radius: 10px;
+      background: #f9fff9; color: #28a745;
+      font-size: 14px; font-weight: 500; text-align: center;
       line-height: 1.4;
     }
   </style>
-
+</head>
+<body>
 
   <div class="popup">
     <h2>Add Wallet Address</h2>
-    <!-- Info Box -->
     <div class="info-box">
       You can add up to <b>20 wallet addresses</b> here to avoid delays during withdrawals.
     </div>
@@ -234,26 +124,13 @@
           <button id="searchBtn">🔍</button>
         </div>
         <ul id="walletOptions">
-          <li>MetaMask</li>
-          <li>Trust Wallet</li>
-          <li>Binance Wallet</li>
-          <li>OKX Wallet</li>
-          <li>Coinbase Wallet</li>
-          <li>Phantom Wallet</li>
-          <li>Kraken Wallet</li>
-          <li>Gemini Wallet</li>
-          <li>Ledger Live</li>
-          <li>Trezor Wallet</li>
-          <li>Exodus Wallet</li>
-          <li>Atomic Wallet</li>
-          <li>BitGo Wallet</li>
-          <li>Math Wallet</li>
-          <li>TokenPocket</li>
-          <li>Zerion Wallet</li>
-          <li>Rainbow Wallet</li>
-          <li>SafePal</li>
-          <li>Ellipal Wallet</li>
-          <li>Other</li>
+          <li>MetaMask</li><li>Trust Wallet</li><li>Binance Wallet</li>
+          <li>OKX Wallet</li><li>Coinbase Wallet</li><li>Phantom Wallet</li>
+          <li>Kraken Wallet</li><li>Gemini Wallet</li><li>Ledger Live</li>
+          <li>Trezor Wallet</li><li>Exodus Wallet</li><li>Atomic Wallet</li>
+          <li>BitGo Wallet</li><li>Math Wallet</li><li>TokenPocket</li>
+          <li>Zerion Wallet</li><li>Rainbow Wallet</li><li>SafePal</li>
+          <li>Ellipal Wallet</li><li>Other</li>
         </ul>
       </div>
     </div>
@@ -266,7 +143,6 @@
     </div>
   </div>
 
-  <!-- Popup message box -->
   <div id="message"></div>
 
   <script type="module">
@@ -304,13 +180,14 @@
       setTimeout(() => { msg.style.display = "none"; }, 1200);
     }
 
-    // Toggle dropdown
-    dropdownBtn.addEventListener("click", () => {
+    // Dropdown toggle
+    dropdownBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
       dropdownList.classList.toggle("show");
     });
 
-    // Close dropdown if click outside
-    document.addEventListener("click", function(e) {
+    // Close dropdown if clicked outside
+    document.addEventListener("click", (e) => {
       if (!e.target.closest(".dropdown-container")) {
         dropdownList.classList.remove("show");
       }
@@ -318,7 +195,8 @@
 
     // Select wallet
     document.querySelectorAll("#walletOptions li").forEach(item => {
-      item.addEventListener("click", function() {
+      item.addEventListener("click", function(e) {
+        e.stopPropagation();
         selectedWallet = this.textContent;
         dropdownBtn.textContent = selectedWallet;
         dropdownList.classList.remove("show");
@@ -330,8 +208,7 @@
       let found = false;
       document.querySelectorAll("#walletOptions li").forEach(li => {
         if (li.textContent.toLowerCase().includes(filter)) {
-          li.style.display = "block";
-          found = true;
+          li.style.display = "block"; found = true;
         } else {
           li.style.display = "none";
         }
@@ -341,60 +218,77 @@
       }
     }
 
-    searchInput.addEventListener("input", function() {
+    searchInput.addEventListener("input", function(e) {
+      e.stopPropagation();
       filterWallets(this.value.toLowerCase());
     });
 
-    searchBtn.addEventListener("click", () => {
+    searchBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
       let filter = searchInput.value.trim().toLowerCase();
       if (!filter) {
-        showMessage("⚠️ Please enter wallet name", "red");
+        showMessage(" Please enter wallet name", "red");
         return;
       }
       filterWallets(filter);
     });
 
-    // Add Wallet
-    addBtn.addEventListener("click", async () => {
-      const address = document.getElementById("walletAddress").value.trim();
+     // Add wallet
+   addBtn.addEventListener("click", async (e) => {
+  e.stopPropagation();
+  const address = document.getElementById("walletAddress").value.trim();
 
-      if (!selectedWallet) {
-        showMessage("⚠️ Please select a wallet", "red");
-        return;
-      }
-      if (!address || address.length < 15) {
-        showMessage("⚠️ Enter a valid BEP20 address", "red");
-        return;
-      }
+  // Basic validations
+  if (!selectedWallet) {
+    showMessage(" Please select a wallet", "red");
+    return;
+  }
+  if (!address || address.length < 15) {
+    showMessage(" Enter a valid BEP20 address", "red");
+    return;
+  }
 
-      if (currentUserId) {
-        const q = query(
-          collection(db, "users", currentUserId, "wallets"),
-          where("walletApp", "==", selectedWallet),
-          where("address", "==", address)
-        );
-        const snapshot = await getDocs(q);
+  if (currentUserId) {
+    try {
+      // ⚡ Check if same address already exists in ANY wallet
+      const q = query(
+        collection(db, "users", currentUserId, "wallets"),
+        where("address", "==", address)
+      );
+      const snapshot = await getDocs(q);
 
-        if (!snapshot.empty) {
-          showMessage(`⚠️ Already added in ${selectedWallet}`, "red");
-          return;
+      if (!snapshot.empty) {
+        const existing = snapshot.docs[0].data().walletApp;
+        if (existing === selectedWallet) {
+          showMessage(` Already added in ${selectedWallet}`, "red");
+        } else {
+          showMessage(` Already exists in ${existing}`, "red");
         }
-
-        await addDoc(collection(db, "users", currentUserId, "wallets"), {
-          walletApp: selectedWallet,
-          type: "USDT (BEP20)",
-          address: address,
-          addedAt: new Date()
-        });
-
-        showMessage("✅ Wallet added successfully!");
-        document.getElementById("walletAddress").value = "";
+        return;
       }
-    });
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) currentUserId = user.uid;
-    });
+      // ✅ Show success immediately after checks
+      showMessage("✅ Wallet added successfully!");
+      document.getElementById("walletAddress").value = "";
+
+      // Background save
+      await addDoc(collection(db, "users", currentUserId, "wallets"), {
+        walletApp: selectedWallet,
+        type: "USDT (BEP20)",
+        address: address,
+        addedAt: new Date()
+      });
+
+    } catch (err) {
+      console.error("Save error:", err);
+      showMessage("⚠️ Something went wrong", "red");
+    }
+  }
+});
+
+
+
+    onAuthStateChanged(auth, (user) => { if (user) currentUserId = user.uid; });
   </script>
-
-
+</body>
+</html>
