@@ -5,13 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Withdraw</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
+  
+   <style>
+    /* General Reset */
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;   /* ✅ horizontal scroll off */
       font-family: 'Poppins', sans-serif;
       background: #f5f7fa;
-      margin: 0;
-      padding-bottom: 100px;
       color: #333;
+    }
+
+    * {
+      box-sizing: border-box;   /* ✅ border/padding overflow fix */
+      max-width: 100%;          /* ✅ kisi element ko overflow karne se rokta hai */
+    }
+
+    body {
+      padding-bottom: 100px;
     }
 
     /* Dashboard Wrapper */
@@ -22,310 +34,269 @@
     }
 
     /* Info Card */
-    /* Info Card */
     .info-card {
       background: #fff;
       border-radius: 16px;
       padding: 20px;
-      margin-bottom: 20px;
+      margin: 20px 0;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       text-align: center;
-      margin-top: 20px;   /* 🔥 upar se gap milega */
-      margin-bottom: 20px;
     }
 
-/* Heading */
-.info-card h3 {
-  margin-bottom: 12px;
-  color: #ff00d9; /* pink heading */
-}
+    .info-card h3 {
+      margin-bottom: 12px;
+      color: #ff00d9;
+    }
 
-/* Info text box */
-.info-text-box {
-  border: 1.8px solid #28a745;
-  background: #f9fffa;
-  color: #28a745;
-  padding: 12px 14px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  margin: 12px 0 18px 0;
-  text-align: center;
-  line-height: 1.5;
-}
+    .info-text-box {
+      border: 1.8px solid #28a745;
+      background: #f9fffa;
+      color: #28a745;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      margin: 12px 0 18px 0;
+      text-align: center;
+      line-height: 1.5;
+    }
 
-/* Button */
-.btn-withdraw {
-  background: #28a745;
-  color: #fff;
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  transition: 0.3s;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.btn-withdraw:hover {
-  background: #218838;
-}
+    /* Button */
+    .btn-withdraw {
+      background: #28a745;
+      color: #fff;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transition: 0.3s;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-withdraw:hover { background: #218838; }
 
+    /* History Header Box */
+    .history-header-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border: 1.5px solid #c3e6cb;
+    }
+    .history-header-box .title {
+      color: #28a745;
+      font-size: 17px;
+      font-weight: 600;
+    }
+    .refresh-btn {
+      background: #17a2b8;
+      color: #fff;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .refresh-btn:hover { background: #138496; }
 
-/* History Header Box */
-.history-header-box {
-  background: #fff;
-  border-radius: 12px;
-  padding: 12px 16px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  border: 1.5px solid #c3e6cb;
-}
-.history-header-box .title {
-  color: #28a745;
-  font-size: 17px;
-  font-weight: 600;
-}
-.refresh-btn {
-  background: #17a2b8;
-  color: #fff;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.refresh-btn:hover {
-  background: #138496;
-}
+    /* Popup Overlay */
+    .popup-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      overflow-x: hidden;  /* ✅ popup me bhi horizontal scroll off */
+    }
+    .popup {
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px;
+      width: 90%;
+      max-width: 360px;   /* ✅ thoda safe margin */
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+      animation: fadeIn 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: scale(0.9);}
+      to {opacity: 1; transform: scale(1);}
+    }
 
-/* Popup Overlay */
-.popup-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-}
-.popup {
-  background: #fff;
-  border-radius: 12px;
-  padding: 10px;
-  width: 90%;
-  max-width: 260px;
-  text-align: center;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-  animation: fadeIn 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-@keyframes fadeIn {
-  from {opacity: 0; transform: scale(0.9);}
-  to {opacity: 1; transform: scale(1);}
-}
+    .popup label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      align-self: flex-start;
+      margin-top: 8px;
+    }
+    .amount-input, .address-input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      text-align: center;
+    }
 
-.popup label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #333;
-  align-self: flex-start;
-  margin-top: 8px;
-}
-.amount-input, .address-input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 6px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 14px;
-  outline: none;
-  text-align: center;
-}
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      width: 100%;
+    }
+    .action-buttons button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 13px;
+      color: #fff;
+    }
+    .close-btn { background: #dc3545; }
+    .submit-btn { background: #28a745; }
 
-/* Action Buttons */
-.action-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 14px;
-  width: 100%;
-}
-.action-buttons button {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 13px;
-  color: #fff;
-}
-.close-btn { background: #dc3545; }
-.submit-btn { background: #28a745; }
+    /* Success & Error Popups */
+    .thankyou-popup, .error-popup {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: bold;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      z-index: 3000;
+      display: none;
+      animation: fadeInOut 1.5s ease forwards;
+    }
+    .thankyou-popup { background: #28a745; color: #fff; }
+    .error-popup { background: #dc3545; color: #fff; }
+    @keyframes fadeInOut {
+      0% {opacity: 0; transform: translate(-50%,-50%) scale(0.9);}
+      20% {opacity: 1; transform: translate(-50%,-50%) scale(1);}
+      80% {opacity: 1;}
+      100% {opacity: 0; transform: translate(-50%,-50%) scale(0.9);}
+    }
 
-/* Success & Error Popups */
-.thankyou-popup, .error-popup {
-  position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%,-50%);
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-weight: bold;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-  z-index: 3000;
-  display: none;
-  animation: fadeInOut 1.5s ease forwards;
-}
-.thankyou-popup { background: #28a745; color: #fff; }
-.error-popup { background: #dc3545; color: #fff; }
-@keyframes fadeInOut {
-  0% {opacity: 0; transform: translate(-50%,-50%) scale(0.9);}
-  20% {opacity: 1; transform: translate(-50%,-50%) scale(1);}
-  80% {opacity: 1;}
-  100% {opacity: 0; transform: translate(-50%,-50%) scale(0.9);}
-}
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0;
+      width: 100%; height: 70px;
+      background: #fff;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 2px solid #28a745;
+      z-index: 100;
+    }
+    .nav-item {
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      color: #333;
+      text-decoration: none;
+      transition: 0.3s;
+      position: relative;
+      padding: 10px 0;
+    }
+    .nav-item i {
+      font-size: 22px;
+      display: block;
+      margin-bottom: 3px;
+      color: #28a745;
+    }
+    .nav-item:hover { color: #28a745; }
+    .nav-item:hover i { color: #218838; }
+    .nav-item:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: 0; top: 20%; bottom: 20%;
+      width: 1px; background: #e0e0e0;
+    }
 
-/* Bottom Nav */
-.bottom-nav {
-  position: fixed;
-  bottom: 0; left: 0;
-  width: 100%; height: 70px;
-  background: #fff;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  border-top: 2px solid #28a745;
-  z-index: 100;
-}
-.nav-item {
-  flex: 1;
-  text-align: center;
-  font-size: 12px;
-  color: #333;
-  text-decoration: none;
-  transition: 0.3s;
-  position: relative;
-  padding: 10px 0;
-}
-.nav-item i {
-  font-size: 22px;
-  display: block;
-  margin-bottom: 3px;
-  color: #28a745;
-}
-.nav-item:hover { color: #28a745; }
-.nav-item:hover i { color: #218838; }
-.nav-item:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  right: 0; top: 20%; bottom: 20%;
-  width: 1px; background: #e0e0e0;
-}
-/* ✅ Balance Card */
-.balance-card {
-  background: linear-gradient(135deg, #28a745, #20c997);
-  border-radius: 16px;
-  padding: 20px;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  margin-bottom: 20px;
-}
+    /* ✅ Balance Card */
+    .balance-card {
+      background: linear-gradient(135deg, #28a745, #20c997);
+      border-radius: 16px;
+      padding: 20px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      margin-bottom: 20px;
+    }
+    .balance-icon { font-size: 42px; margin-right: 15px; }
+    .balance-info h3 { margin: 0; font-size: 16px; font-weight: 600; }
+    .balance-info .amount { font-size: 26px; font-weight: bold; margin: 5px 0; }
+    .balance-info small { font-size: 14px; opacity: 0.9; }
 
-.balance-icon {
-  font-size: 42px;
-  margin-right: 15px;
-}
+    /* Clean Buttons */
+    .clean-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      margin: 20px 0;
+    }
+    .clean-btn {
+      background: #fff;
+      border-radius: 14px;
+      padding: 25px 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .clean-btn:hover {
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+    .clean-btn i { font-size: 28px; color: #28a745; margin-bottom: 8px; display: block; }
+    .clean-btn p { margin: 0; font-size: 14px; font-weight: 500; color: #333; }
 
-.balance-info h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.balance-info .amount {
-  font-size: 26px;
-  font-weight: bold;
-  margin: 5px 0;
-}
-
-.balance-info small {
-  font-size: 14px;
-  opacity: 0.9;
-}
-
-.clean-buttons {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* ek row me 3 button */
-  gap: 5px;
-  margin: 20px 0;
-}
-
-.clean-btn {
-  background: #fff;
-  border-radius: 14px;
-  padding: 25px 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-  text-align: center;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.clean-btn:hover {
-  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-  transform: translateY(-2px);
-}
-
-.clean-btn i {
-  font-size: 28px;
-  color: #28a745;
-  margin-bottom: 8px;
-  display: block;
-}
-
-.clean-btn p {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-}
-
-#contentArea {
-  margin-top: 20px;
-  background: #fff;
-  padding: 20px;
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  min-height: 250px;
-
-  /* 👇 yahi magic */
-  max-height: 400px;   /* jitna chah utna fix kar sakta hai */
-  overflow-y: auto;    /* data jyada hoga to andar scroll hoga */
-}
- html, body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden; /* 👈 horizontal scroll hata dega */
-}
+    /* Content Area */
+    #contentArea {
+      margin-top: 20px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      min-height: 250px;
+      max-height: 400px;
+      overflow-y: auto;
+      overflow-x: hidden;  /* ✅ content scroll fix */
+    }
+    #contentArea * {
+      max-width: 100% !important;  /* ✅ ensure no overflow inside */
+    }
+  </style>
 
 
-</style>
 </head>
 <body>
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -699,4 +670,5 @@ window.loadPage = function(page) {
 </script>
 </body>
 </html>
+
 
