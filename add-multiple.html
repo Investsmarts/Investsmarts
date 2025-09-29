@@ -1,393 +1,400 @@
-<style>
-  body {
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    background: #f5f7fa;
-    color: #333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 10px;
-    box-sizing: border-box;
-  }
 
-  .popup {
-    background: #fff;
-    border-radius: 14px;
-    padding: 20px;
-    width: 100%;
-    max-width: 420px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-    text-align: center;
-  }
+  <meta charset="UTF-8">
+  <title>Add Wallet Address</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #f5f7fa;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px;
+      box-sizing: border-box;
+    }
 
-  h2 {
-    margin-bottom: 15px;
-    font-size: 20px;
-    color: #28a745;
-  }
+    .popup {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      text-align: center;
+    }
 
-  label {
-    font-size: 14px;
-    font-weight: 600;
-    display: block;
-    text-align: left;
-    margin-top: 12px;
-  }
+    h2 {
+      margin-bottom: 15px;
+      font-size: 20px;
+      color: #28a745;
+    }
 
-  input {
-    width: 100%;
-    padding: 14px;
-    margin-top: 6px;
-    border: 1.5px solid #ccc;
-    border-radius: 8px;
-    font-size: 15px;
-    outline: none;
-    box-sizing: border-box;
-  }
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      display: block;
+      text-align: left;
+      margin-top: 12px;
+    }
 
-  input::placeholder {
-    color: #888;
-  }
+    input {
+      width: 100%;
+      padding: 14px;
+      margin-top: 6px;
+      border: 1.5px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      box-sizing: border-box;
+    }
 
-  /* Custom dropdown */
-  .dropdown-container {
-    position: relative;
-    margin-top: 6px;
-  }
+    input::placeholder {
+      color: #888;
+    }
 
-  .dropdown-btn {
-    width: 100%;
-    padding: 12px;
-    border: 1.5px solid #ccc;
-    border-radius: 8px;
-    font-size: 15px;
-    text-align: left;
-    cursor: pointer;
-    background: #fff;
-    box-sizing: border-box;
-  }
+    /* Custom dropdown */
+    .dropdown-container {
+      position: relative;
+      margin-top: 6px;
+    }
 
-  .dropdown-list {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    width: 100%;       /* ✅ mobile me proper width */
-    max-height: 250px;
-    overflow-y: auto;
-    background: #fff;
-    border: 1.5px solid #ccc;
-    border-radius: 8px;
-    margin-top: 4px;
-    opacity: 0;
-    transition: max-height 0.4s ease, opacity 0.4s ease;
-    z-index: 2000;      /* ✅ upar dikhe */
-    box-sizing: border-box;
-  }
+    .dropdown-btn {
+      width: 100%;
+      padding: 12px;
+      border: 1.5px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      text-align: left;
+      cursor: pointer;
+      background: #fff;
+      box-sizing: border-box;
+    }
 
-  .dropdown-list.show {
-    max-height: 250px;
-    opacity: 1;
-    overflow-y: auto;
-  }
+    .dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  width: 100%;       /* ✅ mobile me proper width */
+  max-height: 250px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  margin-top: 4px;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+  z-index: 2000;      /* ✅ upar dikhe */
+  box-sizing: border-box;
+}
 
-  /* Search box + button inside dropdown */
-  .dropdown-top {
-    display: flex;
-    align-items: center;
-    padding: 6px;
-    border-bottom: 1px solid #ddd;
-    gap: 6px;
-    background: #fafafa;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
+    .dropdown-list.show {
+      max-height: 250px;
+      opacity: 1;
+      overflow-y: auto;
+    }
 
-  .dropdown-top input {
-    flex: 1;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
-    min-width: 0;  
-  }
+    /* Search box + button inside dropdown */
+    .dropdown-top {
+      display: flex;
+      align-items: center;
+      padding: 6px;
+      border-bottom: 1px solid #ddd;
+      gap: 6px;
+      background: #fafafa;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
 
-  .dropdown-top button {
-    height: 38px;
-    padding: 0 14px;
-    border: none;
-    border-radius: 6px;
-    background: #007bff;
-    color: #fff;
-    cursor: pointer;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.3s ease;
-  }
+    .dropdown-top input {
+      flex: 1;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      min-width: 0;  
+    }
 
-  .dropdown-top button:hover {
-    background: #0056b3;
-  }
+    .dropdown-top button {
+      height: 38px;
+      padding: 0 14px;
+      border: none;
+      border-radius: 6px;
+      background: #007bff;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
+    }
 
-  .dropdown-list ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
+    .dropdown-top button:hover {
+      background: #0056b3;
+    }
 
-  .dropdown-list li {
-    padding: 10px 14px;
-    cursor: pointer;
-    transition: background 0.2s;
-    font-size: 14px;
-  }
+    .dropdown-list ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
-  .dropdown-list li:hover {
-    background: #f0f0f0;
-  }
+    .dropdown-list li {
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 14px;
+    }
 
-  .action-buttons {
-    display: flex;
-    margin-top: 18px;
-  }
+    .dropdown-list li:hover {
+      background: #f0f0f0;
+    }
 
-  .action-buttons button {
-    flex: 1;
-    padding: 14px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 15px;
-    color: #fff;
-    transition: 0.3s;
-    background: #007bff;
-  }
+    .action-buttons {
+      display: flex;
+      margin-top: 18px;
+    }
 
-  .action-buttons button:hover {
-    background: #0069d9;
-  }
+    .action-buttons button {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 15px;
+      color: #fff;
+      transition: 0.3s;
+      background: #007bff;
+    }
 
-  /* Center Popup Message */
-  #message {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff;
-    padding: 14px 24px;
-    border-radius: 10px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-    font-size: 15px;
-    font-weight: 600;
-    display: none;
-    z-index: 9999;
-    max-width: 80%;
-    text-align: center;
-    animation: fadeIn 0.3s ease;
-  }
+    .action-buttons button:hover {
+      background: #0069d9;
+    }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translate(-50%, -60%); }
-    to { opacity: 1; transform: translate(-50%, -50%); }
-  }
+    /* Center Popup Message */
+    #message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 14px 24px;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      font-size: 15px;
+      font-weight: 600;
+      display: none;
+      z-index: 9999;
+      max-width: 80%;
+      text-align: center;
+      animation: fadeIn 0.3s ease;
+    }
 
-  /* Info Box Styling */
-  .info-box {
-    margin-top: 15px;
-    padding: 12px 18px;
-    border: 2px solid #28a745;
-    border-radius: 10px;
-    background: #f9fff9;
-    color: #28a745;
-    font-size: 14px;
-    font-weight: 500;
-    text-align: center;
-    line-height: 1.4;
-  }
-</style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -60%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
 
-<div class="popup">
-  <h2>Add Wallet Address</h2>
-  <!-- Info Box -->
-  <div class="info-box">
-    You can add up to <b>20 wallet addresses</b> here to avoid delays during withdrawals.
-  </div>
+    /* Info Box Styling */
+    .info-box {
+      margin-top: 15px;
+      padding: 12px 18px;
+      border: 2px solid #28a745;
+      border-radius: 10px;
+      background: #f9fff9;
+      color: #28a745;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      line-height: 1.4;
+    }
+  </style>
 
-  <label>Wallet App</label>
-  <div class="dropdown-container">
-    <div class="dropdown-btn">Select Wallet</div>
-    <div class="dropdown-list" id="dropdownList">
-      <div class="dropdown-top">
-        <input type="text" id="walletSearch" placeholder="Search wallet...">
-        <button id="searchBtn">🔍</button>
+
+  <div class="popup">
+    <h2>Add Wallet Address</h2>
+    <!-- Info Box -->
+    <div class="info-box">
+      You can add up to <b>20 wallet addresses</b> here to avoid delays during withdrawals.
+    </div>
+
+    <label>Wallet App</label>
+    <div class="dropdown-container">
+      <div class="dropdown-btn">Select Wallet</div>
+      <div class="dropdown-list" id="dropdownList">
+        <div class="dropdown-top">
+          <input type="text" id="walletSearch" placeholder="Search wallet...">
+          <button id="searchBtn">🔍</button>
+        </div>
+        <ul id="walletOptions">
+          <li>MetaMask</li>
+          <li>Trust Wallet</li>
+          <li>Binance Wallet</li>
+          <li>OKX Wallet</li>
+          <li>Coinbase Wallet</li>
+          <li>Phantom Wallet</li>
+          <li>Kraken Wallet</li>
+          <li>Gemini Wallet</li>
+          <li>Ledger Live</li>
+          <li>Trezor Wallet</li>
+          <li>Exodus Wallet</li>
+          <li>Atomic Wallet</li>
+          <li>BitGo Wallet</li>
+          <li>Math Wallet</li>
+          <li>TokenPocket</li>
+          <li>Zerion Wallet</li>
+          <li>Rainbow Wallet</li>
+          <li>SafePal</li>
+          <li>Ellipal Wallet</li>
+          <li>Other</li>
+        </ul>
       </div>
-      <ul id="walletOptions">
-        <li>MetaMask</li>
-        <li>Trust Wallet</li>
-        <li>Binance Wallet</li>
-        <li>OKX Wallet</li>
-        <li>Coinbase Wallet</li>
-        <li>Phantom Wallet</li>
-        <li>Kraken Wallet</li>
-        <li>Gemini Wallet</li>
-        <li>Ledger Live</li>
-        <li>Trezor Wallet</li>
-        <li>Exodus Wallet</li>
-        <li>Atomic Wallet</li>
-        <li>BitGo Wallet</li>
-        <li>Math Wallet</li>
-        <li>TokenPocket</li>
-        <li>Zerion Wallet</li>
-        <li>Rainbow Wallet</li>
-        <li>SafePal</li>
-        <li>Ellipal Wallet</li>
-        <li>Other</li>
-      </ul>
+    </div>
+
+    <label>BEP20 Wallet Address</label>
+    <input type="text" id="walletAddress" placeholder="Paste BEP20 address here">
+
+    <div class="action-buttons">
+      <button id="addBtn">➕ Add Address</button>
     </div>
   </div>
 
-  <label>BEP20 Wallet Address</label>
-  <input type="text" id="walletAddress" placeholder="Paste BEP20 address here">
+  <!-- Popup message box -->
+  <div id="message"></div>
 
-  <div class="action-buttons">
-    <button id="addBtn">➕ Add Address</button>
-  </div>
-</div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-<!-- Popup message box -->
-<div id="message"></div>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+      authDomain: "btcinvest-c0e25.firebaseapp.com",
+      projectId: "btcinvest-c0e25",
+      storageBucket: "btcinvest-c0e25.firebasestorage.app",
+      messagingSenderId: "204937458487",
+      appId: "1:204937458487:web:cc27ece1249999279f60b2",
+      measurementId: "G-HG0Q8ZHT6G"
+    };
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
-    authDomain: "btcinvest-c0e25.firebaseapp.com",
-    projectId: "btcinvest-c0e25",
-    storageBucket: "btcinvest-c0e25.firebasestorage.app",
-    messagingSenderId: "204937458487",
-    appId: "1:204937458487:web:cc27ece1249999279f60b2",
-    measurementId: "G-HG0Q8ZHT6G"
-  };
+    let currentUserId = null;
+    let selectedWallet = "";
+    const msg = document.getElementById("message");
+    const dropdownBtn = document.querySelector(".dropdown-btn");
+    const dropdownList = document.getElementById("dropdownList");
+    const searchInput = document.getElementById("walletSearch");
+    const searchBtn = document.getElementById("searchBtn");
+    const addBtn = document.getElementById("addBtn");
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  let currentUserId = null;
-  let selectedWallet = "";
-  const msg = document.getElementById("message");
-  const dropdownBtn = document.querySelector(".dropdown-btn");
-  const dropdownList = document.getElementById("dropdownList");
-  const searchInput = document.getElementById("walletSearch");
-  const searchBtn = document.getElementById("searchBtn");
-  const addBtn = document.getElementById("addBtn");
-
-  function showMessage(text, color="#28a745") {
-    msg.textContent = text;
-    msg.style.color = color;
-    msg.style.display = "block";
-    setTimeout(() => { msg.style.display = "none"; }, 1200);
-  }
-
-  // Toggle dropdown
-  dropdownBtn.addEventListener("click", () => {
-    dropdownList.classList.toggle("show");
-  });
-
-  // Close dropdown if click outside
-  document.addEventListener("click", function(e) {
-    if (!e.target.closest(".dropdown-container")) {
-      dropdownList.classList.remove("show");
+    function showMessage(text, color="#28a745") {
+      msg.textContent = text;
+      msg.style.color = color;
+      msg.style.display = "block";
+      setTimeout(() => { msg.style.display = "none"; }, 1200);
     }
-  });
 
-  // Select wallet
-  document.querySelectorAll("#walletOptions li").forEach(item => {
-    item.addEventListener("click", function() {
-      selectedWallet = this.textContent;
-      dropdownBtn.textContent = selectedWallet;
-      dropdownList.classList.remove("show");
+    // Toggle dropdown
+    dropdownBtn.addEventListener("click", () => {
+      dropdownList.classList.toggle("show");
     });
-  });
 
-  // Search filter
-  function filterWallets(filter) {
-    let found = false;
-    document.querySelectorAll("#walletOptions li").forEach(li => {
-      if (li.textContent.toLowerCase().includes(filter)) {
-        li.style.display = "block";
-        found = true;
-      } else {
-        li.style.display = "none";
+    // Close dropdown if click outside
+    document.addEventListener("click", function(e) {
+      if (!e.target.closest(".dropdown-container")) {
+        dropdownList.classList.remove("show");
       }
     });
-    if (!found && filter) {
-      showMessage("⚠️ No wallet found", "red");
-    }
-  }
 
-  searchInput.addEventListener("input", function() {
-    filterWallets(this.value.toLowerCase());
-  });
+    // Select wallet
+    document.querySelectorAll("#walletOptions li").forEach(item => {
+      item.addEventListener("click", function() {
+        selectedWallet = this.textContent;
+        dropdownBtn.textContent = selectedWallet;
+        dropdownList.classList.remove("show");
+      });
+    });
 
-  searchBtn.addEventListener("click", () => {
-    let filter = searchInput.value.trim().toLowerCase();
-    if (!filter) {
-      showMessage("⚠️ Please enter wallet name", "red");
-      return;
-    }
-    filterWallets(filter);
-  });
-
-  // Add Wallet
-  addBtn.addEventListener("click", async () => {
-    const address = document.getElementById("walletAddress").value.trim();
-
-    if (!selectedWallet) {
-      showMessage("⚠️ Please select a wallet", "red");
-      return;
-    }
-    if (!address || address.length < 15) {
-      showMessage("⚠️ Enter a valid BEP20 address", "red");
-      return;
+    // Search filter
+    function filterWallets(filter) {
+      let found = false;
+      document.querySelectorAll("#walletOptions li").forEach(li => {
+        if (li.textContent.toLowerCase().includes(filter)) {
+          li.style.display = "block";
+          found = true;
+        } else {
+          li.style.display = "none";
+        }
+      });
+      if (!found && filter) {
+        showMessage("⚠️ No wallet found", "red");
+      }
     }
 
-    if (currentUserId) {
-      const q = query(
-        collection(db, "users", currentUserId, "wallets"),
-        where("walletApp", "==", selectedWallet),
-        where("address", "==", address)
-      );
-      const snapshot = await getDocs(q);
+    searchInput.addEventListener("input", function() {
+      filterWallets(this.value.toLowerCase());
+    });
 
-      if (!snapshot.empty) {
-        showMessage(`⚠️ Already added in ${selectedWallet}`, "red");
+    searchBtn.addEventListener("click", () => {
+      let filter = searchInput.value.trim().toLowerCase();
+      if (!filter) {
+        showMessage("⚠️ Please enter wallet name", "red");
+        return;
+      }
+      filterWallets(filter);
+    });
+
+    // Add Wallet
+    addBtn.addEventListener("click", async () => {
+      const address = document.getElementById("walletAddress").value.trim();
+
+      if (!selectedWallet) {
+        showMessage("⚠️ Please select a wallet", "red");
+        return;
+      }
+      if (!address || address.length < 15) {
+        showMessage("⚠️ Enter a valid BEP20 address", "red");
         return;
       }
 
-      await addDoc(collection(db, "users", currentUserId, "wallets"), {
-        walletApp: selectedWallet,
-        type: "USDT (BEP20)",
-        address: address,
-        addedAt: new Date()
-      });
+      if (currentUserId) {
+        const q = query(
+          collection(db, "users", currentUserId, "wallets"),
+          where("walletApp", "==", selectedWallet),
+          where("address", "==", address)
+        );
+        const snapshot = await getDocs(q);
 
-      showMessage("✅ Wallet added successfully!");
-      document.getElementById("walletAddress").value = "";
-    }
-  });
+        if (!snapshot.empty) {
+          showMessage(`⚠️ Already added in ${selectedWallet}`, "red");
+          return;
+        }
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) currentUserId = user.uid;
-  });
-</script>
+        await addDoc(collection(db, "users", currentUserId, "wallets"), {
+          walletApp: selectedWallet,
+          type: "USDT (BEP20)",
+          address: address,
+          addedAt: new Date()
+        });
+
+        showMessage("✅ Wallet added successfully!");
+        document.getElementById("walletAddress").value = "";
+      }
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) currentUserId = user.uid;
+    });
+  </script>
+
+
