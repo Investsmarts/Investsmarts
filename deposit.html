@@ -585,6 +585,20 @@ async function loadTotalDeposit(userId) {
   }
 }
 
+// ✅ Auto Refresh Logic (har 3 second me balance update hoga)
+setInterval(() => {
+  if (currentUserId) {
+    loadTotalDeposit(currentUserId);
+
+    // ✅ Popup show
+    thankyouPopup.textContent = "Auto Refreshed!";
+    thankyouPopup.style.display = "block";
+    setTimeout(() => {
+      thankyouPopup.style.display = "none";
+    }, 1100);
+  }
+}, 5000); // 3000ms = 3 seconds
+
 
 </script>
 </body>
