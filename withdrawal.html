@@ -318,6 +318,12 @@
   max-height: 400px;   /* jitna chah utna fix kar sakta hai */
   overflow-y: auto;    /* data jyada hoga to andar scroll hoga */
 }
+ html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* 👈 horizontal scroll hata dega */
+}
+
 
 </style>
 </head>
@@ -693,3 +699,4 @@ window.loadPage = function(page) {
 </script>
 </body>
 </html>
+
