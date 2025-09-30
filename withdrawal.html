@@ -294,12 +294,77 @@
     #contentArea * {
       max-width: 100% !important;  /* ✅ ensure no overflow inside */
     }
-  </style>
 
+/* Withdrawal History Card */
+/* Withdraw History Card */
+.withdraw-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  font-size: 14px;
+}
 
+.withdraw-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.withdraw-card-header .badge {
+  background: #dc3545;  /* 🔴 Withdraw ke liye red badge */
+  color: #fff;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 6px;
+}
+
+.withdraw-status {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* Status Colors */
+.withdraw-status.pending { color: #ffc107; }
+.withdraw-status.completed { color: #28a745; }
+.withdraw-status.failed { color: #dc3545; }
+
+.withdraw-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0;
+}
+
+.withdraw-row .label {
+  font-weight: 600;
+  color: #444;
+}
+
+.withdraw-row .value,
+.withdraw-row small {
+  color: #555;
+}
+
+.copy-btn {
+  background: #007bff;
+  border: none;
+  color: #fff;
+  padding: 3px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+.copy-btn:hover { background: #0056b3; }
+
+</style>
 </head>
 <body>
-  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
   <div class="dashboard">
 
@@ -314,8 +379,6 @@
         <small id="withdrawLevel">My Level: No Level</small>
       </div>
     </div>
-
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <!-- ✅ Buttons Row -->
     <div class="clean-buttons">
@@ -336,11 +399,9 @@
     <!-- ✅ Content Area -->
     <div id="contentArea">📄 Select a menu above to load content</div>
 
-
-
     <!-- Withdrawal Info Card -->
     <div class="info-card">
-      <h3>Withdrawal Section</h3>
+    <h3>Withdrawal Section</h3>
 
       <!-- Green info box -->
       <div class="info-text-box">
@@ -467,50 +528,90 @@
       if (snap.exists()) {
         const data = snap.data();
         userBalance = data.walletBalance || 0; 
-    userWalletAddress = data.primaryAddress || ""; // 🔥 primary address use karenge
+        userWalletAddress = data.primaryAddress || ""; // 🔥 primary address use karenge
 
-    // ✅ Balance update
-    if (popupBalance) popupBalance.textContent = userBalance.toFixed(2);
+        // ✅ Balance update
+        if (popupBalance) popupBalance.textContent = userBalance.toFixed(2);
 
-    // ✅ Address input logic
-    if (userWalletAddress) {
-      addressInput.value = userWalletAddress; // agar address hai to show
-    } else {
-      addressInput.value = ""; 
-      addressInput.placeholder = "Set your primary address first"; // agar nahi hai to ye dikhana
+        // ✅ Address input logic
+        if (userWalletAddress) {
+          addressInput.value = userWalletAddress; // agar address hai to show
+        } else {
+          addressInput.value = ""; 
+          addressInput.placeholder = "Set your primary address first"; // agar nahi hai to ye dikhana
+        }
+
+        // ✅ Lifetime withdrawal show
+        if (data.lifetimeWithdrawal !== undefined) {
+          document.getElementById("totalWithdraw").textContent = data.lifetimeWithdrawal.toFixed(2);
+        } else {
+          document.getElementById("totalWithdraw").textContent = "0.00";
+        }
+      }
     }
-  }
-}
 
-window.openPopup = function() {
-  popupOverlay.style.display = "flex";
-  document.getElementById("withdrawAmount").value = "";
-  addressInput.value = userWalletAddress || "";
-};
+    window.openPopup = function() {
+      popupOverlay.style.display = "flex";
+      document.getElementById("withdrawAmount").value = "";
+      addressInput.value = userWalletAddress || "";
+    };
 
-window.cancelWithdraw = function() {
-  popupOverlay.style.display = "none";
-};
+    window.cancelWithdraw = function() {
+      popupOverlay.style.display = "none";
+    };
 
+    window.submitWithdraw = async function() {
+      const amount = parseFloat(document.getElementById("withdrawAmount").value) || 0;
+      const address = addressInput.value.trim();
 
-window.submitWithdraw = async function() {
-  const amount = parseFloat(document.getElementById("withdrawAmount").value) || 0;
-  const address = addressInput.value.trim();
+      if (amount < 20) { 
+        showError("Minimum withdrawal is $20"); 
+        return; 
+      }
+      if (amount > userBalance) { 
+        showError("Insufficient balance"); 
+        return; 
+      }
+      if (!address || address.length < 20) { 
+        showError("Please set your primary address first"); 
+        return; 
+      }
 
-  if (amount < 20) { 
-    showError("Minimum withdrawal is $20"); 
-    return; 
-  }
-  if (amount > userBalance) { 
-    showError("Insufficient balance"); 
-    return; 
-  }
-  if (!address || address.length < 20) { 
-    showError("Please set your primary address first"); 
-    return; 
-  }
+      const orderId = generateOrderId();
 
-  const orderId = generateOrderId();
+      if (currentUserId) {
+        const ref = doc(db, "users", currentUserId);
+
+        // 1️⃣ Add withdrawal record
+        await addDoc(collection(db, "users", currentUserId, "withdrawals"), {
+          amount: amount,
+          type: "USDT (BEP20)",
+          address: address,
+          date: serverTimestamp(),
+          status: "Pending",
+          orderId: orderId
+        });
+
+        // 2️⃣ Deduct from balance
+        await updateDoc(ref, { walletBalance: userBalance - amount });
+
+        // 3️⃣ Ensure lifetimeWithdrawal field exists
+        const userSnap = await getDoc(ref);
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          if (data.lifetimeWithdrawal === undefined) {
+            await updateDoc(ref, { lifetimeWithdrawal: 0 });
+          }
+        }
+
+        // 4️⃣ Refresh UI
+        loadWithdrawHistory(currentUserId);
+        loadUserProfile(currentUserId);
+      }
+
+      popupOverlay.style.display = "none";
+      showSuccess("Withdrawal Requested!");
+    };
 
   if (currentUserId) {
     await addDoc(collection(db, "users", currentUserId, "withdrawals"), {
@@ -521,6 +622,7 @@ window.submitWithdraw = async function() {
       status: "Pending",
       orderId: orderId
     });
+    
 
     // Balance minus
     const ref = doc(db, "users", currentUserId);
@@ -560,33 +662,51 @@ async function loadWithdrawHistory(userId) {
       return;
     }
     historyList.innerHTML = "";
+
     querySnapshot.forEach(docSnap => {
       const data = docSnap.data();
-      const dateStr = data.date ? new Date(data.date.seconds*1000).toLocaleString() : "-";
+      const dateStr = data.date ? new Date(data.date.seconds * 1000).toLocaleString() : "-";
       const statusClass = (data.status || "Pending").toLowerCase();
-      historyList.innerHTML += `
-      <div class="history-card">
-      <div class="history-card-header">
-      <span class="badge">Withdraw</span>
-      <span class="status ${statusClass}">${data.status || "Pending"}</span>
-      </div>
-      <div class="history-card-row"><span class="label">Amount</span><span class="value">$${data.amount || 0}</span></div>
-      <div class="history-card-row"><span class="label">Type</span><small>${data.type || "USDT (BEP20)"}</small></div>
-      <div class="history-card-row"><span class="label">Address</span><small>${data.address || "-"}</small>
-      </div>
 
-      <div class="history-card-row"><span class="label">Time</span><small>${dateStr}</small></div>
-      <div class="history-card-row"><span class="label">ID</span>
-      <span><small>${data.orderId || docSnap.id}</small>
-      <button class="copy-btn" onclick="copyOrderId('${data.orderId || docSnap.id}')">Copy</button></span>
-      </div>
-      </div>`;
-    });
+  historyList.innerHTML += `
+  <div class="withdraw-card">
+    <div class="withdraw-card-header">
+      <span class="badge">Withdraw</span>
+      <span class="withdraw-status ${statusClass}">${data.status || "Pending"}</span>
+    </div>
+
+    <div class="withdraw-row">
+      <span class="label">Balance</span>
+      <span class="value">$${data.amount || 0}</span>
+    </div>
+
+    <div class="withdraw-row">
+      <span class="label">Type</span>
+      <small>${data.type || "USDT (BEP20)"}</small>
+    </div>
+
+    <div class="withdraw-row">
+      <span class="label">Time</span>
+      <small>${dateStr}</small>
+    </div>
+
+    <div class="withdraw-row">
+      <span class="label">OrderId</span>
+      <span>
+        <small>${data.orderId || docSnap.id}</small>
+        <button class="copy-btn" onclick="copyOrderId('${data.orderId || docSnap.id}')">Copy</button>
+      </span>
+    </div>
+  </div>`;
+
+    }); // ✅ Ye closing missing tha!
+
   } catch (err) {
     console.error("Error:", err);
     historyList.innerHTML = "<p style='text-align:center; color:red;'>Error loading history</p>";
   }
 }
+
 
 window.copyOrderId = function(orderId) {
   navigator.clipboard.writeText(orderId);
@@ -599,6 +719,7 @@ onAuthStateChanged(auth, (user) => {
     currentUserId = user.uid; 
     loadUserProfile(user.uid);
     loadWithdrawHistory(user.uid); 
+    loadWithdrawCard(user.uid); // 🔥 add this
   }
 });
 async function loadWithdrawCard(uid) {
@@ -633,13 +754,8 @@ async function loadWithdrawCard(uid) {
 }
 
 
-//lod batun file 
-// ✅ Call when user logged in
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    loadWithdrawCard(user.uid);
-  }
-});
+
+
 
 // 🔥 yaha paste kar
 window.loadPage = function(page) {
@@ -672,6 +788,5 @@ window.loadPage = function(page) {
 </script>
 </body>
 </html>
-
 
 
