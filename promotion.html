@@ -23,6 +23,7 @@
       border-radius: 16px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.08);
       margin-bottom: 20px;
+      text-align: center;
     }
 
     /* Referral Section */
@@ -41,43 +42,32 @@
     .btn-share { background: #ff9800; }
     .btn:hover { opacity: 0.9; }
 
-    /* Stats */
-    .stats-header {
-      display: flex;
-      justify-content: space-between;
-      font-weight: 600;
-      font-size: 14px;
-      color: #555;
-      text-align: center;
-      margin-bottom: 10px;
+    /* Accordion Stats */
+    .level-box {
+      background: #f9fafb;
+      padding: 12px;
+      border-radius: 10px;
+      margin: 10px 0;
+      cursor: pointer;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
-    .stats-header div { flex: 1; }
-    .stats { display: flex; justify-content: space-between; gap: 10px; flex-wrap: nowrap; }
-    .stat-card { 
-      background: #fff; 
-      padding: 20px; 
-      border-radius: 14px; 
-      text-align: center; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06); 
-      font-weight: bold; 
-      flex: 1; 
-      cursor: pointer; 
-      transition: transform 0.2s ease; 
-    }
-    .stat-card:hover { transform: translateY(-4px); }
-    .level1 { border-top: 5px solid #22c55e; }
-    .level2 { border-top: 5px solid #f59e0b; }
-    .level3 { border-top: 5px solid #3b82f6; }
-    .stat-card h2 { color: #111; margin: 0; font-size: 22px; }
+    .level-box h3 { margin: 0; font-size: 16px; color:#111; }
+    .level-box p { margin: 5px 0 0; font-size: 14px; color:#555; }
 
-    /* History */
-    .history h2 { text-align: center; margin-bottom: 15px; color: #1e293b; }
-    .history-header { display: flex; justify-content: space-between; background: #f3f4f6; padding: 10px 15px; border-radius: 8px; font-weight: 600; font-size: 14px; }
-    .history-header span { flex: 1; text-align: center; }
-    .history-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
-    .history-item { display: flex; justify-content: space-between; background: #fff; padding: 10px 15px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); font-size: 13px; }
-    .history-item span { flex: 1; text-align: center; }
-    .history-item .today { color: green; font-weight: bold; }
+    .level-list {
+      display: none;
+      padding: 10px 15px;
+      border-left: 3px solid #3b82f6;
+      background: #fff;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
+    .level-list div {
+      border-bottom: 1px solid #eee;
+      padding: 6px 0;
+      font-size: 14px;
+    }
 
     /* Navbar */
     .bottom-nav {
@@ -120,49 +110,13 @@
       width: 1px;
       background: #e0e0e0;
     }
-
-    /* Universal Popup Style */
-.popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);  /* ✅ Always center */
-  background: #fff;
-  padding: 20px;
-  border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
-  z-index: 1000;
-  display: none; /* hidden by default */
-}
-
-/* Overlay background */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);  /* dim background */
-  display: none;
-  z-index: 999;
-}
-
   </style>
 </head>
 <body>
-  <body>
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
-  <!-- Overlay & Popup -->
-  <div class="overlay" id="overlay"></div>
-  <div class="popup" id="popupMsg"></div>
 
   <div class="container">
     <h1>Promote & Earn</h1>
-
 
     <!-- Referral -->
     <div class="card referral-card">
@@ -174,29 +128,28 @@
       </div>
     </div>
 
-    <!-- Stats -->
+    <!-- Stats Accordion -->
     <div class="card">
-      <div class="stats-header">
-        <div>LV1</div><div>LV2</div><div>LV3</div>
-      </div>
-      <div class="stats">
-        <div class="stat-card level1" onclick="showHistory(1)">
-          <h2 id="level1Users">0</h2>
-          <p style="color:green;" id="level1Earning">$0</p>
-        </div>
-        <div class="stat-card level2" onclick="showHistory(2)">
-          <h2 id="level2Users">0</h2>
-          <p style="color:#f59e0b;" id="level2Earning">$0</p>
-        </div>
-        <div class="stat-card level3" onclick="showHistory(3)">
-          <h2 id="level3Users">0</h2>
-          <p style="color:#3b82f6;" id="level3Earning">$0</p>
-        </div>
-      </div>
-    </div>
+      <h2 style="text-align:center; margin-bottom:15px;">Referral Levels</h2>
 
-    <!-- Dynamic History -->
-    <div id="dynamicHistory" class="card history"></div>
+      <div class="level-box" onclick="toggleLevel(1)">
+        <h3>Level 1 <span id="level1Users">0</span> Members</h3>
+        <p>Earning: <b id="level1Earning">$0</b></p>
+      </div>
+      <div class="level-list" id="level1List"></div>
+
+      <div class="level-box" onclick="toggleLevel(2)">
+        <h3>Level 2 <span id="level2Users">0</span> Members</h3>
+        <p>Earning: <b id="level2Earning">$0</b></p>
+      </div>
+      <div class="level-list" id="level2List"></div>
+
+      <div class="level-box" onclick="toggleLevel(3)">
+        <h3>Level 3 <span id="level3Users">0</span> Members</h3>
+        <p>Earning: <b id="level3Earning">$0</b></p>
+      </div>
+      <div class="level-list" id="level3List"></div>
+    </div>
   </div>
 
   <!-- Navbar -->
@@ -208,165 +161,109 @@
   </div>
 
   <!-- Firebase Script -->
-     <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, query, where, getDocs, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, query, getDocs, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-  // ✅ Firebase Config
-  const firebaseConfig = {
-    apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
-    authDomain: "btcinvest-c0e25.firebaseapp.com",
-    projectId: "btcinvest-c0e25",
-    storageBucket: "btcinvest-c0e25.firebasestorage.app",
-    messagingSenderId: "204937458487",
-    appId: "1:204937458487:web:cc27ece1249999279f60b2",
-    measurementId: "G-HG0Q8ZHT6G"
-  };
+    // ✅ Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+      authDomain: "btcinvest-c0e25.firebaseapp.com",
+      projectId: "btcinvest-c0e25",
+      storageBucket: "btcinvest-c0e25.firebasestorage.app",
+      messagingSenderId: "204937458487",
+      appId: "1:204937458487:web:cc27ece1249999279f60b2",
+      measurementId: "G-HG0Q8ZHT6G"
+    };
 
-  // ✅ Init Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
+    // ✅ Init Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
 
-  let finalRefLink = "";
+    let finalRefLink = "";
 
-  // ✅ Referral Link from Firebase (use referralCode if available, else UID)
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      let refId = user.uid; // default fallback
-      try {
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (userDoc.exists()) {
-          const data = userDoc.data();
-          if (data.referralCode) {
-            refId = data.referralCode; // ✅ use referralCode from Firestore
+    // ✅ Referral Link
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        let refId = user.uid;
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists() && userDoc.data().referralCode) {
+            refId = userDoc.data().referralCode;
           }
-        }
-      } catch (e) {
-        console.error("Error fetching user referralCode:", e);
+        } catch (e) { console.error("Error fetching user referralCode:", e); }
+
+        const baseRegisterLink = "https://smartfundad.com/index.html";
+        finalRefLink = `${baseRegisterLink}?ref=${refId}`;
+        document.getElementById("refLink").innerHTML = `
+          <strong>🎁 Your Exclusive Invitation Link:</strong><br>
+          <span style="color:#2563eb; font-weight:bold; word-break:break-all;">
+            ${finalRefLink}
+          </span>
+          <br><small style="color:#555;">Share this link with friends & earn multi-level rewards!</small>
+        `;
+        window.finalRefLink = finalRefLink;
+      } else {
+        document.getElementById("refLink").innerHTML = `<strong>⚠️ Please log in to get your referral link.</strong>`;
       }
-
-      const baseRegisterLink = "https://smartfundad.com/index.html";
-      finalRefLink = `${baseRegisterLink}?ref=${refId}`;
-
-      document.getElementById("refLink").innerHTML = `
-        <strong>🎁 Your Exclusive Invitation Link:</strong><br>
-        <span style="color:#2563eb; font-weight:bold; word-break:break-all;">
-          ${finalRefLink}
-        </span>
-        <br><small style="color:#555;">Share this link with friends & earn multi-level rewards!</small>
-      `;
-
-      // ✅ make available globally for copy/share
-      window.finalRefLink = finalRefLink;
-
-    } else {
-      document.getElementById("refLink").innerHTML = `
-        <strong>⚠️ Please log in to get your referral link.</strong>
-      `;
-    }
-  });
-
-
-  // ✅ Popup function
-  function showPopup(message) {
-    const popup = document.getElementById("popupMsg");
-    const overlay = document.getElementById("overlay");
-
-    popup.innerHTML = `<p>${message}</p>`;
-    popup.style.display = "block";
-    overlay.style.display = "block";
-
-    setTimeout(() => {
-      popup.style.display = "none";
-      overlay.style.display = "none";
-    }, 2000);
-  }
-
-  // ✅ Copy & Share
-  window.copyReferral = function () {
-    if (!finalRefLink) return showPopup(" Please log in first.");
-    navigator.clipboard.writeText(finalRefLink);
-    showPopup("✅ Referral link copied!");
-  };
-
-  window.shareReferral = function () {
-    if (!finalRefLink) return showPopup(" Please log in first.");
-    if (navigator.share) {
-      navigator.share({
-        title: "🔥 TrustDollar Invitation",
-        text: ` 🎁  Join TrustDollar & start earning!\n\nHere’s my exclusive invitation link:\n${finalRefLink}\n\n Sign up now and enjoy rewards on multiple levels!`,
-        url: finalRefLink
-      });
-    } else {
-      showPopup("⚠️ Sharing not supported in this browser.");
-    }
-  };
-
-  // ✅ Load Stats
-  async function loadStats() {
-    let level1Count = 0, level2Count = 0, level3Count = 0;
-    let level1Earning = 0, level2Earning = 0, level3Earning = 0;
-
-    const q = query(collection(db, "referrals"));
-    const querySnapshot = await getDocs(q);
-
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      if (data.level === 1) { level1Count++; level1Earning += data.earning; }
-      if (data.level === 2) { level2Count++; level2Earning += data.earning; }
-      if (data.level === 3) { level3Count++; level3Earning += data.earning; }
     });
 
-    document.getElementById("level1Users").textContent = level1Count;
-    document.getElementById("level2Users").textContent = level2Count;
-    document.getElementById("level3Users").textContent = level3Count;
+    // ✅ Copy & Share
+    window.copyReferral = function () {
+      if (!finalRefLink) return alert("Please log in first.");
+      navigator.clipboard.writeText(finalRefLink);
+      alert("✅ Referral link copied!");
+    };
+    window.shareReferral = function () {
+      if (!finalRefLink) return alert("Please log in first.");
+      if (navigator.share) {
+        navigator.share({
+          title: "🔥 TrustDollar Invitation",
+          text: ` 🎁 Join TrustDollar & start earning!\n\nHere’s my exclusive invitation link:\n${finalRefLink}`,
+          url: finalRefLink
+        });
+      } else {
+        alert("⚠️ Sharing not supported in this browser.");
+      }
+    };
 
-    document.getElementById("level1Earning").textContent = `$${level1Earning}`;
-    document.getElementById("level2Earning").textContent = `$${level2Earning}`;
-    document.getElementById("level3Earning").textContent = `$${level3Earning}`;
-  }
+    // ✅ Accordion Toggle
+    window.toggleLevel = function(level) {
+      const list = document.getElementById(`level${level}List`);
+      list.style.display = (list.style.display === "block") ? "none" : "block";
+    };
 
-  // ✅ Show History in popup
-  window.showHistory = async function (level) {
-    const q = query(collection(db, "referrals"), where("level", "==", level));
-    const querySnapshot = await getDocs(q);
+    // ✅ Load Stats + Details
+    async function loadStats() {
+      let levelData = {1:[],2:[],3:[]};
+      let earnings = {1:0,2:0,3:0};
 
-    let items = "";
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      items += `
-        <div style="margin-bottom:8px;">
-          <strong>${data.name}</strong><br>
-          ${data.date} - <b>$${data.earning}</b>
-        </div>
-      `;
-    });
+      const q = query(collection(db, "referrals"));
+      const querySnapshot = await getDocs(q);
 
-    showPopup(items || `No data found for Level ${level}`);
-  };
-
-  // ✅ Save Referral (example)
-  async function saveReferral(name, level, earning) {
-    try {
-      await addDoc(collection(db, "referrals"), {
-        name: name,
-        date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-        earning: earning,
-        level: level,
-        today: true
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (levelData[data.level]) {
+          levelData[data.level].push(data);
+          earnings[data.level] += data.earning;
+        }
       });
-      console.log("Referral saved!");
-    } catch (e) {
-      console.error("Error adding referral: ", e);
+
+      for (let lvl=1; lvl<=3; lvl++) {
+        document.getElementById(`level${lvl}Users`).textContent = levelData[lvl].length;
+        document.getElementById(`level${lvl}Earning`).textContent = `$${earnings[lvl]}`;
+        let html = "";
+        levelData[lvl].forEach(u => {
+          html += `<div><strong>${u.name || "Unnamed"}</strong> - $${u.earning} <small>(${u.date})</small></div>`;
+        });
+        document.getElementById(`level${lvl}List`).innerHTML = html || "<em>No users yet</em>";
+      }
     }
-  }
 
-  // First time load
-  loadStats();
-
-
+    // First load
+    loadStats();
   </script>
 </body>
 </html>
