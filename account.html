@@ -1,253 +1,203 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Smartfundad Account</title>
-  <!-- ✅ SEO -->
-  <meta name="description" content="Smartfundad wallet dashboard: check balance, income, withdrawals, and history." />
-  <meta name="keywords" content="wallet, smartfundad, withdrawal history, income, balance" />
-  <meta name="author" content="Smartfundad" />
-  <meta name="robots" content="index, follow" />
-
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary: #1976d2;
-      --text-color: #333;
-      --border: #e0e0e0;
-      --nav-glass: rgba(255, 255, 255, 0.8);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f9f9f9;
-      color: var(--text-color);
-      padding-top: 70px;
-      padding-bottom: 90px;
+      font-family: 'Poppins', sans-serif;
+      background: #f1f5f9;
+      margin: 0;
+      padding-bottom: 100px;
+      color: #333;
     }
+    .container { max-width: 950px; margin: auto; padding: 20px; }
+    h1 { text-align: center; margin-bottom: 20px; color: #1e293b; }
 
-    nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      height: 60px;
+    /* Card */
+    .card {
       background: #fff;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      font-weight: bold;
-      color: var(--primary);
-      z-index: 100;
-    }
-
-    .container {
-      max-width: 500px;
-      margin: auto;
       padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
     }
-
-    .info-box {
-      background: #fff;
-      padding: 15px 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      margin-bottom: 15px;
-      border: 1px solid var(--border);
+    .card h2 {
+      margin: 0 0 15px;
+      font-size: 18px;
+      color: #1e293b;
+    }
+    .info-row {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-    }
-
-    .info-box span:first-child {
-      color: var(--primary);
-      font-weight: 600;
-    }
-
-    .info-box span:last-child {
-      font-weight: bold;
-      word-break: break-word;
-      text-align: right;
-      max-width: 65%;
-    }
-
-    .btn {
-      background: var(--primary);
-      color: #fff;
-      font-size: 16px;
-      border: none;
-      border-radius: 10px;
-      padding: 14px 20px;
-      margin: 10px auto;
-      cursor: pointer;
-      width: 100%;
-      max-width: 400px;
-      display: block;
-      text-align: center;
-    }
-
-    .back-btn {
-      background: #444;
-      color: #fff;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
       font-size: 14px;
+    }
+    .info-row:last-child { border-bottom: none; }
+
+    /* Button */
+    .btn {
+      width: 100%;
+      padding: 12px;
       border: none;
       border-radius: 8px;
-      padding: 10px 20px;
-      margin: 0 auto;
+      font-weight: bold;
+      color: #fff;
+      background: #ef4444;
       cursor: pointer;
-      width: 100%;
-      max-width: 400px;
-      display: block;
-      text-align: center;
+      transition: 0.3s;
+      font-size: 15px;
     }
+    .btn:hover { opacity: 0.9; }
 
+    /* Navbar */
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
       height: 70px;
-      background: var(--nav-glass);
-      backdrop-filter: blur(10px);
+      background: #fff;
       display: flex;
       justify-content: space-around;
       align-items: center;
-      border-top: 1px solid var(--border);
+      border-top: 2px solid #28a745;
       z-index: 100;
     }
-
     .nav-item {
+      flex: 1;
       text-align: center;
       font-size: 12px;
-      color: var(--text-color);
+      color: #333;
       text-decoration: none;
+      transition: 0.3s;
+      position: relative;
+      padding: 10px 0;
     }
-
     .nav-item i {
       font-size: 22px;
       display: block;
-      margin-bottom: 2px;
+      margin-bottom: 3px;
+      color: #28a745;
     }
-
-    .nav-item:hover {
-      color: var(--primary);
-    }
-
-    /* ✅ Highlight active nav item */
-    .nav-item.active {
-      color: var(--primary);
-      font-weight: bold;
-    }
-
-    .nav-item.active i {
-      color: var(--primary);
-      transform: scale(1.2);
-      transition: 0.3s;
+    .nav-item:hover { color: #28a745; }
+    .nav-item:hover i { color: #218838; }
+    .nav-item:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 20%;
+      bottom: 20%;
+      width: 1px;
+      background: #e0e0e0;
     }
   </style>
 </head>
 <body>
-
-  <nav>Smartfundad Account</nav>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
   <div class="container">
-    <div class="info-box"><span>Name</span><span id="userName">Loading...</span></div>
-    <div class="info-box"><span>Email</span><span id="userEmail">Loading...</span></div>
-    <div class="info-box"><span>Wallet Balance</span><span id="walletBalance">$0.00</span></div>
-    <button class="btn" onclick="goToWithdraw()">Withdraw Funds</button>
-    <button class="btn" onclick="logout()">Log Out</button>
+    <h1>My Account</h1>
+
+    <!-- Profile Info -->
+    <div class="card">
+      <h2>Profile</h2>
+      <div class="info-row"><span>Name</span><span id="userName">Loading...</span></div>
+      <div class="info-row"><span>Email</span><span id="userEmail">Loading...</span></div>
+      <div class="info-row"><span>Referral Code</span><span id="userRef">Loading...</span></div>
+      <div class="info-row"><span>Joined</span><span id="userJoin">Loading...</span></div>
+    </div>
+
+    <!-- Wallet Info -->
+    <div class="card">
+      <h2>Wallet</h2>
+      <div class="info-row"><span>Total Deposit</span><span id="userDeposit">$0</span></div>
+      <div class="info-row"><span>Current Balance</span><span id="userBalance">$0</span></div>
+      <div class="info-row"><span>Total Earnings</span><span id="userEarnings">$0</span></div>
+    </div>
+
+    <!-- Referral Stats -->
+    <div class="card">
+      <h2>Team</h2>
+      <div class="info-row"><span>Level 1</span><span id="teamLv1">0</span></div>
+      <div class="info-row"><span>Level 2</span><span id="teamLv2">0</span></div>
+      <div class="info-row"><span>Level 3</span><span id="teamLv3">0</span></div>
+      <div class="info-row"><span>Total Team</span><span id="teamTotal">0</span></div>
+    </div>
+
+    <!-- Logout -->
+    <button class="btn" onclick="logout()">Logout</button>
   </div>
 
+  <!-- Navbar -->
   <div class="bottom-nav">
-    <a href="index.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
-    <a href="tasks.html" class="nav-item"><i class='bx bx-task'></i><span>Tasks</span></a>
-    <a href="rrr.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
-    <a href="wallet.html" class="nav-item"><i class='bx bx-wallet'></i><span>Wallet</span></a>
+    <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
+    <a href="invest.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
+    <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
     <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
   </div>
-   
 
-  <!-- ✅ Active nav highlight JS -->
-  <script>
-    const navItems = document.querySelectorAll(".nav-item");
-    const current = location.pathname.split("/").pop();
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    navItems.forEach(item => {
-      const href = item.getAttribute("href");
-      if (href === current) {
-        item.classList.add("active");
+  // ✅ Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+    authDomain: "btcinvest-c0e25.firebaseapp.com",
+    projectId: "btcinvest-c0e25",
+    storageBucket: "btcinvest-c0e25.firebasestorage.app",
+    messagingSenderId: "204937458487",
+    appId: "1:204937458487:web:cc27ece1249999279f60b2",
+    measurementId: "G-HG0Q8ZHT6G"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  // ✅ Load User Data
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+
+        // Profile
+        document.getElementById("userName").textContent = data.name || "Unnamed";
+        document.getElementById("userEmail").textContent = data.email || user.email;
+        document.getElementById("userRef").textContent = data.referralCode || "N/A";
+        document.getElementById("userJoin").textContent = data.createdAt ? new Date(data.createdAt).toLocaleDateString() : "N/A";
+
+        // Wallet
+        document.getElementById("userDeposit").textContent = "$" + (data.lifetimeDeposit || 0);
+        document.getElementById("userBalance").textContent = "$" + (data.balance || 0);
+        document.getElementById("userEarnings").textContent = "$" + (data.totalEarnings || 0);
+
+        // Referral counts
+        const lv1 = await getDocs(query(collection(db, "users"), where("referredBy", "==", data.referralCode)));
+        const lv2 = await getDocs(query(collection(db, "users"), where("upline2", "==", user.uid)));
+        const lv3 = await getDocs(query(collection(db, "users"), where("upline3", "==", user.uid)));
+
+        document.getElementById("teamLv1").textContent = lv1.size;
+        document.getElementById("teamLv2").textContent = lv2.size;
+        document.getElementById("teamLv3").textContent = lv3.size;
+        document.getElementById("teamTotal").textContent = lv1.size + lv2.size + lv3.size;
       }
-    });
-  </script>
-
-  <!-- Firebase Script -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import {
-      getAuth,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import {
-      getFirestore,
-      doc,
-      getDoc
-    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBJazg3yVQfDaSuloygIZSQPccFL4HIaMQ",
-      authDomain: "smartfundad-60227.firebaseapp.com",
-      databaseURL: "https://smartfundad-60227-default-rtdb.firebaseio.com",
-      projectId: "smartfundad-60227",
-      storageBucket: "smartfundad-60227.firebasestorage.app",
-      messagingSenderId: "125738343496",
-      appId: "1:125738343496:web:328065e13d114cfd9f8c7d",
-      measurementId: "G-LE5QZREW1E"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (userDoc.exists()) {
-          const data = userDoc.data();
-          document.getElementById("userName").textContent = data.name || "N/A";
-          document.getElementById("userEmail").textContent = data.email || user.email;
-          document.getElementById("walletBalance").textContent = `$${parseFloat(data.wallet || 0).toFixed(2)}`;
-        }
-      } else {
-        window.location.href = "auth.html";
-      }
-    });
-
-    window.goToWithdraw = () => {
-      window.location.href = "withdraw.html";
+    } else {
+      window.location.href = "login.html"; // redirect if not logged in
     }
-
-    window.goBack = () => {
-      window.history.back();
-    }
-    import { signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-window.logout = function () {
-  signOut(auth).then(() => {
-    window.location.href = "auth.html";
-  }).catch((error) => {
-    console.error("Logout error:", error);
   });
-};
 
-  </script>
-
+  // ✅ Logout
+  window.logout = async function() {
+    await signOut(auth);
+    window.location.href = "login.html";
+  }
+</script>
 </body>
 </html>
