@@ -613,28 +613,7 @@
       showSuccess("Withdrawal Requested!");
     };
 
-  if (currentUserId) {
-    await addDoc(collection(db, "users", currentUserId, "withdrawals"), {
-      amount: amount,
-      type: "USDT (BEP20)",
-      address: address,
-      date: serverTimestamp(),
-      status: "Pending",
-      orderId: orderId
-    });
-    
 
-    // Balance minus
-    const ref = doc(db, "users", currentUserId);
-    await updateDoc(ref, { walletBalance: userBalance - amount });
-
-    loadWithdrawHistory(currentUserId);
-    loadUserProfile(currentUserId);
-  }
-
-  popupOverlay.style.display = "none";
-  showSuccess("Withdrawal Requested!");
-};
 
 window.manualRefresh = function() {
   const historyList = document.getElementById("withdrawHistoryList");
@@ -752,12 +731,7 @@ async function loadWithdrawCard(uid) {
     console.error("Error loading withdraw card:", err);
   }
 }
-
-
-
-
-
-// 🔥 yaha paste kar
+//first lod page 
 window.loadPage = function(page) {
   fetch(page)
   .then(res => res.text())
@@ -765,7 +739,7 @@ window.loadPage = function(page) {
     const content = document.getElementById("contentArea");
     content.innerHTML = data;
 
-      // 👇 Agar loaded page me <script> hai, to unhe manually run karna hoga
+    // 👇 Agar loaded page me <script> hai, to unhe manually run karna hoga
     const scripts = content.querySelectorAll("script");
     scripts.forEach(oldScript => {
       const newScript = document.createElement("script");
@@ -785,6 +759,31 @@ window.loadPage = function(page) {
 };
 
 
+// ❌ Right-click disable
+  document.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+    
+  });
+
+// ❌ Disable text selection
+  document.addEventListener("selectstart", function(e) {
+    e.preventDefault();
+  });
+
+// ❌ Disable copy (Ctrl+C), cut (Ctrl+X), paste (Ctrl+V), view-source (Ctrl+U)
+  document.addEventListener("keydown", function(e) {
+    if (
+      (e.ctrlKey && (e.key === "c" || e.key === "C")) || 
+      (e.ctrlKey && (e.key === "x" || e.key === "X")) || 
+      (e.ctrlKey && (e.key === "v" || e.key === "V")) || 
+      (e.ctrlKey && (e.key === "u" || e.key === "U")) || 
+    (e.key === "F12") // DevTools
+    ) {
+      e.preventDefault();
+    
+  }
+});
+</script>
 </script>
 </body>
 </html>
