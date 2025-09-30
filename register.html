@@ -271,27 +271,6 @@
     return closest; // object or null
   }
 
-  async function distributeIncome(newUserName, referredBy) {
-    let currentRef = referredBy;
-    for (let level = 1; level <= 3; level++) {
-      if (!currentRef) break;
-      const q = query(collection(db, "users"), where("referralCode", "==", currentRef));
-      const snap = await getDocs(q);
-      if (!snap.empty) {
-        const refUser = snap.docs[0].data();
-        const earning = level === 1 ? 50 : level === 2 ? 30 : 20;
-        await addDoc(collection(db, "referrals"), {
-          name: refUser.name,
-          userReferralCode: currentRef,
-          fromUser: newUserName,
-          level, earning,
-          date: new Date().toLocaleDateString("en-GB"),
-          today: true
-        });
-        currentRef = refUser.referredBy;
-      } else break;
-    }
-  }
 
   document.getElementById("registerBtn").addEventListener("click", async () => {
     const btn = document.getElementById("registerBtn");
@@ -355,27 +334,57 @@
       }
 
       // ✅ Create user
-      const userCredential = await createUserWithEmailAndPassword(auth, normEmail, password);
-      const user = userCredential.user;
-      const finalReferral = "REF" + Math.floor(Math.random()*900000+100000);
+const userCredential = await createUserWithEmailAndPassword(auth, normEmail, password);
+const user = userCredential.user;
+const finalReferral = "REF" + Math.floor(Math.random()*900000+100000);
 
-      // Save normalized fields in Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        name: normName,
-        email: normEmail,
-        username: normUsername,
-        mobile,
-        aadhaar,
-        chequeNumber: cheque !== "" ? cheque : null,
-        referralCode: finalReferral,
-        referredBy: referral !== "" ? referral : null,
-        walletBalance: 0,
-        totalInvested: 0,
-        createdAt: new Date().toISOString()
-      });
+// ✅ Pehle object banao
+let userDocData = {
+  name: normName,
+  email: normEmail,
+  username: normUsername,
+  mobile,
+  aadhaar,
+  chequeNumber: cheque !== "" ? cheque : null,
+  referralCode: finalReferral,
+  referredBy: referral !== "" ? referral : null,
+  walletBalance: 0,
+  totalInvested: 0,
+  createdAt: new Date().toISOString()
+};
 
-      // distribute income if any
-      if(referral) await distributeIncome(normName, referral);
+// ✅ Agar referral diya gaya hai to uplines nikal lo
+if(referral){
+  const q = query(collection(db, "users"), where("referralCode", "==", referral));
+  const snap = await getDocs(q);
+  if(!snap.empty){
+    const refUser = snap.docs[0].data();
+    const refUserId = snap.docs[0].id;
+    userDocData.upline1 = refUserId;
+
+    if(refUser.referredBy){
+      const q2 = query(collection(db, "users"), where("referralCode", "==", refUser.referredBy));
+      const snap2 = await getDocs(q2);
+      if(!snap2.empty){
+        const refUser2 = snap2.docs[0].data();
+        const refUser2Id = snap2.docs[0].id;
+        userDocData.upline2 = refUser2Id;
+
+        if(refUser2.referredBy){
+          const q3 = query(collection(db, "users"), where("referralCode", "==", refUser2.referredBy));
+          const snap3 = await getDocs(q3);
+          if(!snap3.empty){
+            const refUser3Id = snap3.docs[0].id;
+            userDocData.upline3 = refUser3Id;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ✅ Bas ek hi baar Firestore me save karo
+await setDoc(doc(db, "users", user.uid), userDocData);
 
       showPopup("Registration Successful!");
       setTimeout(()=> window.location.href="Dashboard.html", 1500);
