@@ -107,6 +107,61 @@
       p, li { font-size:14px; }
       header { font-size:18px; }
     }
+
+/* === Image Slider CSS === */
+.slider {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
+  overflow: hidden;
+  border: 2px solid var(--green);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.slides {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slides img {
+  width: 100%;
+  flex-shrink: 0;
+}
+/* Arrow buttons */
+.prev, .next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(22,163,74,0.7);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 18px;
+}
+.prev { left: 10px; }
+.next { right: 10px; }
+.prev:hover, .next:hover { background: var(--green); }
+
+/* Dots indicators */
+.dots {
+  text-align: center;
+  margin-top: 8px;
+}
+.dots span {
+  display: inline-block;
+  width: 10px; height: 10px;
+  margin: 3px;
+  background: #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.dots span.active { background: var(--green); }
+
+
   </style>
 </head>
 <body>
@@ -181,10 +236,26 @@
       </div>
     </div>
 
-    <div class="certificate">
-      <h2>  Certificate</h2>
-      <img src="myphoto/JSDGUROWEJRKWHRKJAHFKLAJ.png" alt="Company Certificate">
-    </div>
+    <div class="slider">
+  <div class="slides">
+    <img src="myphoto/JSDGUROWEJRKWHRKJAHFKLAJ.png" alt="Certificate 1">
+    <img src="myphoto/5386823GHGHG.png" alt="Certificate 2">
+    <img src="myphoto/GKJKG68767hkjhj.png" alt="Certificate 3">
+  </div>
+
+  <!-- Arrow buttons -->
+  <button class="prev" onclick="showSlide(index-1)">&#10094;</button>
+  <button class="next" onclick="showSlide(index+1)">&#10095;</button>
+
+  <!-- Dots indicators -->
+  <div class="dots">
+    <span onclick="showSlide(0)"></span>
+    <span onclick="showSlide(1)"></span>
+    <span onclick="showSlide(2)"></span>
+  </div>
+</div>
+
+
 <div class="disclaimer" style="
   background:#ffeaea;
   border:2px solid #dc2626;
@@ -233,6 +304,41 @@
     
   }
 });
+
+/* === Image Slider Script === */
+const slider = document.querySelector('.slides');
+let index = 0;
+
+function showSlide(i) {
+  const total = document.querySelectorAll('.slides img').length;
+  index = (i + total) % total; // loop
+  slider.style.transform = `translateX(${-index * 100}%)`;
+
+  // update dots active state
+  const dots = document.querySelectorAll('.dots span');
+  if (dots.length) {
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === index);
+    });
+  }
+}
+
+// Auto slide every 4s
+setInterval(() => { showSlide(index + 1); }, 4000);
+
+// Touch/Swipe support
+let startX = 0;
+slider.parentElement.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+slider.parentElement.addEventListener('touchend', e => {
+  let endX = e.changedTouches[0].clientX;
+  if (startX - endX > 50) showSlide(index + 1); // left swipe
+  if (endX - startX > 50) showSlide(index - 1); // right swipe
+});
+
+// Start with first slide
+showSlide(0);
+
+
 </script>
 </body>
 </html>
