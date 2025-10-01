@@ -108,6 +108,56 @@
       border-radius: 8px; font-size: 14px;
       display: none; z-index: 200;
     }
+
+    /* user rendar */
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.user-table th, .user-table td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+.user-table th {
+  background: #f8fafc;
+  font-weight: bold;
+}
+
+.user-table td:first-child, .user-table th:first-child {
+  text-align: left;
+}
+.user-table td:last-child, .user-table th:last-child {
+  text-align: right;
+}
+/* serch butun */
+.search-box {
+  display: flex;
+  justify-content: flex-end;
+  margin: 8px 0 12px;
+}
+
+.search-box input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 200px;
+  transition: 0.3s;
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 4px rgba(37,99,235,0.5);
+}
+
+
   </style>
 </head>
 <body>
@@ -139,23 +189,42 @@
       <button class="level-btn" onclick="showLevel(3)">3 (<span id="level3Users">0</span>)</button>
     </div>
 
-    <!-- Content Sections -->
-    <div id="level1" class="level-content active">
-      <h3>Earning: <b id="level1Earning">$0</b></h3>
-      <div class="spinner" id="spinner1"><div></div></div>
-      <div id="level1List"></div>
-    </div>
-    <div id="level2" class="level-content">
-      <h3>Earning: <b id="level2Earning">$0</b></h3>
-      <div class="spinner" id="spinner2"><div></div></div>
-      <div id="level2List"></div>
-    </div>
-    <div id="level3" class="level-content">
-      <h3>Earning: <b id="level3Earning">$0</b></h3>
-      <div class="spinner" id="spinner3"><div></div></div>
-      <div id="level3List"></div>
-    </div>
+  <!-- Content Sections -->
+<div id="level1" class="level-content active">
+  <h3>Earning: <b id="level1Earning">$0</b></h3>
+
+  <!-- 🔍 Search -->
+  <div class="search-box">
+    <input type="text" id="searchLevel1" placeholder="Search by name...">
   </div>
+
+  <div class="spinner" id="spinner1"><div></div></div>
+  <div id="level1List"></div>
+</div>
+
+<div id="level2" class="level-content">
+  <h3>Earning: <b id="level2Earning">$0</b></h3>
+
+  <!-- 🔍 Search -->
+  <div class="search-box">
+    <input type="text" id="searchLevel2" placeholder="Search by name...">
+  </div>
+
+  <div class="spinner" id="spinner2"><div></div></div>
+  <div id="level2List"></div>
+</div>
+
+<div id="level3" class="level-content">
+  <h3>Earning: <b id="level3Earning">$0</b></h3>
+
+  <!-- 🔍 Search -->
+  <div class="search-box">
+    <input type="text" id="searchLevel3" placeholder="Search by name...">
+  </div>
+
+  <div class="spinner" id="spinner3"><div></div></div>
+  <div id="level3List"></div>
+</div>
 
   <!-- Bottom Navbar -->
   <div class="bottom-nav">
@@ -240,25 +309,60 @@
     }
   };
 
-  // Render users
-  function renderLevelList(listId, users, rate) {
-    const container = document.getElementById(listId);
-    if (users.length === 0) {
-      container.innerHTML = "<em style='color:#999;'>No Referral</em>";
-      return;
-    }
-    container.innerHTML = users.map(u => {
-      const isActive = (u.lifetimeDeposit && u.lifetimeDeposit > 0);
-      const status = isActive ? "<span class='status-active'>Active</span>" : "<span class='status-inactive'>Inactive</span>";
-      const received = ((u.totalInvested || 0) * rate).toFixed(2);
-      return `
-        <div class="user-item">
-          <strong>${u.name || "Unnamed"}</strong> - ${status}<br>
-          Received: <b style="color:#2563eb;">$${received}</b>
-        </div>
-      `;
-    }).join("");
+ 
+// Render users
+function attachSearch(listId, users, rate, inputId) {
+  const input = document.getElementById(inputId);
+  input.addEventListener("input", () => {
+    renderLevelList(listId, users, rate, input.value);
+  });
+}
+
+function renderLevelList(listId, users, rate, searchTerm="") {
+  const container = document.getElementById(listId);
+
+  // Filter by search
+  const filteredUsers = users.filter(u =>
+    (u.name || "Unnamed").toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (filteredUsers.length === 0) {
+    container.innerHTML = "<em style='color:#999;'>No matching user</em>";
+    return;
   }
+
+  let html = `
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Received</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  html += filteredUsers.map(u => {
+    const isActive = (u.lifetimeDeposit && u.lifetimeDeposit > 0);
+    const status = isActive
+      ? "<span class='status-active'>Active</span>"
+      : "<span class='status-inactive'>Inactive</span>";
+    const received = ((u.totalInvested || 0) * rate).toFixed(2);
+
+    return `
+      <tr>
+        <td>${u.name || "Unnamed"}</td>
+        <td>${status}</td>
+        <td>$${received}</td>
+      </tr>
+    `;
+  }).join("");
+
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+}
+
 
   // ✅ Load single level data only
   async function loadSingleLevel(currentUser, level) {
@@ -286,6 +390,8 @@
     document.getElementById(`level${level}Users`).textContent = members.length;
     document.getElementById(`level${level}Earning`).textContent = `$${earning.toFixed(2)}`;
     renderLevelList(`level${level}List`, members, levelConfig.rate);
+    attachSearch(`level${level}List`, members, levelConfig.rate, `searchLevel${level}`);
+
   }
 
   // ✅ Global currentUser store
