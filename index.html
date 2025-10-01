@@ -137,27 +137,28 @@
   margin: 0 auto 30px;
   border-radius: 20px;
   overflow: hidden;
-  border: 0px solid orange;
   box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }
 
 .slides {
   display: flex;
   transition: transform 0.6s ease-in-out;
+  align-items: flex-start; /* ✅ important: let height adjust from child */
 }
 
 .slide-card {
   flex: 0 0 100%;
-  height: auto;  /* ✅ box ki height image ke hisaab se */
+  display: flex;               /* ✅ make img behave naturally */
+  justify-content: center;
 }
 
 .slide-card img {
-  width: 100%;
-  height: auto;   /* ✅ natural height maintain */
+  max-width: 100%;   /* ✅ responsive */
+  height: auto;      /* ✅ keep aspect ratio */
   display: block;
   border-radius: 16px;
-  object-fit: contain; /* ✅ image pura dikhega, crop nahi hoga */
 }
+
 
 /* HERO TEXT */
 .hero h1 {
