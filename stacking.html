@@ -486,8 +486,16 @@
 
   // ✅ Confirm Stake (possibleIncome add kiya)
   window.confirmStake = async function(){
-    if(!currentUserId){ showPopup("User not authenticated"); return; }
-    if(!currentPlanObj){ showPopup("Plan not selected"); return; }
+  if(!currentUserId){ 
+    showPopup("User not authenticated"); 
+    return; 
+  }
+
+  // Safe check
+  if(!currentPlanObj || !currentPlanObj.planName){ 
+    showPopup("Plan not selected properly ❌"); 
+    return; 
+  }
 
     const amount = parseFloat(stakeInput.value);
     if(isNaN(amount) || amount <= 0){ showPopup("Enter valid amount"); return; }
