@@ -497,166 +497,95 @@ window.closeModal = function(){
 
 
   // ---- Create stake (extra fields add kiye accruedIncome + lastAccrual) ----
-  window.confirmStake = async function(){
-    if(!currentUserId){ showPopup("User not authenticated"); return; }
-    if(!currentPlanObj){ showPopup("Plan not selected"); return; }
+// ---- process matured (3-level income distribution) ----
+async function processMatured(uid){
+  if(!uid) return;
+  const invCol = collection(db, "users", uid, "investments");
+  const q = query(invCol, where("status","==","Active"));
+  const snap = await getDocs(q);
+  if(snap.empty) return;
+  const now = Date.now();
 
-    const amount = parseFloat(stakeInput.value);
-    if(isNaN(amount) || amount <= 0){ showPopup("Enter valid amount"); return; }
-    if(amount < currentPlanObj.minAmount || amount > currentPlanObj.maxAmount){
-      showPopup(`Amount must be between ${currentPlanObj.minAmount} and ${currentPlanObj.maxAmount}`);
-      return;
-    }
+  for(const docSnap of snap.docs){
+    const d = docSnap.data();
+    const id = docSnap.id;
+    if(!d.startTime || !d.endTime) continue;
 
-    closeModal(); // ✅ close instantly
+    const endMs = d.endTime.seconds * 1000;
+    if(now < endMs) continue;
 
-    const userRef = doc(db, "users", currentUserId);
+    const invRef = doc(db, "users", uid, "investments", id);
+    const userRef = doc(db, "users", uid);
+
     try{
       await runTransaction(db, async (tx) => {
+        const inv = await tx.get(invRef);
+        if(!inv.exists()) return;
+        const invData = inv.data();
+        if(invData.status !== "Active") return;
+
+        const amount = invData.amount || 0;
+        const dailyRate = Number(invData.dailyRate) || 0;
+        const durationDays = Math.round((invData.endTime.seconds - invData.startTime.seconds) / (24*60*60));
+        const profit = (amount * dailyRate / 100) * durationDays;
+        const possibleIncome = Number(profit.toFixed(6));
+
+        // Percentages
+        const userPercent = invData.userPercent ?? 0.70;
+        const u1Percent   = invData.upline1Percent ?? 0.17;
+        const u2Percent   = invData.upline2Percent ?? 0.08;
+        const u3Percent   = invData.upline3Percent ?? 0.05;
+
+        // Shares
+        const userShare = +(profit * userPercent).toFixed(6);
+        const u1Share   = +(profit * u1Percent).toFixed(6);
+        const u2Share   = +(profit * u2Percent).toFixed(6);
+        const u3Share   = +(profit * u3Percent).toFixed(6);
+
+        // ✅ Update investment status
+        tx.update(invRef, {
+          status: "Completed",
+          possibleIncome,
+          accruedIncome: 0,
+          endTime: serverTimestamp()
+        });
+
+        // ✅ Update user wallet
         const uSnap = await tx.get(userRef);
-        if(!uSnap.exists()) throw "User data missing";
-        const balance = uSnap.data().walletBalance || 0;
-        if(balance < amount) throw "Insufficient balance";
+        const userBal = (uSnap.exists() && uSnap.data().walletBalance) ? uSnap.data().walletBalance : 0;
 
         tx.update(userRef, { 
-          walletBalance: balance - amount,
-          totalStack: (uSnap.data().totalStack || 0) + amount
+          walletBalance: userBal + amount + userShare,
+          stakingIncome: (uSnap.data().stakingIncome || 0) + userShare,
+          totalIncome: (uSnap.data().totalIncome || 0) + profit
         });
 
-        let days = 1; 
-        if(currentPlanObj.planName.includes("15")) days = 15;
-        else if(currentPlanObj.planName.includes("30")) days = 30;
+        // ✅ Pay uplines
+        const uplineIds = [uSnap.data().upline1, uSnap.data().upline2, uSnap.data().upline3];
+        const uplineShares = [u1Share, u2Share, u3Share];
 
-        const expiryMs = Date.now() + days*24*60*60*1000;
-        const expiryDate = new Date(expiryMs);
+        for(let i=0; i<uplineIds.length; i++){
+          if(!uplineIds[i]) continue; // skip if no upline
+          const upRef = doc(db, "users", uplineIds[i]);
+          const upSnap = await tx.get(upRef);
+          if(!upSnap.exists()) continue;
 
-        const stakeDoc = {
-          amount,
-          startTime: serverTimestamp(),
-          endTime: Timestamp.fromDate(expiryDate),
-          status: "Active",
-          dailyRate: currentPlanObj.dailyRate,
-          planName: currentPlanObj.planName,
-          imgSrc: currentPlanObj.imgSrc || "default.png",
-          possibleIncome: 0,
-          accruedIncome: 0,          
-          lastAccrual: serverTimestamp(), 
-          userPercent: 0.70,
-          upline1Percent: 0.17,
-          upline2Percent: 0.08,
-          upline3Percent: 0.05
-        };
-
-        const invCol = collection(db, "users", currentUserId, "investments");
-        await addDoc(invCol, stakeDoc);
+          const upBal = upSnap.data().walletBalance || 0;
+          tx.update(upRef, {
+            walletBalance: upBal + uplineShares[i],
+            referralIncome: (upSnap.data().referralIncome || 0) + uplineShares[i],
+            totalIncome: (upSnap.data().totalIncome || 0) + uplineShares[i]
+          });
+        }
       });
-      showPopup(" Stake created!");
+
+      showPopup("Stake matured & income distributed (3-level) ✅");
+
     }catch(err){
-      console.error(err);
-      showPopup(typeof err === "string" ? err : "Error creating stake");
-    }
-  };
-
-  // ---- process 30-min accrual ----
-  async function processAccrual(uid){
-    if(!uid) return;
-    const invCol = collection(db, "users", uid, "investments");
-    const q = query(invCol, where("status","==","Active"));
-    const snap = await getDocs(q);
-    if(snap.empty) return;
-
-    const now = Date.now();
-    for(const docSnap of snap.docs){
-      const d = docSnap.data();
-      const id = docSnap.id;
-      if(!d.startTime || !d.endTime) continue;
-
-      const lastMs = d.lastAccrual?.seconds ? d.lastAccrual.seconds * 1000 : d.startTime.seconds * 1000;
-      if(now - lastMs < 30*60*1000) continue;  
-
-      const amount = d.amount;
-      const dailyRate = Number(d.dailyRate);
-      const perMinuteRate = (amount * dailyRate/100) / (24*60);
-      const earned = perMinuteRate * 30;  
-
-      const invRef = doc(db, "users", uid, "investments", id);
-      const userRef = doc(db, "users", uid);
-
-      try{
-        await runTransaction(db, async (tx)=>{
-          const uSnap = await tx.get(userRef);
-          if(!uSnap.exists()) return;
-
-          tx.update(invRef, {
-            accruedIncome: (d.accruedIncome || 0) + earned,
-            lastAccrual: serverTimestamp()
-          });
-
-          tx.update(userRef, {
-            stakingIncome: (uSnap.data().stakingIncome || 0) + earned,
-            totalIncome: (uSnap.data().totalIncome || 0) + earned
-          });
-        });
-      }catch(err){ console.error("Accrual error:", err); }
+      console.error("Error processing matured", err);
     }
   }
-
-  // ---- process matured (level 3 upgrade added) ----
-  async function processMatured(uid){
-    if(!uid) return;
-    const invCol = collection(db, "users", uid, "investments");
-    const q = query(invCol, where("status","==","Active"));
-    const snap = await getDocs(q);
-    if(snap.empty) return;
-    const now = Date.now();
-
-    for(const docSnap of snap.docs){
-      const d = docSnap.data();
-      const id = docSnap.id;
-      if(!d.startTime || !d.endTime) continue;
-
-      const endMs = d.endTime.seconds * 1000;
-      if(now < endMs) continue;
-
-      const invRef = doc(db, "users", uid, "investments", id);
-      const userRef = doc(db, "users", uid);
-
-      try{
-        await runTransaction(db, async (tx) => {
-          const inv = await tx.get(invRef);
-          if(!inv.exists()) return;
-          const invData = inv.data();
-          if(invData.status !== "Active") return;
-
-          const amount = invData.amount || 0;
-          const dailyRate = Number(invData.dailyRate) || 0;
-          const durationDays = Math.round((invData.endTime.seconds - invData.startTime.seconds) / (24*60*60));
-          const profit = (amount * dailyRate / 100) * durationDays;
-          const possibleIncome = Number(profit.toFixed(6));
-
-          const userPercent = invData.userPercent ?? 0.70;
-          const userShare = +(profit * userPercent).toFixed(6);
-
-          tx.update(invRef, {
-            status: "Completed",
-            possibleIncome,
-            accruedIncome: 0,
-            endTime: serverTimestamp()
-          });
-
-          const uSnap = await tx.get(userRef);
-          const userBal = (uSnap.exists() && uSnap.data().walletBalance) ? uSnap.data().walletBalance : 0;
-
-          tx.update(userRef, { 
-            walletBalance: userBal + amount + userShare,
-            stakingIncome: (uSnap.data().stakingIncome || 0) + userShare,
-            totalIncome: (uSnap.data().totalIncome || 0) + profit,
-            level: 3
-          });
-        });
-      }catch(err){ console.error("Error processing matured", err); }
-    }
-  }
+}
 
 
 // modal background click to close
