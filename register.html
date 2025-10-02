@@ -1,20 +1,22 @@
- <!DOCTYPE html>
- <html lang="en">
- <head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>User Register/ Trustdollar / with - very Safe your fund //////</title>
+  <title>User Register / Trustdollar</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f0f0f0;
-      margin:0;
+      margin: 0;
+      padding: 0;
     }
+
     .header {
       position: fixed;
       top: 0;
       left: 0;
-      right: 0;   /* ✅ dono side lock */
+      right: 0;
       width: 100%;
       text-align: center;
       padding: 12px;
@@ -24,98 +26,147 @@
       color: white;
       box-shadow: 0 2px 5px rgba(0,0,0,0.3);
       z-index: 1000;
-
-      /* 👇 Extra fix for stability */
-      transform: translateZ(0);    
-      will-change: transform;
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
-    }
-
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;   /* ✅ Left-right scroll band */
-      width: 100%;
-    }
-
-    .wrapper, .container, .info-box {
-      max-width: 100%;     
-      box-sizing: border-box;
     }
 
     .wrapper {
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      justify-content: center;
+      align-items: flex-start;
       width: 100%;
-      margin-top: 70px; /* header ke neeche space */
+      margin-top: 80px; 
       padding: 15px;
-      padding-bottom: 80px;  /* ✅ extra safe space */
       box-sizing: border-box;
     }
 
-
-    
     .container {
       background: #fff;
-      padding: 20px 25px;
+      padding: 25px 20px;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      box-shadow: 0 0 15px rgba(0,0,0,0.15);
       width: 100%;
       max-width: 400px;
       text-align: center;
     }
 
-    h2 { margin:0 0 12px 0; font-size:22px; font-weight:bold; }
-    input {
-      width: 100%; padding: 10px; margin: 8px 0;
-      border-radius: 5px; border: 1px solid #ccc;
-      box-sizing: border-box; font-size:14px;
+    h2 { 
+      margin: 0 0 20px 0; 
+      font-size: 22px; 
+      font-weight: bold; 
+      color: #333; 
     }
-    .password-container { position: relative; }
+
+    /* Floating input group */
+    .input-group {
+      position: relative;
+      margin: 18px 0;
+      width: 100%;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 14px 12px;
+      font-size: 15px;
+      border: 1.5px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      box-sizing: border-box;
+      background: #fff;
+      transition: 0.3s;
+    }
+
+    .input-group label {
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      font-size: 15px;
+      color: #888;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      background: #fff;
+      padding: 0 4px;
+    }
+
+    .input-group input:focus {
+      border-color: #4CAF50;
+      box-shadow: 0 0 6px rgba(76,175,80,0.3);
+    }
+
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label {
+      top: -8px;
+      font-size: 12px;
+      color: #4CAF50;
+      font-weight: 600;
+    }
+
+    /* Password eye icon */
     .password-container i {
-      position: absolute; right: 10px; top: 50%;
-      transform: translateY(-50%); cursor: pointer; font-size:16px;
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 16px;
+      color: #444;
     }
+
     button {
-      width: 100%; padding: 10px; margin-top: 10px;
-      border: none; border-radius: 5px;
-      background: #4CAF50; color: white;
-      font-size: 16px; font-weight:bold;
-      cursor: pointer; display:flex; align-items:center; justify-content:center;
-      gap:8px; transition: background 0.3s;
+      width: 100%; 
+      padding: 12px; 
+      margin-top: 15px;
+      border: none; 
+      border-radius: 6px;
+      background: linear-gradient(90deg,#4CAF50,#2c7);
+      color: white;
+      font-size: 16px; 
+      font-weight: bold;
+      cursor: pointer; 
+      transition: 0.3s;
     }
+
     button:hover { background:#3a9440; }
-    .popup {
-      position: fixed; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: #fff; padding: 15px 25px;
-      border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      display: none; z-index: 2000; font-size: 15px;
+
+    .login-box {
+      margin-top: 16px; 
+      padding: 10px;
+      border: 1px solid #ddd; 
+      border-radius: 6px;
+      background: #f9f9f9; 
+      font-size: 14px; 
+      color: #333;
     }
+    .login-box a { color: #0066ff; font-weight: bold; text-decoration: none; }
+    .login-box a:hover { text-decoration: underline; }
+
+    .popup {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 12px 22px;
+      border-radius: 8px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+      display: none;
+      font-size: 15px;
+      z-index: 2000;
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+    }
+    .popup.show { display:block; opacity:1; }
     .popup.success { border-left: 5px solid green; }
     .popup.error { border-left: 5px solid red; }
 
-    .login-box {
-      margin-top: 14px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      background: #f9f9f9;
-      font-size: 14px;
-      color: #333;
+    /* ✅ Mobile Responsive */
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px 15px;
+        border-radius: 8px;
+      }
+      h2 { font-size: 20px; }
+      .input-group input { font-size: 14px; padding: 12px 10px; }
+      .input-group label { font-size: 14px; }
+      button { font-size: 15px; padding: 10px; }
     }
-    .login-box a {
-      color: #0066ff;
-      font-weight: bold;
-      text-decoration: none;
-    }
-    .login-box a:hover {
-      text-decoration: underline;
-    }
-
   </style>
 </head>
 <body>
@@ -123,33 +174,70 @@
   <div class="wrapper">
     <div class="container">
       <h2>Register</h2>
-      <input type="text" id="name" placeholder="Name">
-      <input type="text" id="register-email" placeholder="Email">
-      <input type="text" id="username" placeholder="Username">
-      <input type="text" id="mobile" placeholder="Mobile Number">
-      <input type="text" id="aadhaar" placeholder="Aadhaar">
-      <input type="text" id="cheque" placeholder="Upline Cheque (Optional)">
-      <div class="password-container">
-        <input type="password" id="password" placeholder="Password">
+
+      <!-- Name -->
+      <div class="input-group">
+        <input type="text" id="name" placeholder=" " required>
+        <label for="name">Name</label>
+      </div>
+
+      <!-- Email -->
+      <div class="input-group">
+        <input type="text" id="register-email" placeholder=" " required>
+        <label for="register-email">Email</label>
+      </div>
+
+      <!-- Username -->
+      <div class="input-group">
+        <input type="text" id="username" placeholder=" " required>
+        <label for="username">Username</label>
+      </div>
+
+      <!-- Mobile -->
+      <div class="input-group">
+        <input type="text" id="mobile" placeholder=" " required>
+        <label for="mobile">Mobile Number</label>
+      </div>
+
+      <!-- Aadhaar -->
+      <div class="input-group">
+        <input type="text" id="aadhaar" placeholder=" " required>
+        <label for="aadhaar">Aadhaar</label>
+      </div>
+
+      <!-- Cheque -->
+      <div class="input-group">
+        <input type="text" id="cheque" placeholder=" ">
+        <label for="cheque">Upline Cheque (Optional)</label>
+      </div>
+
+      <!-- Password -->
+      <div class="input-group password-container">
+        <input type="password" id="password" placeholder=" " required>
+        <label for="password">Password</label>
         <i id="toggle-password">👁️</i>
       </div>
-      <div class="password-container">
-        <input type="password" id="confirm-password" placeholder="Confirm Password">
+
+      <!-- Confirm Password -->
+      <div class="input-group password-container">
+        <input type="password" id="confirm-password" placeholder=" " required>
+        <label for="confirm-password">Confirm Password</label>
         <i id="toggle-confirm-password">👁️</i>
       </div>
-      <input type="text" id="referral" placeholder="Referral Code (Optional)">
+
+      <!-- Referral -->
+      <div class="input-group">
+        <input type="text" id="referral" placeholder=" ">
+        <label for="referral">Referral Code (Optional)</label>
+      </div>
 
       <button id="registerBtn">Register</button>
 
-      <!-- ✅ Login redirect box -->
       <div class="login-box">
-        Already have an account? 
-        <a href="login.html">Login here</a>
+        Already have an account? <a href="login.html">Login here</a>
       </div>
-
     </div>
-<div id="popup" class="popup"></div>
-
+  </div>
 <style>
   .popup {
     position: fixed;
