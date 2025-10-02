@@ -309,6 +309,74 @@
     setTimeout(()=>{ document.getElementById("popup").style.display = "none"; }, 2500);
   };
 
+  // ✅ Wallet listener
+  function listenWallet(){
+    const uRef = doc(db, "users", currentUserId);
+    onSnapshot(uRef, snap => {
+      if(!snap.exists()){ 
+        walletBalanceEl.value = "0.00 USDT"; 
+        return; 
+      }
+      const bal = snap.data().walletBalance || 0;
+      walletBalanceEl.value = Number(bal).toFixed(2) + " USDT";
+    });
+  }
+
+  // ✅ Investment history listener
+  function listenInvestments(){
+    const invCol = collection(db, "users", currentUserId, "investments");
+    const q = query(invCol, orderBy("startTime","desc"));
+
+    onSnapshot(q, snap => {
+      historyList.innerHTML = "";
+
+      if(snap.empty){
+        historyList.innerHTML = `
+          <div style="text-align:center;color:#666;padding:20px;
+          background:#fff;border-radius:10px;
+          border:1px solid #eee;">
+          No record found
+          </div>`;
+        return;
+      }
+
+      snap.forEach(docSnap => {
+        const d = docSnap.data();
+        const id = docSnap.id;
+
+        const cls = d.status==="Completed" ? "status-complete" : 
+                    d.status==="Active" ? "status-active" : "status-cancel";
+
+        historyList.innerHTML += `
+          <div class="invest-card">
+            <img src="${d.imgSrc || 'https://via.placeholder.com/150'}" alt="plan"/>
+            <div class="invest-title">${d.planName || "TrustDollar Staking"}</div>
+            <div class="invest-info">
+              <p><span class="invest-label">Order Status</span>
+                 <span class="invest-value"><span class="status-badge ${cls}">${d.status}</span></span></p>
+              <p><span class="invest-label">Investment Amount</span>
+                 <span class="invest-value">${Number(d.amount||0).toFixed(2)} USDT</span></p>
+              <p><span class="invest-label">Accrued Income</span>
+                 <span class="invest-value">${Number(d.accruedIncome||0).toFixed(2)} USDT</span></p>
+              <p><span class="invest-label">Possible Income</span>
+                 <span class="invest-value">${Number(d.possibleIncome||0).toFixed(2)} USDT</span></p>
+            </div>
+          </div>`;
+      });
+    });
+  }
+
+  // ✅ User summary listener
+  function listenUserSummary(){
+    const uRef = doc(db, "users", currentUserId);
+    onSnapshot(uRef, snap => {
+      if(!snap.exists()) return;
+      const d = snap.data();
+      document.getElementById("totalInvested").textContent = (d.totalStack || 0) + " USDT";
+      document.getElementById("totalIncome").textContent = (d.totalIncome || 0) + " USDT";
+    });
+  }
+
   // Auth listener
   onAuthStateChanged(auth, user => {
     if(!user){
@@ -327,9 +395,6 @@
     // ✅ 5 minute me accrual check
     setInterval(()=>processAccrual(currentUserId), 5*60*1000);
   });
-
-  // --- baaki tumhara pura listenWallet(), listenInvestments(), listenUserSummary(), 
-  // countdown, openModal, closeModal, confirmStake waise hi rahenge ---
 
   // ---- Create stake (extra fields add kiye accruedIncome + lastAccrual) ----
   window.confirmStake = async function(){
@@ -374,8 +439,8 @@
           planName: currentPlanObj.planName,
           imgSrc: currentPlanObj.imgSrc || "default.png",
           possibleIncome: 0,
-          accruedIncome: 0,          // ✅ income track
-          lastAccrual: serverTimestamp(), // ✅ starting point
+          accruedIncome: 0,          
+          lastAccrual: serverTimestamp(), 
           userPercent: 0.70,
           upline1Percent: 0.17,
           upline2Percent: 0.08,
@@ -407,12 +472,12 @@
       if(!d.startTime || !d.endTime) continue;
 
       const lastMs = d.lastAccrual?.seconds ? d.lastAccrual.seconds * 1000 : d.startTime.seconds * 1000;
-      if(now - lastMs < 30*60*1000) continue;  // abhi 30 min nahi hue
+      if(now - lastMs < 30*60*1000) continue;  
 
       const amount = d.amount;
       const dailyRate = Number(d.dailyRate);
       const perMinuteRate = (amount * dailyRate/100) / (24*60);
-      const earned = perMinuteRate * 30;  // 30 min income
+      const earned = perMinuteRate * 30;  
 
       const invRef = doc(db, "users", uid, "investments", id);
       const userRef = doc(db, "users", uid);
@@ -421,7 +486,6 @@
         await runTransaction(db, async (tx)=>{
           const uSnap = await tx.get(userRef);
           if(!uSnap.exists()) return;
-          const bal = uSnap.data().walletBalance || 0;
 
           tx.update(invRef, {
             accruedIncome: (d.accruedIncome || 0) + earned,
@@ -483,7 +547,6 @@
           const uSnap = await tx.get(userRef);
           const userBal = (uSnap.exists() && uSnap.data().walletBalance) ? uSnap.data().walletBalance : 0;
 
-          // ✅ add profit + level 3
           tx.update(userRef, { 
             walletBalance: userBal + amount + userShare,
             stakingIncome: (uSnap.data().stakingIncome || 0) + userShare,
@@ -494,9 +557,6 @@
       }catch(err){ console.error("Error processing matured", err); }
     }
   }
-
-  // ✅ baaki tumhare modal close, section switch, etc. waise hi chalenge
-
 
 
 // modal background click to close
