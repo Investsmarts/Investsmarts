@@ -225,15 +225,15 @@
 }
 
 #pullRefresh {
-  position: fixed;   /* relative ❌ -> fixed ✅ */
-  top: 60px;         /* nav ke niche hi dikhai dega */
+  position: fixed;
+  top: -50px;   /* default hidden */
   left: 0;
   right: 0;
   text-align: center;
-  transform: translateY(-60px); /* hidden initially */
-  transition: transform 0.3s ease;
-  z-index: 999; /* nav ke neeche dikhe */
+  transition: top 0.3s ease;
+  z-index: 2000;
 }
+
 
 .spinner {
   width: 28px;
@@ -706,17 +706,15 @@ window.confirmStake = async function(){
       .find(a=>a.getAttribute("onclick")?.includes(sectionId));
     if(navLink) navLink.classList.add("active");
   };
-  
+
 // refresh page 
 let startY = 0;
-let isPulled = false;
 let pullDiv = document.getElementById("pullRefresh");
+let isPulled = false;
 
 document.addEventListener("touchstart", function(e) {
-  if (window.scrollY === 0) { 
-    startY = e.touches[0].pageY;
-    isPulled = true;
-  }
+  startY = e.touches[0].pageY;
+  isPulled = true;
 });
 
 document.addEventListener("touchmove", function(e) {
@@ -724,21 +722,20 @@ document.addEventListener("touchmove", function(e) {
   let currentY = e.touches[0].pageY;
   let pullDistance = currentY - startY;
 
-  if (pullDistance > 0) {
-    // spinner ko neeche slide karna
-    pullDiv.style.transform = `translateY(${Math.min(pullDistance - 60, 30)}px)`;
+  if (pullDistance > 20) { // thoda sa kheechte hi spinner dikh jaye
+    pullDiv.style.top = "40px";  // spinner visible
   }
 });
 
 document.addEventListener("touchend", function() {
-  if (pullDiv.style.transform.includes("translateY(") && !pullDiv.style.transform.includes("-")) {
-    // ✅ refresh karo
+  if (pullDiv.style.top === "40px") {
+    // ✅ turant refresh
     setTimeout(() => {
       location.reload();
-    }, 800);
+    }, 500);
   }
   // reset
-  pullDiv.style.transform = "translateY(-60px)";
+  pullDiv.style.top = "-50px";
   isPulled = false;
 });
 
