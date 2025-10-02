@@ -6,7 +6,7 @@
   <title>Withdraw</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   
-   <style>
+  <style>
     /* General Reset */
     html, body {
       margin: 0;
@@ -361,122 +361,296 @@
 }
 .copy-btn:hover { background: #0056b3; }
 
+/* ✅ Multiple Wallet ka CSS */
+.popup-multiple {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+h2 { margin-bottom: 15px; font-size: 20px; color: #28a745; }
+label { font-size: 14px; font-weight: 600; display: block; text-align: left; margin-top: 12px; }
+
+input {
+  width: 100%; padding: 14px; margin-top: 6px;
+  border: 1.5px solid #ccc; border-radius: 8px;
+  font-size: 15px; outline: none; box-sizing: border-box;
+}
+input::placeholder { color: #888; }
+
+.dropdown-container { position: relative; margin-top: 6px; }
+.dropdown-btn {
+  width: 100%; padding: 12px;
+  border: 1.5px solid #ccc; border-radius: 8px;
+  font-size: 15px; text-align: left; cursor: pointer;
+  background: #fff; box-sizing: border-box;
+}
+.dropdown-list {
+  position: absolute; top: 100%; left: 0; right: 0;
+  width: 100%; max-height: 0; overflow: hidden;
+  background: #fff; border: 1.5px solid #ccc; border-radius: 8px;
+  margin-top: 4px; opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+  z-index: 2000; box-sizing: border-box;
+}
+.dropdown-list.show { max-height: 250px; opacity: 1; overflow-y: auto; }
+
+.dropdown-top {
+  display: flex; align-items: center; padding: 6px;
+  border-bottom: 1px solid #ddd; gap: 6px;
+  background: #fafafa; position: sticky; top: 0; z-index: 10;
+}
+.dropdown-top input {
+  flex: 1; padding: 10px; font-size: 14px;
+  border: 1px solid #ccc; border-radius: 6px; min-width: 0;
+}
+.dropdown-top button {
+  height: 38px; padding: 0 14px; border: none; border-radius: 6px;
+  background: #007bff; color: #fff; cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.3s ease;
+}
+.dropdown-top button:hover { background: #0056b3; }
+
+.dropdown-list ul { list-style: none; padding: 0; margin: 0; }
+.dropdown-list li {
+  padding: 10px 14px; cursor: pointer;
+  transition: background 0.2s; font-size: 14px;
+}
+.dropdown-list li:hover { background: #f0f0f0; }
+
+.action-buttons { display: flex; margin-top: 18px; }
+.action-buttons button {
+  flex: 1; padding: 14px; border: none; border-radius: 8px;
+  cursor: pointer; font-weight: bold; font-size: 15px; color: #fff;
+  transition: 0.3s; background: #007bff;
+}
+.action-buttons button:hover { background: #0069d9; }
+
+#message {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff; padding: 14px 24px;
+  border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  font-size: 15px; font-weight: 600; display: none;
+  z-index: 9999; max-width: 80%; text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -60%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+.info-box {
+  margin-top: 15px; padding: 12px 18px;
+  border: 2px solid #28a745; border-radius: 10px;
+  background: #f9fff9; color: #28a745;
+  font-size: 14px; font-weight: 500; text-align: center;
+  line-height: 1.4;
+}
+
+/*record.html ka code */
+/* Record Section */
+.records-section h2 {
+  color: #28a745;
+  margin-bottom: 15px;
+  text-align: center;
+}
+.records-section .count-box {
+  background: #fff;
+  border: 2px solid #28a745;
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+.records-section .wallet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.records-section .wallet-card {
+  background: #fff;
+  border: 1.5px solid #ddd;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.records-section .wallet-info {
+  max-width: 65%;
+}
+.records-section .wallet-info b {
+  color: #28a745;
+  font-size: 14px;
+}
+.records-section .wallet-info p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  word-break: break-all;
+  color: #444;
+}
+.records-section .wallet-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.records-section .wallet-actions button {
+  border: none;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.records-section .primary-btn {
+  background: #007bff;
+  color: #fff;
+}
+.records-section .primary-btn:hover {
+  background: #0056b3;
+}
+.records-section .delete-btn {
+  background: #dc3545;
+  color: #fff;
+}
+.records-section .delete-btn:hover {
+  background: #a71d2a;
+}
+.records-section .primary-badge {
+  background: #28a745;
+  color: #fff;
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  margin-left: 6px;
+}
+
+
 </style>
 </head>
 <body>
-<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
   <div class="dashboard">
 
    <!-- ✅ Withdrawal Card -->
-<div class="balance-card">
-  <div class="balance-icon">
-    <i class='bx bx-up-arrow-circle'></i>
+   <div class="balance-card">
+    <div class="balance-icon">
+      <i class='bx bx-up-arrow-circle'></i>
+    </div>
+    <div class="balance-info">
+      <h3>Total Withdrawal (USDT)</h3>
+      <p class="amount">$<span id="totalWithdraw">0.00</span></p>
+      <small id="withdrawLevel">“Timing: / Not Ready”</small>
+    </div>
   </div>
-  <div class="balance-info">
-    <h3>Total Withdrawal (USDT)</h3>
-    <p class="amount">$<span id="totalWithdraw">0.00</span></p>
-    <small id="withdrawLevel">“Timing: / Not Ready”</small>
+
+
+  <!-- ✅ Buttons Row -->
+  <div class="clean-buttons">
+    <div class="clean-btn" onclick="loadPage('primary.html')">
+      <i class='bx bx-star'></i>
+      <p>Primary </p>
+    </div>
+    <div class="clean-btn" onclick="loadPage('add-multiple.html')">
+      <i class='bx bx-plus-circle'></i>
+      <p> Multiple</p>
+    </div>
+    <div class="clean-btn" onclick="loadPage('records.html')">
+      <i class='bx bx-book'></i>
+      <p> Record</p>
+    </div>
+  </div>
+
+  <!-- ✅ Content Area -->
+  <div id="contentArea">📄 Select a menu above to load content</div>
+
+  <!-- Withdrawal Info Card -->
+  <div class="info-card">
+    <h3>Withdrawal Section</h3>
+
+    <!-- Green info box -->
+    <div class="info-text-box">
+      Click below to <b>Withdraw Funds</b> securely.
+    </div>
+
+    <!-- Withdraw Button -->
+    <button class="btn-withdraw" onclick="openPopup()">
+      <i class='bx bx-up-arrow-circle'></i> Request Withdrawal
+    </button>
+  </div>
+
+  <!-- Withdrawal History -->
+  <div class="history-section">
+    <div class="history-header-box">
+      <span class="title"> History</span>
+      <button class="refresh-btn" onclick="manualRefresh()">🔄 Refresh</button>
+    </div>
+    <div id="withdrawHistoryList">
+      <p style="text-align:center; color:#666;">Loading...</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Popup -->
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup">
+    <h2 style="margin-bottom:8px;color:#222;">Withdraw Funds</h2>
+    <p style="font-size:13px;color:#666;margin-bottom:10px;">
+      Minimum withdrawal: <b style="color:#28a745;">$20</b><br>
+      Available balance: <b id="popupBalance" style="color:#007bff;">0</b>
+    </p>
+
+    <label>Amount ($)</label>
+    <input type="number" id="withdrawAmount" class="amount-input" placeholder="Enter withdrawal amount">
+
+    <label>Type</label>
+    <input type="text" value="USDT (BEP20)" disabled class="address-input">
+
+    <label>Your Wallet Address</label>
+    <input type="text" id="withdrawAddress" class="address-input" placeholder="Enter your BEP20 address" readonly>
+
+
+    <div class="action-buttons">
+      <button class="close-btn" onclick="cancelWithdraw()">Cancel</button>
+      <button class="submit-btn" onclick="submitWithdraw()">Submit</button>
+    </div>
   </div>
 </div>
 
+<div class="thankyou-popup" id="thankyouPopup">Withdrawal Requested</div>
+<div class="error-popup" id="errorPopup">Enter valid details</div>
 
-    <!-- ✅ Buttons Row -->
-    <div class="clean-buttons">
-      <div class="clean-btn" onclick="loadPage('primary.html')">
-        <i class='bx bx-star'></i>
-        <p>Primary </p>
-      </div>
-      <div class="clean-btn" onclick="loadPage('add-multiple.html')">
-        <i class='bx bx-plus-circle'></i>
-        <p> Multiple</p>
-      </div>
-      <div class="clean-btn" onclick="loadPage('records.html')">
-        <i class='bx bx-book'></i>
-        <p> Record</p>
-      </div>
-    </div>
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
+  <a href="invest.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
+  <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
+  <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
+</div>
 
-    <!-- ✅ Content Area -->
-    <div id="contentArea">📄 Select a menu above to load content</div>
-
-    <!-- Withdrawal Info Card -->
-    <div class="info-card">
-    <h3>Withdrawal Section</h3>
-
-      <!-- Green info box -->
-      <div class="info-text-box">
-        Click below to <b>Withdraw Funds</b> securely.
-      </div>
-
-      <!-- Withdraw Button -->
-      <button class="btn-withdraw" onclick="openPopup()">
-        <i class='bx bx-up-arrow-circle'></i> Request Withdrawal
-      </button>
-    </div>
-
-    <!-- Withdrawal History -->
-    <div class="history-section">
-      <div class="history-header-box">
-        <span class="title"> History</span>
-        <button class="refresh-btn" onclick="manualRefresh()">🔄 Refresh</button>
-      </div>
-      <div id="withdrawHistoryList">
-        <p style="text-align:center; color:#666;">Loading...</p>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Popup -->
-  <div class="popup-overlay" id="popupOverlay">
-    <div class="popup">
-      <h2 style="margin-bottom:8px;color:#222;">Withdraw Funds</h2>
-      <p style="font-size:13px;color:#666;margin-bottom:10px;">
-        Minimum withdrawal: <b style="color:#28a745;">$20</b><br>
-        Available balance: <b id="popupBalance" style="color:#007bff;">0</b>
-      </p>
-
-      <label>Amount ($)</label>
-      <input type="number" id="withdrawAmount" class="amount-input" placeholder="Enter withdrawal amount">
-
-      <label>Type</label>
-      <input type="text" value="USDT (BEP20)" disabled class="address-input">
-
-      <label>Your Wallet Address</label>
-      <input type="text" id="withdrawAddress" class="address-input" placeholder="Enter your BEP20 address" readonly>
-
-
-      <div class="action-buttons">
-        <button class="close-btn" onclick="cancelWithdraw()">Cancel</button>
-        <button class="submit-btn" onclick="submitWithdraw()">Submit</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="thankyou-popup" id="thankyouPopup">Withdrawal Requested</div>
-  <div class="error-popup" id="errorPopup">Enter valid details</div>
-
-  <!-- Bottom Navigation -->
-  <div class="bottom-nav">
-    <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
-    <a href="invest.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
-    <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
-    <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
-  </div>
-
-  <script>
+<script>
     // Highlight active nav
-    const links = document.querySelectorAll("nav a");
-    links.forEach(link => {
-      link.addEventListener("click", function() {
-        links.forEach(l => l.classList.remove("active"));
-        this.classList.add("active");
-      });
+  const links = document.querySelectorAll("nav a");
+  links.forEach(link => {
+    link.addEventListener("click", function() {
+      links.forEach(l => l.classList.remove("active"));
+      this.classList.add("active");
     });
-  </script>
+  });
+</script>
 
-  <!-- ✅ Firebase + Logic -->
+<!-- ✅ Firebase + Logic -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -642,17 +816,17 @@
 
         historyList.innerHTML += `
         <div class="withdraw-card">
-          <div class="withdraw-card-header">
-            <span class="badge">Withdraw</span>
-            <span class="withdraw-status ${statusClass}">${data.status || "Pending"}</span>
-          </div>
-          <div class="withdraw-row"><span class="label">Balance</span><span class="value">$${data.amount || 0}</span></div>
-          <div class="withdraw-row"><span class="label">Type</span><small>${data.type || "USDT (BEP20)"}</small></div>
-          <div class="withdraw-row"><span class="label">Time</span><small>${dateStr}</small></div>
-          <div class="withdraw-row"><span class="label">OrderId</span>
-            <span><small>${data.orderId || docSnap.id}</small>
-            <button class="copy-btn" onclick="copyOrderId('${data.orderId || docSnap.id}')">Copy</button></span>
-          </div>
+        <div class="withdraw-card-header">
+        <span class="badge">Withdraw</span>
+        <span class="withdraw-status ${statusClass}">${data.status || "Pending"}</span>
+        </div>
+        <div class="withdraw-row"><span class="label">Balance</span><span class="value">$${data.amount || 0}</span></div>
+        <div class="withdraw-row"><span class="label">Type</span><small>${data.type || "USDT (BEP20)"}</small></div>
+        <div class="withdraw-row"><span class="label">Time</span><small>${dateStr}</small></div>
+        <div class="withdraw-row"><span class="label">OrderId</span>
+        <span><small>${data.orderId || docSnap.id}</small>
+        <button class="copy-btn" onclick="copyOrderId('${data.orderId || docSnap.id}')">Copy</button></span>
+        </div>
         </div>`;
       });
     } catch (err) {
@@ -710,8 +884,8 @@
       else if (totalFunds >= 500) timing = "10 Days";
       else if (totalFunds >= 200) timing = "20 Days";
 
-     document.getElementById("withdrawLevel").textContent =
-    "Release In " + timing;
+      document.getElementById("withdrawLevel").textContent =
+      "Release In " + timing;
 
 
       // 🔹 Total completed withdrawals
@@ -735,27 +909,27 @@
   // ✅ Load external pages
   window.loadPage = function (page) {
     fetch(page)
-      .then(res => res.text())
-      .then(data => {
-        const content = document.getElementById("contentArea");
-        content.innerHTML = data;
+    .then(res => res.text())
+    .then(data => {
+      const content = document.getElementById("contentArea");
+      content.innerHTML = data;
 
-        const scripts = content.querySelectorAll("script");
-        scripts.forEach(oldScript => {
-          const newScript = document.createElement("script");
-          if (oldScript.type) newScript.type = oldScript.type;
-          if (oldScript.src) {
-            newScript.src = oldScript.src;
-          } else {
-            newScript.textContent = oldScript.textContent;
-          }
-          document.body.appendChild(newScript);
-          oldScript.remove();
-        });
-      })
-      .catch(() => {
-        document.getElementById("contentArea").innerHTML = "<p style='color:red'>Error loading page</p>";
+      const scripts = content.querySelectorAll("script");
+      scripts.forEach(oldScript => {
+        const newScript = document.createElement("script");
+        if (oldScript.type) newScript.type = oldScript.type;
+        if (oldScript.src) {
+          newScript.src = oldScript.src;
+        } else {
+          newScript.textContent = oldScript.textContent;
+        }
+        document.body.appendChild(newScript);
+        oldScript.remove();
       });
+    })
+    .catch(() => {
+      document.getElementById("contentArea").innerHTML = "<p style='color:red'>Error loading page</p>";
+    });
   };
 
   // ❌ Disable right click + copy etc
@@ -771,5 +945,4 @@
 </script>
 </body>
 </html>
-
 
