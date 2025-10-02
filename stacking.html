@@ -333,7 +333,6 @@
     appId: "1:204937458487:web:cc27ece1249999279f60b2",
     measurementId: "G-HG0Q8ZHT6G"
   };
-  // =======================================================
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -347,15 +346,14 @@
   let currentUserId = null;
   let currentPlanObj = null;
 
-  // small popup
+  // ✅ small popup
   window.showPopup = (msg) => {
     document.getElementById("popupMessage").textContent = msg;
     document.getElementById("popup").style.display = "flex";
     setTimeout(()=>{ document.getElementById("popup").style.display = "none"; }, 2500);
   };
 
-
-   // ✅ Countdown function
+  // ✅ Countdown
   function startCountdown(elId, endTime){
     const el = document.getElementById(elId);
     if(!el) return;
@@ -389,7 +387,6 @@
   }
 
   // ✅ Investment history listener
-// ✅ Investment history listener (with expiry + countdown)
   function listenInvestments(){
     const invCol = collection(db, "users", currentUserId, "investments");
     const q = query(invCol, orderBy("startTime","desc"));
@@ -412,15 +409,13 @@
         const id = docSnap.id;
 
         const cls = d.status==="Completed" ? "status-complete" : 
-        d.status==="Active" ? "status-active" : "status-cancel";
+                    d.status==="Active" ? "status-active" : "status-cancel";
 
-      // ✅ countdown placeholder
         let countdownHtml = "";
         if(d.status==="Active" && d.endTime){
           countdownHtml = `<div class="countdown-box">
           <div class="countdown" id="cd_${id}">Loading...</div>
           </div>`;
-        // delay thoda dena so DOM render ho jaye
           setTimeout(()=>startCountdown("cd_"+id, d.endTime.seconds*1000), 200);
         }
 
@@ -446,8 +441,7 @@
     });
   }
 
-
-  // ✅ User summary listener
+  // ✅ User summary
   function listenUserSummary(){
     const uRef = doc(db, "users", currentUserId);
     onSnapshot(uRef, snap => {
@@ -458,7 +452,7 @@
     });
   }
 
-  // Auth listener
+  // ✅ Auth listener
   onAuthStateChanged(auth, user => {
     if(!user){
       showPopup("Not signed in. Redirect to login.");
@@ -469,164 +463,196 @@
     listenInvestments();
     listenUserSummary();
 
-    // ✅ 1 minute me matured check
     setInterval(()=>processMatured(currentUserId), 60000);
     processMatured(currentUserId).catch(e=>console.error(e));
 
-    // ✅ 5 minute me accrual check
     setInterval(()=>processAccrual(currentUserId), 5*60*1000);
   });
 
   // ✅ Open modal
-window.openModal = function(planName, minAmount, maxAmount, dailyRate, imgSrc){
-  currentPlanObj = { planName, minAmount, maxAmount, dailyRate, imgSrc };
-
-  document.getElementById("modalPlan").textContent = planName;
-  document.getElementById("modalAmount").value = `${minAmount} - ${maxAmount} USDT`;
-  document.getElementById("modalReturn").value = dailyRate + "% per day";
-  document.getElementById("modalImg").src = imgSrc;
-
-  document.getElementById("stakeModal").style.display = "flex";
-};
-
-// ✅ Close modal
-window.closeModal = function(){
-  document.getElementById("stakeModal").style.display = "none";
-  currentPlanObj = null;
-};
-
-
-  // ---- Create stake (extra fields add kiye accruedIncome + lastAccrual) ----
-// ---- process matured (3-level income distribution) ----
-async function processMatured(uid){
-  if(!uid) return;
-  const invCol = collection(db, "users", uid, "investments");
-  const q = query(invCol, where("status","==","Active"));
-  const snap = await getDocs(q);
-  if(snap.empty) return;
-  const now = Date.now();
-
-  for(const docSnap of snap.docs){
-    const d = docSnap.data();
-    const id = docSnap.id;
-    if(!d.startTime || !d.endTime) continue;
-
-    const endMs = d.endTime.seconds * 1000;
-    if(now < endMs) continue;
-
-    const invRef = doc(db, "users", uid, "investments", id);
-    const userRef = doc(db, "users", uid);
-
-    try{
-      await runTransaction(db, async (tx) => {
-        const inv = await tx.get(invRef);
-        if(!inv.exists()) return;
-        const invData = inv.data();
-        if(invData.status !== "Active") return;
-
-        const amount = invData.amount || 0;
-        const dailyRate = Number(invData.dailyRate) || 0;
-        const durationDays = Math.round((invData.endTime.seconds - invData.startTime.seconds) / (24*60*60));
-        const profit = (amount * dailyRate / 100) * durationDays;
-        const possibleIncome = Number(profit.toFixed(6));
-
-        // Percentages
-        const userPercent = invData.userPercent ?? 0.70;
-        const u1Percent   = invData.upline1Percent ?? 0.17;
-        const u2Percent   = invData.upline2Percent ?? 0.08;
-        const u3Percent   = invData.upline3Percent ?? 0.05;
-
-        // Shares
-        const userShare = +(profit * userPercent).toFixed(6);
-        const u1Share   = +(profit * u1Percent).toFixed(6);
-        const u2Share   = +(profit * u2Percent).toFixed(6);
-        const u3Share   = +(profit * u3Percent).toFixed(6);
-
-        // ✅ Update investment status
-        tx.update(invRef, {
-          status: "Completed",
-          possibleIncome,
-          accruedIncome: 0,
-          endTime: serverTimestamp()
-        });
-
-        // ✅ Update user wallet
-        const uSnap = await tx.get(userRef);
-        const userBal = (uSnap.exists() && uSnap.data().walletBalance) ? uSnap.data().walletBalance : 0;
-
-        tx.update(userRef, { 
-          walletBalance: userBal + amount + userShare,
-          stakingIncome: (uSnap.data().stakingIncome || 0) + userShare,
-          totalIncome: (uSnap.data().totalIncome || 0) + profit
-        });
-
-        // ✅ Pay uplines
-        const uplineIds = [uSnap.data().upline1, uSnap.data().upline2, uSnap.data().upline3];
-        const uplineShares = [u1Share, u2Share, u3Share];
-
-        for(let i=0; i<uplineIds.length; i++){
-          if(!uplineIds[i]) continue; // skip if no upline
-          const upRef = doc(db, "users", uplineIds[i]);
-          const upSnap = await tx.get(upRef);
-          if(!upSnap.exists()) continue;
-
-          const upBal = upSnap.data().walletBalance || 0;
-          tx.update(upRef, {
-            walletBalance: upBal + uplineShares[i],
-            referralIncome: (upSnap.data().referralIncome || 0) + uplineShares[i],
-            totalIncome: (upSnap.data().totalIncome || 0) + uplineShares[i]
-          });
-        }
-      });
-
-      showPopup("Stake matured & income distributed (3-level) ✅");
-
-    }catch(err){
-      console.error("Error processing matured", err);
-    }
-  }
-}
-
-
-// modal background click to close
-  window.onclick = function(e){
-    const modal = document.getElementById("stakeModal");
-    if(e.target === modal) modal.style.display = "none";
+  window.openModal = function(planName, minAmount, maxAmount, dailyRate, imgSrc){
+    currentPlanObj = { planName, minAmount, maxAmount, dailyRate, imgSrc };
+    document.getElementById("modalPlan").textContent = planName;
+    document.getElementById("modalAmount").value = `${minAmount} - ${maxAmount} USDT`;
+    document.getElementById("modalReturn").value = dailyRate + "% per day";
+    document.getElementById("modalImg").src = imgSrc;
+    document.getElementById("stakeModal").style.display = "flex";
   };
 
-// ✅ Section switch fix
-  window.showSection = function(sectionId, event){
-  // Sab sections hide kar do safely
-    document.querySelectorAll(".section").forEach(s => {
-      if(s) s.style.display = "none";
-    });
+  window.closeModal = function(){
+    document.getElementById("stakeModal").style.display = "none";
+    currentPlanObj = null;
+  };
 
-  // Sirf selected section dikhana
-    const sec = document.getElementById(sectionId);
-    if(sec){  
-      sec.style.display = "block";
-    } else {
-      console.warn("Section not found: ", sectionId);
+  // ✅ Confirm Stake (possibleIncome add kiya)
+  window.confirmStake = async function(){
+    if(!currentUserId){ showPopup("User not authenticated"); return; }
+    if(!currentPlanObj){ showPopup("Plan not selected"); return; }
+
+    const amount = parseFloat(stakeInput.value);
+    if(isNaN(amount) || amount <= 0){ showPopup("Enter valid amount"); return; }
+    if(amount < currentPlanObj.minAmount || amount > currentPlanObj.maxAmount){
+      showPopup(`Amount must be between ${currentPlanObj.minAmount} and ${currentPlanObj.maxAmount}`);
       return;
     }
 
-  // Navbar active class set karna
-    document.querySelectorAll(".nav a").forEach(a => a.classList.remove("active"));
-    if(event && event.target) event.target.classList.add("active");
+    closeModal();
 
-  // Record section ke liye special handling
-    const stakingContainer = document.querySelector(".staking-container");
-    const historyWrap = document.querySelector(".history-wrap");
+    const userRef = doc(db, "users", currentUserId);
+    try{
+      await runTransaction(db, async (tx) => {
+        const uSnap = await tx.get(userRef);
+        if(!uSnap.exists()) throw "User data missing";
+        const balance = uSnap.data().walletBalance || 0;
+        if(balance < amount) throw "Insufficient balance";
 
-    if(sectionId === "record"){
-      if(stakingContainer) stakingContainer.style.display = "none";
-      if(historyWrap) historyWrap.style.display = "block";
-    } else {
-      if(stakingContainer) stakingContainer.style.display = "grid";
-      if(historyWrap) historyWrap.style.display = "block";
+        tx.update(userRef, { 
+          walletBalance: balance - amount,
+          totalStack: (uSnap.data().totalStack || 0) + amount
+        });
+
+        let days = 1; 
+        if(currentPlanObj.planName.includes("15")) days = 15;
+        else if(currentPlanObj.planName.includes("30")) days = 30;
+
+        const expiryMs = Date.now() + days*24*60*60*1000;
+        const expiryDate = new Date(expiryMs);
+
+        // ✅ possibleIncome calculate
+        const dailyProfit = amount * (currentPlanObj.dailyRate / 100);
+        const userDailyShare = dailyProfit * 0.70;  
+        const possibleIncome = +(userDailyShare * days).toFixed(2);
+
+        const stakeDoc = {
+          amount,
+          startTime: serverTimestamp(),
+          endTime: Timestamp.fromDate(expiryDate),
+          status: "Active",
+          dailyRate: currentPlanObj.dailyRate,
+          planName: currentPlanObj.planName,
+          imgSrc: currentPlanObj.imgSrc || "default.png",
+          possibleIncome: possibleIncome,
+          accruedIncome: 0,
+          lastAccrual: serverTimestamp(),
+          userPercent: 0.70,
+          upline1Percent: 0.17,
+          upline2Percent: 0.08,
+          upline3Percent: 0.05
+        };
+
+        const invCol = collection(db, "users", currentUserId, "investments");
+        await addDoc(invCol, stakeDoc);
+      });
+      showPopup("Stake created successfully ✅");
+    }catch(err){
+      console.error(err);
+      showPopup(typeof err === "string" ? err : "Error creating stake");
     }
   };
+
+  // ✅ process matured (3-level distribution logic)
+  async function processMatured(uid){
+    if(!uid) return;
+    const invCol = collection(db, "users", uid, "investments");
+    const q = query(invCol, where("status","==","Active"));
+    const snap = await getDocs(q);
+    if(snap.empty) return;
+    const now = Date.now();
+
+    for(const docSnap of snap.docs){
+      const d = docSnap.data();
+      const id = docSnap.id;
+      if(!d.startTime || !d.endTime) continue;
+
+      const endMs = d.endTime.seconds * 1000;
+      if(now < endMs) continue;
+
+      const invRef = doc(db, "users", uid, "investments", id);
+      const userRef = doc(db, "users", uid);
+
+      try{
+        await runTransaction(db, async (tx) => {
+          const inv = await tx.get(invRef);
+          if(!inv.exists()) return;
+          const invData = inv.data();
+          if(invData.status !== "Active") return;
+
+          const amount = invData.amount || 0;
+          const dailyRate = Number(invData.dailyRate) || 0;
+          const durationDays = Math.round((invData.endTime.seconds - invData.startTime.seconds) / (24*60*60));
+          const profit = (amount * dailyRate / 100) * durationDays;
+          const possibleIncome = Number(profit.toFixed(6));
+
+          // Percentages
+          const userPercent = invData.userPercent ?? 0.70;
+          const u1Percent   = invData.upline1Percent ?? 0.17;
+          const u2Percent   = invData.upline2Percent ?? 0.08;
+          const u3Percent   = invData.upline3Percent ?? 0.05;
+
+          // Shares
+          const userShare = +(profit * userPercent).toFixed(6);
+          const u1Share   = +(profit * u1Percent).toFixed(6);
+          const u2Share   = +(profit * u2Percent).toFixed(6);
+          const u3Share   = +(profit * u3Percent).toFixed(6);
+
+          // ✅ Update investment status
+          tx.update(invRef, {
+            status: "Completed",
+            possibleIncome,
+            accruedIncome: 0,
+            endTime: serverTimestamp()
+          });
+
+          // ✅ Update user wallet
+          const uSnap = await tx.get(userRef);
+          const userBal = (uSnap.exists() && uSnap.data().walletBalance) ? uSnap.data().walletBalance : 0;
+
+          tx.update(userRef, { 
+            walletBalance: userBal + amount + userShare,
+            stakingIncome: (uSnap.data().stakingIncome || 0) + userShare,
+            totalIncome: (uSnap.data().totalIncome || 0) + profit
+          });
+
+          // ✅ Pay uplines
+          const uplineIds = [uSnap.data().upline1, uSnap.data().upline2, uSnap.data().upline3];
+          const uplineShares = [u1Share, u2Share, u3Share];
+
+          for(let i=0; i<uplineIds.length; i++){
+            if(!uplineIds[i]) continue; 
+            const upRef = doc(db, "users", uplineIds[i]);
+            const upSnap = await tx.get(upRef);
+            if(!upSnap.exists()) continue;
+
+            const upBal = upSnap.data().walletBalance || 0;
+            tx.update(upRef, {
+              walletBalance: upBal + uplineShares[i],
+              referralIncome: (upSnap.data().referralIncome || 0) + uplineShares[i],
+              totalIncome: (upSnap.data().totalIncome || 0) + uplineShares[i]
+            });
+          }
+        });
+
+        showPopup("Stake matured & income distributed ✅");
+
+      }catch(err){
+        console.error("Error processing matured", err);
+      }
+    }
+  }
+
+  // ✅ Section switch function
+  window.showSection = function(sectionId){
+    document.querySelectorAll(".section").forEach(sec => sec.style.display="none");
+    const target = document.getElementById(sectionId);
+    if(target) target.style.display = "block";
+
+    document.querySelectorAll(".nav a").forEach(a=>a.classList.remove("active"));
+    const navLink = [...document.querySelectorAll(".nav a")]
+      .find(a=>a.getAttribute("onclick")?.includes(sectionId));
+    if(navLink) navLink.classList.add("active");
+  };
 </script>
+
 
 </body>
 </html>
