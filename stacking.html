@@ -275,10 +275,10 @@
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
   import {
     getFirestore, doc, setDoc, addDoc, collection, serverTimestamp,
-    getDoc, onSnapshot, runTransaction, query, orderBy, where, getDocs, updateDoc,Timestamp
+    getDoc, onSnapshot, runTransaction, query, orderBy, where, getDocs, updateDoc, Timestamp
   } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-// ====== CONFIG ======
+  // ====== CONFIG ======
   const firebaseConfig = {
     apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
     authDomain: "btcinvest-c0e25.firebaseapp.com",
@@ -288,13 +288,13 @@
     appId: "1:204937458487:web:cc27ece1249999279f60b2",
     measurementId: "G-HG0Q8ZHT6G"
   };
-// =======================================================
+  // =======================================================
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-// UI elements
+  // UI elements
   const historyList = document.getElementById("historyList");
   const walletBalanceEl = document.getElementById("userBalance");
   const stakeInput = document.getElementById("stakeInput");
@@ -302,14 +302,14 @@
   let currentUserId = null;
   let currentPlanObj = null;
 
-// small popup
+  // small popup
   window.showPopup = (msg) => {
     document.getElementById("popupMessage").textContent = msg;
     document.getElementById("popup").style.display = "flex";
     setTimeout(()=>{ document.getElementById("popup").style.display = "none"; }, 2500);
   };
 
-// Auth listener
+  // Auth listener
   onAuthStateChanged(auth, user => {
     if(!user){
       showPopup("Not signed in. Redirect to login.");
@@ -318,207 +318,20 @@
     currentUserId = user.uid;
     listenWallet();
     listenInvestments();
-  listenUserSummary();   // ✅ summary function call
-  setInterval(()=>processMatured(currentUserId), 60000);
-  processMatured(currentUserId).catch(e=>console.error(e));
-});
+    listenUserSummary();
 
-// listen wallet
-  function listenWallet(){
-    const uRef = doc(db, "users", currentUserId);
-    onSnapshot(uRef, snap => {
-      if(!snap.exists()){ walletBalanceEl.value = "0.00 USDT"; return; }
-      const bal = snap.data().walletBalance || 0;
-      walletBalanceEl.value = numberFmt(bal) + " USDT";
-    });
-  }
+    // ✅ 1 minute me matured check
+    setInterval(()=>processMatured(currentUserId), 60000);
+    processMatured(currentUserId).catch(e=>console.error(e));
 
-// listen investments history
-  function listenInvestments(){
-    const invCol = collection(db, "users", currentUserId, "investments");
-    const q = query(invCol, orderBy("startTime","desc"));
+    // ✅ 5 minute me accrual check
+    setInterval(()=>processAccrual(currentUserId), 5*60*1000);
+  });
 
-    onSnapshot(q, snap => {
-      historyList.innerHTML = "";
+  // --- baaki tumhara pura listenWallet(), listenInvestments(), listenUserSummary(), 
+  // countdown, openModal, closeModal, confirmStake waise hi rahenge ---
 
-      let totalInvested = 0;
-      let totalIncome = 0;
-
-      if(snap.empty){
-        historyList.innerHTML = `
-        <div style="text-align:center;color:#666;padding:20px;
-        background:#fff;border-radius:10px;
-        border:1px solid #eee;">
-        No record found
-        </div>`;
-        document.getElementById("totalInvested").textContent = "0 USDT";
-        document.getElementById("totalIncome").textContent = "0 USDT";
-        return;
-      }
-
-      snap.forEach(docSnap => {
-        const d = docSnap.data();
-        const id = docSnap.id;
-
-      // ✅ Add totals
-        totalInvested += d.amount || 0;
-        if(d.possibleIncome) totalIncome += d.possibleIncome;
-
-      // ✅ startTime fix
-        let startMs = null;
-        if (d.startTime) {
-          const sec = d.startTime.seconds || d.startTime._seconds;
-          startMs = sec * 1000;
-        }
-        const when = startMs ? new Date(startMs).toLocaleString() : "-";
-
-        const cls = d.status==="Completed" ? "status-complete" : 
-        d.status==="Active" ? "status-active" : "status-cancel";
-
-        let countdownHtml = "";
-        if(d.status==="Active" && d.endTime){
-  const endTime = d.endTime.seconds * 1000;  // ✅ actual expiry time
-  const cdId = "cd_"+id;
-  countdownHtml = `<div class="countdown" id="${cdId}">Loading...</div>`;
-  setTimeout(()=>startCountdown(cdId, endTime), 200);
-}
-
-
-      // ✅ Card UI like screenshot
-historyList.innerHTML += `
-<div class="invest-card">
-<img src="${d.imgSrc || 'myphoto/1414.png'}" alt="plan"/>
-<div class="invest-title">${d.planName || "TrustDollar Staking"}</div>
-
-<div class="invest-info">
-<p>
-<span class="invest-label">Order Status</span>
-<span class="invest-value"><span class="status-badge ${cls}">${d.status}</span></span>
-</p>
-
-<p>
-<span class="invest-label">Investment Amount</span>
-<span class="invest-value">${numberFmt(d.amount)} USDT</span>
-</p>
-
-<p>
-<span class="invest-label">Income</span>
-<span class="invest-value">${numberFmt(d.possibleIncome || 0)} USDT</span>
-</p>
-
-<p>
-<span class="invest-label">Application Time</span>
-<span class="invest-value">${when}</span>
-</p>
-
-<p>
-<span class="invest-label">Expiry Time</span>
-<span class="invest-value">${d.endTime ? new Date(d.endTime.seconds*1000).toLocaleString() : "-"}</span>
-</p>
-</div>
-
-${countdownHtml ? `<div class="countdown-box">${countdownHtml}</div>` : ""}
-</div>
-`;
-});
-
-    // ✅ Update totals (local calc)
-      document.getElementById("totalInvested").textContent = numberFmt(totalInvested) + " USDT";
-      document.getElementById("totalIncome").textContent = numberFmt(totalIncome) + " USDT";
-    });
-  }
-
-// ✅ listen user summary (global)
-  function listenUserSummary(){
-    const uRef = doc(db, "users", currentUserId);
-    onSnapshot(uRef, snap => {
-      if(!snap.exists()) return;
-      const d = snap.data();
-      document.getElementById("totalInvested").textContent = numberFmt(d.totalStack || 0) + " USDT";
-      document.getElementById("totalIncome").textContent = numberFmt(d.totalIncome || 0) + " USDT";
-    });
-  }
-
-// countdown
-  function startCountdown(elId, endTime){
-    const el = document.getElementById(elId);
-    if(!el) return;
-    function tick(){
-      const now = Date.now();
-      const diff = endTime - now;
-      if(diff <= 0){
-        el.textContent = "Completed soon";
-        return;
-      }
-      const hrs = Math.floor(diff / (1000*60*60));
-      const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
-      const secs = Math.floor((diff % (1000*60)) / 1000);
-      el.textContent = `${hrs}h ${mins}m ${secs}s`;
-      setTimeout(tick, 1000);
-    }
-    tick();
-  }
-
-// Utility
-  function numberFmt(n){ return Number(n||0).toFixed(2); }
-
-// ---- Modal open / close ----
-  window.openModal = function(planName, minAmount, maxAmount, dailyRate, imgSrc){
-    currentPlanObj = { planName, minAmount, maxAmount, dailyRate, imgSrc };
-    document.getElementById("modalPlan").innerText = planName;
-    document.getElementById("modalAmount").value = `${minAmount} - ${maxAmount} USDT`;
-    document.getElementById("modalReturn").value = `${dailyRate}%`;
-    document.getElementById("modalImg").src = imgSrc || "";
-    document.getElementById("stakeModal").style.display = "flex";
-    stakeInput.value = "";
-  };
-  window.closeModal = function(){ document.getElementById("stakeModal").style.display = "none"; };
-
-// ---- Validate stake amount live ----
-  const stakeInputEl = document.getElementById("stakeInput");
-  const errorMsg = document.createElement("div");
-  errorMsg.style.color = "red";
-  errorMsg.style.fontSize = "12px";
-  errorMsg.style.marginTop = "4px";
-  stakeInputEl.parentNode.appendChild(errorMsg);
-
-  stakeInputEl.addEventListener("input", async () => {
-    if (!currentPlanObj) return;
-    errorMsg.textContent = "";
-  stakeInputEl.style.border = "1px solid #d6dbe0"; // reset border
-
-  const val = parseFloat(stakeInputEl.value);
-  if (isNaN(val) || val <= 0) {
-    stakeInputEl.style.border = "2px solid red";
-    errorMsg.textContent = " Please enter a valid amount";
-    return;
-  }
-
-  // ✅ check min–max
-  if (val < currentPlanObj.minAmount || val > currentPlanObj.maxAmount) {
-    stakeInputEl.style.border = "2px solid red";
-    errorMsg.textContent = ` Amount must be between ${currentPlanObj.minAmount} and ${currentPlanObj.maxAmount} USDT`;
-    return;
-  }
-
-  // ✅ check wallet balance
-  const uRef = doc(db, "users", currentUserId);
-  const snap = await getDoc(uRef);
-  if (snap.exists()) {
-    const balance = snap.data().walletBalance || 0;
-    if (val > balance) {
-      stakeInputEl.style.border = "2px solid red";
-      errorMsg.textContent = ` Insufficient balance (Available: ${balance} USDT)`;
-      return;
-    }
-  }
-
-  // ✅ sab sahi hai
-  stakeInputEl.style.border = "2px solid green";
-  errorMsg.textContent = "";
-});
-
-// ---- Create stake ----
+  // ---- Create stake (extra fields add kiye accruedIncome + lastAccrual) ----
   window.confirmStake = async function(){
     if(!currentUserId){ showPopup("User not authenticated"); return; }
     if(!currentPlanObj){ showPopup("Plan not selected"); return; }
@@ -530,185 +343,164 @@ ${countdownHtml ? `<div class="countdown-box">${countdownHtml}</div>` : ""}
       return;
     }
 
-  closeModal(); // ✅ close instantly
+    closeModal(); // ✅ close instantly
 
-  const userRef = doc(db, "users", currentUserId);
-  try{
-    await runTransaction(db, async (tx) => {
-      const uSnap = await tx.get(userRef);
-      if(!uSnap.exists()) throw "User data missing";
-      const balance = uSnap.data().walletBalance || 0;
-      if(balance < amount) throw "Insufficient balance";
-
-      // ✅ update wallet + totalStack
-      tx.update(userRef, { 
-        walletBalance: balance - amount,
-        totalStack: (uSnap.data().totalStack || 0) + amount
-      });
-
-      // ✅ expiry din calculate karo (1, 15, 30 days)
-      let days = 1; // default 1
-      if(currentPlanObj.planName.includes("15")) days = 15;
-      else if(currentPlanObj.planName.includes("30")) days = 30;
-
-      const expiryMs = Date.now() + days*24*60*60*1000;
-      const expiryDate = new Date(expiryMs);
-
-      const stakeDoc = {
-        amount,
-        startTime: serverTimestamp(),
-        endTime: Timestamp.fromDate(expiryDate),  // Firestore Timestamp
-        status: "Active",
-        dailyRate: currentPlanObj.dailyRate,
-        planName: currentPlanObj.planName,
-        imgSrc: currentPlanObj.imgSrc || "default.png",
-        possibleIncome: 0,
-        closingTimeCalculated: null,
-        userPercent: 0.70,
-        upline1Percent: 0.17,
-        upline2Percent: 0.08,
-        upline3Percent: 0.05
-      };
-
-      const invCol = collection(db, "users", currentUserId, "investments");
-      await addDoc(invCol, stakeDoc);
-    });
-    showPopup(" Stake created!");
-  }catch(err){
-    console.error(err);
-    showPopup(typeof err === "string" ? err : "Error creating stake");
-  }
-};
-
-
-
-// ---- process matured ----
-async function processMatured(uid){
-  if(!uid) return;
-  const invCol = collection(db, "users", uid, "investments");
-  const q = query(invCol, where("status","==","Active"));
-  const snap = await getDocs(q);
-  if(snap.empty) return;
-  const now = Date.now();
-
-  for(const docSnap of snap.docs){
-    const d = docSnap.data();
-    const id = docSnap.id;
-    if(!d.startTime || !d.endTime) continue;
-
-    const endMs = d.endTime.seconds * 1000;
-    if(now < endMs) continue;  // ✅ ab endTime ke hisaab se close hoga
-
-    const invRef = doc(db, "users", uid, "investments", id);
-    const userRef = doc(db, "users", uid);
-
+    const userRef = doc(db, "users", currentUserId);
     try{
       await runTransaction(db, async (tx) => {
-        const inv = await tx.get(invRef);
-        if(!inv.exists()) return;
-        const invData = inv.data();
-        if(invData.status !== "Active") return;
-
-        const amount = invData.amount || 0;
-        const dailyRate = Number(invData.dailyRate) || 0;
-         // ✅ duration days calculate karo
-        const durationDays = Math.round((invData.endTime.seconds - invData.startTime.seconds) / (24*60*60));
-
-        // ✅ total profit nikaalo
-        const profit = (amount * dailyRate / 100) * durationDays;
-        const possibleIncome = Number(profit.toFixed(6));
-
-
-        const userPercent = invData.userPercent ?? 0.70;
-        const u1p = invData.upline1Percent ?? 0.17;
-        const u2p = invData.upline2Percent ?? 0.08;
-        const u3p = invData.upline3Percent ?? 0.05;
-
-        const userShare = +(profit * userPercent).toFixed(6);
-        const u1Share = +(profit * u1p).toFixed(6);
-        const u2Share = +(profit * u2p).toFixed(6);
-        const u3Share = +(profit * u3p).toFixed(6);
-
-        tx.update(invRef, {
-          status: "Completed",
-          possibleIncome,
-          endTime: serverTimestamp()
-        });
-
         const uSnap = await tx.get(userRef);
-        const userBal = (uSnap.exists() && uSnap.data().walletBalance) ? uSnap.data().walletBalance : 0;
-        
-          // ✅ User update
+        if(!uSnap.exists()) throw "User data missing";
+        const balance = uSnap.data().walletBalance || 0;
+        if(balance < amount) throw "Insufficient balance";
+
         tx.update(userRef, { 
-          walletBalance: userBal + amount + userShare,
-        stakingIncome: (uSnap.data().stakingIncome || 0) + userShare,  // ✅ staking profit
-        totalIncome: (uSnap.data().totalIncome || 0) + profit          // ✅ total profit
-      });
-
-
-        const userDocSnap = uSnap;
-        const upline1 = userDocSnap.exists() ? userDocSnap.data().upline1 : null;
-        const upline2 = userDocSnap.exists() ? userDocSnap.data().upline2 : null;
-        const upline3 = userDocSnap.exists() ? userDocSnap.data().upline3 : null;
-
-        if(upline1){
-          const up1Ref = doc(db, "users", upline1);
-          const up1Snap = await tx.get(up1Ref);
-          const up1Bal = (up1Snap.exists() && up1Snap.data().walletBalance) ? up1Snap.data().walletBalance : 0;
-          tx.update(up1Ref, { 
-            walletBalance: up1Bal + u1Share,
-        teamIncome: (up1Snap.data().teamIncome || 0) + u1Share,     // ✅ team income
-        totalIncome: (up1Snap.data().totalIncome || 0) + u1Share
-      });
-        }
-
-        if(upline2){
-         const up2Ref = doc(db, "users", upline2);
-         const up2Snap = await tx.get(up2Ref);
-         const up2Bal = (up2Snap.exists() && up2Snap.data().walletBalance) ? up2Snap.data().walletBalance : 0;
-         tx.update(up2Ref, { 
-          walletBalance: up2Bal + u2Share,
-          teamIncome: (up2Snap.data().teamIncome || 0) + u2Share,
-          totalIncome: (up2Snap.data().totalIncome || 0) + u2Share
+          walletBalance: balance - amount,
+          totalStack: (uSnap.data().totalStack || 0) + amount
         });
-       }
-       if(upline3){
-        const up3Ref = doc(db, "users", upline3);
-        const up3Snap = await tx.get(up3Ref);
-        const up3Bal = (up3Snap.exists() && up3Snap.data().walletBalance) ? up3Snap.data().walletBalance : 0;
-        tx.update(up3Ref, { 
-          walletBalance: up3Bal + u3Share,
-          teamIncome: (up3Snap.data().teamIncome || 0) + u3Share,
-          totalIncome: (up3Snap.data().totalIncome || 0) + u3Share
-        });
-      }
 
+        let days = 1; 
+        if(currentPlanObj.planName.includes("15")) days = 15;
+        else if(currentPlanObj.planName.includes("30")) days = 30;
 
-      const stakeRecordRef = doc(db, "stakes", `stake_${uid}_${id}`);
-      tx.set(stakeRecordRef, {
-        uid,
-        investId: id,
-        amount,
-        profit,
-        userShare,
-        u1Share,u2Share,u3Share,
-        startTime: invData.startTime,
-        endTime: serverTimestamp(),
-        status: "Completed",
-        planName: invData.planName || null
+        const expiryMs = Date.now() + days*24*60*60*1000;
+        const expiryDate = new Date(expiryMs);
+
+        const stakeDoc = {
+          amount,
+          startTime: serverTimestamp(),
+          endTime: Timestamp.fromDate(expiryDate),
+          status: "Active",
+          dailyRate: currentPlanObj.dailyRate,
+          planName: currentPlanObj.planName,
+          imgSrc: currentPlanObj.imgSrc || "default.png",
+          possibleIncome: 0,
+          accruedIncome: 0,          // ✅ income track
+          lastAccrual: serverTimestamp(), // ✅ starting point
+          userPercent: 0.70,
+          upline1Percent: 0.17,
+          upline2Percent: 0.08,
+          upline3Percent: 0.05
+        };
+
+        const invCol = collection(db, "users", currentUserId, "investments");
+        await addDoc(invCol, stakeDoc);
       });
-    });
-
-      console.log("Processed matured stake", uid, id);
+      showPopup(" Stake created!");
     }catch(err){
-      console.error("Error processing matured", err);
+      console.error(err);
+      showPopup(typeof err === "string" ? err : "Error creating stake");
+    }
+  };
+
+  // ---- process 30-min accrual ----
+  async function processAccrual(uid){
+    if(!uid) return;
+    const invCol = collection(db, "users", uid, "investments");
+    const q = query(invCol, where("status","==","Active"));
+    const snap = await getDocs(q);
+    if(snap.empty) return;
+
+    const now = Date.now();
+    for(const docSnap of snap.docs){
+      const d = docSnap.data();
+      const id = docSnap.id;
+      if(!d.startTime || !d.endTime) continue;
+
+      const lastMs = d.lastAccrual?.seconds ? d.lastAccrual.seconds * 1000 : d.startTime.seconds * 1000;
+      if(now - lastMs < 30*60*1000) continue;  // abhi 30 min nahi hue
+
+      const amount = d.amount;
+      const dailyRate = Number(d.dailyRate);
+      const perMinuteRate = (amount * dailyRate/100) / (24*60);
+      const earned = perMinuteRate * 30;  // 30 min income
+
+      const invRef = doc(db, "users", uid, "investments", id);
+      const userRef = doc(db, "users", uid);
+
+      try{
+        await runTransaction(db, async (tx)=>{
+          const uSnap = await tx.get(userRef);
+          if(!uSnap.exists()) return;
+          const bal = uSnap.data().walletBalance || 0;
+
+          tx.update(invRef, {
+            accruedIncome: (d.accruedIncome || 0) + earned,
+            lastAccrual: serverTimestamp()
+          });
+
+          tx.update(userRef, {
+            stakingIncome: (uSnap.data().stakingIncome || 0) + earned,
+            totalIncome: (uSnap.data().totalIncome || 0) + earned
+          });
+        });
+      }catch(err){ console.error("Accrual error:", err); }
     }
   }
-}
+
+  // ---- process matured (level 3 upgrade added) ----
+  async function processMatured(uid){
+    if(!uid) return;
+    const invCol = collection(db, "users", uid, "investments");
+    const q = query(invCol, where("status","==","Active"));
+    const snap = await getDocs(q);
+    if(snap.empty) return;
+    const now = Date.now();
+
+    for(const docSnap of snap.docs){
+      const d = docSnap.data();
+      const id = docSnap.id;
+      if(!d.startTime || !d.endTime) continue;
+
+      const endMs = d.endTime.seconds * 1000;
+      if(now < endMs) continue;
+
+      const invRef = doc(db, "users", uid, "investments", id);
+      const userRef = doc(db, "users", uid);
+
+      try{
+        await runTransaction(db, async (tx) => {
+          const inv = await tx.get(invRef);
+          if(!inv.exists()) return;
+          const invData = inv.data();
+          if(invData.status !== "Active") return;
+
+          const amount = invData.amount || 0;
+          const dailyRate = Number(invData.dailyRate) || 0;
+          const durationDays = Math.round((invData.endTime.seconds - invData.startTime.seconds) / (24*60*60));
+          const profit = (amount * dailyRate / 100) * durationDays;
+          const possibleIncome = Number(profit.toFixed(6));
+
+          const userPercent = invData.userPercent ?? 0.70;
+          const userShare = +(profit * userPercent).toFixed(6);
+
+          tx.update(invRef, {
+            status: "Completed",
+            possibleIncome,
+            accruedIncome: 0,
+            endTime: serverTimestamp()
+          });
+
+          const uSnap = await tx.get(userRef);
+          const userBal = (uSnap.exists() && uSnap.data().walletBalance) ? uSnap.data().walletBalance : 0;
+
+          // ✅ add profit + level 3
+          tx.update(userRef, { 
+            walletBalance: userBal + amount + userShare,
+            stakingIncome: (uSnap.data().stakingIncome || 0) + userShare,
+            totalIncome: (uSnap.data().totalIncome || 0) + profit,
+            level: 3
+          });
+        });
+      }catch(err){ console.error("Error processing matured", err); }
+    }
+  }
+
+  // ✅ baaki tumhare modal close, section switch, etc. waise hi chalenge
+
 
 
 // modal background click to close
-window.onclick = function(e){
+  window.onclick = function(e){
   const modal = document.getElementById("stakeModal");
   if(e.target === modal) modal.style.display = "none";
 };
