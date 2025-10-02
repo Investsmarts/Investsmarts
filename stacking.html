@@ -174,6 +174,47 @@
       .invest-title{font-size:15px}
       .invest-info{font-size:12px}
     }
+
+  
+    /* Floating label wrapper */
+.input-box {
+  position: relative;
+  margin: 14px 0;
+}
+
+.input-box input {
+  width: 100%;
+  padding: 12px 10px;
+  border: 1px solid #d6dbe0;
+  border-radius: 10px;
+  background: #fbfdff;
+  font-size: 14px;
+  outline: none;
+}
+
+.input-box label {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+/* ✅ Jab input focus ho ya value ho tab label upar chala jaye */
+.input-box input:focus + label,
+.input-box input:not(:placeholder-shown) + label {
+  top: -6px;
+  left: 8px;
+  font-size: 12px;
+  color: #0b7a4f;
+  background: #fff;
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
   </style>
 
 </head>
@@ -232,10 +273,14 @@
         <div class="info-box"><label>Amount (min - max)</label><input type="text" id="modalAmount" readonly></div>
         <div class="info-box"><label>Daily Return</label><input type="text" id="modalReturn" readonly></div>
       </div>
-      <div class="stake-action">
-        <input type="number" id="stakeInput" placeholder="Enter amount to stake (USDT)">
-        <button onclick="confirmStake()">Confirm Stake</button>
-      </div>
+    <div class="stake-action">
+  <div class="input-box">
+    <input type="number" id="stakeInput" placeholder=" " required>
+    <label for="stakeInput">Enter amount to stake (USDT)</label>
+  </div>
+  <button onclick="confirmStake()">Confirm Stake</button>
+</div>
+
     </div>
   </div>
   <div id="record" class="section">
@@ -308,7 +353,7 @@
     document.getElementById("popup").style.display = "flex";
     setTimeout(()=>{ document.getElementById("popup").style.display = "none"; }, 2500);
   };
-  
+
 
    // ✅ Countdown function
   function startCountdown(elId, endTime){
@@ -431,6 +476,25 @@
     // ✅ 5 minute me accrual check
     setInterval(()=>processAccrual(currentUserId), 5*60*1000);
   });
+
+  // ✅ Open modal
+window.openModal = function(planName, minAmount, maxAmount, dailyRate, imgSrc){
+  currentPlanObj = { planName, minAmount, maxAmount, dailyRate, imgSrc };
+
+  document.getElementById("modalPlan").textContent = planName;
+  document.getElementById("modalAmount").value = `${minAmount} - ${maxAmount} USDT`;
+  document.getElementById("modalReturn").value = dailyRate + "% per day";
+  document.getElementById("modalImg").src = imgSrc;
+
+  document.getElementById("stakeModal").style.display = "flex";
+};
+
+// ✅ Close modal
+window.closeModal = function(){
+  document.getElementById("stakeModal").style.display = "none";
+  currentPlanObj = null;
+};
+
 
   // ---- Create stake (extra fields add kiye accruedIncome + lastAccrual) ----
   window.confirmStake = async function(){
