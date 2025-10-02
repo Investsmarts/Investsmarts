@@ -308,6 +308,27 @@
     document.getElementById("popup").style.display = "flex";
     setTimeout(()=>{ document.getElementById("popup").style.display = "none"; }, 2500);
   };
+  
+
+   // ✅ Countdown function
+  function startCountdown(elId, endTime){
+    const el = document.getElementById(elId);
+    if(!el) return;
+    function tick(){
+      const now = Date.now();
+      const diff = endTime - now;
+      if(diff <= 0){
+        el.textContent = "Completed soon";
+        return;
+      }
+      const hrs = Math.floor(diff / (1000*60*60));
+      const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+      const secs = Math.floor((diff % (1000*60)) / 1000);
+      el.textContent = `${hrs}h ${mins}m ${secs}s`;
+      setTimeout(tick, 1000);
+    }
+    tick();
+  }
 
   // ✅ Wallet listener
   function listenWallet(){
@@ -323,6 +344,7 @@
   }
 
   // ✅ Investment history listener
+// ✅ Investment history listener (with expiry + countdown)
   function listenInvestments(){
     const invCol = collection(db, "users", currentUserId, "investments");
     const q = query(invCol, orderBy("startTime","desc"));
@@ -332,11 +354,11 @@
 
       if(snap.empty){
         historyList.innerHTML = `
-          <div style="text-align:center;color:#666;padding:20px;
-          background:#fff;border-radius:10px;
-          border:1px solid #eee;">
-          No record found
-          </div>`;
+        <div style="text-align:center;color:#666;padding:20px;
+        background:#fff;border-radius:10px;
+        border:1px solid #eee;">
+        No record found
+        </div>`;
         return;
       }
 
@@ -345,26 +367,40 @@
         const id = docSnap.id;
 
         const cls = d.status==="Completed" ? "status-complete" : 
-                    d.status==="Active" ? "status-active" : "status-cancel";
+        d.status==="Active" ? "status-active" : "status-cancel";
+
+      // ✅ countdown placeholder
+        let countdownHtml = "";
+        if(d.status==="Active" && d.endTime){
+          countdownHtml = `<div class="countdown-box">
+          <div class="countdown" id="cd_${id}">Loading...</div>
+          </div>`;
+        // delay thoda dena so DOM render ho jaye
+          setTimeout(()=>startCountdown("cd_"+id, d.endTime.seconds*1000), 200);
+        }
 
         historyList.innerHTML += `
-          <div class="invest-card">
-            <img src="${d.imgSrc || 'https://via.placeholder.com/150'}" alt="plan"/>
-            <div class="invest-title">${d.planName || "TrustDollar Staking"}</div>
-            <div class="invest-info">
-              <p><span class="invest-label">Order Status</span>
-                 <span class="invest-value"><span class="status-badge ${cls}">${d.status}</span></span></p>
-              <p><span class="invest-label">Investment Amount</span>
-                 <span class="invest-value">${Number(d.amount||0).toFixed(2)} USDT</span></p>
-              <p><span class="invest-label">Accrued Income</span>
-                 <span class="invest-value">${Number(d.accruedIncome||0).toFixed(2)} USDT</span></p>
-              <p><span class="invest-label">Possible Income</span>
-                 <span class="invest-value">${Number(d.possibleIncome||0).toFixed(2)} USDT</span></p>
-            </div>
-          </div>`;
+        <div class="invest-card">
+        <img src="${d.imgSrc || 'https://via.placeholder.com/150'}" alt="plan"/>
+        <div class="invest-title">${d.planName || "TrustDollar Staking"}</div>
+        <div class="invest-info">
+        <p><span class="invest-label">Order Status</span>
+        <span class="invest-value"><span class="status-badge ${cls}">${d.status}</span></span></p>
+        <p><span class="invest-label">Investment Amount</span>
+        <span class="invest-value">${Number(d.amount||0).toFixed(2)} USDT</span></p>
+        <p><span class="invest-label">Accrued Income</span>
+        <span class="invest-value">${Number(d.accruedIncome||0).toFixed(2)} USDT</span></p>
+        <p><span class="invest-label">Possible Income</span>
+        <span class="invest-value">${Number(d.possibleIncome||0).toFixed(2)} USDT</span></p>
+        <p><span class="invest-label">Expiry Time</span>
+        <span class="invest-value">${d.endTime ? new Date(d.endTime.seconds*1000).toLocaleString() : "-"}</span></p>
+        </div>
+        ${countdownHtml}
+        </div>`;
       });
     });
   }
+
 
   // ✅ User summary listener
   function listenUserSummary(){
@@ -561,42 +597,42 @@
 
 // modal background click to close
   window.onclick = function(e){
-  const modal = document.getElementById("stakeModal");
-  if(e.target === modal) modal.style.display = "none";
-};
+    const modal = document.getElementById("stakeModal");
+    if(e.target === modal) modal.style.display = "none";
+  };
 
 // ✅ Section switch fix
-window.showSection = function(sectionId, event){
+  window.showSection = function(sectionId, event){
   // Sab sections hide kar do safely
-  document.querySelectorAll(".section").forEach(s => {
-    if(s) s.style.display = "none";
-  });
+    document.querySelectorAll(".section").forEach(s => {
+      if(s) s.style.display = "none";
+    });
 
   // Sirf selected section dikhana
-  const sec = document.getElementById(sectionId);
-  if(sec){  
-    sec.style.display = "block";
-  } else {
-    console.warn("Section not found: ", sectionId);
-    return;
-  }
+    const sec = document.getElementById(sectionId);
+    if(sec){  
+      sec.style.display = "block";
+    } else {
+      console.warn("Section not found: ", sectionId);
+      return;
+    }
 
   // Navbar active class set karna
-  document.querySelectorAll(".nav a").forEach(a => a.classList.remove("active"));
-  if(event && event.target) event.target.classList.add("active");
+    document.querySelectorAll(".nav a").forEach(a => a.classList.remove("active"));
+    if(event && event.target) event.target.classList.add("active");
 
   // Record section ke liye special handling
-  const stakingContainer = document.querySelector(".staking-container");
-  const historyWrap = document.querySelector(".history-wrap");
+    const stakingContainer = document.querySelector(".staking-container");
+    const historyWrap = document.querySelector(".history-wrap");
 
-  if(sectionId === "record"){
-    if(stakingContainer) stakingContainer.style.display = "none";
-    if(historyWrap) historyWrap.style.display = "block";
-  } else {
-    if(stakingContainer) stakingContainer.style.display = "grid";
-    if(historyWrap) historyWrap.style.display = "block";
-  }
-};
+    if(sectionId === "record"){
+      if(stakingContainer) stakingContainer.style.display = "none";
+      if(historyWrap) historyWrap.style.display = "block";
+    } else {
+      if(stakingContainer) stakingContainer.style.display = "grid";
+      if(historyWrap) historyWrap.style.display = "block";
+    }
+  };
 </script>
 
 </body>
