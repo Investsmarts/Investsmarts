@@ -377,16 +377,24 @@
     }
 
     // ✅ Load external pages with smooth fade
-    window.loadPage = function (page) {
-      fetch(page)
-        .then(res => res.text())
-        .then(data => {
-          const content = document.getElementById("contentArea");
-          content.classList.remove("show");
-          setTimeout(() => { content.innerHTML = data; content.classList.add("show"); }, 50);
-        })
-        .catch(() => { document.getElementById("contentArea").innerHTML = "<p style='color:red'>Error loading page</p>"; });
-    };
+   // ✅ नया simple version
+window.loadPage = function (page) {
+  fetch(page)
+    .then(res => res.text())
+    .then(data => {
+      const content = document.getElementById("contentArea");
+      content.classList.remove("show");
+      setTimeout(() => {
+        content.innerHTML = data;
+        content.classList.add("show");
+      }, 50);
+    })
+    .catch(() => {
+      document.getElementById("contentArea").innerHTML =
+        "<p style='color:red'>Error loading page</p>";
+    });
+};
+
 
     // ❌ Disable right click + copy
     document.addEventListener("contextmenu", e => e.preventDefault());
