@@ -8,9 +8,9 @@
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background: #f1f5f9;
+      background: #f9fafb;
       margin: 0;
-      padding-bottom: 100px;
+      padding-bottom: 120px;
       color: #333;
     }
     .container { max-width: 950px; margin: auto; padding: 20px; }
@@ -22,7 +22,8 @@
       padding: 20px;
       border-radius: 16px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      transition: 0.3s;
     }
     .card h2 {
       margin: 0 0 15px;
@@ -32,25 +33,90 @@
     .info-row {
       display: flex;
       justify-content: space-between;
-      padding: 8px 0;
+      padding: 10px 0;
       border-bottom: 1px solid #eee;
-      font-size: 14px;
+      font-size: 15px;
     }
     .info-row:last-child { border-bottom: none; }
 
-    /* Button */
+    /* Leadership Card Styling */
+     /* Leadership Card Styling */
+.leader-card {
+  background: linear-gradient(135deg,#28a745,#60d394);
+  color: #fff;
+  text-align: center;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.leader-header {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.leader-box {
+  flex: 1;
+  text-align: center;
+}
+
+.leader-icon {
+  font-size: 32px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.leader-label {
+  font-size: 14px;
+  opacity: 0.9;
+  display: block;
+}
+
+.leader-value {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.leader-next {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 10px;
+}
+
+
+    /* Progress Bar */
+    .progress {
+      background: rgba(255,255,255,0.3);
+      border-radius: 8px;
+      overflow: hidden;
+      height: 14px;
+      margin-top: 12px;
+    }
+    .progress-bar {
+      background: #fff;
+      height: 100%;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    /* Buttons */
     .btn {
       width: 100%;
       padding: 12px;
+      margin-top: 10px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-weight: bold;
       color: #fff;
-      background: #ef4444;
       cursor: pointer;
       transition: 0.3s;
       font-size: 15px;
     }
+    .btn-green { background: #28a745; }
+    .btn-logout { background: #ef4444; }
     .btn:hover { opacity: 0.9; }
 
     /* Navbar */
@@ -94,26 +160,168 @@
       width: 1px;
       background: #e0e0e0;
     }
+
+    /* Helper Text */
+    .helper {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    /* Popup Modal */
+    #popupOverlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    #popupBox {
+      background: #fff;
+      padding: 20px;
+      border-radius: 14px;
+      width: 90%;
+      max-width: 350px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      text-align: center;
+      animation: zoomIn 0.2s ease;
+    }
+    #popupBox h3 { margin:0 0 12px; font-size:18px; color:#111; }
+    #popupInput {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .popup-actions {
+      margin-top:15px;
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+    }
+    .popup-actions button {
+      padding:8px 14px;
+      border:none;
+      border-radius:8px;
+      color:#fff;
+      cursor:pointer;
+    }
+    .popup-cancel { background:#999; }
+    .popup-ok { background:#28a745; }
+
+
+    /* Small Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 16px;
+  background: #28a745; /* Trust green */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.header .logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.header .title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff; /* plain white for clarity */
+}
+
+.header .notif {
+  position: relative;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header .notif i {
+  font-size: 18px;
+  color: #fff;
+}
+
+.header .notif .dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
+  background: red;
+  border-radius: 50%;
+}
+
+
   </style>
 </head>
 <body>
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
+
+
+<!-- Header -->
+<header class="header">
+ 
+  </div>
+  <h1 class="title">TrustDollar <small>Account</small></h1>
+  
+</header>
+
+
   <div class="container">
-    <h1>My Account</h1>
+  
+
+  <!-- Leadership Level (Top Card) -->
+<div class="card leader-card" id="leaderCard">
+  <div class="leader-header">
+    <div class="leader-box">
+      <i class="bx bxs-user leader-icon" id="leaderIcon"></i>
+      <span class="leader-label">Rank</span>
+      <div class="leader-value" id="userRank">Newbie</div>
+    </div>
+    <div class="leader-box">
+      <i class="bx bxs-group leader-icon"></i>
+      <span class="leader-label">Total Team</span>
+      <div class="leader-value" id="rankTeam">0</div>
+    </div>
+  </div>
+  <p class="leader-next" id="nextGoal">Keep Growing 🚀</p>
+  <div class="progress"><div class="progress-bar" id="rankProgress"></div></div>
+</div>
+
+    <p class="helper">Manage your profile, wallet and security settings. Keep your account safe 🔒</p>
 
     <!-- Profile Info -->
     <div class="card">
-      <h2>Profile</h2>
+      <h2>Profile Information</h2>
       <div class="info-row"><span>Name</span><span id="userName">Loading...</span></div>
       <div class="info-row"><span>Email</span><span id="userEmail">Loading...</span></div>
       <div class="info-row"><span>Referral Code</span><span id="userRef">Loading...</span></div>
       <div class="info-row"><span>Joined</span><span id="userJoin">Loading...</span></div>
+      <button class="btn btn-green" onclick="editProfile()">✏️ Edit Profile</button>
     </div>
 
     <!-- Wallet Info -->
     <div class="card">
-      <h2>Wallet</h2>
+      <h2>Wallet Summary</h2>
       <div class="info-row"><span>Total Deposit</span><span id="userDeposit">$0</span></div>
       <div class="info-row"><span>Current Balance</span><span id="userBalance">$0</span></div>
       <div class="info-row"><span>Total Earnings</span><span id="userEarnings">$0</span></div>
@@ -121,15 +329,23 @@
 
     <!-- Referral Stats -->
     <div class="card">
-      <h2>Team</h2>
+      <h2>My Team</h2>
       <div class="info-row"><span>Level 1</span><span id="teamLv1">0</span></div>
       <div class="info-row"><span>Level 2</span><span id="teamLv2">0</span></div>
       <div class="info-row"><span>Level 3</span><span id="teamLv3">0</span></div>
-      <div class="info-row"><span>Total Team</span><span id="teamTotal">0</span></div>
+      <div class="info-row"><strong>Total Team</strong><strong id="teamTotal">0</strong></div>
+    </div>
+
+    <!-- Security -->
+    <div class="card">
+      <h2>Security Settings</h2>
+      <p class="helper">Update your password and email to keep your account safe.</p>
+      <button class="btn btn-green" onclick="changePassword()">🔑 Change Password</button>
+      <button class="btn btn-green" onclick="changeEmail()">📧 Change Email</button>
     </div>
 
     <!-- Logout -->
-    <button class="btn" onclick="logout()">Logout</button>
+    <button class="btn btn-logout" onclick="logout()">🚪 Logout</button>
   </div>
 
   <!-- Navbar -->
@@ -142,10 +358,10 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged, signOut, updatePassword, updateEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-  // ✅ Firebase Config
+  // Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
     authDomain: "btcinvest-c0e25.firebaseapp.com",
@@ -160,44 +376,68 @@
   const db = getFirestore(app);
   const auth = getAuth(app);
 
-  // ✅ Load User Data
+  // Rank Logic with Icon
+  function getRank(total) {
+    if (total >= 1000) return { rank: "💎 Diamond Leader", next: "Max Level Achieved 🎉", goal: 1000, icon: "bxs-diamond" };
+    if (total >= 500) return { rank: "🏆 Gold Leader", next: "1000 Members for Diamond", goal: 1000, icon: "bxs-trophy" };
+    if (total >= 200) return { rank: "🥈 Silver Leader", next: "500 Members for Gold", goal: 500, icon: "bxs-medal" };
+    if (total >= 50)  return { rank: "🥉 Bronze Leader", next: "200 Members for Silver", goal: 200, icon: "bxs-medal" };
+    if (total >= 10)  return { rank: "🌱 Starter", next: "50 Members for Bronze", goal: 50, icon: "bx-leaf" };
+    return { rank: "👤 Newbie", next: "10 Members for Starter", goal: 10, icon: "bxs-user" };
+  }
+
+  // Load user data
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists()) {
         const data = userDoc.data();
 
-        // Profile
         document.getElementById("userName").textContent = data.name || "Unnamed";
         document.getElementById("userEmail").textContent = data.email || user.email;
         document.getElementById("userRef").textContent = data.referralCode || "N/A";
         document.getElementById("userJoin").textContent = data.createdAt ? new Date(data.createdAt).toLocaleDateString() : "N/A";
 
-        // Wallet
         document.getElementById("userDeposit").textContent = "$" + (data.lifetimeDeposit || 0);
         document.getElementById("userBalance").textContent = "$" + (data.balance || 0);
         document.getElementById("userEarnings").textContent = "$" + (data.totalEarnings || 0);
 
-        // Referral counts
         const lv1 = await getDocs(query(collection(db, "users"), where("referredBy", "==", data.referralCode)));
         const lv2 = await getDocs(query(collection(db, "users"), where("upline2", "==", user.uid)));
         const lv3 = await getDocs(query(collection(db, "users"), where("upline3", "==", user.uid)));
 
+        const totalTeam = lv1.size + lv2.size + lv3.size;
         document.getElementById("teamLv1").textContent = lv1.size;
         document.getElementById("teamLv2").textContent = lv2.size;
         document.getElementById("teamLv3").textContent = lv3.size;
-        document.getElementById("teamTotal").textContent = lv1.size + lv2.size + lv3.size;
+        document.getElementById("teamTotal").textContent = totalTeam;
+
+        // Rank Update
+        const { rank, next, goal, icon } = getRank(totalTeam);
+        document.getElementById("userRank").textContent = rank;
+        document.getElementById("rankTeam").textContent = totalTeam;
+        document.getElementById("nextGoal").textContent = next;
+        document.getElementById("leaderIcon").className = "bx " + icon + " leader-icon";
+
+        // Progress bar update
+        let progress = Math.min((totalTeam / goal) * 100, 100);
+        document.getElementById("rankProgress").style.width = progress + "%";
       }
     } else {
-      window.location.href = "login.html"; // redirect if not logged in
+      window.location.href = "login.html";
     }
   });
 
-  // ✅ Logout
+  // Logout
   window.logout = async function() {
     await signOut(auth);
     window.location.href = "login.html";
   }
+
+  // Edit actions
+  window.changePassword = function() { alert("🔑 Change password feature"); }
+  window.changeEmail = function() { alert("📧 Change email feature"); }
+  window.editProfile = function() { alert("✏️ Edit profile feature"); }
 </script>
 </body>
 </html>
