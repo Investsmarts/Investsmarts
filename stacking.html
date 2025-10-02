@@ -225,10 +225,14 @@
 }
 
 #pullRefresh {
-  position: relative;
-  top: -50px; /* by default hidden */
+  position: fixed;   /* relative ❌ -> fixed ✅ */
+  top: 60px;         /* nav ke niche hi dikhai dega */
+  left: 0;
+  right: 0;
   text-align: center;
-  transition: top 0.3s ease;
+  transform: translateY(-60px); /* hidden initially */
+  transition: transform 0.3s ease;
+  z-index: 999; /* nav ke neeche dikhe */
 }
 
 .spinner {
@@ -239,11 +243,6 @@
   border-radius: 50%;
   margin: 0 auto;
   animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 
   </style>
@@ -707,7 +706,8 @@ window.confirmStake = async function(){
       .find(a=>a.getAttribute("onclick")?.includes(sectionId));
     if(navLink) navLink.classList.add("active");
   };
-
+  
+// refresh page 
 let startY = 0;
 let isPulled = false;
 let pullDiv = document.getElementById("pullRefresh");
@@ -726,19 +726,19 @@ document.addEventListener("touchmove", function(e) {
 
   if (pullDistance > 0) {
     // spinner ko neeche slide karna
-    pullDiv.style.top = Math.min(pullDistance - 50, 20) + "px";
+    pullDiv.style.transform = `translateY(${Math.min(pullDistance - 60, 30)}px)`;
   }
 });
 
 document.addEventListener("touchend", function() {
-  if (parseInt(pullDiv.style.top) > 0) {
+  if (pullDiv.style.transform.includes("translateY(") && !pullDiv.style.transform.includes("-")) {
     // ✅ refresh karo
     setTimeout(() => {
       location.reload();
     }, 800);
   }
   // reset
-  pullDiv.style.top = "-50px";
+  pullDiv.style.transform = "translateY(-60px)";
   isPulled = false;
 });
 
