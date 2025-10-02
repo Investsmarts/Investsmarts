@@ -534,6 +534,73 @@ input::placeholder { color: #888; }
   margin-left: 6px;
 }
 
+/* requestwithrowal pop up */ 
+.popup-withdraw {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  width: 90%;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+  animation: fadeIn 0.3s ease;   /* ✅ ye smooth opening dega */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* ✅ center alignment */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Info Box for Min + Balance */
+.popup-info-box {
+  border: 1.5px solid #28a745;
+  background: #f9fffa;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Buttons */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  width: 100%;
+}
+.action-buttons button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+}
+
+/* ❌ Cancel Button */
+.close-btn {
+  background: #dc3545;
+}
+.close-btn:hover {
+  background: #a71d2a;
+}
+
+/* ✅ Submit Button */
+.submit-btn {
+  background: #28a745;
+}
+.submit-btn:hover {
+  background: #218838;
+}
+
 
 </style>
 </head>
@@ -604,12 +671,14 @@ input::placeholder { color: #888; }
 
 <!-- Popup -->
 <div class="popup-overlay" id="popupOverlay">
-  <div class="popup">
-    <h2 style="margin-bottom:8px;color:#222;">Withdraw Funds</h2>
-    <p style="font-size:13px;color:#666;margin-bottom:10px;">
-      Minimum withdrawal: <b style="color:#28a745;">$20</b><br>
-      Available balance: <b id="popupBalance" style="color:#007bff;">0</b>
-    </p>
+  <div class="popup-withdraw">
+    <h2>Withdraw Funds</h2>
+
+    <!-- Info Box for Min + Balance -->
+    <div class="popup-info-box">
+      <p>Minimum withdrawal: <b style="color:#28a745;">$20</b></p>
+      <p>Available balance: <b id="popupBalance" style="color:#007bff;">0.00</b></p>
+    </div>
 
     <label>Amount ($)</label>
     <input type="number" id="withdrawAmount" class="amount-input" placeholder="Enter withdrawal amount">
@@ -618,15 +687,16 @@ input::placeholder { color: #888; }
     <input type="text" value="USDT (BEP20)" disabled class="address-input">
 
     <label>Your Wallet Address</label>
-    <input type="text" id="withdrawAddress" class="address-input" placeholder="Enter your BEP20 address" readonly>
+    <input type="text" id="withdrawAddress" class="address-input" placeholder="Set your primary address first" readonly>
 
-
+    <!-- Buttons -->
     <div class="action-buttons">
       <button class="close-btn" onclick="cancelWithdraw()">Cancel</button>
       <button class="submit-btn" onclick="submitWithdraw()">Submit</button>
     </div>
   </div>
 </div>
+
 
 <div class="thankyou-popup" id="thankyouPopup">Withdrawal Requested</div>
 <div class="error-popup" id="errorPopup">Enter valid details</div>
