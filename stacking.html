@@ -157,23 +157,32 @@
     }
 
     /* ✅ Responsive Fix */
-    @media(max-width:768px){
-      .invest-card{padding:14px}
-      .invest-title{font-size:16px}
-      .invest-info p{font-size:13px;flex-direction:column;align-items:flex-start}
-      .invest-info span{margin-top:2px}
-      .countdown-box{font-size:13px;padding:8px}
-    }
-    @media(max-width:600px){
-      .staking-img{height:160px}
-      .staking-title{font-size:15px}
-      .nav{gap:12px;font-size:14px}
-    }
-    @media(max-width:480px){
-      .invest-card{padding:12px}
-      .invest-title{font-size:15px}
-      .invest-info{font-size:12px}
-    }
+@media(max-width:768px){
+  .invest-card{padding:14px}
+  .invest-title{font-size:16px}
+
+  /* ✅ left-right fix */
+  .invest-info p{
+    font-size:13px;
+    flex-direction:row;   /* column ❌ -> row ✅ */
+    align-items:center;   /* vertically center */
+  }
+  .invest-info span{margin-top:0} /* extra gap hata diya */
+  
+  .countdown-box{font-size:13px;padding:8px}
+}
+
+@media(max-width:600px){
+  .staking-img{height:160px}
+  .staking-title{font-size:15px}
+  .nav{gap:12px;font-size:14px}
+}
+
+@media(max-width:480px){
+  .invest-card{padding:12px}
+  .invest-title{font-size:15px}
+  .invest-info{font-size:12px}
+}
 
   
     /* Floating label wrapper */
@@ -469,94 +478,107 @@
     setInterval(()=>processAccrual(currentUserId), 5*60*1000);
   });
 
-  // ✅ Open modal
-  window.openModal = function(planName, minAmount, maxAmount, dailyRate, imgSrc){
-    currentPlanObj = { planName, minAmount, maxAmount, dailyRate, imgSrc };
-    document.getElementById("modalPlan").textContent = planName;
-    document.getElementById("modalAmount").value = `${minAmount} - ${maxAmount} USDT`;
-    document.getElementById("modalReturn").value = dailyRate + "% per day";
-    document.getElementById("modalImg").src = imgSrc;
-    document.getElementById("stakeModal").style.display = "flex";
-  };
+ window.openModal = function(planName, minAmount, maxAmount, dailyRate, imgSrc){
+  // modal me choose kiya gaya plan object me store karenge
+  currentPlanObj = { planName, minAmount, maxAmount, dailyRate, imgSrc };
 
-  window.closeModal = function(){
-    document.getElementById("stakeModal").style.display = "none";
-    currentPlanObj = null;
-  };
+  // ✅ Debug ke liye print karenge (console me dikhai dega)
+  console.log("Plan Selected:", currentPlanObj);
+
+  // modal UI fill karna
+  document.getElementById("modalPlan").textContent = planName;
+  document.getElementById("modalAmount").value = `${minAmount} - ${maxAmount} USDT`;
+  document.getElementById("modalReturn").value = dailyRate + "% per day";
+  document.getElementById("modalImg").src = imgSrc;
+  document.getElementById("stakeModal").style.display = "flex";
+};
+
+window.closeModal = function(){
+  document.getElementById("stakeModal").style.display = "none";
+};
+
 
   // ✅ Confirm Stake (possibleIncome add kiya)
-  window.confirmStake = async function(){
+window.confirmStake = async function(){
   if(!currentUserId){ 
     showPopup("User not authenticated"); 
     return; 
   }
 
-  // Safe check
-  if(!currentPlanObj || !currentPlanObj.planName){ 
+  // ✅ Safe check for plan object
+  if(!currentPlanObj || !currentPlanObj.planName || !currentPlanObj.dailyRate){ 
     showPopup("Plan not selected properly ❌"); 
     return; 
   }
 
-    const amount = parseFloat(stakeInput.value);
-    if(isNaN(amount) || amount <= 0){ showPopup("Enter valid amount"); return; }
-    if(amount < currentPlanObj.minAmount || amount > currentPlanObj.maxAmount){
-      showPopup(`Amount must be between ${currentPlanObj.minAmount} and ${currentPlanObj.maxAmount}`);
-      return;
-    }
+  const amount = parseFloat(stakeInput.value);
+  if(isNaN(amount) || amount <= 0){ 
+    showPopup("Enter valid amount"); 
+    return; 
+  }
+  if(amount < currentPlanObj.minAmount || amount > currentPlanObj.maxAmount){
+    showPopup(`Amount must be between ${currentPlanObj.minAmount} and ${currentPlanObj.maxAmount}`);
+    return;
+  }
 
-    closeModal();
+  closeModal();
 
-    const userRef = doc(db, "users", currentUserId);
-    try{
-      await runTransaction(db, async (tx) => {
-        const uSnap = await tx.get(userRef);
-        if(!uSnap.exists()) throw "User data missing";
-        const balance = uSnap.data().walletBalance || 0;
-        if(balance < amount) throw "Insufficient balance";
+  const userRef = doc(db, "users", currentUserId);
+  try{
+    await runTransaction(db, async (tx) => {
+      const uSnap = await tx.get(userRef);
+      if(!uSnap.exists()) throw "User data missing";
+      const balance = uSnap.data().walletBalance || 0;
+      if(balance < amount) throw "Insufficient balance";
 
-        tx.update(userRef, { 
-          walletBalance: balance - amount,
-          totalStack: (uSnap.data().totalStack || 0) + amount
-        });
-
-        let days = 1; 
-        if(currentPlanObj.planName.includes("15")) days = 15;
-        else if(currentPlanObj.planName.includes("30")) days = 30;
-
-        const expiryMs = Date.now() + days*24*60*60*1000;
-        const expiryDate = new Date(expiryMs);
-
-        // ✅ possibleIncome calculate
-        const dailyProfit = amount * (currentPlanObj.dailyRate / 100);
-        const userDailyShare = dailyProfit * 0.70;  
-        const possibleIncome = +(userDailyShare * days).toFixed(2);
-
-        const stakeDoc = {
-          amount,
-          startTime: serverTimestamp(),
-          endTime: Timestamp.fromDate(expiryDate),
-          status: "Active",
-          dailyRate: currentPlanObj.dailyRate,
-          planName: currentPlanObj.planName,
-          imgSrc: currentPlanObj.imgSrc || "default.png",
-          possibleIncome: possibleIncome,
-          accruedIncome: 0,
-          lastAccrual: serverTimestamp(),
-          userPercent: 0.70,
-          upline1Percent: 0.17,
-          upline2Percent: 0.08,
-          upline3Percent: 0.05
-        };
-
-        const invCol = collection(db, "users", currentUserId, "investments");
-        await addDoc(invCol, stakeDoc);
+      tx.update(userRef, { 
+        walletBalance: balance - amount,
+        totalStack: (uSnap.data().totalStack || 0) + amount
       });
-      showPopup("Stake created successfully ✅");
-    }catch(err){
-      console.error(err);
-      showPopup(typeof err === "string" ? err : "Error creating stake");
-    }
-  };
+
+      // ✅ Ab safe dailyRate use karo
+      const dailyRate = Number(currentPlanObj.dailyRate) || 0;
+
+      let days = 1; 
+      const planName = (currentPlanObj.planName || "").toLowerCase();
+      if(planName.includes("15")) days = 15;
+      else if(planName.includes("30")) days = 30;
+
+      const expiryMs = Date.now() + days*24*60*60*1000;
+      const expiryDate = new Date(expiryMs);
+
+      // ✅ possibleIncome calculate
+      const dailyProfit = amount * (dailyRate / 100);
+      const userDailyShare = dailyProfit * 0.70;  
+      const possibleIncome = +(userDailyShare * days).toFixed(2);
+
+      const stakeDoc = {
+        amount,
+        startTime: serverTimestamp(),
+        endTime: Timestamp.fromDate(expiryDate),
+        status: "Active",
+        dailyRate: dailyRate,
+        planName: currentPlanObj.planName,
+        imgSrc: currentPlanObj.imgSrc || "default.png",
+        possibleIncome: possibleIncome,
+        accruedIncome: 0,
+        lastAccrual: serverTimestamp(),
+        userPercent: 0.70,
+        upline1Percent: 0.17,
+        upline2Percent: 0.08,
+        upline3Percent: 0.05
+      };
+
+      const invCol = collection(db, "users", currentUserId, "investments");
+      await addDoc(invCol, stakeDoc);
+    });
+    showPopup("Stake created successfully ✅");
+  }catch(err){
+    console.error(err);
+    showPopup(typeof err === "string" ? err : "Error creating stake");
+  }
+};
+
 
   // ✅ process matured (3-level distribution logic)
   async function processMatured(uid){
