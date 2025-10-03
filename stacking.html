@@ -224,26 +224,6 @@
   border-radius: 4px;
 }
 
-#pullRefresh {
-  position: fixed;
-  top: -50px;   /* default hidden */
-  left: 0;
-  right: 0;
-  text-align: center;
-  transition: top 0.3s ease;
-  z-index: 2000;
-}
-
-
-.spinner {
-  width: 28px;
-  height: 28px;
-  border: 3px solid #22c55e;
-  border-top: 3px solid transparent;
-  border-radius: 50%;
-  margin: 0 auto;
-  animation: spin 0.8s linear infinite;
-}
 
   </style>
 
@@ -256,10 +236,6 @@
     <a href="stacklong.html">Stack Long</a>
     <a onclick="showSection('record')">Record</a>
   </div>
-  <!-- ✅ Yaha Spinner -->
-<div id="pullRefresh">
-  <div class="spinner"></div>
-</div>
 
   <!-- Sections -->
   <div id="staking" class="section active">
@@ -395,7 +371,7 @@
       const now = Date.now();
       const diff = endTime - now;
       if(diff <= 0){
-        el.textContent = "Completed soon";
+        el.textContent = " Crediting... please wait";
         return;
       }
       const hrs = Math.floor(diff / (1000*60*60));
@@ -606,137 +582,131 @@ window.confirmStake = async function(){
 
 
   // ✅ process matured (3-level distribution logic)
-  async function processMatured(uid){
-    if(!uid) return;
-    const invCol = collection(db, "users", uid, "investments");
-    const q = query(invCol, where("status","==","Active"));
-    const snap = await getDocs(q);
-    if(snap.empty) return;
-    const now = Date.now();
+// ✅ process matured (3-level distribution logic)
+async function processMatured(uid) {
+  if (!uid) return;
+  const invCol = collection(db, "users", uid, "investments");
+  const q = query(invCol, where("status", "==", "Active"));
+  const snap = await getDocs(q);
+  if (snap.empty) return;
+  const now = Date.now();
 
-    for(const docSnap of snap.docs){
-      const d = docSnap.data();
-      const id = docSnap.id;
-      if(!d.startTime || !d.endTime) continue;
+  for (const docSnap of snap.docs) {
+    const d = docSnap.data();
+    const id = docSnap.id;
+    if (!d.startTime || !d.endTime) continue;
 
-      const endMs = d.endTime.seconds * 1000;
-      if(now < endMs) continue;
+    const endMs = d.endTime.seconds * 1000;
+    if (now < endMs) continue;
 
-      const invRef = doc(db, "users", uid, "investments", id);
-      const userRef = doc(db, "users", uid);
+    const invRef = doc(db, "users", uid, "investments", id);
+    const userRef = doc(db, "users", uid);
 
-      try{
-        await runTransaction(db, async (tx) => {
-          const inv = await tx.get(invRef);
-          if(!inv.exists()) return;
-          const invData = inv.data();
-          if(invData.status !== "Active") return;
+    try {
+      await runTransaction(db, async (tx) => {
+        // ✅ pehle saare reads ek sath
+        const [inv, uSnap] = await Promise.all([
+          tx.get(invRef),
+          tx.get(userRef)
+        ]);
 
-          const amount = invData.amount || 0;
-          const dailyRate = Number(invData.dailyRate) || 0;
-          const durationDays = Math.round((invData.endTime.seconds - invData.startTime.seconds) / (24*60*60));
-          const profit = (amount * dailyRate / 100) * durationDays;
-          const possibleIncome = Number(profit.toFixed(6));
+        if (!inv.exists()) return;
+        const invData = inv.data();
+        if (invData.status !== "Active") return;
 
-          // Percentages
-          const userPercent = invData.userPercent ?? 0.70;
-          const u1Percent   = invData.upline1Percent ?? 0.17;
-          const u2Percent   = invData.upline2Percent ?? 0.08;
-          const u3Percent   = invData.upline3Percent ?? 0.05;
+        const uData = uSnap.exists() ? uSnap.data() : {};
+        const amount = invData.amount || 0;
+        const dailyRate = Number(invData.dailyRate) || 0;
+        const durationDays = Math.round(
+          (invData.endTime.seconds - invData.startTime.seconds) / (24 * 60 * 60)
+        );
 
-          // Shares
-          const userShare = +(profit * userPercent).toFixed(6);
-          const u1Share   = +(profit * u1Percent).toFixed(6);
-          const u2Share   = +(profit * u2Percent).toFixed(6);
-          const u3Share   = +(profit * u3Percent).toFixed(6);
+        const profit = (amount * dailyRate / 100) * durationDays;
+        const possibleIncome = Number(profit.toFixed(6));
 
-          // ✅ Update investment status
-          tx.update(invRef, {
-            status: "Completed",
-            possibleIncome,
-            accruedIncome: 0,
-            endTime: serverTimestamp()
-          });
+        // Percentages
+        const userPercent = invData.userPercent ?? 0.70;
+        const u1Percent = invData.upline1Percent ?? 0.17;
+        const u2Percent = invData.upline2Percent ?? 0.08;
+        const u3Percent = invData.upline3Percent ?? 0.05;
 
-          // ✅ Update user wallet
-          const uSnap = await tx.get(userRef);
-          const userBal = (uSnap.exists() && uSnap.data().walletBalance) ? uSnap.data().walletBalance : 0;
+        // Shares
+        const userShare = +(profit * userPercent).toFixed(6);
+        const u1Share = +(profit * u1Percent).toFixed(6);
+        const u2Share = +(profit * u2Percent).toFixed(6);
+        const u3Share = +(profit * u3Percent).toFixed(6);
 
-          tx.update(userRef, { 
-            walletBalance: userBal + amount + userShare,
-            stakingIncome: (uSnap.data().stakingIncome || 0) + userShare,
-            totalIncome: (uSnap.data().totalIncome || 0) + profit
-          });
-
-          // ✅ Pay uplines
-          const uplineIds = [uSnap.data().upline1, uSnap.data().upline2, uSnap.data().upline3];
-          const uplineShares = [u1Share, u2Share, u3Share];
-
-          for(let i=0; i<uplineIds.length; i++){
-            if(!uplineIds[i]) continue; 
-            const upRef = doc(db, "users", uplineIds[i]);
-            const upSnap = await tx.get(upRef);
-            if(!upSnap.exists()) continue;
-
-            const upBal = upSnap.data().walletBalance || 0;
-            tx.update(upRef, {
-              walletBalance: upBal + uplineShares[i],
-              referralIncome: (upSnap.data().referralIncome || 0) + uplineShares[i],
-              totalIncome: (upSnap.data().totalIncome || 0) + uplineShares[i]
-            });
-          }
+        // ✅ pehle reads ho gaye, ab likhna start karo
+        tx.update(invRef, {
+          status: "Completed",
+          possibleIncome,
+          accruedIncome: 0,
+          endTime: serverTimestamp()
         });
 
-        showPopup("Stake matured & income distributed ✅");
+        const userBal = uData.walletBalance || 0;
+        tx.update(userRef, {
+          walletBalance: userBal + amount + userShare,
+          stakingIncome: (uData.stakingIncome || 0) + userShare,
+          totalIncome: (uData.totalIncome || 0) + profit
+        });
 
-      }catch(err){
-        console.error("Error processing matured", err);
-      }
+        // ✅ uplines ke liye bhi sab read → phir write
+        const uplineIds = [uData.upline1, uData.upline2, uData.upline3];
+        const uplineShares = [u1Share, u2Share, u3Share];
+
+        for (let i = 0; i < uplineIds.length; i++) {
+          if (!uplineIds[i]) continue;
+          const upRef = doc(db, "users", uplineIds[i]);
+          const upSnap = await tx.get(upRef); // read first
+          if (!upSnap.exists()) continue;
+
+          const upData = upSnap.data();
+          const upBal = upData.walletBalance || 0;
+
+          tx.update(upRef, {
+            walletBalance: upBal + uplineShares[i],
+            referralIncome: (upData.referralIncome || 0) + uplineShares[i],
+            totalIncome: (upData.totalIncome || 0) + uplineShares[i]
+          });
+        }
+      });
+
+      showPopup("Stake matured & income distributed ✅");
+
+    } catch (err) {
+      console.error("Error processing matured", err);
     }
   }
+}
 
-  // ✅ Section switch function
-  window.showSection = function(sectionId){
-    document.querySelectorAll(".section").forEach(sec => sec.style.display="none");
-    const target = document.getElementById(sectionId);
-    if(target) target.style.display = "block";
+// ✅ Section switch function
+window.showSection = function(sectionId){
+  // sab sections hide
+  document.querySelectorAll(".section").forEach(sec => sec.style.display="none");
 
-    document.querySelectorAll(".nav a").forEach(a=>a.classList.remove("active"));
-    const navLink = [...document.querySelectorAll(".nav a")]
-      .find(a=>a.getAttribute("onclick")?.includes(sectionId));
-    if(navLink) navLink.classList.add("active");
-  };
+  // selected section show
+  const target = document.getElementById(sectionId);
+  if(target) target.style.display = "block";
 
-// refresh page 
-let startY = 0;
-let pullDiv = document.getElementById("pullRefresh");
-let isPulled = false;
+  // nav active class
+  document.querySelectorAll(".nav a").forEach(a=>a.classList.remove("active"));
+  const navLink = [...document.querySelectorAll(".nav a")]
+    .find(a=>a.getAttribute("onclick")?.includes(sectionId));
+  if(navLink) navLink.classList.add("active");
 
-document.addEventListener("touchstart", function(e) {
-  startY = e.touches[0].pageY;
-  isPulled = true;
-});
+  // ✅ Save current section
+  localStorage.setItem("lastSection", sectionId);
+};
 
-document.addEventListener("touchmove", function(e) {
-  if (!isPulled) return;
-  let currentY = e.touches[0].pageY;
-  let pullDistance = currentY - startY;
-
-  if (pullDistance > 20) { // thoda sa kheechte hi spinner dikh jaye
-    pullDiv.style.top = "40px";  // spinner visible
+// ✅ Restore last section on page load
+document.addEventListener("DOMContentLoaded", () => {
+  const last = localStorage.getItem("lastSection");
+  if(last){
+    showSection(last);   // last section khol do
+  } else {
+    showSection("staking"); // default
   }
-});
-
-document.addEventListener("touchend", function() {
-  if (pullDiv.style.top === "40px") {
-    // ✅ turant refresh
-    setTimeout(() => {
-      location.reload();
-    }, 500);
-  }
-  // reset
-  pullDiv.style.top = "-50px";
-  isPulled = false;
 });
 
 
