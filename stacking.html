@@ -720,7 +720,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </script>
 
+<script>
+// ❌ Right-click disable
+  document.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+    
+  });
 
+// ❌ Disable text selection
+  document.addEventListener("selectstart", function(e) {
+    e.preventDefault();
+  });
+
+// ❌ Disable copy (Ctrl+C), cut (Ctrl+X), paste (Ctrl+V), view-source (Ctrl+U)
+  document.addEventListener("keydown", function(e) {
+    if (
+      (e.ctrlKey && (e.key === "c" || e.key === "C")) || 
+      (e.ctrlKey && (e.key === "x" || e.key === "X")) || 
+      (e.ctrlKey && (e.key === "v" || e.key === "V")) || 
+      (e.ctrlKey && (e.key === "u" || e.key === "U")) || 
+    (e.key === "F12") // DevTools
+    ) {
+      e.preventDefault();
+    
+  }
+});
+</script>
 </body>
 </html>
 
