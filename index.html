@@ -3,7 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TrustDollar v2 - Secure Your Funds</title>
+ <title>TrustDollar  - Earn  Daily | Instant Withdrawals</title>
+
+  <!-- ✅ Favicon -->
+  <link rel="icon" type="image/png" href="myphoto/trustlogo.png">
+  <link rel="shortcut icon" type="image/png" href="myphoto/trustlogo.png">
+
+  <!-- ✅ Open Graph (Social Media Preview) -->
+  <meta property="og:title" content="TrustDollar v2 - Secure Your Funds">
+  <meta property="og:description" content="Blockchain-powered platform designed to keep your investments safe and transparent. Start today and earn referral income up to 3 levels.">
+  <meta property="og:image" content="https://www.smartfundad.com/myphoto/trustlogo.png">
+  <meta property="og:url" content="https://www.smartfundad.com">
+  <meta property="og:type" content="website">
+
+  <!-- ✅ Logo Schema for Google -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "url": "https://www.smartfundad.com",
+    "logo": "https://www.smartfundad.com/myphoto/trustlogo.png"
+  }
+  </script>
+
+
   <style>
     body {
       margin: 0;
@@ -450,7 +473,7 @@
 <body>
 <!-- ✅ Referral Popup -->
 <div id="referralPopup" class="popup">
-  Referral detected. Please sign up."
+  Referral detected. Please sign up.
 </div>
 
   <!-- HEADER -->
@@ -464,11 +487,11 @@
 <div class="menu-overlay" id="menuOverlay"></div>
 <nav class="nav-links" id="navLinks">
   <a href="explore.html">Explore</a>
-  <a href="tutorial.html">Tutorial</a>
   <a href="earn.html">Earn</a>
- <a href="doc.html">Doc</a>
+  <a href="doc.html">doc</a>
   <a href="terms.html">Term</a>
-  <a href="Privacy.html">Privacy Policy</a>
+  <a href="privacy.html">Privacy Policy</a>
+
 </nav>
 
 </header>
@@ -476,11 +499,9 @@
   <div class="hero">
     <div class="slider" id="slider">
       <div class="slides">
-        <div class="slide-card"><img src="myphoto/22.png" alt="slide2"></div>
-        <div class="slide-card"><img src="myphoto/33.png" alt="slide3"></div>    
         <div class="slide-card"><img src="myphoto/11.png" alt="slide1"></div>
-          
-
+        <div class="slide-card"><img src="myphoto/22.png" alt="slide2"></div>
+        <div class="slide-card"><img src="myphoto/33.png" alt="slide3"></div>
       </div>
     </div>
 
@@ -536,9 +557,9 @@
         <div class="link-group">
           <h3>Resources</h3>
           <ul>
-            <a href="doc.html">doc</a>
-            <li><a href="tutorial.html">Tutorials</a></li>
-            <li><a href="invite.html">Invite Friends</a></li>
+            <li><a href="#">Docs</a></li>
+            <li><a href="#">Tutorials</a></li>
+            <li><a href="#">Invite Friends</a></li>
           </ul>
         </div>
         <div class="link-group">
@@ -546,7 +567,7 @@
           <ul>
             <li><a href="terms.html">Terms of Service</a></li>
             <li><a href="privacy.html">Privacy Policy</a></li>
-            <li><a href="about.html">About Us</a></li>
+            <li><a href="#">About Us</a></li>
           </ul>
         </div>
       </div>
@@ -579,6 +600,9 @@
       else index = i;
       slides.style.transform = `translateX(-${index * 100}%)`;
     }
+
+    // ✅ First load me first slide show ho
+    showSlide(0);
 
     setInterval(() => { showSlide(index + 1); }, 4000);
 
@@ -677,39 +701,6 @@ menuOverlay.addEventListener("click", () => {
 });
 
 </script>
-<script>
-// ❌ Right-click disable
-  document.addEventListener("contextmenu", function(e) {
-    e.preventDefault();
-    
-  });
-
-// ❌ Disable text selection
-  document.addEventListener("selectstart", function(e) {
-    e.preventDefault();
-  });
-
-// ❌ Disable copy (Ctrl+C), cut (Ctrl+X), paste (Ctrl+V), view-source (Ctrl+U)
-  document.addEventListener("keydown", function(e) {
-    if (
-      (e.ctrlKey && (e.key === "c" || e.key === "C")) || 
-      (e.ctrlKey && (e.key === "x" || e.key === "X")) || 
-      (e.ctrlKey && (e.key === "v" || e.key === "V")) || 
-      (e.ctrlKey && (e.key === "u" || e.key === "U")) || 
-    (e.key === "F12") // DevTools
-    ) {
-      e.preventDefault();
-    
-  }
-});
-</script>
 
 </body>
 </html>
-
-
-
-
-
-
-
