@@ -580,9 +580,7 @@ window.confirmStake = async function(){
   }
 };
 
-
-  // ✅ process matured (3-level distribution logic)
-// ✅ process matured (3-level distribution logic)
+// ✅ process matured (3-level distribution logic) FIXED
 async function processMatured(uid) {
   if (!uid) return;
   const invCol = collection(db, "users", uid, "investments");
@@ -599,44 +597,48 @@ async function processMatured(uid) {
     const endMs = d.endTime.seconds * 1000;
     if (now < endMs) continue;
 
+    // income dena sabhi ko user ko yanaha se diya jata hai 
     const invRef = doc(db, "users", uid, "investments", id);
     const userRef = doc(db, "users", uid);
 
     try {
+      // ✅ pehle sab reads kar liye
+      const [invSnap, userSnap, up1Snap, up2Snap, up3Snap] = await Promise.all([
+        getDoc(invRef),
+        getDoc(userRef),
+        d.upline1 ? getDoc(doc(db, "users", d.upline1)) : null,
+        d.upline2 ? getDoc(doc(db, "users", d.upline2)) : null,
+        d.upline3 ? getDoc(doc(db, "users", d.upline3)) : null,
+      ]);
+
+      if (!invSnap.exists()) continue;
+      const invData = invSnap.data();
+      if (invData.status !== "Active") continue;
+
+      const uData = userSnap.exists() ? userSnap.data() : {};
+      const amount = invData.amount || 0;
+      const dailyRate = Number(invData.dailyRate) || 0;
+      const durationDays = Math.round(
+        (invData.endTime.seconds - invData.startTime.seconds) / (24 * 60 * 60)
+      );
+
+      const profit = (amount * dailyRate / 100) * durationDays;
+      const possibleIncome = Number(profit.toFixed(6));
+
+      // Percentages
+      const userPercent = invData.userPercent ?? 0.70;
+      const u1Percent = invData.upline1Percent ?? 0.17;
+      const u2Percent = invData.upline2Percent ?? 0.08;
+      const u3Percent = invData.upline3Percent ?? 0.05;
+
+      // Shares
+      const userShare = +(profit * userPercent).toFixed(6);
+      const u1Share = +(profit * u1Percent).toFixed(6);
+      const u2Share = +(profit * u2Percent).toFixed(6);
+      const u3Share = +(profit * u3Percent).toFixed(6);
+
+      // ✅ Ab transaction me sirf updates
       await runTransaction(db, async (tx) => {
-        // ✅ pehle saare reads ek sath
-        const [inv, uSnap] = await Promise.all([
-          tx.get(invRef),
-          tx.get(userRef)
-        ]);
-
-        if (!inv.exists()) return;
-        const invData = inv.data();
-        if (invData.status !== "Active") return;
-
-        const uData = uSnap.exists() ? uSnap.data() : {};
-        const amount = invData.amount || 0;
-        const dailyRate = Number(invData.dailyRate) || 0;
-        const durationDays = Math.round(
-          (invData.endTime.seconds - invData.startTime.seconds) / (24 * 60 * 60)
-        );
-
-        const profit = (amount * dailyRate / 100) * durationDays;
-        const possibleIncome = Number(profit.toFixed(6));
-
-        // Percentages
-        const userPercent = invData.userPercent ?? 0.70;
-        const u1Percent = invData.upline1Percent ?? 0.17;
-        const u2Percent = invData.upline2Percent ?? 0.08;
-        const u3Percent = invData.upline3Percent ?? 0.05;
-
-        // Shares
-        const userShare = +(profit * userPercent).toFixed(6);
-        const u1Share = +(profit * u1Percent).toFixed(6);
-        const u2Share = +(profit * u2Percent).toFixed(6);
-        const u3Share = +(profit * u3Percent).toFixed(6);
-
-        // ✅ pehle reads ho gaye, ab likhna start karo
         tx.update(invRef, {
           status: "Completed",
           possibleIncome,
@@ -651,23 +653,28 @@ async function processMatured(uid) {
           totalIncome: (uData.totalIncome || 0) + profit
         });
 
-        // ✅ uplines ke liye bhi sab read → phir write
-        const uplineIds = [uData.upline1, uData.upline2, uData.upline3];
-        const uplineShares = [u1Share, u2Share, u3Share];
-
-        for (let i = 0; i < uplineIds.length; i++) {
-          if (!uplineIds[i]) continue;
-          const upRef = doc(db, "users", uplineIds[i]);
-          const upSnap = await tx.get(upRef); // read first
-          if (!upSnap.exists()) continue;
-
-          const upData = upSnap.data();
-          const upBal = upData.walletBalance || 0;
-
-          tx.update(upRef, {
-            walletBalance: upBal + uplineShares[i],
-            referralIncome: (upData.referralIncome || 0) + uplineShares[i],
-            totalIncome: (upData.totalIncome || 0) + uplineShares[i]
+        if (up1Snap?.exists()) {
+          const up1 = up1Snap.data();
+          tx.update(up1Snap.ref, {
+            walletBalance: (up1.walletBalance || 0) + u1Share,
+            referralIncome: (up1.referralIncome || 0) + u1Share,
+            totalIncome: (up1.totalIncome || 0) + u1Share
+          });
+        }
+        if (up2Snap?.exists()) {
+          const up2 = up2Snap.data();
+          tx.update(up2Snap.ref, {
+            walletBalance: (up2.walletBalance || 0) + u2Share,
+            referralIncome: (up2.referralIncome || 0) + u2Share,
+            totalIncome: (up2.totalIncome || 0) + u2Share
+          });
+        }
+        if (up3Snap?.exists()) {
+          const up3 = up3Snap.data();
+          tx.update(up3Snap.ref, {
+            walletBalance: (up3.walletBalance || 0) + u3Share,
+            referralIncome: (up3.referralIncome || 0) + u3Share,
+            totalIncome: (up3.totalIncome || 0) + u3Share
           });
         }
       });
@@ -679,6 +686,7 @@ async function processMatured(uid) {
     }
   }
 }
+
 
 // ✅ Section switch function
 window.showSection = function(sectionId){
@@ -715,3 +723,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
