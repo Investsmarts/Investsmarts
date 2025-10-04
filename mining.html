@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
 
@@ -121,15 +123,28 @@
       box-shadow:0 4px 12px rgba(0,0,0,0.2); font-size:15px; font-weight:bold;
       color:#28a745; z-index:2000;
     }
+
+      /* Bottom Navbar */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0;
+      width: 100%; height: 70px; background: #fff;
+      display: flex; justify-content: space-around; align-items: center;
+      border-top: 2px solid #28a745; z-index: 100;
+    }
+    .nav-item { flex: 1; text-align: center; font-size: 12px; color: #333; text-decoration: none; transition: 0.3s; position: relative; padding: 10px 0; }
+    .nav-item i { font-size: 22px; display: block; margin-bottom: 3px; color: #28a745; }
+    .nav-item:hover { color: #28a745; }
+    .nav-item:hover i { color: #218838; }
+
   </style>
 </head>
 <body>
 
-  <div class="header">My App Header</div>
+  <div class="header">Smart Mining </div>
 
   <div class="top-nav">
-    <a href="#">1.4%</a>
-    <a href="#">1.5%</a>
+    <a href="invest.html">1.4%</a>
+    <a href="">1.5%</a>
     <a href="#">2.5%</a>
   </div>
 
@@ -156,6 +171,15 @@
       <span class="wave"></span><span class="wave"></span><span class="wave"></span><span class="wave"></span><span class="wave"></span>
     </div>
   </div>
+
+   <!-- Bottom Navbar -->
+  <div class="bottom-nav">
+    <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
+    <a href="mining.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
+    <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
+    <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
+  </div>
+
 
   <div class="popup" id="popupMsg"></div>
 
