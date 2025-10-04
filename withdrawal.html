@@ -1119,6 +1119,33 @@ window.loadPage = function (page) {
 };
 
 // Pull-to-refresh detection
+const loader = document.getElementById("refreshLoader");
+
+// 🔹 Page load hone par loader dikhana (default refresh me)
+window.addEventListener("load", () => {
+  loader.style.display = "flex";
+  setTimeout(() => {
+    loader.style.display = "none";
+  }, 1500); // 1.5 sec baad hide
+});
+
+// 🔹 Manual Refresh Trigger (button ke liye)
+function triggerCustomRefresh() {
+  if (!loader) return;
+
+  loader.style.display = "flex";
+
+  if (typeof manualRefresh === "function") {
+    manualRefresh(); // ✅ tumhara function chalega
+  }
+
+  setTimeout(() => {
+    loader.style.display = "none";
+    isPulled = false;
+  }, 2000);
+}
+
+// 🔹 Pull-to-refresh detection (mobile)
 let startY = 0;
 let isPulled = false;
 
@@ -1136,25 +1163,9 @@ window.addEventListener("touchmove", (e) => {
   }
 });
 
-function triggerCustomRefresh() {
-  const loader = document.getElementById("refreshLoader");
-  if (!loader) return;
-
-  // Show rainbow logo loader
-  loader.style.display = "flex";
-
-  // Yahan apna refresh logic call karo
-  if (typeof manualRefresh === "function") {
-    manualRefresh(); // ✅ tumhara refresh function chalega
-  }
-
-  // Loader ko auto hide bhi karna hai (safety ke liye)
-  setTimeout(() => {
-    loader.style.display = "none";
-    isPulled = false;
-  }, 2000);
-}
-
+window.addEventListener("touchend", () => {
+  isPulled = false;
+});
 
 
 // ❌ Right-click disable
