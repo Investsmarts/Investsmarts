@@ -239,61 +239,91 @@
       right: 0; top: 20%; bottom: 20%;
       width: 1px; background: #e0e0e0;
     }
+    /* ✅ Balance Card (Withdraw Page) */
+.balance-card {
+  max-width: 480px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg,#28a745,#34d058); /* Green gradient */
+  color: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
 
-    /* ✅ Balance Card */
-    .balance-card {
-      background: linear-gradient(135deg, #28a745, #20c997);
-      border-radius: 16px;
-      padding: 20px;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      margin-bottom: 20px;
-    }
-    .balance-icon { font-size: 42px; margin-right: 15px; }
-    .balance-info h3 { margin: 0; font-size: 16px; font-weight: 600; }
-    .balance-info .amount { font-size: 26px; font-weight: bold; margin: 5px 0; }
-    .balance-info small { font-size: 14px; opacity: 0.9; }
+/* Left Icon */
+.balance-card .balance-icon {
+  font-size: 40px;
+  color: #fff;
+  flex-shrink: 0;
+}
 
-    /* Clean Buttons */
-    .clean-buttons {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 5px;
-      margin: 20px 0;
-    }
-    .clean-btn {
-      background: #fff;
-      border-radius: 14px;
-      padding: 25px 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-      text-align: center;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .clean-btn:hover {
-      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-      transform: translateY(-2px);
-    }
-    .clean-btn i { font-size: 28px; color: #28a745; margin-bottom: 8px; display: block; }
-    .clean-btn p { margin: 0; font-size: 14px; font-weight: 500; color: #333; }
+/* Right Info Section */
+.balance-card .balance-info {
+  flex: 1;
+}
 
-    /* Content Area */
-    #contentArea {
-      margin-top: 20px;
-      background: #fff;
-      padding: 20px;
-      border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      min-height: 250px;
-      max-height: 400px;
-      overflow-y: auto;
-      overflow-x: hidden;  /* ✅ content scroll fix */
-    }
-    #contentArea * {
-      max-width: 100% !important;  /* ✅ ensure no overflow inside */
-    }
+.balance-card .balance-info h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 6px;
+  opacity: 0.95;
+}
+
+.balance-card .balance-info .amount {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.balance-card .balance-info small {
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+
+  /* Clean Buttons - Smaller Version */
+.clean-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 15px 0;
+}
+
+.clean-btn {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 8px;  /* 🔥 button height kam */
+  box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.clean-btn:hover {
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.clean-btn i {
+  font-size: 22px;   /* 🔥 icon size kam */
+  color: #28a745;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.clean-btn p {
+  margin: 0;
+  font-size: 13px;   /* 🔥 text size thoda chhota */
+  font-weight: 500;
+  color: #333;
+}
 
 
 /* Withdraw History Card */
@@ -601,6 +631,50 @@ input::placeholder { color: #888; }
   background: #218838;
 }
 
+/* Refresh Loader (Hidden by default) */
+#refreshLoader {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(255,255,255,0.95);
+  display: none;            /* default off */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+}
+
+#refreshLoader .loader-logo img {
+  width: 80px;   /* apne logo ka size */
+  height: auto;
+  margin-bottom: 20px;
+}
+
+#refreshLoader .loader-line {
+  width: 120px;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 50px;
+  overflow: hidden;
+  position: relative;
+}
+
+#refreshLoader .loader-line::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -120px;
+  width: 120px;
+  height: 100%;
+  background: linear-gradient(90deg,#28a745,#34d058);
+  border-radius: 50px;
+  animation: lineMove 1.2s linear infinite;
+}
+
+@keyframes lineMove {
+  0% { left: -120px; }
+  100% { left: 120px; }
+}
+
 
 </style>
 </head>
@@ -609,7 +683,8 @@ input::placeholder { color: #888; }
 
   <div class="dashboard">
 
-   <!-- ✅ Withdrawal Card -->
+
+    <!-- ✅ Withdrawal Card -->
    <div class="balance-card">
     <div class="balance-icon">
       <i class='bx bx-up-arrow-circle'></i>
@@ -667,6 +742,14 @@ input::placeholder { color: #888; }
     </div>
   </div>
 
+</div>
+
+<!-- Refresh Loader -->
+<div id="refreshLoader">
+  <div class="loader-logo">
+    <img src="myphoto/trustlogo.png" alt="Logo"> <!-- apna logo yaha daal -->
+  </div>
+  <div class="loader-line"></div>
 </div>
 
 <!-- Popup -->
@@ -858,15 +941,24 @@ input::placeholder { color: #888; }
     showSuccess("Withdrawal Requested!");
   };
 
-  window.manualRefresh = function () {
-    const historyList = document.getElementById("withdrawHistoryList");
-    historyList.innerHTML = "<p style='text-align:center; color:#666;'>Refreshing...</p>";
-    if (currentUserId) {
-      loadWithdrawHistory(currentUserId);
-    } else {
-      historyList.innerHTML = "<p style='text-align:center; color:red;'>User not logged in!</p>";
-    }
-  };
+ function manualRefresh() {
+  const historyList = document.getElementById("withdrawHistoryList");
+
+  // 🔹 Show loader
+  document.getElementById("refreshLoader").style.display = "flex";
+
+  // Refresh logic
+ 
+  if (currentUserId) {
+    loadWithdrawHistory(currentUserId).then(() => {
+      // 🔹 Hide loader after done
+      document.getElementById("refreshLoader").style.display = "none";
+    });
+  } else {
+    historyList.innerHTML = "<p style='text-align:center; color:red;'>User not logged in!</p>";
+    document.getElementById("refreshLoader").style.display = "none";
+  }
+}
 
   async function loadWithdrawHistory(userId) {
     const historyList = document.getElementById("withdrawHistoryList");
@@ -976,14 +1068,28 @@ input::placeholder { color: #888; }
     }
   }
 
-  // ✅ Load external pages
-  window.loadPage = function (page) {
-    fetch(page)
+// ✅ Load external pages aur scroll fix
+window.loadPage = function (page) {
+  const content = document.getElementById("contentArea");
+
+  // 🔹 Jabhi button dabaye, turant scroll top
+  window.scrollTo(0, 0);
+
+  // 🔹 Loading placeholder
+  content.innerHTML = "<p style='text-align:center; color:#28a745;'>⏳ Loading...</p>";
+
+  fetch(page)
     .then(res => res.text())
     .then(data => {
-      const content = document.getElementById("contentArea");
       content.innerHTML = data;
 
+      // 🔹 Dobara ensure scroll upar hi rahe
+      setTimeout(() => {
+        document.body.scrollTop = 0;        // Safari ke liye
+        document.documentElement.scrollTop = 0; // Chrome/Firefox ke liye
+      }, 30);
+
+      // ✅ Agar page ke andar <script> tags hain to run karo
       const scripts = content.querySelectorAll("script");
       scripts.forEach(oldScript => {
         const newScript = document.createElement("script");
@@ -998,21 +1104,11 @@ input::placeholder { color: #888; }
       });
     })
     .catch(() => {
-      document.getElementById("contentArea").innerHTML = "<p style='color:red'>Error loading page</p>";
+      content.innerHTML = "<p style='color:red; text-align:center;'>⚠ Error loading page</p>";
     });
-  };
-
-  // ❌ Disable right click + copy etc
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("keydown", e => {
-    if ((e.ctrlKey && ["c", "x", "v", "u"].includes(e.key.toLowerCase())) || e.key === "F12") {
-      e.preventDefault();
-    }
-  });
+};
 
 
 </script>
 </body>
 </html>
-
