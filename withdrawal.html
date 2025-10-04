@@ -941,14 +941,14 @@ input::placeholder { color: #888; }
     showSuccess("Withdrawal Requested!");
   };
 
- function manualRefresh() {
+window.manualRefresh = function () {
   const historyList = document.getElementById("withdrawHistoryList");
 
   // 🔹 Show loader
   document.getElementById("refreshLoader").style.display = "flex";
 
   // Refresh logic
- 
+  historyList.innerHTML = "<p style='text-align:center; color:#666;'>Refreshing...</p>";
   if (currentUserId) {
     loadWithdrawHistory(currentUserId).then(() => {
       // 🔹 Hide loader after done
@@ -958,7 +958,8 @@ input::placeholder { color: #888; }
     historyList.innerHTML = "<p style='text-align:center; color:red;'>User not logged in!</p>";
     document.getElementById("refreshLoader").style.display = "none";
   }
-}
+};
+
 
   async function loadWithdrawHistory(userId) {
     const historyList = document.getElementById("withdrawHistoryList");
