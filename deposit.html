@@ -654,7 +654,7 @@ async function loadDepositHistory(userId) {
 }
 
 onAuthStateChanged(auth, (user) => {
-  if (!user) window.location.href = "auth.html";
+  if (!user) window.location.href = "login.html";
   else { currentUserId = user.uid; loadDepositHistory(user.uid); 
   loadTotalDeposit(user.uid);}
 });
@@ -732,3 +732,4 @@ function showInstruction() {
 </script>
 </body>
 </html>
+
