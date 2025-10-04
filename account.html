@@ -5,24 +5,102 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Account</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background: #f9fafb;
+      background: #f5f7fa; /* ✅ same as dashboard */
       margin: 0;
-      padding-bottom: 120px;
+      padding: 15px;
+      padding-top: 70px;  /* header ke liye */
+      padding-bottom: 90px; /* bottom nav ke liye */
       color: #333;
     }
-    .container { max-width: 950px; margin: auto; padding: 20px; }
-    h1 { text-align: center; margin-bottom: 20px; color: #1e293b; }
 
-    /* Card */
+    .container {
+      max-width: 480px; /* ✅ Dashboard width */
+      margin: 0 auto;
+    }
+
+    /* ✅ Balance Card (copied from Dashboard) */
+    .balance-card {
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg,#28a745,#34d058);
+      color: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+    .balance-card h4 {
+      font-size: 14px;
+      margin: 0 0 8px;
+      opacity: 0.9;
+    }
+    .balance-card .amount {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    .balance-card .username {
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0.9;
+    }
+    .usdt-icon {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    /* ✅ Income Card (Dashboard style) */
+    .income-card {
+      margin: 0 auto 20px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .income-card h3 {
+      font-size: 15px;
+      margin-bottom: 12px;
+      font-weight: 600;
+      color: #555;
+    }
+    .income-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+    .income-row:last-child {
+      border-bottom: none;
+      font-weight: 600;
+    }
+
+    /* ✅ Level Badge */
+    .level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 14px;
+      background: rgba(0,0,0,0.1);
+    }
+
+    /* Generic Card */
     .card {
       background: #fff;
       padding: 20px;
       border-radius: 16px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-      margin-bottom: 25px;
+      margin-bottom: 20px;
       transition: 0.3s;
     }
     .card h2 {
@@ -38,69 +116,6 @@
       font-size: 15px;
     }
     .info-row:last-child { border-bottom: none; }
-
-    /* Leadership Card Styling */
-     /* Leadership Card Styling */
-.leader-card {
-  background: linear-gradient(135deg,#28a745,#60d394);
-  color: #fff;
-  text-align: center;
-  padding: 25px;
-  border-radius: 18px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-}
-
-.leader-header {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.leader-box {
-  flex: 1;
-  text-align: center;
-}
-
-.leader-icon {
-  font-size: 32px;
-  margin-bottom: 6px;
-  display: block;
-}
-
-.leader-label {
-  font-size: 14px;
-  opacity: 0.9;
-  display: block;
-}
-
-.leader-value {
-  font-size: 18px;
-  font-weight: 600;
-  margin-top: 4px;
-}
-
-.leader-next {
-  font-size: 14px;
-  opacity: 0.9;
-  margin-bottom: 10px;
-}
-
-
-    /* Progress Bar */
-    .progress {
-      background: rgba(255,255,255,0.3);
-      border-radius: 8px;
-      overflow: hidden;
-      height: 14px;
-      margin-top: 12px;
-    }
-    .progress-bar {
-      background: #fff;
-      height: 100%;
-      width: 0%;
-      transition: width 0.4s ease;
-    }
 
     /* Buttons */
     .btn {
@@ -125,12 +140,13 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 70px;
+      height: 65px;
       background: #fff;
       display: flex;
       justify-content: space-around;
       align-items: center;
       border-top: 2px solid #28a745;
+      box-shadow: 0 -3px 12px rgba(0,0,0,0.05);
       z-index: 100;
     }
     .nav-item {
@@ -151,17 +167,7 @@
     }
     .nav-item:hover { color: #28a745; }
     .nav-item:hover i { color: #218838; }
-    .nav-item:not(:last-child)::after {
-      content: "";
-      position: absolute;
-      right: 0;
-      top: 20%;
-      bottom: 20%;
-      width: 1px;
-      background: #e0e0e0;
-    }
 
-    /* Helper Text */
     .helper {
       font-size: 13px;
       color: #666;
@@ -169,197 +175,101 @@
       text-align: center;
     }
 
-    /* Popup Modal */
-    #popupOverlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
+     /* ✅ Header */
+    .header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      background: #32cd32;
+      color: white; text-align: center;
+      padding: 14px; font-size: 18px; font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      z-index: 1000;
     }
-    #popupBox {
-      background: #fff;
-      padding: 20px;
-      border-radius: 14px;
-      width: 90%;
-      max-width: 350px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-      text-align: center;
-      animation: zoomIn 0.2s ease;
-    }
-    #popupBox h3 { margin:0 0 12px; font-size:18px; color:#111; }
-    #popupInput {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 15px;
-    }
-    @keyframes zoomIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    .popup-actions {
-      margin-top:15px;
-      display:flex;
-      gap:10px;
-      justify-content:flex-end;
-    }
-    .popup-actions button {
-      padding:8px 14px;
-      border:none;
-      border-radius:8px;
-      color:#fff;
-      cursor:pointer;
-    }
-    .popup-cancel { background:#999; }
-    .popup-ok { background:#28a745; }
 
-
-    /* Small Header */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0px 16px;
-  background: #28a745; /* Trust green */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  position: sticky;
-  top: 0;
-  z-index: 999;
-}
-
-.header .logo {
-  font-size: 20px;
-  font-weight: bold;
-  color: #fff;
-}
-
-.header .title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff; /* plain white for clarity */
-}
-
-.header .notif {
-  position: relative;
-  background: rgba(255,255,255,0.15);
-  border-radius: 50%;
-  padding: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.header .notif i {
-  font-size: 18px;
-  color: #fff;
-}
-
-.header .notif .dot {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 8px;
-  height: 8px;
-  background: red;
-  border-radius: 50%;
-}
-
-
+ 
   </style>
 </head>
 <body>
-  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+ <div class="header">My account</div>
 
+<div class="container">
 
-
-<!-- Header -->
-<header class="header">
- 
-  </div>
-  <h1 class="title">TrustDollar <small>Account</small></h1>
-  
-</header>
-
-
-  <div class="container">
-  
-
-  <!-- Leadership Level (Top Card) -->
-<div class="card leader-card" id="leaderCard">
-  <div class="leader-header">
-    <div class="leader-box">
-      <i class="bx bxs-user leader-icon" id="leaderIcon"></i>
-      <span class="leader-label">Rank</span>
-      <div class="leader-value" id="userRank">Newbie</div>
+  <!-- ✅ Balance Card -->
+  <div class="balance-card">
+    <h4>Current Balance (USDT)</h4>
+    <div class="amount">
+      <svg class="usdt-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+        <circle cx="16" cy="16" r="16" fill="#26A17B"/>
+        <path fill="#fff" d="M17.03 17.41v-2.29h6.41V10h-14v5.12h6.4v2.29c-5.21.24-9.14 1.28-9.14 2.52s3.93 2.29 9.14 2.52v6.28h4.2v-6.28c5.2-.24 9.13-1.28 9.13-2.52s-3.93-2.28-9.13-2.52z"/>
+      </svg>
+      <span id="walletBalance">0.00</span>
     </div>
-    <div class="leader-box">
-      <i class="bx bxs-group leader-icon"></i>
-      <span class="leader-label">Total Team</span>
-      <div class="leader-value" id="rankTeam">0</div>
+    <div class="username">
+      <span id="userName">User</span> | <span id="userLevel">No Level</span>
     </div>
   </div>
-  <p class="leader-next" id="nextGoal">Keep Growing 🚀</p>
-  <div class="progress"><div class="progress-bar" id="rankProgress"></div></div>
+
+  <!-- ✅ Income Card -->
+  <div class="income-card">
+    <h3>My Income (USDT)</h3>
+    <div class="income-row"><span>Mining Profit</span><span id="miningIncome">0.00</span></div>
+    <div class="income-row"><span>Team Income</span><span id="teamIncome">0.00</span></div>
+    <div class="income-row"><span>Staking Income</span><span id="stakingIncome">0.00</span></div>
+    <div class="income-row"><span>Total Income</span><span id="totalIncome">0.00</span></div>
+  </div>
+
+  <p class="helper">Manage your profile, wallet and security settings. Keep your account safe 🔒</p>
+
+  <!-- Profile Info -->
+  <div class="card">
+    <h2>Profile Information</h2>
+    <div class="info-row"><span>Name</span><span id="profileName">Loading...</span></div>
+    <div class="info-row"><span>Email</span><span id="userEmail">Loading...</span></div>
+    <div class="info-row"><span>Referral Code</span><span id="userRef">Loading...</span></div>
+    <div class="info-row"><span>Joined</span><span id="userJoin">Loading...</span></div>
+    <button class="btn btn-green" onclick="editProfile()">✏️ Edit Profile</button>
+  </div>
+
+  <!-- Wallet Info -->
+  <div class="card">
+    <h2>Wallet Summary</h2>
+    <div class="info-row"><span>Total Deposit</span><span id="userDeposit">$0</span></div>
+    <div class="info-row"><span>Current Balance</span><span id="userBalance">$0</span></div>
+    <div class="info-row"><span>Total Earnings</span><span id="userEarnings">$0</span></div>
+  </div>
+
+  <!-- Referral Stats -->
+  <div class="card">
+    <h2>My Team</h2>
+    <div class="info-row"><span>Level 1</span><span id="teamLv1">0</span></div>
+    <div class="info-row"><span>Level 2</span><span id="teamLv2">0</span></div>
+    <div class="info-row"><span>Level 3</span><span id="teamLv3">0</span></div>
+    <div class="info-row"><strong>Total Team</strong><strong id="teamTotal">0</strong></div>
+  </div>
+
+  <!-- Security -->
+  <div class="card">
+    <h2>Security Settings</h2>
+    <p class="helper">Update your password and email to keep your account safe.</p>
+    <button class="btn btn-green" onclick="changePassword()">🔑 Change Password</button>
+    <button class="btn btn-green" onclick="changeEmail()">📧 Change Email</button>
+  </div>
+
+  <!-- Logout -->
+  <button class="btn btn-logout" onclick="logout()">🚪 Logout</button>
 </div>
 
-    <p class="helper">Manage your profile, wallet and security settings. Keep your account safe 🔒</p>
-
-    <!-- Profile Info -->
-    <div class="card">
-      <h2>Profile Information</h2>
-      <div class="info-row"><span>Name</span><span id="userName">Loading...</span></div>
-      <div class="info-row"><span>Email</span><span id="userEmail">Loading...</span></div>
-      <div class="info-row"><span>Referral Code</span><span id="userRef">Loading...</span></div>
-      <div class="info-row"><span>Joined</span><span id="userJoin">Loading...</span></div>
-      <button class="btn btn-green" onclick="editProfile()">✏️ Edit Profile</button>
-    </div>
-
-    <!-- Wallet Info -->
-    <div class="card">
-      <h2>Wallet Summary</h2>
-      <div class="info-row"><span>Total Deposit</span><span id="userDeposit">$0</span></div>
-      <div class="info-row"><span>Current Balance</span><span id="userBalance">$0</span></div>
-      <div class="info-row"><span>Total Earnings</span><span id="userEarnings">$0</span></div>
-    </div>
-
-    <!-- Referral Stats -->
-    <div class="card">
-      <h2>My Team</h2>
-      <div class="info-row"><span>Level 1</span><span id="teamLv1">0</span></div>
-      <div class="info-row"><span>Level 2</span><span id="teamLv2">0</span></div>
-      <div class="info-row"><span>Level 3</span><span id="teamLv3">0</span></div>
-      <div class="info-row"><strong>Total Team</strong><strong id="teamTotal">0</strong></div>
-    </div>
-
-    <!-- Security -->
-    <div class="card">
-      <h2>Security Settings</h2>
-      <p class="helper">Update your password and email to keep your account safe.</p>
-      <button class="btn btn-green" onclick="changePassword()">🔑 Change Password</button>
-      <button class="btn btn-green" onclick="changeEmail()">📧 Change Email</button>
-    </div>
-
-    <!-- Logout -->
-    <button class="btn btn-logout" onclick="logout()">🚪 Logout</button>
-  </div>
-
-  <!-- Navbar -->
-  <div class="bottom-nav">
-    <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
-    <a href="mining.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
-    <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
-    <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
-  </div>
+<!-- Navbar -->
+<div class="bottom-nav">
+  <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
+  <a href="mining.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
+  <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
+  <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
+</div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-  import { getAuth, onAuthStateChanged, signOut, updatePassword, updateEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   // Firebase Config
   const firebaseConfig = {
@@ -376,15 +286,9 @@
   const db = getFirestore(app);
   const auth = getAuth(app);
 
-  // Rank Logic with Icon
-  function getRank(total) {
-    if (total >= 1000) return { rank: "💎 Diamond Leader", next: "Max Level Achieved 🎉", goal: 1000, icon: "bxs-diamond" };
-    if (total >= 500) return { rank: "🏆 Gold Leader", next: "1000 Members for Diamond", goal: 1000, icon: "bxs-trophy" };
-    if (total >= 200) return { rank: "🥈 Silver Leader", next: "500 Members for Gold", goal: 500, icon: "bxs-medal" };
-    if (total >= 50)  return { rank: "🥉 Bronze Leader", next: "200 Members for Silver", goal: 200, icon: "bxs-medal" };
-    if (total >= 10)  return { rank: "🌱 Starter", next: "50 Members for Bronze", goal: 50, icon: "bx-leaf" };
-    return { rank: "👤 Newbie", next: "10 Members for Starter", goal: 10, icon: "bxs-user" };
-  }
+  const walletBalanceEl = document.getElementById("walletBalance");
+  const userLevelEl = document.getElementById("userLevel");
+  const userNameEl = document.getElementById("userName");
 
   // Load user data
   onAuthStateChanged(auth, async (user) => {
@@ -393,15 +297,51 @@
       if (userDoc.exists()) {
         const data = userDoc.data();
 
-        document.getElementById("userName").textContent = data.name || "Unnamed";
+        // Profile Info
+        document.getElementById("profileName").textContent = data.name || "Unnamed";
+        userNameEl.textContent = data.name || "User";
         document.getElementById("userEmail").textContent = data.email || user.email;
         document.getElementById("userRef").textContent = data.referralCode || "N/A";
         document.getElementById("userJoin").textContent = data.createdAt ? new Date(data.createdAt).toLocaleDateString() : "N/A";
 
+        // Wallet
+        let balance = data.walletBalance || 0;
+        walletBalanceEl.textContent = balance.toFixed(2);
         document.getElementById("userDeposit").textContent = "$" + (data.lifetimeDeposit || 0);
-        document.getElementById("userBalance").textContent = "$" + (data.balance || 0);
+        document.getElementById("userBalance").textContent = "$" + balance.toFixed(2);
         document.getElementById("userEarnings").textContent = "$" + (data.totalEarnings || 0);
 
+        // ✅ Level Badge Logic
+        let lifetimeDeposit = data.lifetimeDeposit ?? 0;
+        let level = "No Level";
+        let levelColor = "#999";
+        let bgColor = "#eee";
+        let levelIcon = "";
+
+        if (lifetimeDeposit >= 200 && lifetimeDeposit < 500) {
+          level = "Starter"; levelColor = "#FF9800"; bgColor = "#FFE0B2"; levelIcon = "🌱";
+        } else if (lifetimeDeposit >= 500 && lifetimeDeposit < 1000) {
+          level = "Starter+"; levelColor = "#00BCD4"; bgColor = "#B2EBF2"; levelIcon = "⭐";
+        } else if (lifetimeDeposit >= 5000 && lifetimeDeposit < 10000) {
+          level = "Bronze"; levelColor = "#CD7F32"; bgColor = "#F5DEB3"; levelIcon = "🥉";
+        } else if (lifetimeDeposit >= 10000 && lifetimeDeposit < 20000) {
+          level = "Silver"; levelColor = "#C0C0C0"; bgColor = "#E0E0E0"; levelIcon = "🥈";
+        } else if (lifetimeDeposit >= 20000 && lifetimeDeposit < 40000) {
+          level = "Gold"; levelColor = "#FFD700"; bgColor = "#FFF8DC"; levelIcon = "🥇";
+        } else if (lifetimeDeposit >= 50000) {
+          level = "Diamond"; levelColor = "#00BFFF"; bgColor = "#E0F7FA"; levelIcon = "💎";
+        }
+
+        userLevelEl.innerHTML = `<span class="level-badge" style="color:${levelColor}; background:${bgColor};">${levelIcon} ${level}</span>`;
+
+        // ✅ Income
+        document.getElementById("miningIncome").textContent = (data.miningIncome || 0).toFixed(2);
+        document.getElementById("teamIncome").textContent = (data.teamIncome || 0).toFixed(2);
+        document.getElementById("stakingIncome").textContent = (data.stakingIncome || 0).toFixed(2);
+        let total = (data.miningIncome || 0) + (data.teamIncome || 0) + (data.stakingIncome || 0);
+        document.getElementById("totalIncome").textContent = total.toFixed(2);
+
+        // Team Members
         const lv1 = await getDocs(query(collection(db, "users"), where("referredBy", "==", data.referralCode)));
         const lv2 = await getDocs(query(collection(db, "users"), where("upline2", "==", user.uid)));
         const lv3 = await getDocs(query(collection(db, "users"), where("upline3", "==", user.uid)));
@@ -411,17 +351,6 @@
         document.getElementById("teamLv2").textContent = lv2.size;
         document.getElementById("teamLv3").textContent = lv3.size;
         document.getElementById("teamTotal").textContent = totalTeam;
-
-        // Rank Update
-        const { rank, next, goal, icon } = getRank(totalTeam);
-        document.getElementById("userRank").textContent = rank;
-        document.getElementById("rankTeam").textContent = totalTeam;
-        document.getElementById("nextGoal").textContent = next;
-        document.getElementById("leaderIcon").className = "bx " + icon + " leader-icon";
-
-        // Progress bar update
-        let progress = Math.min((totalTeam / goal) * 100, 100);
-        document.getElementById("rankProgress").style.width = progress + "%";
       }
     } else {
       window.location.href = "login.html";
@@ -441,4 +370,3 @@
 </script>
 </body>
 </html>
-
