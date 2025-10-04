@@ -7,14 +7,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
+     body {
+       font-family: 'Poppins', sans-serif;
       background: #f5f7fa;
       margin: 0;
       padding: 15px;
       padding-bottom: 90px;
       color: #333;
-    }
+
+     padding-top: 70px; /* ✅ यह लाइन add करो */
+     }
+
 
     /* Balance Card */
     .balance-card {
@@ -147,9 +150,23 @@
       background: rgba(0,0,0,0.1); /* default transparent background */
     }
 
+   /* ✅ Header */
+    .header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      background: #32cd32;
+      color: white; text-align: center;
+      padding: 14px; font-size: 18px; font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      z-index: 1000;
+    }
+.wallet-card {
+  margin-top: 80px;  /* sirf wallet box ko neeche karega */
+}
+
   </style>
 </head>
 <body>
+   <div class="header">MY Dashword </div>
 
   <!-- Balance Card -->
   <div class="balance-card">
@@ -954,39 +971,12 @@ document.getElementById("totalIncome").textContent = total.toFixed(2);
       window.location.href = "register.html";
     }
   });
-</script>
 
-</script>
-<script>
-// ❌ Right-click disable
-  document.addEventListener("contextmenu", function(e) {
-    e.preventDefault();
-    
-  });
 
-// ❌ Disable text selection
-  document.addEventListener("selectstart", function(e) {
-    e.preventDefault();
-  });
 
-// ❌ Disable copy (Ctrl+C), cut (Ctrl+X), paste (Ctrl+V), view-source (Ctrl+U)
-  document.addEventListener("keydown", function(e) {
-    if (
-      (e.ctrlKey && (e.key === "c" || e.key === "C")) || 
-      (e.ctrlKey && (e.key === "x" || e.key === "X")) || 
-      (e.ctrlKey && (e.key === "v" || e.key === "V")) || 
-      (e.ctrlKey && (e.key === "u" || e.key === "U")) || 
-    (e.key === "F12") // DevTools
-    ) {
-      e.preventDefault();
-    
-  }
-});
-  
+
 </script>
 </body>
 </html>
-
-
 
 
