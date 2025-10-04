@@ -135,6 +135,18 @@
       .action-buttons { gap: 8px; }
       .action-buttons .btn { font-size: 13px; padding: 12px 6px; }
     }
+
+    .level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 14px;
+      background: rgba(0,0,0,0.1); /* default transparent background */
+    }
+
   </style>
 </head>
 <body>
@@ -193,7 +205,7 @@
     <h3>My Income (USDT)</h3>
     <div class="income-row"><span>Mining Profit</span><span id="miningIncome">0.00</span></div>
     <div class="income-row"><span>Team Income</span><span id="teamIncome">0.00</span></div>
-    <div class="income-row"><span>Activity Income</span><span id="activityIncome">0.00</span></div>
+    <div class="income-row"><span>Staking Income</span><span id="stakingIncome">0.00</span></div>
     <div class="income-row"><span>Total Income</span><span id="totalIncome">0.00</span></div>
   </div>
 
@@ -706,9 +718,9 @@ setInterval(updateParticipants, 86400000); // daily increment
       <div class="link-group">
         <h3>Resources</h3>
         <ul>
-          <li><a href="#">Docs</a></li>
-          <li><a href="#">Tutorials</a></li>
-          <li><a href="#">Invite Friends</a></li>
+          <li><a href="doc.html">Docs</a></li>
+          <li><a href="tutorial.html">Tutorials</a></li>
+          <li><a href="invite.html">Invite Friends</a></li>
         </ul>
       </div>
       <div class="link-group">
@@ -716,7 +728,7 @@ setInterval(updateParticipants, 86400000); // daily increment
         <ul>
           <li><a href="terms.html">Terms of Service</a></li>
           <li><a href="privacy.html">Privacy Policy</a></li>
-          <li><a href="#">About Us</a></li>
+          <li><a href="about.html">About Us</a></li>
         </ul>
       </div>
     </div>
@@ -828,6 +840,7 @@ setInterval(updateParticipants, 86400000); // daily increment
 </script>
 
 <!-- Firebase Logic -->
+<!-- Firebase Logic -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -857,40 +870,82 @@ setInterval(updateParticipants, 86400000); // daily increment
         const userRef = doc(db, "users", user.uid);
         const userDoc = await getDoc(userRef);
 
-        const investRef = doc(db, "investments", user.uid);
-        const investDoc = await getDoc(investRef);
-
         if (userDoc.exists()) {
           const data = userDoc.data();
+
+          // Wallet balance + Name
           let balance = data.walletBalance || 0;
           walletBalanceEl.textContent = balance.toFixed(2);
           userNameEl.textContent = data.name || "User";
 
-            // Level
+          // ---- Level Logic ----
           let lifetimeDeposit = data.lifetimeDeposit ?? 0;
-          if (data.lifetimeDeposit === undefined) {
-            await updateDoc(userRef, { lifetimeDeposit: balance });
-            lifetimeDeposit = balance;
-          }
 
           let level = "No Level";
-          if (lifetimeDeposit >= 5000 && lifetimeDeposit < 10000) level = "Bronze";
-          else if (lifetimeDeposit >= 10000 && lifetimeDeposit < 20000) level = "Silver";
-          else if (lifetimeDeposit >= 20000 && lifetimeDeposit < 40000) level = "Gold";
-          else if (lifetimeDeposit >= 40000) level = "Diamond";
+let levelColor = "#999"; // default text color
+let bgColor = "#eee";    // default bg
+let levelIcon = "";
 
-          userLevelEl.textContent = level;
+// Starter: 200 - 499
+if (lifetimeDeposit >= 200 && lifetimeDeposit < 500) {
+  level = "Starter";
+  levelColor = "#FF9800"; // Orange text
+  bgColor = "#FFE0B2";    // Light orange background
+  levelIcon = "🌱";
+}
+// Starter+ (500 - 999)
+else if (lifetimeDeposit >= 500 && lifetimeDeposit < 1000) {
+  level = "Starter+";
+  levelColor = "#00BCD4"; // Cyan text
+  bgColor = "#B2EBF2";    // Light cyan background
+  levelIcon = "⭐";
+}
+// Bronze
+else if (lifetimeDeposit >= 5000 && lifetimeDeposit < 10000) {
+  level = "Bronze";
+  levelColor = "#CD7F32";
+  bgColor = "#F5DEB3"; // wheat/light brown
+  levelIcon = "🥉";
+}
+// Silver
+else if (lifetimeDeposit >= 10000 && lifetimeDeposit < 20000) {
+  level = "Silver";
+  levelColor = "#C0C0C0";
+  bgColor = "#E0E0E0";
+  levelIcon = "🥈";
+}
+// Gold
+else if (lifetimeDeposit >= 20000 && lifetimeDeposit < 40000) {
+  level = "Gold";
+  levelColor = "#FFD700";
+  bgColor = "#FFF8DC";
+  levelIcon = "🥇";
+}
+// Diamond
+else if (lifetimeDeposit >= 50000) {
+  level = "Diamond";
+  levelColor = "#00BFFF";
+  bgColor = "#E0F7FA";
+  levelIcon = "💎";
+}
 
-            // Income Logic
-          if (investDoc.exists()) {
-            const investData = investDoc.data();
-            document.getElementById("miningIncome").textContent = (investData.miningIncome || 0).toFixed(2);
-            document.getElementById("teamIncome").textContent = (investData.teamIncome || 0).toFixed(2);
-            document.getElementById("activityIncome").textContent = (investData.activityIncome || 0).toFixed(2);
+// Show in badge box
+userLevelEl.innerHTML = `
+<span class="level-badge" style="color:${levelColor}; background:${bgColor};">
+${levelIcon} ${level}
+</span>
+`;
 
-            let total = (investData.miningIncome || 0) + (investData.teamIncome || 0) + (investData.activityIncome || 0);
-            document.getElementById("totalIncome").textContent = total.toFixed(2);
-          }
+
+          // ---- Income Logic (from users/{uid}) ----
+document.getElementById("miningIncome").textContent = (data.miningIncome || 0).toFixed(2);
+document.getElementById("teamIncome").textContent = (data.teamIncome || 0).toFixed(2);
+document.getElementById("stakingIncome").textContent = (data.stakingIncome || 0).toFixed(2);
+
+let total = (data.miningIncome || 0) + (data.teamIncome || 0) + (data.stakingIncome || 0);
+document.getElementById("totalIncome").textContent = total.toFixed(2);
+
+          console.log("User Data:", data); // Debugging
         }
       } catch (err) {
         console.error("Error:", err);
@@ -899,6 +954,8 @@ setInterval(updateParticipants, 86400000); // daily increment
       window.location.href = "register.html";
     }
   });
+</script>
+
 </script>
 <script>
 // ❌ Right-click disable
@@ -929,6 +986,5 @@ setInterval(updateParticipants, 86400000); // daily increment
 </script>
 </body>
 </html>
-
 
 
