@@ -1,372 +1,285 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f5f7fa; /* ✅ same as dashboard */
-      margin: 0;
-      padding: 15px;
-      padding-top: 70px;  /* header ke liye */
-      padding-bottom: 90px; /* bottom nav ke liye */
-      color: #333;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Account — Auto Hide Popup</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<style>
+:root{--green:#32cd32;--muted:#777;}
+body{font-family:'Poppins',sans-serif;background:#f5f7fa;margin:0;padding:15px;padding-top:70px;padding-bottom:90px;color:#222}
+.container{max-width:480px;margin:0 auto}
+.header{position:fixed;top:0;left:0;width:100%;background:var(--green);color:#fff;text-align:center;padding:14px;font-size:18px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.15);z-index:1000}
+.profile-card{background:#fff;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 18px rgba(0,0,0,.08);margin-bottom:18px}
+.profile-pic{width:100px;height:100px;margin:0 auto}
+.profile-pic img{width:100px;height:100px;border-radius:18px;object-fit:cover;display:block;background:#fff}
+.profile-name{font-size:18px;font-weight:600;color:#1e293b;margin-top:10px}
+.profile-email{color:var(--muted);font-size:14px;margin-top:4px}
+.button-box{background:#fff;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:16px;margin-top:10px}
+.button-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.action-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;border-radius:12px;background:#fff;border:1px solid #eee;cursor:pointer;transition:all .2s;text-align:center}
+.action-btn:hover{background:#f6fff6;border-color:var(--green);transform:translateY(-3px)}
+.action-btn i{font-size:26px;color:var(--green);margin-bottom:8px}
+.action-btn span{font-size:14px;font-weight:500;color:#222}
+.btn-logout{background:#ef4444;color:#fff;width:100%;border:none;border-radius:12px;padding:12px;font-size:16px;font-weight:600;margin-top:20px;cursor:pointer}
+.bottom-nav{position:fixed;bottom:0;left:0;width:100%;height:65px;background:#fff;display:flex;justify-content:space-around;align-items:center;border-top:2px solid #28a745;box-shadow:0 -3px 12px rgba(0,0,0,.05);z-index:100}
+.nav-item{flex:1;text-align:center;font-size:12px;color:#333;text-decoration:none;padding:10px 0}
+.nav-item i{font-size:22px;display:block;margin-bottom:3px;color:#28a745}
 
-    .container {
-      max-width: 480px; /* ✅ Dashboard width */
-      margin: 0 auto;
-    }
+/* Main Modal (Center Edit Box) */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+  padding: 15px; /* small padding for mobile edges */
+  box-sizing: border-box;
+}
 
-    /* ✅ Balance Card (copied from Dashboard) */
-    .balance-card {
-      margin: 0 auto 20px;
-      background: linear-gradient(135deg,#28a745,#34d058);
-      color: #fff;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-    }
-    .balance-card h4 {
-      font-size: 14px;
-      margin: 0 0 8px;
-      opacity: 0.9;
-    }
-    .balance-card .amount {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: #fff;
-    }
-    .balance-card .username {
-      font-size: 13px;
-      font-weight: 500;
-      opacity: 0.9;
-    }
-    .usdt-icon {
-      width: 22px;
-      height: 22px;
-      flex-shrink: 0;
-    }
+.modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
 
-    /* ✅ Income Card (Dashboard style) */
-    .income-card {
-      margin: 0 auto 20px;
-      background: #fff;
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    }
-    .income-card h3 {
-      font-size: 15px;
-      margin-bottom: 12px;
-      font-weight: 600;
-      color: #555;
-    }
-    .income-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
-      font-size: 14px;
-    }
-    .income-row:last-child {
-      border-bottom: none;
-      font-weight: 600;
-    }
+/* ✅ Responsive modal box */
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 25px 20px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh; /* prevents overflow */
+  text-align: center;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+  box-sizing: border-box;
+  overflow-y: auto; /* scroll if content bigger */
+  -webkit-overflow-scrolling: touch;
+}
 
-    /* ✅ Level Badge */
-    .level-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-weight: bold;
-      font-size: 14px;
-      background: rgba(0,0,0,0.1);
-    }
+.modal.show .modal-content {
+  transform: scale(1);
+}
 
-    /* Generic Card */
-    .card {
-      background: #fff;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-      margin-bottom: 20px;
-      transition: 0.3s;
-    }
-    .card h2 {
-      margin: 0 0 15px;
-      font-size: 18px;
-      color: #1e293b;
-    }
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
-      font-size: 15px;
-    }
-    .info-row:last-child { border-bottom: none; }
+/* Titles */
+.modal-content h3 {
+  margin-top: 0;
+  color: #222;
+}
+.modal-content h4 {
+  color: #555;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
 
-    /* Buttons */
-    .btn {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 10px;
-      font-weight: bold;
-      color: #fff;
-      cursor: pointer;
-      transition: 0.3s;
-      font-size: 15px;
-    }
-    .btn-green { background: #28a745; }
-    .btn-logout { background: #ef4444; }
-    .btn:hover { opacity: 0.9; }
+/* Inputs and textarea */
+.modal-content input,
+.modal-content textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+.modal-content textarea {
+  min-height: 100px;
+  resize: vertical;
+}
 
-    /* Navbar */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 65px;
-      background: #fff;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      border-top: 2px solid #28a745;
-      box-shadow: 0 -3px 12px rgba(0,0,0,0.05);
-      z-index: 100;
-    }
-    .nav-item {
-      flex: 1;
-      text-align: center;
-      font-size: 12px;
-      color: #333;
-      text-decoration: none;
-      transition: 0.3s;
-      position: relative;
-      padding: 10px 0;
-    }
-    .nav-item i {
-      font-size: 22px;
-      display: block;
-      margin-bottom: 3px;
-      color: #28a745;
-    }
-    .nav-item:hover { color: #28a745; }
-    .nav-item:hover i { color: #218838; }
+/* Action buttons */
+.modal-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.modal-actions button {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+.save-btn {
+  background: var(--green);
+  color: #fff;
+}
+.cancel-btn {
+  background: #ef4444;
+  color: #fff;
+}
 
-    .helper {
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 15px;
-      text-align: center;
-    }
+/* 📱 Mobile specific tuning */
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 20px 15px;
+    width: 100%;
+    border-radius: 14px;
+  }
+  .modal-content input,
+  .modal-content textarea {
+    font-size: 15px;
+  }
+}
 
-     /* ✅ Header */
-    .header {
-      position: fixed; top: 0; left: 0; width: 100%;
-      background: #32cd32;
-      color: white; text-align: center;
-      padding: 14px; font-size: 18px; font-weight: bold;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      z-index: 1000;
-    }
-
- 
-  </style>
+/* ✅ Notification popup (center auto-hide) */
+.notify{
+  position:fixed;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%) scale(0.9);
+  background:#333;color:#fff;
+  padding:15px 25px;
+  border-radius:10px;
+  font-weight:500;
+  font-size:15px;
+  text-align:center;
+  opacity:0;
+  pointer-events:none;
+  transition:all .4s ease;
+  z-index:2000;
+}
+.notify.show{
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1);
+  pointer-events:auto;
+}
+.notify.success{background:#32cd32;}
+.notify.error{background:#e53935;}
+</style>
 </head>
 <body>
- <div class="header">My account</div>
+<div class="header">My Account</div>
 
 <div class="container">
+  <div class="profile-card">
+    <div class="profile-pic"><img id="profileImage" alt=""></div>
+    <div id="userName" class="profile-name">Loading...</div>
+    <div id="userEmail" class="profile-email">Loading...</div>
+  </div>
 
-  <!-- ✅ Balance Card -->
-  <div class="balance-card">
-    <h4>Current Balance (USDT)</h4>
-    <div class="amount">
-      <svg class="usdt-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-        <circle cx="16" cy="16" r="16" fill="#26A17B"/>
-        <path fill="#fff" d="M17.03 17.41v-2.29h6.41V10h-14v5.12h6.4v2.29c-5.21.24-9.14 1.28-9.14 2.52s3.93 2.29 9.14 2.52v6.28h4.2v-6.28c5.2-.24 9.13-1.28 9.13-2.52s-3.93-2.28-9.13-2.52z"/>
-      </svg>
-      <span id="walletBalance">0.00</span>
+  <div class="button-box">
+    <div class="button-grid">
+      <div class="action-btn" onclick="openModal('Edit Email')"><i class='bx bx-envelope'></i><span> Email</span></div>
+      <div class="action-btn" onclick="openModal('Edit Password')"><i class='bx bx-lock'></i><span> Password</span></div>
+      <div class="action-btn" onclick="openModal('Edit Mobile')"><i class='bx bx-mobile'></i><span> Mobile</span></div>
+      <div class="action-btn" onclick="window.location.href='withdrawal.html'"><i class='bx bx-wallet'></i><span> Wallet</span></div>
+      <div class="action-btn" onclick="openModal('Revenue Details')"><i class='bx bx-line-chart'></i><span>Revenue</span></div>
+      <div class="action-btn" onclick="openModal('Withdrawal Report')"><i class='bx bx-file'></i><span>Withdrawal Report</span></div>
     </div>
-    <div class="username">
-      <span id="userName">User</span> | <span id="userLevel">No Level</span>
-    </div>
   </div>
 
-  <!-- ✅ Income Card -->
-  <div class="income-card">
-    <h3>My Income (USDT)</h3>
-    <div class="income-row"><span>Mining Profit</span><span id="miningIncome">0.00</span></div>
-    <div class="income-row"><span>Team Income</span><span id="teamIncome">0.00</span></div>
-    <div class="income-row"><span>Staking Income</span><span id="stakingIncome">0.00</span></div>
-    <div class="income-row"><span>Total Income</span><span id="totalIncome">0.00</span></div>
-  </div>
-
-  <p class="helper">Manage your profile, wallet and security settings. Keep your account safe 🔒</p>
-
-  <!-- Profile Info -->
-  <div class="card">
-    <h2>Profile Information</h2>
-    <div class="info-row"><span>Name</span><span id="profileName">Loading...</span></div>
-    <div class="info-row"><span>Email</span><span id="userEmail">Loading...</span></div>
-    <div class="info-row"><span>Referral Code</span><span id="userRef">Loading...</span></div>
-    <div class="info-row"><span>Joined</span><span id="userJoin">Loading...</span></div>
-    <button class="btn btn-green" onclick="editProfile()">✏️ Edit Profile</button>
-  </div>
-
-  <!-- Wallet Info -->
-  <div class="card">
-    <h2>Wallet Summary</h2>
-    <div class="info-row"><span>Total Deposit</span><span id="userDeposit">$0</span></div>
-    <div class="info-row"><span>Current Balance</span><span id="userBalance">$0</span></div>
-    <div class="info-row"><span>Total Earnings</span><span id="userEarnings">$0</span></div>
-  </div>
-
-  <!-- Referral Stats -->
-  <div class="card">
-    <h2>My Team</h2>
-    <div class="info-row"><span>Level 1</span><span id="teamLv1">0</span></div>
-    <div class="info-row"><span>Level 2</span><span id="teamLv2">0</span></div>
-    <div class="info-row"><span>Level 3</span><span id="teamLv3">0</span></div>
-    <div class="info-row"><strong>Total Team</strong><strong id="teamTotal">0</strong></div>
-  </div>
-
-  <!-- Security -->
-  <div class="card">
-    <h2>Security Settings</h2>
-    <p class="helper">Update your password and email to keep your account safe.</p>
-    <button class="btn btn-green" onclick="changePassword()">🔑 Change Password</button>
-    <button class="btn btn-green" onclick="changeEmail()">📧 Change Email</button>
-  </div>
-
-  <!-- Logout -->
-  <button class="btn btn-logout" onclick="logout()">🚪 Logout</button>
+  <button class="btn-logout" onclick="logout()"> Log out</button>
 </div>
 
-<!-- Navbar -->
 <div class="bottom-nav">
-  <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
-  <a href="mining.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
-  <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
-  <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
+  <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i>Home</a>
+  <a href="mining.html" class="nav-item"><i class='bx bx-wallet'></i>Invest</a>
+  <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i>Refer</a>
+  <a href="account.html" class="nav-item"><i class='bx bx-user'></i>Account</a>
 </div>
+
+<!-- Modal -->
+<div class="modal" id="popupModal">
+  <div class="modal-content">
+    <h4 id="modalUser">Hey User 👋</h4>
+    <h3 id="modalTitle"></h3>
+    <input id="modalInput" type="text" placeholder="Enter value" style="display:none">
+    <textarea id="modalTextarea" placeholder="Enter details..." style="display:none"></textarea>
+    <div class="modal-actions">
+      <button class="save-btn" onclick="saveModal()">Save</button>
+      <button class="cancel-btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Notification -->
+<div id="notify" class="notify"></div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getFirestore,doc,getDoc,updateDoc,arrayUnion} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {getAuth,onAuthStateChanged,signOut,updateEmail as fbUpdateEmail,updatePassword as fbUpdatePassword} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-  // Firebase Config
-  const firebaseConfig = {
-    apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
-    authDomain: "btcinvest-c0e25.firebaseapp.com",
-    projectId: "btcinvest-c0e25",
-    storageBucket: "btcinvest-c0e25.firebasestorage.app",
-    messagingSenderId: "204937458487",
-    appId: "1:204937458487:web:cc27ece1249999279f60b2",
-    measurementId: "G-HG0Q8ZHT6G"
-  };
+const firebaseConfig={apiKey:"AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",authDomain:"btcinvest-c0e25.firebaseapp.com",projectId:"btcinvest-c0e25",storageBucket:"btcinvest-c0e25.firebasestorage.app",messagingSenderId:"204937458487",appId:"1:204937458487:web:cc27ece1249999279f60b2"};
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+const auth=getAuth(app);
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
+const modal=document.getElementById("popupModal");
+const notify=document.getElementById("notify");
+const modalTitle=document.getElementById("modalTitle");
+const modalUser=document.getElementById("modalUser");
+const modalInput=document.getElementById("modalInput");
+const modalTextarea=document.getElementById("modalTextarea");
+const userNameEl=document.getElementById("userName");
+const userEmailEl=document.getElementById("userEmail");
+const profileImage=document.getElementById("profileImage");
 
-  const walletBalanceEl = document.getElementById("walletBalance");
-  const userLevelEl = document.getElementById("userLevel");
-  const userNameEl = document.getElementById("userName");
+let currentUser,userDocRef,currentAction;
+profileImage.src=`https://i.pravatar.cc/150?img=${Math.floor(Math.random()*70)+1}`;
 
-  // Load user data
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (userDoc.exists()) {
-        const data = userDoc.data();
+function maskEmail(e){if(!e)return"";const[n,d]=e.split("@");return n.substring(0,3)+"****@"+d;}
 
-        // Profile Info
-        document.getElementById("profileName").textContent = data.name || "Unnamed";
-        userNameEl.textContent = data.name || "User";
-        document.getElementById("userEmail").textContent = data.email || user.email;
-        document.getElementById("userRef").textContent = data.referralCode || "N/A";
-        document.getElementById("userJoin").textContent = data.createdAt ? new Date(data.createdAt).toLocaleDateString() : "N/A";
+onAuthStateChanged(auth,async user=>{
+ if(!user){location.href="login.html";return;}
+ currentUser=user;
+ userDocRef=doc(db,"users",user.uid);
+ const s=await getDoc(userDocRef);
+ const data=s.exists()?s.data():{};
+ const uname=data.name||"User";
+ userNameEl.textContent=uname;
+ userEmailEl.textContent=maskEmail(data.email||user.email);
+ modalUser.textContent=`Hey ${uname} 👋`;
+});
 
-        // Wallet
-        let balance = data.walletBalance || 0;
-        walletBalanceEl.textContent = balance.toFixed(2);
-        document.getElementById("userDeposit").textContent = "$" + (data.lifetimeDeposit || 0);
-        document.getElementById("userBalance").textContent = "$" + balance.toFixed(2);
-        document.getElementById("userEarnings").textContent = "$" + (data.totalEarnings || 0);
+window.openModal=(a)=>{
+ currentAction=a;
+ modal.classList.add("show");
+ modalInput.style.display="none";
+ modalTextarea.style.display="none";
+ if(a==="Revenue Details"||a==="Withdrawal Report"){modalTextarea.style.display="block";modalTitle.textContent=a;}
+ else{modalInput.style.display="block";modalTitle.textContent=a;}
+};
+window.closeModal=()=>{modal.classList.remove("show");setTimeout(()=>{modalInput.value="";modalTextarea.value="";},300);};
 
-        // ✅ Level Badge Logic
-        let lifetimeDeposit = data.lifetimeDeposit ?? 0;
-        let level = "No Level";
-        let levelColor = "#999";
-        let bgColor = "#eee";
-        let levelIcon = "";
+function showNotify(msg,type="success"){
+ notify.textContent=msg;
+ notify.className=`notify show ${type}`;
+ setTimeout(()=>{notify.classList.remove("show");},2000);
+}
 
-        if (lifetimeDeposit >= 200 && lifetimeDeposit < 500) {
-          level = "Starter"; levelColor = "#FF9800"; bgColor = "#FFE0B2"; levelIcon = "🌱";
-        } else if (lifetimeDeposit >= 500 && lifetimeDeposit < 1000) {
-          level = "Starter+"; levelColor = "#00BCD4"; bgColor = "#B2EBF2"; levelIcon = "⭐";
-        } else if (lifetimeDeposit >= 5000 && lifetimeDeposit < 10000) {
-          level = "Bronze"; levelColor = "#CD7F32"; bgColor = "#F5DEB3"; levelIcon = "🥉";
-        } else if (lifetimeDeposit >= 10000 && lifetimeDeposit < 20000) {
-          level = "Silver"; levelColor = "#C0C0C0"; bgColor = "#E0E0E0"; levelIcon = "🥈";
-        } else if (lifetimeDeposit >= 20000 && lifetimeDeposit < 40000) {
-          level = "Gold"; levelColor = "#FFD700"; bgColor = "#FFF8DC"; levelIcon = "🥇";
-        } else if (lifetimeDeposit >= 50000) {
-          level = "Diamond"; levelColor = "#00BFFF"; bgColor = "#E0F7FA"; levelIcon = "💎";
-        }
-
-        userLevelEl.innerHTML = `<span class="level-badge" style="color:${levelColor}; background:${bgColor};">${levelIcon} ${level}</span>`;
-
-        // ✅ Income
-        document.getElementById("miningIncome").textContent = (data.miningIncome || 0).toFixed(2);
-        document.getElementById("teamIncome").textContent = (data.teamIncome || 0).toFixed(2);
-        document.getElementById("stakingIncome").textContent = (data.stakingIncome || 0).toFixed(2);
-        let total = (data.miningIncome || 0) + (data.teamIncome || 0) + (data.stakingIncome || 0);
-        document.getElementById("totalIncome").textContent = total.toFixed(2);
-
-        // Team Members
-        const lv1 = await getDocs(query(collection(db, "users"), where("referredBy", "==", data.referralCode)));
-        const lv2 = await getDocs(query(collection(db, "users"), where("upline2", "==", user.uid)));
-        const lv3 = await getDocs(query(collection(db, "users"), where("upline3", "==", user.uid)));
-
-        const totalTeam = lv1.size + lv2.size + lv3.size;
-        document.getElementById("teamLv1").textContent = lv1.size;
-        document.getElementById("teamLv2").textContent = lv2.size;
-        document.getElementById("teamLv3").textContent = lv3.size;
-        document.getElementById("teamTotal").textContent = totalTeam;
-      }
-    } else {
-      window.location.href = "login.html";
-    }
-  });
-
-  // Logout
-  window.logout = async function() {
-    await signOut(auth);
-    window.location.href = "login.html";
+window.saveModal=async()=>{
+ if(!currentUser){showNotify("User not loaded","error");return;}
+ const val=modalTextarea.style.display==="block"?modalTextarea.value.trim():modalInput.value.trim();
+ if(!val){showNotify("Please enter details","error");return;}
+ try{
+  if(currentAction==="Edit Email"){await fbUpdateEmail(currentUser,val);await updateDoc(userDocRef,{email:val});userEmailEl.textContent=maskEmail(val);showNotify("Email updated ✅");}
+  else if(currentAction==="Edit Password"){await fbUpdatePassword(currentUser,val);showNotify("Password updated ✅");}
+  else if(currentAction==="Edit Mobile"){await updateDoc(userDocRef,{mobileNumber:val});showNotify("Mobile updated ✅");}
+  else if(currentAction==="Revenue Details"){await updateDoc(userDocRef,{revenueInfo:val});showNotify("Revenue details sent ✅");}
+  else if(currentAction==="Withdrawal Report"){
+    const r={email:currentUser.email,message:val,time:new Date().toISOString()};
+    await updateDoc(userDocRef,{withdrawalReports:arrayUnion(r)});
+    showNotify("Withdrawal report sent ✅");
   }
+ }catch(e){showNotify("Error: "+e.message,"error");}
+ closeModal();
+};
 
-  // Edit actions
-  window.changePassword = function() { alert("🔑 Change password feature"); }
-  window.changeEmail = function() { alert("📧 Change email feature"); }
-  window.editProfile = function() { alert("✏️ Edit profile feature"); }
+window.logout=async()=>{await signOut(auth);location.href="login.html";};
+modal.addEventListener("click",e=>{if(e.target===modal)closeModal();});
 </script>
 </body>
 </html>
