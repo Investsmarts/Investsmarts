@@ -394,22 +394,31 @@
 </div>
 
 
-     <!-- ✅ icone Deposit Card -->
-  <div class="deposit-actions">
-
-  <div class="action-btn">
+<!-- ✅ icone Deposit Card -->
+ <div class="deposit-actions">
+  <div class="action-btn" onclick="openPopup()">
     <i class='bx bx-credit-card'></i>
     <span>Deposit</span>
   </div>
-  <div class="action-btn">
+  <div class="action-btn" onclick="scrollToHistory()">
     <i class='bx bx-list-ul'></i>
     <span>History</span>
   </div>
-  <div class="action-btn">
+  <div class="action-btn" onclick="scanFeature()">
     <i class='bx bx-scan'></i>
     <span>Scan</span>
   </div>
 </div>
+
+<script>
+function scrollToHistory() {
+  document.querySelector('.history-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+function scanFeature() {
+  alert('QR Scan feature coming soon!');
+}
+</script>
 
  <!-- Deposit Info -->
 <div class="info-card">
@@ -729,8 +738,33 @@ function showInstruction() {
   }, 4000); // hide after 4 sec
 }
 
+// ❌ Right-click disable
+  document.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+    
+  });
+
+// ❌ Disable text selection
+  document.addEventListener("selectstart", function(e) {
+    e.preventDefault();
+  });
+
+// ❌ Disable copy (Ctrl+C), cut (Ctrl+X), paste (Ctrl+V), view-source (Ctrl+U)
+  document.addEventListener("keydown", function(e) {
+    if (
+      (e.ctrlKey && (e.key === "c" || e.key === "C")) || 
+      (e.ctrlKey && (e.key === "x" || e.key === "X")) || 
+      (e.ctrlKey && (e.key === "v" || e.key === "V")) || 
+      (e.ctrlKey && (e.key === "u" || e.key === "U")) || 
+    (e.key === "F12") // DevTools
+    ) {
+      e.preventDefault();
+    
+  }
+});
+
+
 </script>
 </body>
 </html>
-
 
