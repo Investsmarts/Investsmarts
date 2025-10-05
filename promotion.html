@@ -1,96 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Promotion</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f1f5f9;
-      margin: 0;
-      padding-bottom: 100px;
-      color: #333;
-       padding-top: 70px; /* ✅ यह लाइन add करो */
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TrustDollar | Real-Time Referrals</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 
-    }
-    .container { max-width: 950px; margin: auto; padding: 20px; }
-    h1 { text-align: center; margin-bottom: 20px; color: #1e293b; }
+<style>
+body {
+  font-family: "Poppins", sans-serif;
+  background: #f1f5f9;
+  margin: 0;
+  padding-top: 70px;
+  padding-bottom: 100px;
+  color: #333;
+}
+.container { max-width: 950px; margin: auto; padding: 15px; }
+.card {
+  background: #fff; padding: 20px; border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08); margin-bottom: 20px;
+  text-align: center;
+}
+.header {
+  position: fixed; top: 0; left: 0; width: 100%;
+  background: #32cd32; color: #fff; text-align: center;
+  padding: 14px; font-size: 18px; font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15); z-index: 1000;
+}
 
-    .card {
-      background: #fff;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-      margin-bottom: 20px;
-      text-align: center;
-    }
+/* team section */
+.team-grid {
+  display: grid; grid-template-columns: repeat(2,1fr);
+  gap: 14px; margin-top: 15px;
+}
+.team-box {
+  background: #f8fafc; border-radius: 14px;
+  padding: 16px 0; box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+  text-align: center; transition: 0.3s;
+}
+.team-box:hover { transform: translateY(-3px); }
+.team-box .label { font-size: 15px; color: #2563eb; font-weight: 600; margin-bottom: 6px; display:block; }
+.team-box .value {
+  font-size: 16px; font-weight: 700; color: #16a34a;
+  background: #e7fbe9; border: 1px solid #a7f3d0;
+  padding: 6px 12px; border-radius: 10px;
+}
+.team-box.total { background: linear-gradient(135deg,#22c55e,#16a34a); color:#fff; }
+.team-box.total .value { background:rgba(255,255,255,0.2); color:#fff; }
 
-    /* Referral Link */
-    .referral-link {
-      word-break: break-all;
-      font-size: 14px;
-      background: #f9fafb;
-      padding: 12px;
-      border-radius: 10px;
-      margin: 15px auto;
-      border: 1px solid #e5e7eb;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .btn-row { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-    .btn { padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: #fff; transition: 0.3s; }
-    .btn-copy { background: #00aaff; }
-    .btn-share { background: #ff9800; }
-    .btn:hover { opacity: 0.9; }
+/* buttons and QR */
+.btn-row { display:flex; justify-content:center; gap:10px; margin-top:15px; }
+.btn { padding:10px 18px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; color:#fff; transition:0.3s; }
+.btn-copy { background:#00aaff; }
+.btn-share { background:#ff9800; }
+#qrcode-wrapper { display:flex; justify-content:center; margin:15px 0; }
+#qrcode { padding:10px; border:2px solid #22c55e; border-radius:12px; }
 
-    /* QR Code Container */
-    #qrcode-wrapper { display: flex; justify-content: center; margin: 15px 0; }
-    #qrcode { padding: 10px; border: 2px solid #22c55e; border-radius: 12px; display: inline-block; }
+.level-buttons { display:flex; justify-content:space-between; gap:8px; margin:15px 0; }
+.level-btn {
+  flex:1; padding:10px; border:none; border-radius:8px;
+  font-weight:600; cursor:pointer; background:#e5e7eb; color:#333;
+}
+.level-btn.active { background:#2563eb; color:#fff; }
 
-    /* Level Buttons */
-    .level-buttons { display: flex; justify-content: space-between; gap: 8px; margin: 15px 0; }
-    .level-btn {
-      flex: 1; padding: 10px; border: none; border-radius: 8px;
-      font-weight: 600; cursor: pointer;
-      background: #e5e7eb; color: #333; transition: 0.3s;
-    }
-    .level-btn.active { background: #2563eb; color: #fff; }
-    .level-btn:hover { opacity: 0.9; }
+.level-content {
+  display:none; border:1px solid #e5e7eb; border-radius:10px;
+  padding:12px; background:#fff; margin-bottom:12px;
+}
+.level-content.active { display:block; }
 
-    /* Level Content */
-    .level-content {
-      display: none; text-align: left;
-      border: 1px solid #e5e7eb; border-radius: 10px;
-      padding: 12px; background: #fff;
-      margin-bottom: 12px;
-    }
-    .level-content.active { display: block; }
+.user-table { width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
+.user-table th, .user-table td { padding:10px; border-bottom:1px solid #eee; text-align:center; }
+.status-active { color:green; font-weight:bold; }
+.status-inactive { color:red; }
 
-    .user-item { padding: 10px; border-bottom: 1px solid #eee; font-size: 14px; }
-    .user-item:last-child { border: none; }
-    .status-active { color: green; font-weight: bold; }
-    .status-inactive { color: red; }
+.popup {
+  position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+  background:#333; color:#fff; padding:12px 18px; border-radius:8px;
+  display:none; z-index:999;
+}
 
-    /* Spinner */
-    .spinner {
-      display: none;
-      text-align: center;
-      padding: 15px;
-    }
-    .spinner div {
-      width: 22px; height: 22px;
-      border: 3px solid #2563eb;
-      border-top: 3px solid transparent;
-      border-radius: 50%;
-      display: inline-block;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin { 100% { transform: rotate(360deg); } }
+/* referral card */
+.referral-card {
+  text-align:center; background:#fff; border-radius:16px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  padding:20px; max-width:360px; margin:0 auto 25px;
+}
+.referral-link {
+  display:block; word-break:break-all; background:#f9fafb;
+  padding:10px 12px; border-radius:10px; border:1px solid #e5e7eb;
+  margin:10px auto 15px; overflow:hidden; white-space:normal;
+}
 
-    /* Bottom Navbar */
+   /* Bottom Navbar */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0;
       width: 100%; height: 70px; background: #fff;
@@ -102,143 +106,53 @@
     .nav-item:hover { color: #28a745; }
     .nav-item:hover i { color: #218838; }
 
-    /* Popup */
-    .popup {
-      position: fixed; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: #333; color: #fff; padding: 12px 18px;
-      border-radius: 8px; font-size: 14px;
-      display: none; z-index: 200;
-    }
-
-    /* user rendar */
-
-.user-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  font-size: 14px;
-}
-
-.user-table th, .user-table td {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  text-align: center;
-}
-
-.user-table th {
-  background: #f8fafc;
-  font-weight: bold;
-}
-
-.user-table td:first-child, .user-table th:first-child {
-  text-align: left;
-}
-.user-table td:last-child, .user-table th:last-child {
-  text-align: right;
-}
-/* serch butun */
-.search-box {
-  display: flex;
-  justify-content: flex-end;
-  margin: 8px 0 12px;
-}
-
-.search-box input {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 14px;
-  width: 200px;
-  transition: 0.3s;
-}
-
-.search-box input:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 4px rgba(37,99,235,0.5);
-}
-
-/* ✅ Header */
-    .header {
-      position: fixed; top: 0; left: 0; width: 100%;
-      background: #32cd32;
-      color: white; text-align: center;
-      padding: 14px; font-size: 18px; font-weight: bold;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      z-index: 1000;
-    }
 </style>
 </head>
 <body>
- <div class="header">MY Refarals  </div>
+<div class="header">My Referrals</div>
 
-  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
-
-  <div class="container">
-    <h1>Promote & Earn</h1>
-
-    <!-- Referral -->
-    <div class="card referral-card">
-      <p>Invite your friends and earn commissions (3 Levels).</p>
-      <div class="referral-link" id="refLink">Loading...</div>
-
-      <!-- QR code wrapper -->
-      <div id="qrcode-wrapper"><div id="qrcode"></div></div>
-
-      <!-- Buttons -->
-      <div class="btn-row">
-        <button class="btn btn-copy" onclick="copyReferral()">Copy Link</button>
-        <button class="btn btn-share" onclick="shareReferral()">Share Link</button>
-      </div>
+<div class="container">
+  <div class="card">
+    <h2>My Team</h2>
+    <div class="team-grid">
+      <div class="team-box"><span class="label">Level 1</span><span id="teamLv1" class="value">0</span></div>
+      <div class="team-box"><span class="label">Level 2</span><span id="teamLv2" class="value">0</span></div>
+      <div class="team-box"><span class="label">Level 3</span><span id="teamLv3" class="value">0</span></div>
+      <div class="team-box total"><span class="label">Total</span><span id="teamTotal" class="value">0</span></div>
     </div>
+  </div>
 
-    <!-- Level Buttons -->
-    <div class="level-buttons">
-      <button class="level-btn active" onclick="showLevel(1)">1 (<span id="level1Users">0</span>)</button>
-      <button class="level-btn" onclick="showLevel(2)">2 (<span id="level2Users">0</span>)</button>
-      <button class="level-btn" onclick="showLevel(3)">3 (<span id="level3Users">0</span>)</button>
+  <div class="card referral-card">
+    <b>Your link:</b>
+    <div id="refLink" class="referral-link">Loading referral link...</div>
+    <div id="qrcode-wrapper"><div id="qrcode"></div></div>
+    <div class="btn-row">
+      <button class="btn btn-copy" onclick="copyReferral()">Copy Link</button>
+      <button class="btn btn-share" onclick="shareReferral()">Share Link</button>
     </div>
-
-  <!-- Content Sections -->
-<div id="level1" class="level-content active">
-  <h3>Earning: <b id="level1Earning">$0</b></h3>
-
-  <!-- 🔍 Search -->
-  <div class="search-box">
-    <input type="text" id="searchLevel1" placeholder="Search by name...">
   </div>
 
-  <div class="spinner" id="spinner1"><div></div></div>
-  <div id="level1List"></div>
+ <div class="level-buttons">
+  <button class="level-btn active" onclick="showLevel(1)">Level 1</button>
+  <button class="level-btn" onclick="showLevel(2)">Level 2</button>
+  <button class="level-btn" onclick="showLevel(3)">Level 3</button>
 </div>
 
-<div id="level2" class="level-content">
-  <h3>Earning: <b id="level2Earning">$0</b></h3>
-
-  <!-- 🔍 Search -->
-  <div class="search-box">
-    <input type="text" id="searchLevel2" placeholder="Search by name...">
+  <div id="level1" class="level-content active">
+    <h3>Earning: <b id="level1Earning">$0</b></h3>
+    <div id="level1List"></div>
   </div>
-
-  <div class="spinner" id="spinner2"><div></div></div>
-  <div id="level2List"></div>
-</div>
-
-<div id="level3" class="level-content">
-  <h3>Earning: <b id="level3Earning">$0</b></h3>
-
-  <!-- 🔍 Search -->
-  <div class="search-box">
-    <input type="text" id="searchLevel3" placeholder="Search by name...">
+  <div id="level2" class="level-content">
+    <h3>Earning: <b id="level2Earning">$0</b></h3>
+    <div id="level2List"></div>
   </div>
-
-  <div class="spinner" id="spinner3"><div></div></div>
-  <div id="level3List"></div>
+  <div id="level3" class="level-content">
+    <h3>Earning: <b id="level3Earning">$0</b></h3>
+    <div id="level3List"></div>
+  </div>
 </div>
 
-  <!-- Bottom Navbar -->
+ <!-- Bottom Navbar -->
   <div class="bottom-nav">
     <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
     <a href="mining.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
@@ -246,197 +160,140 @@
     <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
   </div>
 
-  <!-- Popup -->
-  <div id="popup" class="popup"></div>
+
+<div id="popup" class="popup"></div>
+
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, query, where,
+  onSnapshot, doc, getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-  // Firebase Config
-  const firebaseConfig = {
-    apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
-    authDomain: "btcinvest-c0e25.firebaseapp.com",
-    projectId: "btcinvest-c0e25",
-    storageBucket: "btcinvest-c0e25.firebasestorage.app",
-    messagingSenderId: "204937458487",
-    appId: "1:204937458487:web:cc27ece1249999279f60b2",
-    measurementId: "G-HG0Q8ZHT6G"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25",
+  storageBucket: "btcinvest-c0e25.firebasestorage.app",
+  messagingSenderId: "204937458487",
+  appId: "1:204937458487:web:cc27ece1249999279f60b2",
+  measurementId: "G-HG0Q8ZHT6G"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+let finalRefLink = "";
+let currentUserGlobal = null;
 
-  let finalRefLink = "";
-
-  // ✅ Show Level Toggle with spinner
-  window.showLevel = async function(level) {
-    // remove active class
-    document.querySelectorAll(".level-btn").forEach(btn => btn.classList.remove("active"));
-    document.querySelectorAll(".level-content").forEach(content => content.classList.remove("active"));
-
-    // add active
-    document.querySelector(`.level-btn:nth-child(${level})`).classList.add("active");
-    const activeSection = document.getElementById(`level${level}`);
-    activeSection.classList.add("active");
-
-    // ✅ sabhi spinners ko hide karo
-    document.querySelectorAll(".spinner").forEach(sp => sp.style.display = "none");
-
-    // ✅ active wale spinner ko dikhado
-    const spinner = document.getElementById(`spinner${level}`);
-    spinner.style.display = "block";
-
-    // ✅ load sirf usi level ka data
-    await loadSingleLevel(currentUserGlobal, level);
-
-    spinner.style.display = "none"; // hide after load
-  };
-
-  // Popup
-  function showPopup(msg) {
-    const popup = document.getElementById("popup");
-    popup.innerText = msg;
-    popup.style.display = "block";
-    setTimeout(()=> popup.style.display="none", 2000);
-  }
-
-  // Copy & Share
-  window.copyReferral = function () {
-    if (!finalRefLink) return showPopup("⚠️ Please log in first.");
-    navigator.clipboard.writeText(finalRefLink);
-    showPopup("✅ Referral link copied!");
-  };
-  window.shareReferral = function () {
-    if (!finalRefLink) return showPopup("⚠️ Please log in first.");
-    if (navigator.share) {
-      navigator.share({
-        title: "🔥 TrustDollar Invitation",
-        text: `🎁 Join TrustDollar & start earning!\n\nHere’s my link:\n${finalRefLink}`,
-        url: finalRefLink
-      });
-    } else {
-      showPopup("⚠️ Sharing not supported in this browser.");
-    }
-  };
-
- 
-// Render users
-function attachSearch(listId, users, rate, inputId) {
-  const input = document.getElementById(inputId);
-  input.addEventListener("input", () => {
-    renderLevelList(listId, users, rate, input.value);
-  });
+function showPopup(msg) {
+  const pop = document.getElementById("popup");
+  pop.innerText = msg;
+  pop.style.display = "block";
+  setTimeout(() => (pop.style.display = "none"), 2000);
 }
+window.copyReferral = function () {
+  if (!finalRefLink) return showPopup("Login first");
+  navigator.clipboard.writeText(finalRefLink);
+  showPopup("Referral link copied!");
+};
+window.shareReferral = function () {
+  if (navigator.share)
+    navigator.share({
+      title: "TrustDollar Invite",
+      text: "Join TrustDollar and earn!",
+      url: finalRefLink,
+    });
+  else showPopup("Browser not supported");
+};
 
-function renderLevelList(listId, users, rate, searchTerm="") {
-  const container = document.getElementById(listId);
-
-  // Filter by search
-  const filteredUsers = users.filter(u =>
-    (u.name || "Unnamed").toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  if (filteredUsers.length === 0) {
-    container.innerHTML = "<em style='color:#999;'>No matching user</em>";
+// ✅ Render level user list
+function renderList(listId, members, rate) {
+  const c = document.getElementById(listId);
+  if (!members.length) {
+    c.innerHTML = "<em>No users</em>";
     return;
   }
-
-  let html = `
-    <table class="user-table">
-      <thead>
+  c.innerHTML = `
+  <table class="user-table">
+    <thead><tr><th>Name</th><th>Status</th><th>Received</th></tr></thead>
+    <tbody>
+      ${members.map(
+        (u) => `
         <tr>
-          <th>Name</th>
-          <th>Status</th>
-          <th>Received</th>
-        </tr>
-      </thead>
-      <tbody>
-  `;
-
-  html += filteredUsers.map(u => {
-    const isActive = (u.lifetimeDeposit && u.lifetimeDeposit > 0);
-    const status = isActive
-      ? "<span class='status-active'>Active</span>"
-      : "<span class='status-inactive'>Inactive</span>";
-    const received = ((u.totalInvested || 0) * rate).toFixed(2);
-
-    return `
-      <tr>
-        <td>${u.name || "Unnamed"}</td>
-        <td>${status}</td>
-        <td>$${received}</td>
-      </tr>
-    `;
-  }).join("");
-
-  html += `</tbody></table>`;
-  container.innerHTML = html;
+          <td>${u.name || "Unnamed"}</td>
+          <td>${u.lifetimeDeposit > 0
+            ? "<span class='status-active'>Active</span>"
+            : "<span class='status-inactive'>Inactive</span>"}</td>
+          <td>$${((u.totalInvested || 0) * rate).toFixed(2)}</td>
+        </tr>`
+      ).join("")}
+    </tbody>
+  </table>`;
 }
 
+// ✅ Global function for tab switch
+window.showLevel = function (level) {
+  document.querySelectorAll(".level-btn").forEach((b) => b.classList.remove("active"));
+  document.querySelectorAll(".level-content").forEach((c) => c.classList.remove("active"));
+  document.querySelector(`.level-btn:nth-child(${level})`).classList.add("active");
+  document.getElementById(`level${level}`).classList.add("active");
+};
 
-  // ✅ Load single level data only
-  async function loadSingleLevel(currentUser, level) {
-    const levelConfig = {
-      1: {field:"referredBy", val: currentUser.referralCode, rate:0.10},
-      2: {field:"upline2", val: currentUser.uid, rate:0.05},
-      3: {field:"upline3", val: currentUser.uid, rate:0.02}
-    }[level];
-
-    let members = [];
-    let earning = 0;
-
-    try {
-      const qSnap = await getDocs(query(collection(db,"users"), where(levelConfig.field,"==",levelConfig.val)));
-      qSnap.forEach(d=>{
-        const u = d.data();
-        members.push(u);
-        earning += (u.totalInvested || 0) * levelConfig.rate;
-      });
-    } catch(err) {
-      console.error("Error loading level", level, err);
-    }
-
-    // UI update
-    document.getElementById(`level${level}Users`).textContent = members.length;
-    document.getElementById(`level${level}Earning`).textContent = `$${earning.toFixed(2)}`;
-    renderLevelList(`level${level}List`, members, levelConfig.rate);
-    attachSearch(`level${level}List`, members, levelConfig.rate, `searchLevel${level}`);
-
-  }
-
-  // ✅ Global currentUser store
-  let currentUserGlobal = null;
-
-  // Auth listener
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const userDoc = await getDoc(doc(db,"users",user.uid));
-      if (userDoc.exists()) {
-        const currentUser = userDoc.data();
-        currentUser.uid = user.uid;
-        currentUserGlobal = currentUser;
-
-        finalRefLink = `https://smartfundad.com/index.html?ref=${currentUser.referralCode || user.uid}`;
-        const shortLink = finalRefLink.length > 35 ? finalRefLink.slice(0,35) + "..." : finalRefLink;
-        document.getElementById("refLink").innerHTML = `
-          <strong>🎁 Your Invitation Link:</strong><br>
-          <span style="color:#2563eb; font-weight:bold;">${shortLink}</span>
-        `;
-
-        // Generate QR
-        document.getElementById("qrcode").innerHTML = "";
-        new QRCode(document.getElementById("qrcode"), { text: finalRefLink, width: 120, height: 120 });
-
-        // ✅ Default load only Level 1
-        showLevel(1);
-      }
-    } else {
-      document.getElementById("refLink").innerHTML = `<strong>⚠️ Please log in to get your referral link.</strong>`;
-    }
+// 🔁 Real-time level data
+function subscribeLevel(currentUser, level) {
+  const lv = {
+    1: { field: "referredBy", val: currentUser.referralCode, rate: 0.1 },
+    2: { field: "upline2", val: currentUser.uid, rate: 0.05 },
+    3: { field: "upline3", val: currentUser.uid, rate: 0.02 },
+  }[level];
+  const q = query(collection(db, "users"), where(lv.field, "==", lv.val));
+  onSnapshot(q, (snap) => {
+    let members = [], earn = 0;
+    snap.forEach((d) => {
+      const u = d.data();
+      members.push(u);
+      earn += (u.totalInvested || 0) * lv.rate;
+    });
+    document.getElementById(`level${level}Earning`).textContent = "$" + earn.toFixed(2);
+    renderList(`level${level}List`, members, lv.rate);
   });
-</script>
+}
 
+// 🔥 Auth + real-time Firestore
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return (window.location.href = "login.html");
+  const docu = await getDoc(doc(db, "users", user.uid));
+  if (!docu.exists()) return;
+  const currentUser = { ...docu.data(), uid: user.uid };
+  currentUserGlobal = currentUser;
+
+  finalRefLink = `https://smartfundad.com/index.html?ref=${currentUser.referralCode || user.uid}`;
+  const shortLink = finalRefLink.length > 35 ? finalRefLink.slice(0, 35) + "..." : finalRefLink;
+  document.getElementById("refLink").innerHTML = `<span style="color:#2563eb">${shortLink}</span>`;
+  new QRCode(document.getElementById("qrcode"), { text: finalRefLink, width: 120, height: 120 });
+
+  // Real-time total team counts
+  const ref1 = query(collection(db, "users"), where("referredBy", "==", currentUser.referralCode));
+  const ref2 = query(collection(db, "users"), where("upline2", "==", user.uid));
+  const ref3 = query(collection(db, "users"), where("upline3", "==", user.uid));
+  let lv1 = 0, lv2 = 0, lv3 = 0;
+  const updateTotals = () => {
+    document.getElementById("teamLv1").textContent = lv1;
+    document.getElementById("teamLv2").textContent = lv2;
+    document.getElementById("teamLv3").textContent = lv3;
+    document.getElementById("teamTotal").textContent = lv1 + lv2 + lv3;
+  };
+  onSnapshot(ref1, (s) => { lv1 = s.size; updateTotals(); });
+  onSnapshot(ref2, (s) => { lv2 = s.size; updateTotals(); });
+  onSnapshot(ref3, (s) => { lv3 = s.size; updateTotals(); });
+
+  // Subscribe levels
+  subscribeLevel(currentUser, 1);
+  subscribeLevel(currentUser, 2);
+  subscribeLevel(currentUser, 3);
+});
+</script>
 </body>
 </html>
