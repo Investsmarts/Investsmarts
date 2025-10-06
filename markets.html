@@ -265,29 +265,37 @@
   const tokenList=document.getElementById("tokenList");
   let tokenData=tokens.map(name=>({name,price:(Math.random()*100).toFixed(2)}));
 
-  function renderTokens(){
-    tokenList.innerHTML='';
-    tokenData.forEach(token=>{
-      const div=document.createElement('div');
-      div.className='token';
-      div.innerHTML=`
-        <div class="left">
-          <div class="symbol">${token.name.slice(0,3)}</div>
-          <div class="meta">
-            <div class="name">${token.name}</div>
-            <small>Simulated</small>
-          </div>
+function renderTokens(){
+  tokenList.innerHTML = '';
+  tokenData.forEach(token => {
+    const div = document.createElement('div');
+    div.className = 'token';
+    div.innerHTML = `
+      <div class="left">
+        <div class="symbol">${token.name.slice(0,3)}</div>
+        <div class="meta">
+          <div class="name">${token.name}</div>
+          <small>Simulated</small>
         </div>
-        <div class="right">
-          <div class="price" id="${token.name}">$${token.price}</div>
-          <div class="btns">
-            <button class="buy">Buy</button>
-            <button class="sell">Sell</button>
-          </div>
-        </div>`;
-      tokenList.appendChild(div);
+      </div>
+      <div class="right">
+        <div class="price" id="${token.name}">$${token.price}</div>
+        <div class="btns">
+          <button class="buy">Buy</button>
+          <button class="sell">Sell</button>
+        </div>
+      </div>
+    `;
+
+    // 🟢 Click event: save token data + go to token.html
+    div.addEventListener("click", () => {
+      localStorage.setItem('selectedToken', JSON.stringify(token));
+      window.location.href = "token.html";
     });
-  }
+
+    tokenList.appendChild(div);
+  });
+}
 
   function randomUpdate(){
     tokenData.forEach(t=>{
