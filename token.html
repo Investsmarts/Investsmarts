@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TrustDollar Exchange — Token Live</title>
+<style>
+  :root{
+    --bg:#f8fafc;--card:#fff;--muted:#64748b;
+    --green:#16a34a;--red:#dc2626;--accent:#0ea5a4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
+  body{background:var(--bg);color:#0f172a;padding:12px;display:flex;justify-content:center;}
+  .card{width:100%;max-width:900px;background:var(--card);border-radius:16px;
+    box-shadow:0 6px 16px rgba(0,0,0,0.06);padding:18px;}
+
+  .logout{background:#0ea5a4;color:#fff;padding:10px 14px;border:none;border-radius:10px;
+    cursor:pointer;font-weight:700;font-size:14px;width:100%;margin-top:22px;}
+
+  .top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  .left{display:flex;gap:10px;align-items:center;}
+  .symbol{width:54px;height:54px;border-radius:12px;
+    background:linear-gradient(135deg,#e0f2fe,#ecfdf5);
+    display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;}
+  .title{font-size:18px;font-weight:700;}
+  .priceBig{font-size:24px;font-weight:800;}
+  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .btn{padding:8px 10px;border-radius:8px;border:none;cursor:pointer;font-weight:700;font-size:13px;}
+  .buy{background:var(--green);color:#fff;}
+  .sell{background:var(--red);color:#fff;}
+  .stake{background:var(--accent);color:#fff;}
+
+  .chart{margin-top:12px;height:160px;border-radius:10px;
+    background:linear-gradient(180deg,#ffffff,#f1f5f9);
+    display:flex;justify-content:center;align-items:center;
+    color:var(--muted);font-weight:600;font-size:13px;}
+
+  .metaGrid{margin-top:14px;display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;}
+  .meta{background:#f9fafb;padding:10px;border-radius:10px;text-align:center;}
+  .small{font-size:11px;color:#64748b;}
+
+  .wallet-box{margin-top:16px;background:#fff;border-radius:10px;
+    padding:12px;box-shadow:0 3px 10px rgba(0,0,0,0.05);}
+  .wallet-header{display:flex;justify-content:space-between;align-items:center;}
+  .wallet-total{font-size:1.1rem;font-weight:700;color:#0ea5a4;}
+  .trade-history{margin-top:16px;background:#fff;border-radius:10px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.05);padding:10px;}
+  table{width:100%;border-collapse:collapse;margin-top:8px;}
+  th,td{padding:6px;text-align:left;font-size:0.78rem;border-bottom:1px solid #f1f5f9;}
+  th{color:#64748b;font-weight:600;}
+
+  /* === Modal === */
+  .modal{
+    position:fixed;top:0;left:0;width:100%;height:100%;
+    background:rgba(0,0,0,0.5);display:none;justify-content:center;align-items:center;
+    z-index:1000;
+  }
+  .modal-content{
+    background:#fff;border-radius:14px;width:90%;max-width:420px;
+    box-shadow:0 6px 25px rgba(0,0,0,0.3);overflow:hidden;
+    animation:fadeIn 0.2s ease;
+  }
+  .modal-header{
+    background:linear-gradient(135deg,#0ea5a4,#06b6d4);
+    color:#fff;font-weight:700;font-size:1.1rem;padding:12px 16px;text-align:center;
+  }
+  .modal-body{padding:18px;}
+  .modal-info{display:flex;justify-content:space-between;margin-bottom:12px;font-size:14px;}
+  .modal-input label{display:block;margin-bottom:6px;font-size:13px;color:#475569;text-align:left;}
+  .modal-input input{
+    width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;
+    font-size:15px;font-weight:600;text-align:center;
+  }
+  .modal-total{
+    display:flex;justify-content:space-between;align-items:center;
+    background:#f9fafb;padding:10px 14px;border-radius:10px;margin-top:10px;font-size:14px;
+  }
+  .modal-actions{
+    display:flex;justify-content:space-between;padding:14px;background:#f8fafc;
+  }
+  .confirm{background:#16a34a;color:#fff;padding:10px 16px;border:none;border-radius:8px;cursor:pointer;font-weight:700;width:48%;}
+  .cancel{background:#e2e8f0;color:#0f172a;padding:10px 16px;border:none;border-radius:8px;cursor:pointer;font-weight:700;width:48%;}
+  .error{margin-top:8px;color:#dc2626;font-weight:600;text-align:center;}
+  @keyframes fadeIn{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
+
+/* === Alert Box === */
+#alertBox{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 18px 24px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  font-weight: 700;
+  font-size: 15px;
+  color: #0f172a;
+  display: none;
+  z-index: 2000;
+  text-align: center;
+  animation: fadeInOut 2s ease;
+}
+@keyframes fadeInOut {
+  0% {opacity: 0; transform: translate(-50%, -55%);}
+  10% {opacity: 1; transform: translate(-50%, -50%);}
+  90% {opacity: 1;}
+  100% {opacity: 0; transform: translate(-50%, -45%);}
+}
+#alertBox.success {border-left: 6px solid #16a34a;}
+#alertBox.error {border-left: 6px solid #dc2626;}
+#alertBox.info {border-left: 6px solid #0ea5a4;}
+</style>
+</head>
+<body>
+
+<div class="card" id="mainCard" style="display:none;">
+  <div class="top">
+    <div class="left">
+      <div class="symbol" id="symbol">--</div>
+      <div><div class="title" id="t_name">Token</div></div>
+    </div>
+    <div class="controls">
+      <div class="priceBig" id="t_price">$0.00</div>
+      <button class="btn buy" id="btnBuy">Buy</button>
+      <button class="btn sell" id="btnSell">Sell</button>
+      <button class="btn stake">Stake</button>
+    </div>
+  </div>
+
+  <div class="chart" id="chart">⏳ Loading live data...</div>
+
+  <div class="metaGrid">
+    <div class="meta"><div class="small">Your Tokens</div><div id="userBalance">0.00</div></div>
+    <div class="meta"><div class="small">Staked</div><div id="userStaked">0.00</div></div>
+  </div>
+
+  <div class="wallet-box">
+    <div class="wallet-header">
+      <div><strong>💼 Wallet Balance:</strong></div>
+      <div class="wallet-total" id="walletTotal">$0.00</div>
+    </div>
+  </div>
+
+  <div class="trade-history">
+    <h3>🧾 Live Trade History</h3>
+    <table id="tradeTable">
+      <thead><tr><th>Time</th><th>Token</th><th>Action</th><th>Qty</th><th>Price</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <button id="logoutBtn" class="logout">Logout</button>
+</div>
+
+<div id="alertBox"></div>
+
+<!-- Modal -->
+<div class="modal" id="tradeModal">
+  <div class="modal-content">
+    <div class="modal-header" id="modalHeader">Trade</div>
+    <div class="modal-body">
+      <div class="modal-info">
+        <div><strong>Current Price:</strong> <span id="modalPrice">$0.00</span></div>
+        <div><strong>Available:</strong> <span id="modalWallet">$0.00</span></div>
+      </div>
+      <div class="modal-input">
+        <label for="modalQty">Enter Quantity</label>
+        <input type="number" id="modalQty" placeholder="0.00" min="0" />
+      </div>
+      <div class="modal-total">
+        <span>Total:</span>
+        <strong id="modalTotal">$0.00</strong>
+      </div>
+      <div class="error" id="modalError"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="confirm" id="confirmTrade">Confirm</button>
+      <button class="cancel" id="cancelTrade">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="loadingScreen" style="font-family:sans-serif;text-align:center;margin-top:100px;color:#555;">
+  🧩 Verifying 🧩...
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+import { 
+  getFirestore, doc, getDoc, updateDoc, addDoc, 
+  onSnapshot, collection, query, where, orderBy, serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25",
+  storageBucket: "btcinvest-c0e25.firebasestorage.app",
+  messagingSenderId: "204937458487",
+  appId: "1:204937458487:web:cc27ece1249999279f60b2",
+  measurementId: "G-HG0Q8ZHT6G"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser=null,token=null,walletBalance=0,userTokens=0,userStaked=0,currentPrice=0,tradeType=null;
+
+// 🟢 Center alert function
+function showAlert(msg,type="info",duration=2000){
+  const box=document.getElementById("alertBox");
+  box.textContent=msg; box.className=type; box.style.display="block";
+  setTimeout(()=>box.style.display="none",duration);
+}
+
+onAuthStateChanged(auth, async (user)=>{
+  if(user){currentUser=user;
+    document.getElementById("loadingScreen").style.display="none";
+    document.getElementById("mainCard").style.display="block";
+    await loadUser(user);
+  }else window.location.href="login.html";
+});
+
+async function loadUser(user){
+  const ref=doc(db,"users",user.uid);
+  const snap=await getDoc(ref);
+  if(snap.exists()){
+    const u=snap.data();
+    walletBalance=u.walletBalance??0;
+    userTokens=u.miningAmount??0;
+    userStaked=u.lifetimeDeposit??0;
+
+    document.getElementById("walletTotal").textContent=`$${walletBalance.toFixed(2)}`;
+    document.getElementById("userBalance").textContent=userTokens.toFixed(2);
+    document.getElementById("userStaked").innerHTML=`${userStaked.toFixed(2)} <button id="releaseBtn" style="margin-left:6px;padding:3px 8px;font-size:11px;background:#16a34a;color:#fff;border:none;border-radius:6px;cursor:pointer;">Release +1.5%</button>`;
+
+    // 🟢 Reward release click
+    document.getElementById("releaseBtn").addEventListener("click", async ()=>{
+      if(userStaked<=0)return showAlert("No active stake to release!", "error");
+      const reward=(userStaked*0.015); // 1.5% reward
+      walletBalance+=reward;
+      await updateDoc(ref,{walletBalance});
+      document.getElementById("walletTotal").textContent=`$${walletBalance.toFixed(2)}`;
+      showAlert(`+ $${reward.toFixed(2)} profit added to wallet!`,"success");
+    });
+  }
+
+  const stored=localStorage.getItem("selectedToken");
+  if(!stored){showAlert("No token selected!","error");return;}
+  token=JSON.parse(stored);
+
+  document.getElementById("symbol").textContent=token.name.slice(0,4);
+  document.getElementById("t_name").textContent=token.name;
+  currentPrice=parseFloat(token.price);
+  document.getElementById("t_price").textContent=`$${currentPrice.toFixed(2)}`;
+
+  const pRef=doc(db,"prices",token.name);
+  onSnapshot(pRef,(snap)=>{
+    if(snap.exists()){
+      const d=snap.data();
+      currentPrice=+d.price;
+      document.getElementById("t_price").textContent=`$${currentPrice.toFixed(2)}`;
+      document.getElementById("chart").textContent=`🔥 Live Price: $${currentPrice.toFixed(2)}`;
+    }
+  });
+  loadTrades(user.uid);
+}
+
+function loadTrades(uid){
+  const q=query(collection(db,"trades"),where("user","==",uid),orderBy("timestamp","desc"));
+  const tbody=document.querySelector("#tradeTable tbody");
+  onSnapshot(q,(snap)=>{
+    tbody.innerHTML="";
+    snap.forEach(docu=>{
+      const d=docu.data();
+      const time=d.timestamp?.toDate().toLocaleTimeString()||"--";
+      tbody.innerHTML+=`
+      <tr>
+        <td>${time}</td>
+        <td>${d.token}</td>
+        <td style="color:${d.action=="BUY"?"#16a34a":d.action=="SELL"?"#dc2626":"#0ea5a4"};font-weight:700">${d.action}</td>
+        <td>${d.qty}</td>
+        <td>$${d.price.toFixed(2)}</td>
+      </tr>`;
+    });
+  });
+}
+
+// === Modal Logic ===
+const modal=document.getElementById("tradeModal"),
+header=document.getElementById("modalHeader"),
+priceEl=document.getElementById("modalPrice"),
+walletEl=document.getElementById("modalWallet"),
+qtyInput=document.getElementById("modalQty"),
+totalEl=document.getElementById("modalTotal"),
+err=document.getElementById("modalError");
+
+document.getElementById("btnBuy").onclick=()=>openModal("BUY");
+document.getElementById("btnSell").onclick=()=>openModal("SELL");
+document.querySelector(".stake").onclick=()=>openModal("STAKE");
+document.getElementById("cancelTrade").onclick=()=>modal.style.display="none";
+
+function openModal(type){
+  tradeType=type;
+  if(type=="BUY"&&walletBalance<=0)return showAlert("❌ Not enough balance!","error");
+  if((type=="SELL"||type=="STAKE")&&userTokens<=0)return showAlert("❌ You don't have any tokens!","error");
+  modal.style.display="flex";
+  header.textContent=`${type} ${token.name}`;
+  header.style.background=type=="BUY"?"linear-gradient(135deg,#16a34a,#22c55e)":type=="SELL"?"linear-gradient(135deg,#dc2626,#f87171)":"linear-gradient(135deg,#0ea5a4,#22d3ee)";
+  priceEl.textContent=`$${currentPrice.toFixed(2)}`;
+  walletEl.textContent=type=="BUY"?`Wallet: $${walletBalance.toFixed(2)}`:`Tokens: ${userTokens.toFixed(2)}`;
+  qtyInput.value="";totalEl.textContent="$0.00";err.textContent="";
+}
+
+qtyInput.oninput=()=>{const q=parseFloat(qtyInput.value)||0;totalEl.textContent=`$${(q*currentPrice).toFixed(2)}`;};
+
+document.getElementById("confirmTrade").onclick=async()=>{
+  const qty=parseFloat(qtyInput.value);
+  if(!qty||qty<=0)return err.textContent="Enter valid quantity";
+  const total=qty*currentPrice;const ref=doc(db,"users",currentUser.uid);
+
+  try{
+    if(tradeType=="BUY"){
+      if(total>walletBalance)return showAlert("❌ Not enough wallet balance!","error");
+      walletBalance-=total;userTokens+=qty;
+      await updateDoc(ref,{walletBalance,miningAmount:userTokens});
+      await record("BUY",qty);
+      showAlert(" Buy Successful!","success");
+    }
+    if(tradeType=="SELL"){
+      if(qty>userTokens)return showAlert("❌ Not enough tokens!","error");
+      userTokens-=qty;walletBalance+=total;
+      await updateDoc(ref,{walletBalance,miningAmount:userTokens});
+      await record("SELL",qty);
+      showAlert(" Sell Successful!","success");
+    }
+    if(tradeType=="STAKE"){
+      if(qty>userTokens)return showAlert("❌ Not enough tokens to stake!","error");
+      userTokens-=qty;userStaked+=qty;
+      await updateDoc(ref,{lifetimeDeposit:userStaked,miningAmount:userTokens});
+      await record("STAKE",qty);
+      showAlert(" Stake Successful!","success");
+    }
+
+    // Update UI instantly
+    document.getElementById("walletTotal").textContent=`$${walletBalance.toFixed(2)}`;
+    document.getElementById("userBalance").textContent=userTokens.toFixed(2);
+    document.getElementById("userStaked").innerHTML=`${userStaked.toFixed(2)} <button id="releaseBtn" style="margin-left:6px;padding:3px 8px;font-size:11px;background:#16a34a;color:#fff;border:none;border-radius:6px;cursor:pointer;">Release +1.5%</button>`;
+    document.getElementById("releaseBtn").addEventListener("click", async ()=>{
+      if(userStaked<=0)return showAlert("No active stake to release!", "error");
+      const reward=(userStaked*0.015);
+      walletBalance+=reward;
+      await updateDoc(ref,{walletBalance});
+      document.getElementById("walletTotal").textContent=`$${walletBalance.toFixed(2)}`;
+      showAlert(`+ $${reward.toFixed(2)} profit added!`,"success");
+    });
+
+    modal.style.display="none";
+  }catch(e){
+    console.error(e);showAlert(" Transaction Failed!","error");
+  }
+};
+
+async function record(action,qty){
+  await addDoc(collection(db,"trades"),{
+    user:currentUser.uid,
+    token:token.name,
+    action,qty,price:currentPrice,timestamp:serverTimestamp()
+  });
+}
+
+document.getElementById("logoutBtn").onclick=()=>signOut(auth).then(()=>{localStorage.clear();window.location.href="login.html";});
+
+</script>
+</body>
+</html>
