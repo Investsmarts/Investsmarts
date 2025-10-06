@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>💵 Live Token Market</title>
+<style>
+  :root{
+    --bg:#f9fafb;
+    --card:#ffffff;
+    --muted:#64748b;
+    --text:#0f172a;
+    --green:#16a34a;
+    --red:#dc2626;
+    --accent:#0ea5a4;
+  }
+  *{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+  }
+  html,body{
+    width:100%;
+    overflow-x:hidden; /* ❌ Horizontal scroll hat gaya */
+  }
+  body{
+    font-family:'Poppins',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:14px;
+  }
+
+  header{
+    width:100%;
+    max-width:900px;
+    text-align:center;
+    margin-bottom:12px;
+  }
+  h1{
+    font-size:1.4rem;
+    margin:5px 0;
+    color:var(--accent);
+  }
+  .muted{
+    font-size:0.85rem;
+    color:var(--muted);
+  }
+
+  /* === STATS CARD === */
+  .stats-card{
+    width:100%;
+    max-width:900px;
+    background:var(--card);
+    border-radius:16px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.05);
+    padding:22px 24px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px 40px;
+    margin-bottom:18px;
+  }
+  .stat-item{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .stat-label{
+    font-size:0.9rem;
+    color:var(--muted);
+    font-weight:500;
+    margin-bottom:4px;
+  }
+  .stat-value{
+    font-size:1.2rem;
+    font-weight:700;
+    color:var(--text);
+    letter-spacing:0.3px;
+  }
+
+  @media(max-width:600px){
+    .stats-card{
+      grid-template-columns:1fr 1fr;
+      gap:14px 20px;
+      padding:16px;
+    }
+    .stat-value{
+      font-size:1.05rem;
+    }
+  }
+
+  /* === TOKEN LIST === */
+  .token-list{
+    width:100%;
+    max-width:900px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .token{
+    background:var(--card);
+    border-radius:14px;
+    padding:12px 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 2px 6px rgba(0,0,0,0.04);
+    transition:transform .15s ease, box-shadow .15s ease;
+    cursor:pointer;
+  }
+  .token:hover{
+    transform:translateY(-2px);
+    box-shadow:0 3px 10px rgba(0,0,0,0.08);
+  }
+  .left{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .symbol{
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    background:linear-gradient(135deg,#e0f2fe,#ecfdf5);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:600;
+    color:#0f172a;
+    font-size:0.85rem;
+  }
+  .meta{
+    display:flex;
+    flex-direction:column;
+    line-height:1.2;
+  }
+  .name{
+    font-weight:600;
+    font-size:0.95rem;
+  }
+  .meta small{
+    color:var(--muted);
+    font-size:0.75rem;
+  }
+
+  .right{
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+  .price{
+    font-weight:700;
+    font-size:0.95rem;
+    min-width:65px;
+    text-align:right;
+    transition:color 0.3s ease;
+  }
+  .price.up{color:var(--green);}
+  .price.down{color:var(--red);}
+  .btns{
+    display:flex;
+    gap:6px;
+  }
+  button{
+    border:none;
+    border-radius:8px;
+    padding:6px 12px;
+    font-size:0.8rem;
+    font-weight:600;
+    cursor:pointer;
+    color:#fff;
+  }
+  .buy{background:var(--green);}
+  .sell{background:var(--red);}
+
+  @media(max-width:600px){
+    .token{
+      padding:10px 12px;
+    }
+    .symbol{
+      width:32px;
+      height:32px;
+      font-size:0.7rem;
+    }
+    .name{font-size:0.85rem;}
+    .price{font-size:0.85rem;min-width:55px;}
+    button{padding:5px 9px;font-size:0.7rem;}
+  }
+
+  /* Smooth Scroll + No scrollbar flash */
+  ::-webkit-scrollbar{width:0;height:0;}
+</style>
+</head>
+<body>
+  <div class="trust-banner">
+  <span class="dollar">$</span> TRUSTDOLLAR <span class="dollar">$</span>
+</div>
+
+  <header>
+  <div class="brand">
+    
+    <h1>TrustDollar Exchange</h1>
+  </div>
+  <div class="muted">The most trusted digital token market 💹</div>
+</header>
+
+  <!-- Top Stats Card -->
+  <div class="stats-card">
+    <div class="stat-item">
+      <div class="stat-label">Total Volume</div>
+      <div class="stat-value" id="totalVolume">$0</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Total Investors</div>
+      <div class="stat-value" id="totalInvestors">0</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Total Profit</div>
+      <div class="stat-value" id="totalProfit">$0</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Fund Invested</div>
+      <div class="stat-value" id="totalFund">$0</div>
+    </div>
+  </div>
+
+  <!-- Token List -->
+  <div class="token-list" id="tokenList"></div>
+
+<script>
+  // === SHORT USD FORMAT ===
+  function formatUSD(num){
+    if(num>=1e9)return "$"+(num/1e9).toFixed(2)+"B";
+    if(num>=1e6)return "$"+(num/1e6).toFixed(2)+"M";
+    if(num>=1e3)return "$"+(num/1e3).toFixed(2)+"K";
+    return "$"+num.toLocaleString();
+  }
+
+  function randomNum(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+
+  // === STATS UPDATE ===
+  const volumeEl=document.getElementById("totalVolume");
+  const investorEl=document.getElementById("totalInvestors");
+  const profitEl=document.getElementById("totalProfit");
+  const fundEl=document.getElementById("totalFund");
+
+  function updateStats(){
+    const vol=randomNum(1e7,9e9);
+    const inv=randomNum(10000,3000000);
+    const prof=randomNum(100000,600000000);
+    const fund=randomNum(500000,2000000000);
+
+    volumeEl.textContent=formatUSD(vol);
+    investorEl.textContent=inv.toLocaleString();
+    profitEl.textContent=formatUSD(prof);
+    fundEl.textContent=formatUSD(fund);
+  }
+  updateStats();
+  setInterval(updateStats,3600000);
+
+  // === TOKENS ===
+  const tokens=["TRUSTD","MOONX","DOGEX","SOLPRO","BNBMAX","LUNAR","POLYUP","AVAXO","MATICPRO","NEONAI","FLOKI","KARMA","SPACE","ZILLA","DOLLY","SHIBX","RAPTOR","GAMEX","HYPER","META"];
+  const tokenList=document.getElementById("tokenList");
+  let tokenData=tokens.map(name=>({name,price:(Math.random()*100).toFixed(2)}));
+
+  function renderTokens(){
+    tokenList.innerHTML='';
+    tokenData.forEach(token=>{
+      const div=document.createElement('div');
+      div.className='token';
+      div.innerHTML=`
+        <div class="left">
+          <div class="symbol">${token.name.slice(0,3)}</div>
+          <div class="meta">
+            <div class="name">${token.name}</div>
+            <small>Simulated</small>
+          </div>
+        </div>
+        <div class="right">
+          <div class="price" id="${token.name}">$${token.price}</div>
+          <div class="btns">
+            <button class="buy">Buy</button>
+            <button class="sell">Sell</button>
+          </div>
+        </div>`;
+      tokenList.appendChild(div);
+    });
+  }
+
+  function randomUpdate(){
+    tokenData.forEach(t=>{
+      let change=(Math.random()*2-1).toFixed(2);
+      let newPrice=parseFloat(t.price)+parseFloat(change);
+      if(newPrice<0.1)newPrice=0.1;
+      const el=document.getElementById(t.name);
+      if(el){
+        if(newPrice>t.price){el.classList.add('up');el.classList.remove('down');}
+        else{el.classList.add('down');el.classList.remove('up');}
+        t.price=newPrice.toFixed(2);
+        el.textContent=`$${t.price}`;
+      }
+    });
+  }
+
+  renderTokens();
+  setInterval(randomUpdate,1000);
+</script>
+</body>
+</html>
