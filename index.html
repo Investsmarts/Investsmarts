@@ -6,8 +6,9 @@
  <title>TrustDollar  - Earn  Daily | Instant Withdrawals</title>
 
   <!-- ✅ Favicon -->
-  <link rel="icon" type="image/png" href="myphoto/trustlogo.png">
-  <link rel="shortcut icon" type="image/png" href="myphoto/trustlogo.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://www.smartfundad.com/myphoto/trustlogo.png">
+<link rel="shortcut icon" type="image/png" href="https://www.smartfundad.com/myphoto/trustlogo.png">
+
 
   <!-- ✅ Open Graph (Social Media Preview) -->
   <meta property="og:title" content="TrustDollar v2 - Secure Your Funds">
@@ -467,6 +468,55 @@
 #successPopup {
   background: #4CAF50;
 }
+/* Header layout */
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  color: #000;
+  padding: 10px 30px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  height: 55px;
+  width: auto;
+}
+
+/* Gradient text styles */
+.brand-name {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: flex;
+  gap: 4px;
+}
+
+.multi-color {
+  background: linear-gradient(90deg, #4CAF50, #00bcd4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.multi-color-2 {
+  background: linear-gradient(90deg, #ff9800, #ff5722);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-name span {
+  text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
 
 </style>
 </head>
@@ -477,11 +527,14 @@
 </div>
 
   <!-- HEADER -->
-<!-- HEADER -->
 <header class="header">
   <div class="header-left">
-     <img src="myphoto/logo.png" alt="TrustDollar Logo" class="logo-img">
-</div>
+    <img src="myphoto/trustlogo.png" alt="TrustDollar Logo" class="logo-img">
+    <h1 class="brand-name">
+      <span class="multi-color">Trust</span><span class="multi-color-2">Dollar V2</span>
+    </h1>
+  </div>
+</header>
 
 <div class="menu-toggle" id="menuToggle">☰</div>
 <div class="menu-overlay" id="menuOverlay"></div>
