@@ -271,8 +271,13 @@ if (data.createdAt) {
   const joinDate = new Date(data.createdAt);
   const now = new Date();
 
-  const diffMs = now - joinDate;
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+// Compare only by date (ignore timezone hours)
+const joinDay = new Date(joinDate.getFullYear(), joinDate.getMonth(), joinDate.getDate());
+const todayDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+const diffMs = todayDay - joinDay;
+const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
 
 joinDateText = joinDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
