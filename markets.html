@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>💵 Live Token Market</title>
+<title>💵 TrustDollar Exchange</title>
 <style>
-  :root{
+  :root {
     --bg:#f9fafb;
     --card:#ffffff;
     --muted:#64748b;
@@ -14,15 +14,8 @@
     --red:#dc2626;
     --accent:#0ea5a4;
   }
-  *{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-  }
-  html,body{
-    width:100%;
-    overflow-x:hidden; /* ❌ Horizontal scroll hat gaya */
-  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{width:100%;overflow-x:hidden;}
   body{
     font-family:'Poppins',sans-serif;
     background:var(--bg);
@@ -32,22 +25,9 @@
     align-items:center;
     padding:14px;
   }
-
-  header{
-    width:100%;
-    max-width:900px;
-    text-align:center;
-    margin-bottom:12px;
-  }
-  h1{
-    font-size:1.4rem;
-    margin:5px 0;
-    color:var(--accent);
-  }
-  .muted{
-    font-size:0.85rem;
-    color:var(--muted);
-  }
+  header{text-align:center;margin-bottom:14px;width:100%;max-width:900px;}
+  h1{font-size:1.6rem;color:var(--accent);}
+  .muted{font-size:0.9rem;color:var(--muted);margin-top:4px;}
 
   /* === STATS CARD === */
   .stats-card{
@@ -56,39 +36,30 @@
     background:var(--card);
     border-radius:16px;
     box-shadow:0 4px 15px rgba(0,0,0,0.05);
-    padding:22px 24px;
+    padding:20px 24px;
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px 40px;
-    margin-bottom:18px;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:24px;
+    justify-items:center;
+    margin-bottom:20px;
   }
+
   .stat-item{
     display:flex;
     flex-direction:column;
-    align-items:flex-start;
+    align-items:center;
+    text-align:center;
   }
   .stat-label{
-    font-size:0.9rem;
+    font-size:0.95rem;
     color:var(--muted);
-    font-weight:500;
-    margin-bottom:4px;
+    font-weight:600;
+    margin-bottom:6px;
   }
   .stat-value{
     font-size:1.2rem;
     font-weight:700;
     color:var(--text);
-    letter-spacing:0.3px;
-  }
-
-  @media(max-width:600px){
-    .stats-card{
-      grid-template-columns:1fr 1fr;
-      gap:14px 20px;
-      padding:16px;
-    }
-    .stat-value{
-      font-size:1.05rem;
-    }
   }
 
   /* === TOKEN LIST === */
@@ -102,7 +73,7 @@
   .token{
     background:var(--card);
     border-radius:14px;
-    padding:12px 16px;
+    padding:14px 16px;
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -114,143 +85,91 @@
     transform:translateY(-2px);
     box-shadow:0 3px 10px rgba(0,0,0,0.08);
   }
-  .left{
-    display:flex;
-    gap:12px;
-    align-items:center;
-  }
+  .left{display:flex;gap:12px;align-items:center;}
   .symbol{
-    width:40px;
-    height:40px;
-    border-radius:10px;
+    width:42px;height:42px;border-radius:10px;
     background:linear-gradient(135deg,#e0f2fe,#ecfdf5);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:600;
-    color:#0f172a;
-    font-size:0.85rem;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:600;color:#0f172a;font-size:0.85rem;
   }
-  .meta{
-    display:flex;
-    flex-direction:column;
-    line-height:1.2;
-  }
-  .name{
-    font-weight:600;
-    font-size:0.95rem;
-  }
-  .meta small{
-    color:var(--muted);
-    font-size:0.75rem;
-  }
-
-  .right{
-    display:flex;
-    gap:10px;
-    align-items:center;
-  }
-  .price{
-    font-weight:700;
-    font-size:0.95rem;
-    min-width:65px;
-    text-align:right;
-    transition:color 0.3s ease;
-  }
+  .meta{display:flex;flex-direction:column;line-height:1.2;}
+  .name{font-weight:600;font-size:0.95rem;}
+  .meta small{color:var(--muted);font-size:0.75rem;}
+  .right{display:flex;gap:10px;align-items:center;}
+  .price{font-weight:700;font-size:0.95rem;min-width:65px;text-align:right;transition:color 0.3s ease;}
   .price.up{color:var(--green);}
   .price.down{color:var(--red);}
-  .btns{
-    display:flex;
-    gap:6px;
-  }
-  button{
-    border:none;
-    border-radius:8px;
-    padding:6px 12px;
-    font-size:0.8rem;
-    font-weight:600;
-    cursor:pointer;
-    color:#fff;
-  }
+  .btns{display:flex;gap:6px;}
+  button{border:none;border-radius:8px;padding:6px 12px;font-size:0.8rem;font-weight:600;cursor:pointer;color:#fff;}
   .buy{background:var(--green);}
   .sell{background:var(--red);}
+  ::-webkit-scrollbar{width:0;height:0;}
 
-  @media(max-width:600px){
-    .token{
-      padding:10px 12px;
-    }
-    .symbol{
-      width:32px;
-      height:32px;
-      font-size:0.7rem;
-    }
+  /* Responsive */
+  @media(max-width:700px){
+    h1{font-size:1.3rem;}
+    .stats-card{grid-template-columns:repeat(2,1fr);gap:16px;padding:16px;}
+    .stat-label{font-size:0.85rem;}
+    .stat-value{font-size:1.05rem;}
+    .token{padding:10px 12px;}
+    .symbol{width:32px;height:32px;font-size:0.7rem;}
     .name{font-size:0.85rem;}
     .price{font-size:0.85rem;min-width:55px;}
     button{padding:5px 9px;font-size:0.7rem;}
   }
-
-  /* Smooth Scroll + No scrollbar flash */
-  ::-webkit-scrollbar{width:0;height:0;}
 </style>
 </head>
 <body>
-  <div class="trust-banner">
-  <span class="dollar">$</span> TRUSTDOLLAR <span class="dollar">$</span>
-</div>
 
-  <header>
-  <div class="brand">
-    
-    <h1>TrustDollar Exchange</h1>
-  </div>
+<header>
+  <h1>TrustDollar Exchange</h1>
   <div class="muted">The most trusted digital token market 💹</div>
 </header>
 
-  <!-- Top Stats Card -->
-  <div class="stats-card">
-    <div class="stat-item">
-      <div class="stat-label">Total Volume</div>
-      <div class="stat-value" id="totalVolume">$0</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-label">Total Investors</div>
-      <div class="stat-value" id="totalInvestors">0</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-label">Total Profit</div>
-      <div class="stat-value" id="totalProfit">$0</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-label">Fund Invested</div>
-      <div class="stat-value" id="totalFund">$0</div>
-    </div>
+<!-- === STATS CARD === -->
+<div class="stats-card">
+  <div class="stat-item">
+    <div class="stat-label">Total Volume</div>
+    <div class="stat-value" id="totalVolume">$0</div>
   </div>
+  <div class="stat-item">
+    <div class="stat-label">Total Investors</div>
+    <div class="stat-value" id="totalInvestors">0</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Total Profit</div>
+    <div class="stat-value" id="totalProfit">$0</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Fund Invested</div>
+    <div class="stat-value" id="totalFund">$0</div>
+  </div>
+</div>
 
-  <!-- Token List -->
-  <div class="token-list" id="tokenList"></div>
+<!-- === TOKEN LIST === -->
+<div class="token-list" id="tokenList"></div>
 
 <script>
-  // === SHORT USD FORMAT ===
+  // === Helper functions ===
   function formatUSD(num){
     if(num>=1e9)return "$"+(num/1e9).toFixed(2)+"B";
     if(num>=1e6)return "$"+(num/1e6).toFixed(2)+"M";
     if(num>=1e3)return "$"+(num/1e3).toFixed(2)+"K";
     return "$"+num.toLocaleString();
   }
-
   function randomNum(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
 
-  // === STATS UPDATE ===
+  // === Stats ===
   const volumeEl=document.getElementById("totalVolume");
   const investorEl=document.getElementById("totalInvestors");
   const profitEl=document.getElementById("totalProfit");
   const fundEl=document.getElementById("totalFund");
 
   function updateStats(){
-    const vol=randomNum(1e7,9e9);
-    const inv=randomNum(10000,3000000);
-    const prof=randomNum(100000,600000000);
-    const fund=randomNum(500000,2000000000);
+    const vol=randomNum(5e7,5e9);
+    const inv=randomNum(10000,2000000);
+    const prof=randomNum(100000,900000000);
+    const fund=randomNum(500000,1000000000);
 
     volumeEl.textContent=formatUSD(vol);
     investorEl.textContent=inv.toLocaleString();
@@ -258,50 +177,53 @@
     fundEl.textContent=formatUSD(fund);
   }
   updateStats();
-  setInterval(updateStats,3600000);
 
-  // === TOKENS ===
+  // === Tokens ===
   const tokens=["TRUSTD","MOONX","DOGEX","SOLPRO","BNBMAX","LUNAR","POLYUP","AVAXO","MATICPRO","NEONAI","FLOKI","KARMA","SPACE","ZILLA","DOLLY","SHIBX","RAPTOR","GAMEX","HYPER","META"];
   const tokenList=document.getElementById("tokenList");
-  let tokenData=tokens.map(name=>({name,price:(Math.random()*100).toFixed(2)}));
 
-function renderTokens(){
-  tokenList.innerHTML = '';
-  tokenData.forEach(token => {
-    const div = document.createElement('div');
-    div.className = 'token';
-    div.innerHTML = `
-      <div class="left">
-        <div class="symbol">${token.name.slice(0,3)}</div>
-        <div class="meta">
-          <div class="name">${token.name}</div>
-          <small>Simulated</small>
-        </div>
-      </div>
-      <div class="right">
-        <div class="price" id="${token.name}">$${token.price}</div>
-        <div class="btns">
-          <button class="buy">Buy</button>
-          <button class="sell">Sell</button>
-        </div>
-      </div>
-    `;
+  // Load saved prices or initialize
+  let tokenData = JSON.parse(localStorage.getItem("tokenData")) || tokens.map((name,index) => ({
+    name,
+    price: index === 0 ? (46 + Math.random()*0.8).toFixed(2) : (Math.random()*100 + 1).toFixed(2)
+  }));
 
-    // 🟢 Click event: save token data + go to token.html
-    div.addEventListener("click", () => {
-      localStorage.setItem('selectedToken', JSON.stringify(token));
-      window.location.href = "token.html";
+  function renderTokens(){
+    tokenList.innerHTML='';
+    tokenData.forEach(token=>{
+      const div=document.createElement('div');
+      div.className='token';
+      div.innerHTML=`
+        <div class="left">
+          <div class="symbol">${token.name.slice(0,3)}</div>
+          <div class="meta">
+            <div class="name">${token.name}</div>
+            <small>Simulated</small>
+          </div>
+        </div>
+        <div class="right">
+          <div class="price" id="${token.name}">$${token.price}</div>
+          <div class="btns">
+            <button class="buy">Buy</button>
+            <button class="sell">Sell</button>
+          </div>
+        </div>`;
+      div.addEventListener("click",()=>{
+        localStorage.setItem("selectedToken",JSON.stringify(token));
+        window.location.href="token.html";
+      });
+      tokenList.appendChild(div);
     });
+  }
 
-    tokenList.appendChild(div);
-  });
-}
-
-  function randomUpdate(){
+  // === Gradual price movement ===
+  function gradualUpdate(){
     tokenData.forEach(t=>{
-      let change=(Math.random()*2-1).toFixed(2);
-      let newPrice=parseFloat(t.price)+parseFloat(change);
+      const direction=Math.random()<0.55?1:-1; // slightly upward bias
+      const changePercent=(Math.random()*0.02)*direction; // ±2%
+      let newPrice=parseFloat(t.price)*(1+changePercent);
       if(newPrice<0.1)newPrice=0.1;
+
       const el=document.getElementById(t.name);
       if(el){
         if(newPrice>t.price){el.classList.add('up');el.classList.remove('down');}
@@ -310,10 +232,13 @@ function renderTokens(){
         el.textContent=`$${t.price}`;
       }
     });
+    localStorage.setItem("tokenData",JSON.stringify(tokenData));
   }
 
   renderTokens();
-  setInterval(randomUpdate,1000);
+  setInterval(gradualUpdate,2000);
+
+  
 </script>
 </body>
 </html>
