@@ -157,6 +157,25 @@ body{font-family:'Poppins',sans-serif;background:#f5f7fa;margin:0;padding:15px;p
 }
 .notify.success{background:#32cd32;}
 .notify.error{background:#e53935;}
+
+/* 🌟 Premium text look for Joining Date */
+.join-date-text {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  background: linear-gradient(90deg, #16a34a, #4ade80);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+}
+
+.join-date-text:hover {
+  filter: brightness(1.1);
+  transform: scale(1.02);
+}
+
 </style>
 </head>
 <body>
@@ -165,8 +184,12 @@ body{font-family:'Poppins',sans-serif;background:#f5f7fa;margin:0;padding:15px;p
 <div class="container">
   <div class="profile-card">
     <div class="profile-pic"><img id="profileImage" alt=""></div>
-    <div id="userName" class="profile-name">Loading...</div>
-    <div id="userEmail" class="profile-email">Loading...</div>
+  <div id="userJoinDate" class="join-date-text">Joining Date: Loading...</div>
+
+
+<div id="userName" class="profile-name">Loading...</div>
+<div id="userEmail" class="profile-email">Loading...</div>
+
   </div>
 
   <div class="button-box">
@@ -238,10 +261,37 @@ onAuthStateChanged(auth,async user=>{
  userDocRef=doc(db,"users",user.uid);
  const s=await getDoc(userDocRef);
  const data=s.exists()?s.data():{};
- const uname=data.name||"User";
- userNameEl.textContent=uname;
- userEmailEl.textContent=maskEmail(data.email||user.email);
- modalUser.textContent=`Hey ${uname} 👋`;
+const uname = data.name || "User";
+
+let joinDateText = "Not set";
+let daysSince = "";
+
+// ✅ createdAt se date aur difference nikaalna
+if (data.createdAt) {
+  const joinDate = new Date(data.createdAt);
+  const now = new Date();
+
+  const diffMs = now - joinDate;
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+joinDateText = joinDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+  if (diffDays === 0) daysSince = " (Joined today)";
+  else if (diffDays === 1) daysSince = " (1 day ago)";
+  else if (diffDays < 30) daysSince = ` (${diffDays} days ago)`;
+  else {
+    const months = Math.floor(diffDays / 30);
+    const days = diffDays % 30;
+    daysSince = ` (${months} month${months > 1 ? "s" : ""} ${days} day${days > 1 ? "s" : ""} ago)`;
+  }
+}
+
+// ✅ UI me dikhana
+document.getElementById("userJoinDate").textContent = `Joining Date: ${joinDateText}${daysSince}`;
+userNameEl.textContent = uname;
+userEmailEl.textContent = maskEmail(data.email || user.email);
+modalUser.textContent = `Hey ${uname} 👋`;
+
 });
 
 window.openModal=(a)=>{
@@ -283,4 +333,3 @@ modal.addEventListener("click",e=>{if(e.target===modal)closeModal();});
 </script>
 </body>
 </html>
-
