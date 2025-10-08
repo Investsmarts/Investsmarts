@@ -132,6 +132,12 @@ to { opacity: 1; transform: scale(1); }
   font-weight: 700;
 }
 
+@media (max-height: 700px) {
+  .modal-content {
+    transform: translateY(-50px);
+  }
+}
+
 </style>
 </head>
 <body>
@@ -300,8 +306,22 @@ async function loadUser() {
 
 function updateMaxBuyInfo() {
   const info = document.getElementById("maxBuyInfo");
-  if (!info || currentPrice <= 0) return;
-  const maxTokens = walletBalance > 0 ? (walletBalance / currentPrice).toFixed(2) : "0.00";
+  if (!info) return;
+
+  // 🛑 Check wallet
+  if (walletBalance <= 0) {
+    info.textContent = "Insufficient balance to buy tokens";
+    return;
+  }
+
+  // 🛑 Check price
+  if (currentPrice <= 0 || isNaN(currentPrice)) {
+    info.textContent = "Price not available yet";
+    return;
+  }
+
+  // ✅ Calculate maximum tokens
+  const maxTokens = (walletBalance / currentPrice).toFixed(2);
   info.textContent = `You can buy ${maxTokens} tokens max`;
 }
 
@@ -429,6 +449,9 @@ async function openModal(type) {
   header.textContent = `${type} ${token.name}`;
   qtyInput.value = "";
   total.textContent = "$0.00";
+  
+  // ✅ ensures "You can buy X tokens max" updates immediately (only for BUY)
+if (type === "BUY") updateMaxBuyInfo();
 
 
  // ✅ NEW PART: Update current price + available balance
@@ -551,6 +574,43 @@ document.addEventListener("selectstart", e => e.preventDefault());
 
 // 🧹 Stop profit timer on reload or exit
 window.addEventListener("beforeunload", () => clearInterval(window.profitTimer));
+
+// 📱 Adjust modal when keyboard opens (mobile fix)
+const modalInput = document.getElementById("modalQty");
+modalInput.addEventListener("focus", () => {
+  if (window.innerWidth < 768) {
+    document.querySelector(".modal-content")
+      .scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+});
+
+// 🔹 Initialize Chart.js
+const ctx = document.getElementById("earningChart").getContext("2d");
+window.earningChart = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: [],
+    datasets: [{
+      label: "Live Profit ($)",
+      data: [],
+      borderWidth: 2,
+      borderColor: "#0ea5a4",
+      tension: 0.3,
+      fill: true,
+      backgroundColor: "rgba(14,165,164,0.08)",
+      pointRadius: 0
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      x: { display: false },
+      y: { ticks: { color: "#64748b" }, beginAtZero: true }
+    },
+    plugins: { legend: { display: false } }
+  }
+});
+
 
 </script>
 </body>
