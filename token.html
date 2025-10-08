@@ -1,230 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>TrustDollar Exchange — Token Live</title>
-<style>
-  :root{
-    --bg:#f8fafc;--card:#fff;--muted:#64748b;
-    --green:#16a34a;--red:#dc2626;--accent:#0ea5a4;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
-  body{background:var(--bg);color:#0f172a;padding:12px;display:flex;justify-content:center;}
-  .card{width:100%;max-width:900px;background:var(--card);border-radius:16px;
-    box-shadow:0 6px 16px rgba(0,0,0,0.06);padding:18px;}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TrustDollar Exchange — Token Live</title>
+  <style>
+    :root{
+      --bg:#f8fafc;--card:#fff;--muted:#64748b;
+      --green:#16a34a;--red:#dc2626;--accent:#0ea5a4;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
+    body{background:var(--bg);color:#0f172a;padding:12px;display:flex;justify-content:center;}
+    .card{width:100%;max-width:900px;background:var(--card);border-radius:16px;
+      box-shadow:0 6px 16px rgba(0,0,0,0.06);padding:18px;}
 
-  .logout{background:#0ea5a4;color:#fff;padding:10px 14px;border:none;border-radius:10px;
-    cursor:pointer;font-weight:700;font-size:14px;width:100%;margin-top:22px;}
+      .logout{background:#0ea5a4;color:#fff;padding:10px 14px;border:none;border-radius:10px;
+        cursor:pointer;font-weight:700;font-size:14px;width:100%;margin-top:22px;}
 
-  .top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
-  .left{display:flex;gap:10px;align-items:center;}
-  .symbol{width:54px;height:54px;border-radius:12px;
-    background:linear-gradient(135deg,#e0f2fe,#ecfdf5);
-    display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;}
-  .title{font-size:18px;font-weight:700;}
-  .priceBig{font-size:24px;font-weight:800;}
-  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-  .btn{padding:8px 10px;border-radius:8px;border:none;cursor:pointer;font-weight:700;font-size:13px;}
-  .buy{background:var(--green);color:#fff;}
-  .sell{background:var(--red);color:#fff;}
-  .stake{background:var(--accent);color:#fff;}
+        .top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+        .left{display:flex;gap:10px;align-items:center;}
+        .symbol{width:54px;height:54px;border-radius:12px;
+          background:linear-gradient(135deg,#e0f2fe,#ecfdf5);
+          display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;}
+          .title{font-size:18px;font-weight:700;}
+          .priceBig{font-size:24px;font-weight:800;}
+          .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+          .btn{padding:8px 10px;border-radius:8px;border:none;cursor:pointer;font-weight:700;font-size:13px;}
+          .buy{background:var(--green);color:#fff;}
+          .sell{background:var(--red);color:#fff;}
+          .stake{background:var(--accent);color:#fff;}
 
-  .chart{margin-top:12px;height:160px;border-radius:10px;
-    background:linear-gradient(180deg,#ffffff,#f1f5f9);
-    display:flex;justify-content:center;align-items:center;color:var(--muted);font-weight:600;font-size:13px;}
+          .chart{margin-top:12px;height:160px;border-radius:10px;
+            background:linear-gradient(180deg,#ffffff,#f1f5f9);
+            display:flex;justify-content:center;align-items:center;color:var(--muted);font-weight:600;font-size:13px;}
 
-  .metaGrid{margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;}
-  .meta{background:#f9fafb;padding:10px;border-radius:10px;text-align:center;}
-  .small{font-size:11px;color:#64748b;}
+            .metaGrid{margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;}
+            .meta{background:#f9fafb;padding:10px;border-radius:10px;text-align:center;}
+            .small{font-size:11px;color:#64748b;}
 
-  .wallet-box{margin-top:16px;background:#fff;border-radius:10px;
-    padding:12px;box-shadow:0 3px 10px rgba(0,0,0,0.05);}
-  .wallet-header{display:flex;justify-content:space-between;align-items:center;}
-  .wallet-total{font-size:1.1rem;font-weight:700;color:#0ea5a4;}
-  .trade-history{margin-top:16px;background:#fff;border-radius:10px;
-    box-shadow:0 3px 10px rgba(0,0,0,0.05);padding:10px;}
-  table{width:100%;border-collapse:collapse;margin-top:8px;}
-  th,td{padding:6px;text-align:left;font-size:0.78rem;border-bottom:1px solid #f1f5f9;}
-  th{color:#64748b;font-weight:600;}
+            .wallet-box{margin-top:16px;background:#fff;border-radius:10px;
+              padding:12px;box-shadow:0 3px 10px rgba(0,0,0,0.05);}
+              .wallet-header{display:flex;justify-content:space-between;align-items:center;}
+              .wallet-total{font-size:1.1rem;font-weight:700;color:#0ea5a4;}
+              .trade-history{margin-top:16px;background:#fff;border-radius:10px;
+                box-shadow:0 3px 10px rgba(0,0,0,0.05);padding:10px;}
+                table{width:100%;border-collapse:collapse;margin-top:8px;}
+                th,td{padding:6px;text-align:left;font-size:0.78rem;border-bottom:1px solid #f1f5f9;}
+                th{color:#64748b;font-weight:600;}
 
-  /* Modal */
-  .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);
-    display:none;justify-content:center;align-items:center;z-index:1000;}
-  .modal-content{background:#fff;border-radius:14px;width:90%;max-width:420px;
-    box-shadow:0 6px 25px rgba(0,0,0,0.3);overflow:hidden;}
-  .modal-header{background:linear-gradient(135deg,#0ea5a4,#06b6d4);color:#fff;
-    font-weight:700;font-size:1.1rem;padding:12px 16px;text-align:center;}
-  .modal-body{padding:18px;}
-  .modal-info{display:flex;justify-content:space-between;margin-bottom:12px;font-size:14px;}
-  .modal-input label{display:block;margin-bottom:6px;font-size:13px;color:#475569;text-align:left;}
-  .modal-input input{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;
-    font-size:15px;font-weight:600;text-align:center;}
-  .modal-total{display:flex;justify-content:space-between;align-items:center;
-    background:#f9fafb;padding:10px 14px;border-radius:10px;margin-top:10px;font-size:14px;}
-  .modal-actions{display:flex;justify-content:space-between;padding:14px;background:#f8fafc;}
-  .confirm{background:#16a34a;color:#fff;padding:10px 16px;border:none;border-radius:8px;cursor:pointer;font-weight:700;width:48%;}
-  .cancel{background:#e2e8f0;color:#0f172a;padding:10px 16px;border:none;border-radius:8px;cursor:pointer;font-weight:700;width:48%;}
-  .error{margin-top:8px;color:#dc2626;font-weight:600;text-align:center;}
+                /* Modal */
+                .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);
+                  display:none;justify-content:center;align-items:center;z-index:1000;}
+                  .modal-content{background:#fff;border-radius:14px;width:90%;max-width:420px;
+                    box-shadow:0 6px 25px rgba(0,0,0,0.3);overflow:hidden;}
+                    .modal-header{background:linear-gradient(135deg,#0ea5a4,#06b6d4);color:#fff;
+                      font-weight:700;font-size:1.1rem;padding:12px 16px;text-align:center;}
+                      .modal-body{padding:18px;}
+                      .modal-info{display:flex;justify-content:space-between;margin-bottom:12px;font-size:14px;}
+                      .modal-input label{display:block;margin-bottom:6px;font-size:13px;color:#475569;text-align:left;}
+                      .modal-input input{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;
+                        font-size:15px;font-weight:600;text-align:center;}
+                        .modal-total{display:flex;justify-content:space-between;align-items:center;
+                          background:#f9fafb;padding:10px 14px;border-radius:10px;margin-top:10px;font-size:14px;}
+                          .modal-actions{display:flex;justify-content:space-between;padding:14px;background:#f8fafc;}
+                          .confirm{background:#16a34a;color:#fff;padding:10px 16px;border:none;border-radius:8px;cursor:pointer;font-weight:700;width:48%;}
+                          .cancel{background:#e2e8f0;color:#0f172a;padding:10px 16px;border:none;border-radius:8px;cursor:pointer;font-weight:700;width:48%;}
+                          .error{margin-top:8px;color:#dc2626;font-weight:600;text-align:center;}
 
-  #alertBox{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-    background:#fff;padding:18px 24px;border-radius:12px;box-shadow:0 5px 20px rgba(0,0,0,0.2);
-    font-weight:700;font-size:15px;color:#0f172a;display:none;z-index:2000;text-align:center;}
-  #alertBox.success{border-left:6px solid #16a34a;}
-  #alertBox.error{border-left:6px solid #dc2626;}
+                          #alertBox{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+                            background:#fff;padding:18px 24px;border-radius:12px;box-shadow:0 5px 20px rgba(0,0,0,0.2);
+                            font-weight:700;font-size:15px;color:#0f172a;display:none;z-index:2000;text-align:center;}
+                            #alertBox.success{border-left:6px solid #16a34a;}
+                            #alertBox.error{border-left:6px solid #dc2626;}
 
-    /* 🔹 Fullscreen Overlay */
-  #loadingScreen {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: linear-gradient(135deg, #f0fdf4, #ecfeff);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-  }
+                            /* 🔹 Fullscreen Overlay */
+                            #loadingScreen {
+                              position: fixed;
+                              top: 0; left: 0;
+                              width: 100%; height: 100%;
+                              background: linear-gradient(135deg, #f0fdf4, #ecfeff);
+                              display: flex;
+                              justify-content: center;
+                              align-items: center;
+                              z-index: 2000;
+                            }
 
-  /* 🔹 Glassy Box */
-  .loader-box {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 30px 50px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-    text-align: center;
-    animation: fadeIn 0.6s ease-in-out;
-  }
+                            /* 🔹 Glassy Box */
+                            .loader-box {
+                              background: rgba(255, 255, 255, 0.8);
+                              backdrop-filter: blur(12px);
+                              border-radius: 16px;
+                              padding: 30px 50px;
+                              box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+                              text-align: center;
+                              animation: fadeIn 0.6s ease-in-out;
+                            }
 
-  /* 🔹 Smooth Spinner */
-  .spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid #e2e8f0;
-    border-top: 5px solid #0ea5a4;
-    border-radius: 50%;
-    margin: 0 auto 18px;
-    animation: spin 1s linear infinite;
-  }
+                            /* 🔹 Smooth Spinner */
+                            .spinner {
+                              width: 50px;
+                              height: 50px;
+                              border: 5px solid #e2e8f0;
+                              border-top: 5px solid #0ea5a4;
+                              border-radius: 50%;
+                              margin: 0 auto 18px;
+                              animation: spin 1s linear infinite;
+                            }
 
-  /* 🔹 Text Style */
-  .loader-box p {
-    font-size: 15px;
-    color: #0f172a;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-  }
+                            /* 🔹 Text Style */
+                            .loader-box p {
+                              font-size: 15px;
+                              color: #0f172a;
+                              font-weight: 600;
+                              letter-spacing: 0.3px;
+                            }
 
-  /* 🔹 Animations */
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
+                            /* 🔹 Animations */
+                            @keyframes spin {
+                              from { transform: rotate(0deg); }
+                              to { transform: rotate(360deg); }
+                            }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
-  }
-</style>
-</head>
-<body>
+                            @keyframes fadeIn {
+                              from { opacity: 0; transform: scale(0.95); }
+                              to { opacity: 1; transform: scale(1); }
+                            }
+                          </style>
+                        </head>
+                        <body>
 
-<div class="card" id="mainCard" style="display:none;">
-  <div class="top">
-    <div class="left">
-      <div class="symbol" id="symbol">--</div>
-      <div><div class="title" id="t_name">Token</div></div>
-    </div>
-    <div class="controls">
-      <div class="priceBig" id="t_price">$0.00</div>
-      <button class="btn buy" id="btnBuy">Buy</button>
-      <button class="btn sell" id="btnSell">Sell</button>
-      <button class="btn stake">Stake</button>
-    </div>
-  </div>
+                          <div class="card" id="mainCard" style="display:none;">
+                            <div class="top">
+                              <div class="left">
+                                <div class="symbol" id="symbol">--</div>
+                                <div><div class="title" id="t_name">Token</div></div>
+                              </div>
+                              <div class="controls">
+                                <div class="priceBig" id="t_price">$0.00</div>
+                                <button class="btn buy" id="btnBuy">Buy</button>
+                                <button class="btn sell" id="btnSell">Sell</button>
+                                <button class="btn stake">Stake</button>
+                              </div>
+                            </div>
 
-<div class="chart" id="chart">
-  <canvas id="earningChart" style="width:100%;height:180px;"></canvas>
-</div>
+                            <div class="chart" id="chart">
+                              <canvas id="earningChart" style="width:100%;height:180px;"></canvas>
+                            </div>
 
-  <div class="metaGrid">
-    <div class="meta"><div class="small">Your Tokens</div><div id="userBalance">0.00</div></div>
-    <div class="meta"><div class="small">Staked</div><div id="userStaked">0.00</div></div>
-  </div>
+                            <div class="metaGrid">
+                              <div class="meta"><div class="small">Your Tokens</div><div id="userBalance">0.00</div></div>
+                              <div class="meta"><div class="small">Staked</div><div id="userStaked">0.00</div></div>
+                            </div>
 
-  <div class="wallet-box">
-    <div class="wallet-header">
-      <div><strong>💼 Wallet Balance:</strong></div>
-      <div class="wallet-total" id="walletTotal">$0.00</div>
-    </div>
-  </div>
+                            <div class="wallet-box">
+                              <div class="wallet-header">
+                                <div><strong>💼 Wallet Balance:</strong></div>
+                                <div class="wallet-total" id="walletTotal">$0.00</div>
+                              </div>
+                            </div>
 
-  <div class="trade-history">
-    <h3> Live Trade History</h3>
-    <table id="tradeTable">
-      <thead><tr><th>Time</th><th>Token</th><th>Action</th><th>Qty</th><th>Price</th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </div>
+                            <div class="trade-history">
+                              <h3> Live Trade History</h3>
+                              <table id="tradeTable">
+                                <thead><tr><th>Time</th><th>Token</th><th>Action</th><th>Qty</th><th>Price</th></tr></thead>
+                                <tbody></tbody>
+                              </table>
+                            </div>
 
-  <button id="logoutBtn" class="logout">Logout</button>
-</div>
+                            <button id="logoutBtn" class="logout">Logout</button>
+                          </div>
 
-<div id="alertBox"></div>
+                          <div id="alertBox"></div>
 
-<!-- Modal -->
-<div class="modal" id="tradeModal">
-  <div class="modal-content">
-    <div class="modal-header" id="modalHeader">Trade</div>
-    <div class="modal-body">
-      <div class="modal-info">
-        <div><strong>Current Price:</strong> <span id="modalPrice">$0.00</span></div>
-        <div><strong>Available:</strong> <span id="modalWallet">$0.00</span></div>
-      </div>
-      <div class="modal-input">
-        <label for="modalQty">Enter Quantity</label>
-        <input type="number" id="modalQty" placeholder="0.00" min="0" />
-      </div>
-      <div class="modal-total"><span>Total:</span><strong id="modalTotal">$0.00</strong></div>
-      <div class="error" id="modalError"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="confirm" id="confirmTrade">Confirm</button>
-      <button class="cancel" id="cancelTrade">Cancel</button>
-    </div>
-  </div>
-</div>
+                          <!-- Modal -->
+                          <div class="modal" id="tradeModal">
+                            <div class="modal-content">
+                              <div class="modal-header" id="modalHeader">Trade</div>
+                              <div class="modal-body">
+                                <div class="modal-info">
+                                  <div><strong>Current Price:</strong> <span id="modalPrice">$0.00</span></div>
+                                  <div><strong>Available:</strong> <span id="modalWallet">$0.00</span></div>
+                                </div>
+                                <div class="modal-input">
+                                  <label for="modalQty">Enter Quantity</label>
+                                  <input type="number" id="modalQty" placeholder="0.00" min="0" />
+                                </div>
+                                <div class="modal-total"><span>Total:</span><strong id="modalTotal">$0.00</strong></div>
+                                <div class="error" id="modalError"></div>
+                              </div>
+                              <div class="modal-actions">
+                                <button class="confirm" id="confirmTrade">Confirm</button>
+                                <button class="cancel" id="cancelTrade">Cancel</button>
+                              </div>
+                            </div>
+                          </div>
 
- <!-- ✅ Modern Professional Loader -->
-<div id="loadingScreen">
-  <div class="loader-box">
-    <div class="spinner"></div>
-    <p>Verifying session... please wait</p>
-  </div>
-</div>
-<!-- Chart.js for smooth animated graph -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                          <!-- ✅ Modern Professional Loader -->
+                          <div id="loadingScreen">
+                            <div class="loader-box">
+                              <div class="spinner"></div>
+                              <p>Verifying session... please wait</p>
+                            </div>
+                          </div>
+                          <!-- Chart.js for smooth animated graph -->
+                          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc, addDoc, onSnapshot, collection, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+                          <script type="module">
+                            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+                            import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+                            import { getFirestore, doc, getDoc, updateDoc, addDoc, onSnapshot, collection, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
-  authDomain: "btcinvest-c0e25.firebaseapp.com",
-  projectId: "btcinvest-c0e25",
-  storageBucket: "btcinvest-c0e25.firebasestorage.app",
-  messagingSenderId: "204937458487",
-  appId: "1:204937458487:web:cc27ece1249999279f60b2",
-  measurementId: "G-HG0Q8ZHT6G"
-};
+                            const firebaseConfig = {
+                              apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+                              authDomain: "btcinvest-c0e25.firebaseapp.com",
+                              projectId: "btcinvest-c0e25",
+                              storageBucket: "btcinvest-c0e25.firebasestorage.app",
+                              messagingSenderId: "204937458487",
+                              appId: "1:204937458487:web:cc27ece1249999279f60b2",
+                              measurementId: "G-HG0Q8ZHT6G"
+                            };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+                            const app = initializeApp(firebaseConfig);
+                            const auth = getAuth(app);
+                            const db = getFirestore(app);
 
-let currentUser, token, walletBalance = 0, userTokens = 0, userStaked = 0, currentPrice = 0, liveProfit = 0;
+                            let currentUser, token, walletBalance = 0, userTokens = 0, userStaked = 0, currentPrice = 0, liveProfit = 0, profitTimer = null;
+
 const perMinuteRate = 0.015 / (24 * 60); // 1.5% per day
 
 function showAlert(msg, type = "info") {
@@ -258,6 +259,8 @@ async function loadUser(user) {
     document.getElementById("walletTotal").textContent = `$${walletBalance.toFixed(2)}`;
     document.getElementById("userBalance").textContent = userTokens.toFixed(2);
     updateStakeUI(ref);
+    initEarningChart();
+
   }
 
   const stored = localStorage.getItem("selectedToken");
@@ -281,19 +284,19 @@ async function loadUser(user) {
 }
 
 // 🟢 Staking + Release + Referral Logic
- function updateStakeUI(ref) {
+function updateStakeUI(ref) {
   const d = document.getElementById("userStaked");
   clearInterval(profitTimer); // 🧹 clear old timer
 
   d.innerHTML = `
-    ${userStaked.toFixed(2)}
-    <div id='stakeInfo' style='font-size:12px;color:#0ea5a4;margin-top:4px;'>
-      Live Profit: $${liveProfit.toFixed(4)}
-    </div>
-    <button id='releaseBtn'
-      style='margin-top:5px;padding:4px 10px;font-size:12px;
-      background:#16a34a;color:#fff;border:none;border-radius:6px;
-      cursor:pointer;'>Release</button>
+  ${userStaked.toFixed(2)}
+  <div id='stakeInfo' style='font-size:12px;color:#0ea5a4;margin-top:4px;'>
+  Live Profit: $${liveProfit.toFixed(4)}
+  </div>
+  <button id='releaseBtn'
+  style='margin-top:5px;padding:4px 10px;font-size:12px;
+  background:#16a34a;color:#fff;border:none;border-radius:6px;
+  cursor:pointer;'>Release</button>
   `;
 
   const stakeInfo = document.getElementById("stakeInfo");
@@ -303,9 +306,12 @@ async function loadUser(user) {
     if (userStaked > 0) {
       const g = userStaked * perMinuteRate;
       liveProfit += g;
+      updateEarningChart(liveProfit);
+
       stakeInfo.innerHTML = `
-        Live Profit: <b>$${liveProfit.toFixed(4)}</b> 
-        (+${((liveProfit / userStaked) * 100).toFixed(2)}%)
+      Live Profit: <b>$${liveProfit.toFixed(4)}</b> 
+      (+${userStaked > 0 ? ((liveProfit / userStaked) * 100).toFixed(2) : "0.00"}%)
+
       `;
       await updateDoc(ref, { liveProfit });
     }
@@ -314,8 +320,9 @@ async function loadUser(user) {
   // ⚡ Smooth live UI every second (no Firebase)
   setInterval(() => {
     stakeInfo.innerHTML = `
-      Live Profit: <b>$${liveProfit.toFixed(4)}</b> 
-      (+${((liveProfit / userStaked) * 100).toFixed(2)}%)
+    Live Profit: <b>$${liveProfit.toFixed(4)}</b> 
+    (${userStaked > 0 ? `+${((liveProfit / userStaked) * 100).toFixed(2)}%` : "+0.00%"})
+
     `;
   }, 1000);
 
@@ -393,27 +400,27 @@ function loadTrades(uid) {
       const d = x.data();
       const t = d.timestamp?.toDate().toLocaleTimeString() || "--";
       tb.innerHTML += `
-        <tr>
-          <td>${t}</td>
-          <td>${d.token}</td>
-          <td style='color:${d.action=="BUY"?"#16a34a":d.action=="SELL"?"#dc2626":"#0ea5a4"};font-weight:700'>
-            ${d.action}
-          </td>
-          <td>${d.qty}</td>
-          <td>$${d.price.toFixed(2)}</td>
-        </tr>`;
+      <tr>
+      <td>${t}</td>
+      <td>${d.token}</td>
+      <td style='color:${d.action=="BUY"?"#16a34a":d.action=="SELL"?"#dc2626":"#0ea5a4"};font-weight:700'>
+      ${d.action}
+      </td>
+      <td>${d.qty}</td>
+      <td>$${d.price.toFixed(2)}</td>
+      </tr>`;
     });
   });
 }
 
 // 🎯 Trade modal logic
 const modal = document.getElementById("tradeModal"),
-  header = document.getElementById("modalHeader"),
-  price = document.getElementById("modalPrice"),
-  avail = document.getElementById("modalWallet"),
-  qty = document.getElementById("modalQty"),
-  total = document.getElementById("modalTotal"),
-  err = document.getElementById("modalError");
+header = document.getElementById("modalHeader"),
+price = document.getElementById("modalPrice"),
+avail = document.getElementById("modalWallet"),
+qty = document.getElementById("modalQty"),
+total = document.getElementById("modalTotal"),
+err = document.getElementById("modalError");
 let tradeType = null;
 
 document.getElementById("btnBuy").onclick = () => openModal("BUY");
@@ -429,9 +436,9 @@ function openModal(t) {
   modal.style.display = "flex";
   header.textContent = `${t} ${token.name}`;
   header.style.background =
-    t == "BUY" ? "linear-gradient(135deg,#16a34a,#22c55e)" :
-    t == "SELL" ? "linear-gradient(135deg,#dc2626,#f87171)" :
-    "linear-gradient(135deg,#0ea5a4,#22d3ee)";
+  t == "BUY" ? "linear-gradient(135deg,#16a34a,#22c55e)" :
+  t == "SELL" ? "linear-gradient(135deg,#dc2626,#f87171)" :
+  "linear-gradient(135deg,#0ea5a4,#22d3ee)";
 
   price.textContent = `$${currentPrice.toFixed(2)}`;
   avail.textContent = t == "BUY" ? `Wallet: $${walletBalance.toFixed(2)}` : `Tokens: ${userTokens.toFixed(2)}`;
@@ -500,10 +507,12 @@ async function addTrade(a, q) {
 }
 
 document.getElementById("logoutBtn").onclick = () =>
-  signOut(auth).then(() => {
-    localStorage.clear();
-    window.location.href = "login.html";
-  });
+signOut(auth).then(() => {
+  localStorage.clear();
+  window.location.href = "login.html";
+});
+
+
 
 
 // ❌ Right-click disable
@@ -517,20 +526,59 @@ document.getElementById("logoutBtn").onclick = () =>
     e.preventDefault();
   });
 
-// ❌ Disable copy (Ctrl+C), cut (Ctrl+X), paste (Ctrl+V), view-source (Ctrl+U)
-  document.addEventListener("keydown", function(e) {
-    if (
-      (e.ctrlKey && (e.key === "c" || e.key === "C")) || 
-      (e.ctrlKey && (e.key === "x" || e.key === "X")) || 
-      (e.ctrlKey && (e.key === "v" || e.key === "V")) || 
-      (e.ctrlKey && (e.key === "u" || e.key === "U")) || 
-    (e.key === "F12") // DevTools
-    ) {
-      e.preventDefault();
-    
-  }
+
+ // ❌ Disable copy, paste, inspect etc.
+document.addEventListener("keydown", function(e) {
+  if (
+    (e.ctrlKey && (["c","x","v","u"].includes(e.key.toLowerCase()))) ||
+    e.key === "F12"
+  ) e.preventDefault();
 });
 
+// ✅ Chart.js earning graph functions
+function initEarningChart() {
+  const ctx = document.getElementById("earningChart").getContext("2d");
+  window.earningChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: [],
+      datasets: [{
+        label: "Live Profit ($)",
+        data: [],
+        borderColor: "#16a34a",
+        borderWidth: 2,
+        fill: true,
+        backgroundColor: "rgba(22,163,74,0.1)",
+        tension: 0.25
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: { display: false },
+        y: { beginAtZero: true }
+      }
+    }
+  });
+}
+
+function updateEarningChart(profit) {
+  const chart = window.earningChart;
+  if (!chart) return;
+  const time = new Date().toLocaleTimeString();
+  chart.data.labels.push(time);
+  chart.data.datasets[0].data.push(profit.toFixed(4));
+  if (chart.data.labels.length > 10) {
+    chart.data.labels.shift();
+    chart.data.datasets[0].data.shift();
+  }
+  chart.update();
+}
 </script>
 </body>
 </html>
+
+
