@@ -72,6 +72,59 @@
     font-weight:700;font-size:15px;color:#0f172a;display:none;z-index:2000;text-align:center;}
   #alertBox.success{border-left:6px solid #16a34a;}
   #alertBox.error{border-left:6px solid #dc2626;}
+
+    /* 🔹 Fullscreen Overlay */
+  #loadingScreen {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, #f0fdf4, #ecfeff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+  }
+
+  /* 🔹 Glassy Box */
+  .loader-box {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 30px 50px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    text-align: center;
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  /* 🔹 Smooth Spinner */
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #e2e8f0;
+    border-top: 5px solid #0ea5a4;
+    border-radius: 50%;
+    margin: 0 auto 18px;
+    animation: spin 1s linear infinite;
+  }
+
+  /* 🔹 Text Style */
+  .loader-box p {
+    font-size: 15px;
+    color: #0f172a;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  /* 🔹 Animations */
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
 </style>
 </head>
 <body>
@@ -107,7 +160,7 @@
   </div>
 
   <div class="trade-history">
-    <h3>🧾 Live Trade History</h3>
+    <h3> Live Trade History</h3>
     <table id="tradeTable">
       <thead><tr><th>Time</th><th>Token</th><th>Action</th><th>Qty</th><th>Price</th></tr></thead>
       <tbody></tbody>
@@ -142,8 +195,12 @@
   </div>
 </div>
 
-<div id="loadingScreen" style="font-family:sans-serif;text-align:center;margin-top:100px;color:#555;">
-  ⏳ Verifying session...
+ <!-- ✅ Modern Professional Loader -->
+<div id="loadingScreen">
+  <div class="loader-box">
+    <div class="spinner"></div>
+    <p>Verifying session... please wait</p>
+  </div>
 </div>
 <!-- Chart.js for smooth animated graph -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -224,54 +281,60 @@ async function loadUser(user) {
 }
 
 // 🟢 Staking + Release + Referral Logic
-function updateStakeUI(ref) {
+ function updateStakeUI(ref) {
   const d = document.getElementById("userStaked");
+  clearInterval(profitTimer); // 🧹 clear old timer
 
   d.innerHTML = `
     ${userStaked.toFixed(2)}
     <div id='stakeInfo' style='font-size:12px;color:#0ea5a4;margin-top:4px;'>
       Live Profit: $${liveProfit.toFixed(4)}
     </div>
-    <button id='releaseBtn' 
+    <button id='releaseBtn'
       style='margin-top:5px;padding:4px 10px;font-size:12px;
       background:#16a34a;color:#fff;border:none;border-radius:6px;
       cursor:pointer;'>Release</button>
   `;
 
-  // ⏱️ Every minute profit update
-  setInterval(async () => {
+  const stakeInfo = document.getElementById("stakeInfo");
+
+  // 🕒 Profit auto-update every minute
+  profitTimer = setInterval(async () => {
     if (userStaked > 0) {
       const g = userStaked * perMinuteRate;
       liveProfit += g;
-      document.getElementById("stakeInfo").innerHTML =
-        `Live Profit: <b>$${liveProfit.toFixed(4)}</b> 
-         (+${((liveProfit / userStaked) * 100).toFixed(2)}%)`;
+      stakeInfo.innerHTML = `
+        Live Profit: <b>$${liveProfit.toFixed(4)}</b> 
+        (+${((liveProfit / userStaked) * 100).toFixed(2)}%)
+      `;
       await updateDoc(ref, { liveProfit });
     }
   }, 60000);
 
-  // 🟡 Release logic
+  // ⚡ Smooth live UI every second (no Firebase)
+  setInterval(() => {
+    stakeInfo.innerHTML = `
+      Live Profit: <b>$${liveProfit.toFixed(4)}</b> 
+      (+${((liveProfit / userStaked) * 100).toFixed(2)}%)
+    `;
+  }, 1000);
+
+  // ⚡ Release button instant feedback
   document.getElementById("releaseBtn").onclick = async () => {
     if (userStaked <= 0) return showAlert("Nothing to release!", "error");
+    showAlert("Processing release...", "info"); // 🟢 instant feedback
 
     const uSnap = await getDoc(doc(db, "users", currentUser.uid));
     const uData = uSnap.data();
-
     const upline1 = uData?.upline1 || null;
     const upline2 = uData?.upline2 || null;
     const upline3 = uData?.upline3 || null;
 
-    // 💰 New reward percentages
-    const userPerc = 0.70;
-    const lvl1Perc = 0.17;
-    const lvl2Perc = 0.08;
-    const lvl3Perc = 0.05;
-
+    const userPerc = 0.70, lvl1Perc = 0.17, lvl2Perc = 0.08, lvl3Perc = 0.05;
     const totalProfit = liveProfit;
     const userGain = totalProfit * userPerc;
     const totalReturn = userStaked * currentPrice + userGain;
 
-    // 🧾 Update user wallet
     walletBalance += totalReturn;
     await updateDoc(ref, {
       walletBalance,
@@ -279,35 +342,28 @@ function updateStakeUI(ref) {
       liveProfit: 0
     });
 
-    // 🪙 Helper function for uplines
     async function creditUpline(uid, perc) {
       if (!uid) return;
       const refU = doc(db, "users", uid);
       const s = await getDoc(refU);
       if (!s.exists()) return;
-
-      let w = s.data().walletBalance ?? 0;
-      const amt = totalProfit * perc;
-      w += amt;
-
-      await updateDoc(refU, { walletBalance: w });
-
+      const data = s.data();
+      const newBal = (data.walletBalance ?? 0) + totalProfit * perc;
+      await updateDoc(refU, { walletBalance: newBal });
       await addDoc(collection(db, "transactions"), {
         from: currentUser.uid,
         to: uid,
         levelPercent: perc * 100,
-        amount: amt,
+        amount: totalProfit * perc,
         type: "UPLINE_REWARD",
         timestamp: serverTimestamp(),
       });
     }
 
-    // 🪙 Credit 3-level uplines
     await creditUpline(upline1, lvl1Perc);
     await creditUpline(upline2, lvl2Perc);
     await creditUpline(upline3, lvl3Perc);
 
-    // 📜 Record release in trades
     await addDoc(collection(db, "trades"), {
       user: currentUser.uid,
       token: token.name,
@@ -322,9 +378,10 @@ function updateStakeUI(ref) {
 
     document.getElementById("walletTotal").textContent = `$${walletBalance.toFixed(2)}`;
     document.getElementById("userStaked").textContent = "0.00";
-    showAlert(`✅ Released Successfully!`, "success");
+    showAlert(" Released Successfully!", "success");
   };
 }
+
 
 // 🧾 Load user's trade history
 function loadTrades(uid) {
@@ -424,10 +481,10 @@ document.getElementById("confirmTrade").onclick = async () => {
     document.getElementById("walletTotal").textContent = `$${walletBalance.toFixed(2)}`;
     document.getElementById("userBalance").textContent = userTokens.toFixed(2);
     modal.style.display = "none";
-    showAlert(`✅ ${tradeType} successful`, "success");
+    showAlert(` ${tradeType} successful`, "success");
   } catch (e) {
     console.error(e);
-    showAlert("⚠️ Transaction failed", "error");
+    showAlert(" Transaction failed", "error");
   }
 };
 
