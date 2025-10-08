@@ -264,29 +264,39 @@ async function loadUser() {
   const userRef = doc(db, "users", currentUser.uid);
   const userSnap = await getDoc(userRef);
   if (!userSnap.exists()) return;
+
   const data = userSnap.data();
   walletBalance = data.walletBalance ?? 0;
   document.getElementById("walletTotal").textContent = `$${walletBalance.toFixed(2)}`;
 
   const stored = localStorage.getItem("selectedToken");
   if (!stored) return;
+
   token = JSON.parse(stored);
+  window.token = token; // 👈 for console debugging
   document.getElementById("symbol").textContent = token.name.slice(0, 4);
   document.getElementById("t_name").textContent = token.name;
 
+  // 🩵 ADD THIS NEW FALLBACK:
+  if (token.price) {
+    currentPrice = parseFloat(token.price);
+    document.getElementById("t_price").textContent = `$${currentPrice.toFixed(2)}`;
+  }
+
+  // Firebase live update (if available)
   const priceRef = doc(db, "prices", token.name);
   onSnapshot(priceRef, (snap) => {
     if (snap.exists()) {
       currentPrice = snap.data().price;
       document.getElementById("t_price").textContent = `$${currentPrice.toFixed(2)}`;
-      updateMaxBuyInfo(); // <== add yahan
+      updateMaxBuyInfo();
     }
   });
 
   await loadTokenData();
   loadTradeHistory();
- 
 }
+
 
 function updateMaxBuyInfo() {
   const info = document.getElementById("maxBuyInfo");
