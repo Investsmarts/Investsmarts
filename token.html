@@ -1,4 +1,454 @@
-<script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TrustDollar Exchange — Token Live</title>
+<style>
+  :root{
+    --bg:#f8fafc;--card:#fff;--muted:#64748b;
+    --green:#16a34a;--red:#dc2626;--accent:#0ea5a4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
+  body{background:var(--bg);color:#0f172a;padding:12px;display:flex;justify-content:center;}
+  .card{width:100%;max-width:900px;background:var(--card);border-radius:16px;
+    box-shadow:0 6px 16px rgba(0,0,0,0.06);padding:18px;}
+
+  .logout{background:#0ea5a4;color:#fff;padding:10px 14px;border:none;border-radius:10px;
+    cursor:pointer;font-weight:700;font-size:14px;width:100%;margin-top:22px;}
+
+  .top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  .left{display:flex;gap:10px;align-items:center;}
+  .symbol{width:54px;height:54px;border-radius:12px;
+    background:linear-gradient(135deg,#e0f2fe,#ecfdf5);
+    display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;}
+  .title{font-size:18px;font-weight:700;}
+  .priceBig{font-size:24px;font-weight:800;}
+  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .btn{padding:8px 10px;border-radius:8px;border:none;cursor:pointer;font-weight:700;font-size:13px;}
+  .buy{background:var(--green);color:#fff;}
+  .sell{background:var(--red);color:#fff;}
+  .stake{background:var(--accent);color:#fff;}
+
+  .chart{margin-top:12px;height:160px;border-radius:10px;
+    background:linear-gradient(180deg,#ffffff,#f1f5f9);
+    display:flex;justify-content:center;align-items:center;color:var(--muted);font-weight:600;font-size:13px;}
+
+  .metaGrid{margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;}
+  .meta{background:#f9fafb;padding:10px;border-radius:10px;text-align:center;}
+  .small{font-size:11px;color:#64748b;}
+
+  .wallet-box{margin-top:16px;background:#fff;border-radius:10px;
+    padding:12px;box-shadow:0 3px 10px rgba(0,0,0,0.05);}
+  .wallet-header{display:flex;justify-content:space-between;align-items:center;}
+  .wallet-total{font-size:1.1rem;font-weight:700;color:#0ea5a4;}
+  .trade-history{margin-top:16px;background:#fff;border-radius:10px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.05);padding:10px;}
+  table{width:100%;border-collapse:collapse;margin-top:8px;}
+  th,td{padding:6px;text-align:left;font-size:0.78rem;border-bottom:1px solid #f1f5f9;}
+  th{color:#64748b;font-weight:600;}
+
+  /* Modal */
+  .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);
+    display:none;justify-content:center;align-items:center;z-index:1000;}
+  .modal-content{background:#fff;border-radius:14px;width:90%;max-width:420px;
+    box-shadow:0 6px 25px rgba(0,0,0,0.3);overflow:hidden;}
+  .modal-header{background:linear-gradient(135deg,#0ea5a4,#06b6d4);color:#fff;
+    font-weight:700;font-size:1.1rem;padding:12px 16px;text-align:center;}
+  .modal-body{padding:18px;}
+  .modal-info{display:flex;justify-content:space-between;margin-bottom:12px;font-size:14px;}
+  .modal-input label{display:block;margin-bottom:6px;font-size:13px;color:#475569;text-align:left;}
+  .modal-input input{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;
+    font-size:15px;font-weight:600;text-align:center;}
+  .modal-total{display:flex;justify-content:space-between;align-items:center;
+    background:#f9fafb;padding:10px 14px;border-radius:10px;margin-top:10px;font-size:14px;}
+  .modal-actions{display:flex;justify-content:space-between;padding:14px;background:#f8fafc;}
+  .confirm{background:#16a34a;color:#fff;padding:10px 16px;border:none;border-radius:8px;cursor:pointer;font-weight:700;width:48%;}
+  .cancel{background:#e2e8f0;color:#0f172a;padding:10px 16px;border:none;border-radius:8px;cursor:pointer;font-weight:700;width:48%;}
+  .error{margin-top:8px;color:#dc2626;font-weight:600;text-align:center;}
+
+  #alertBox{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+    background:#fff;padding:18px 24px;border-radius:12px;box-shadow:0 5px 20px rgba(0,0,0,0.2);
+    font-weight:700;font-size:15px;color:#0f172a;display:none;z-index:2000;text-align:center;}
+  #alertBox.success{border-left:6px solid #16a34a;}
+  #alertBox.error{border-left:6px solid #dc2626;}
+</style>
+</head>
+<body>
+
+<div class="card" id="mainCard" style="display:none;">
+  <div class="top">
+    <div class="left">
+      <div class="symbol" id="symbol">--</div>
+      <div><div class="title" id="t_name">Token</div></div>
+    </div>
+    <div class="controls">
+      <div class="priceBig" id="t_price">$0.00</div>
+      <button class="btn buy" id="btnBuy">Buy</button>
+      <button class="btn sell" id="btnSell">Sell</button>
+      <button class="btn stake">Stake</button>
+    </div>
+  </div>
+
+<div class="chart" id="chart">
+  <canvas id="earningChart" style="width:100%;height:180px;"></canvas>
+</div>
+
+  <div class="metaGrid">
+    <div class="meta"><div class="small">Your Tokens</div><div id="userBalance">0.00</div></div>
+    <div class="meta"><div class="small">Staked</div><div id="userStaked">0.00</div></div>
+  </div>
+
+  <div class="wallet-box">
+    <div class="wallet-header">
+      <div><strong>💼 Wallet Balance:</strong></div>
+      <div class="wallet-total" id="walletTotal">$0.00</div>
+    </div>
+  </div>
+
+  <div class="trade-history">
+    <h3>🧾 Live Trade History</h3>
+    <table id="tradeTable">
+      <thead><tr><th>Time</th><th>Token</th><th>Action</th><th>Qty</th><th>Price</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <button id="logoutBtn" class="logout">Logout</button>
+</div>
+
+<div id="alertBox"></div>
+
+<!-- Modal -->
+<div class="modal" id="tradeModal">
+  <div class="modal-content">
+    <div class="modal-header" id="modalHeader">Trade</div>
+    <div class="modal-body">
+      <div class="modal-info">
+        <div><strong>Current Price:</strong> <span id="modalPrice">$0.00</span></div>
+        <div><strong>Available:</strong> <span id="modalWallet">$0.00</span></div>
+      </div>
+      <div class="modal-input">
+        <label for="modalQty">Enter Quantity</label>
+        <input type="number" id="modalQty" placeholder="0.00" min="0" />
+      </div>
+      <div class="modal-total"><span>Total:</span><strong id="modalTotal">$0.00</strong></div>
+      <div class="error" id="modalError"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="confirm" id="confirmTrade">Confirm</button>
+      <button class="cancel" id="cancelTrade">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="loadingScreen" style="font-family:sans-serif;text-align:center;margin-top:100px;color:#555;">
+  ⏳ Verifying session...
+</div>
+<!-- Chart.js for smooth animated graph -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, updateDoc, addDoc, onSnapshot, collection, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25",
+  storageBucket: "btcinvest-c0e25.firebasestorage.app",
+  messagingSenderId: "204937458487",
+  appId: "1:204937458487:web:cc27ece1249999279f60b2",
+  measurementId: "G-HG0Q8ZHT6G"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser, token, walletBalance = 0, userTokens = 0, userStaked = 0, currentPrice = 0, liveProfit = 0;
+const perMinuteRate = 0.015 / (24 * 60); // 1.5% per day
+
+function showAlert(msg, type = "info") {
+  const b = document.getElementById("alertBox");
+  b.textContent = msg;
+  b.className = type;
+  b.style.display = "block";
+  setTimeout(() => b.style.display = "none", 2000);
+}
+
+onAuthStateChanged(auth, async (u) => {
+  if (u) {
+    currentUser = u;
+    document.getElementById("loadingScreen").style.display = "none";
+    document.getElementById("mainCard").style.display = "block";
+    await loadUser(u);
+  } else {
+    window.location.href = "login.html";
+  }
+});
+
+async function loadUser(user) {
+  const ref = doc(db, "users", user.uid);
+  const s = await getDoc(ref);
+  if (s.exists()) {
+    const d = s.data();
+    walletBalance = d.walletBalance ?? 0;
+    userTokens = d.miningAmount ?? 0;
+    userStaked = d.lifetimeDeposit ?? 0;
+    liveProfit = d.liveProfit ?? 0;
+    document.getElementById("walletTotal").textContent = `$${walletBalance.toFixed(2)}`;
+    document.getElementById("userBalance").textContent = userTokens.toFixed(2);
+    updateStakeUI(ref);
+  }
+
+  const stored = localStorage.getItem("selectedToken");
+  if (!stored) return;
+  token = JSON.parse(stored);
+  document.getElementById("symbol").textContent = token.name.slice(0, 4);
+  document.getElementById("t_name").textContent = token.name;
+  currentPrice = parseFloat(token.price);
+  document.getElementById("t_price").textContent = `$${currentPrice.toFixed(2)}`;
+
+  const pRef = doc(db, "prices", token.name);
+  onSnapshot(pRef, (x) => {
+    if (x.exists()) {
+      const d = x.data();
+      currentPrice = d.price;
+      document.getElementById("t_price").textContent = `$${currentPrice.toFixed(2)}`;
+    }
+  });
+
+  loadTrades(user.uid);
+}
+
+// 🟢 Staking + Release + Referral Logic
+function updateStakeUI(ref) {
+  const d = document.getElementById("userStaked");
+
+  d.innerHTML = `
+    ${userStaked.toFixed(2)}
+    <div id='stakeInfo' style='font-size:12px;color:#0ea5a4;margin-top:4px;'>
+      Live Profit: $${liveProfit.toFixed(4)}
+    </div>
+    <button id='releaseBtn' 
+      style='margin-top:5px;padding:4px 10px;font-size:12px;
+      background:#16a34a;color:#fff;border:none;border-radius:6px;
+      cursor:pointer;'>Release</button>
+  `;
+
+  // ⏱️ Every minute profit update
+  setInterval(async () => {
+    if (userStaked > 0) {
+      const g = userStaked * perMinuteRate;
+      liveProfit += g;
+      document.getElementById("stakeInfo").innerHTML =
+        `Live Profit: <b>$${liveProfit.toFixed(4)}</b> 
+         (+${((liveProfit / userStaked) * 100).toFixed(2)}%)`;
+      await updateDoc(ref, { liveProfit });
+    }
+  }, 60000);
+
+  // 🟡 Release logic
+  document.getElementById("releaseBtn").onclick = async () => {
+    if (userStaked <= 0) return showAlert("Nothing to release!", "error");
+
+    const uSnap = await getDoc(doc(db, "users", currentUser.uid));
+    const uData = uSnap.data();
+
+    const upline1 = uData?.upline1 || null;
+    const upline2 = uData?.upline2 || null;
+    const upline3 = uData?.upline3 || null;
+
+    // 💰 New reward percentages
+    const userPerc = 0.70;
+    const lvl1Perc = 0.17;
+    const lvl2Perc = 0.08;
+    const lvl3Perc = 0.05;
+
+    const totalProfit = liveProfit;
+    const userGain = totalProfit * userPerc;
+    const totalReturn = userStaked * currentPrice + userGain;
+
+    // 🧾 Update user wallet
+    walletBalance += totalReturn;
+    await updateDoc(ref, {
+      walletBalance,
+      lifetimeDeposit: 0,
+      liveProfit: 0
+    });
+
+    // 🪙 Helper function for uplines
+    async function creditUpline(uid, perc) {
+      if (!uid) return;
+      const refU = doc(db, "users", uid);
+      const s = await getDoc(refU);
+      if (!s.exists()) return;
+
+      let w = s.data().walletBalance ?? 0;
+      const amt = totalProfit * perc;
+      w += amt;
+
+      await updateDoc(refU, { walletBalance: w });
+
+      await addDoc(collection(db, "transactions"), {
+        from: currentUser.uid,
+        to: uid,
+        levelPercent: perc * 100,
+        amount: amt,
+        type: "UPLINE_REWARD",
+        timestamp: serverTimestamp(),
+      });
+    }
+
+    // 🪙 Credit 3-level uplines
+    await creditUpline(upline1, lvl1Perc);
+    await creditUpline(upline2, lvl2Perc);
+    await creditUpline(upline3, lvl3Perc);
+
+    // 📜 Record release in trades
+    await addDoc(collection(db, "trades"), {
+      user: currentUser.uid,
+      token: token.name,
+      action: "RELEASE",
+      qty: userStaked,
+      price: currentPrice,
+      timestamp: serverTimestamp(),
+    });
+
+    userStaked = 0;
+    liveProfit = 0;
+
+    document.getElementById("walletTotal").textContent = `$${walletBalance.toFixed(2)}`;
+    document.getElementById("userStaked").textContent = "0.00";
+    showAlert(`✅ Released Successfully!`, "success");
+  };
+}
+
+// 🧾 Load user's trade history
+function loadTrades(uid) {
+  const q = query(collection(db, "trades"), where("user", "==", uid), orderBy("timestamp", "desc"));
+  const tb = document.querySelector("#tradeTable tbody");
+  onSnapshot(q, (s) => {
+    tb.innerHTML = "";
+    s.forEach(x => {
+      const d = x.data();
+      const t = d.timestamp?.toDate().toLocaleTimeString() || "--";
+      tb.innerHTML += `
+        <tr>
+          <td>${t}</td>
+          <td>${d.token}</td>
+          <td style='color:${d.action=="BUY"?"#16a34a":d.action=="SELL"?"#dc2626":"#0ea5a4"};font-weight:700'>
+            ${d.action}
+          </td>
+          <td>${d.qty}</td>
+          <td>$${d.price.toFixed(2)}</td>
+        </tr>`;
+    });
+  });
+}
+
+// 🎯 Trade modal logic
+const modal = document.getElementById("tradeModal"),
+  header = document.getElementById("modalHeader"),
+  price = document.getElementById("modalPrice"),
+  avail = document.getElementById("modalWallet"),
+  qty = document.getElementById("modalQty"),
+  total = document.getElementById("modalTotal"),
+  err = document.getElementById("modalError");
+let tradeType = null;
+
+document.getElementById("btnBuy").onclick = () => openModal("BUY");
+document.getElementById("btnSell").onclick = () => openModal("SELL");
+document.querySelector(".stake").onclick = () => openModal("STAKE");
+document.getElementById("cancelTrade").onclick = () => modal.style.display = "none";
+
+function openModal(t) {
+  tradeType = t;
+  if (t == "BUY" && walletBalance <= 0) return showAlert("No wallet balance", "error");
+  if ((t == "SELL" || t == "STAKE") && userTokens <= 0) return showAlert("No tokens", "error");
+
+  modal.style.display = "flex";
+  header.textContent = `${t} ${token.name}`;
+  header.style.background =
+    t == "BUY" ? "linear-gradient(135deg,#16a34a,#22c55e)" :
+    t == "SELL" ? "linear-gradient(135deg,#dc2626,#f87171)" :
+    "linear-gradient(135deg,#0ea5a4,#22d3ee)";
+
+  price.textContent = `$${currentPrice.toFixed(2)}`;
+  avail.textContent = t == "BUY" ? `Wallet: $${walletBalance.toFixed(2)}` : `Tokens: ${userTokens.toFixed(2)}`;
+  qty.value = "";
+  total.textContent = "$0.00";
+  err.textContent = "";
+}
+
+qty.oninput = () => {
+  const q = parseFloat(qty.value) || 0;
+  total.textContent = `$${(q * currentPrice).toFixed(2)}`;
+};
+
+document.getElementById("confirmTrade").onclick = async () => {
+  const q = parseFloat(qty.value);
+  if (!q || q <= 0) return err.textContent = "Enter valid qty";
+  const sum = q * currentPrice;
+  const ref = doc(db, "users", currentUser.uid);
+
+  try {
+    if (tradeType == "BUY") {
+      if (sum > walletBalance) return showAlert("Not enough balance", "error");
+      walletBalance -= sum;
+      userTokens += q;
+      await updateDoc(ref, { walletBalance, miningAmount: userTokens });
+      await addTrade("BUY", q);
+    }
+
+    if (tradeType == "SELL") {
+      if (q > userTokens) return showAlert("Not enough tokens", "error");
+      userTokens -= q;
+      walletBalance += sum;
+      await updateDoc(ref, { walletBalance, miningAmount: userTokens });
+      await addTrade("SELL", q);
+    }
+
+    if (tradeType == "STAKE") {
+      if (q > userTokens) return showAlert("Not enough tokens", "error");
+      userTokens -= q;
+      userStaked += q;
+      liveProfit = 0;
+      await updateDoc(ref, { lifetimeDeposit: userStaked, miningAmount: userTokens, liveProfit });
+      await addTrade("STAKE", q);
+      updateStakeUI(ref);
+    }
+
+    document.getElementById("walletTotal").textContent = `$${walletBalance.toFixed(2)}`;
+    document.getElementById("userBalance").textContent = userTokens.toFixed(2);
+    modal.style.display = "none";
+    showAlert(`✅ ${tradeType} successful`, "success");
+  } catch (e) {
+    console.error(e);
+    showAlert("⚠️ Transaction failed", "error");
+  }
+};
+
+async function addTrade(a, q) {
+  await addDoc(collection(db, "trades"), {
+    user: currentUser.uid,
+    token: token.name,
+    action: a,
+    qty: q,
+    price: currentPrice,
+    timestamp: serverTimestamp()
+  });
+}
+
+document.getElementById("logoutBtn").onclick = () =>
+  signOut(auth).then(() => {
+    localStorage.clear();
+    window.location.href = "login.html";
+  });
+
+
 // ❌ Right-click disable
   document.addEventListener("contextmenu", function(e) {
     e.preventDefault();
@@ -23,4 +473,7 @@
     
   }
 });
+
 </script>
+</body>
+</html>
