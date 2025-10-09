@@ -138,6 +138,29 @@ to { opacity: 1; transform: scale(1); }
   }
 }
 
+ /*green red pop up butun color */
+
+.confirm {
+  position: relative;
+  overflow: hidden;
+}
+.confirm::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: rgba(255,255,255,0.2);
+  transform: skewX(-20deg);
+  transition: 0.4s;
+}
+.confirm:hover::after {
+  left: 100%;
+}
+.modal-content {
+  transition: transform 0.3s ease;
+}
+
+
 </style>
 </head>
 <body>
@@ -351,15 +374,38 @@ async function loadTokenData() {
 // 🔹 Profit auto engine
 function startProfitEngine(ref, staked, profit) {
   clearInterval(window.profitTimer);
+
+  // 🟢 Chart ko start me update kar do
+  updateEarningChart(profit);
+
+  let counter = 0;
+
   window.profitTimer = setInterval(async () => {
     if (staked > 0) {
       profit += staked * perMinuteRate;
-      await updateDoc(ref, { totalProfit: profit });
+      counter++;
+
+      // 🔹 Har minute UI me profit dikhaye
+      const stakeInfo = document.getElementById("stakeInfo");
+      if (stakeInfo) {
+        stakeInfo.innerHTML = `Live Profit: $${profit.toFixed(4)}`;
+      }
+
+      // 🔹 Chart update karo
       updateEarningChart(profit);
-      document.getElementById("stakeInfo").textContent = `Live Profit: $${profit.toFixed(4)}`;
+
+      // 🔹 Har 5 minute me Firestore me save karo
+      if (counter % 5 === 0) {
+        try {
+          await updateDoc(ref, { totalProfit: profit });
+        } catch (err) {
+          console.warn("Firestore sync skipped:", err);
+        }
+      }
     }
-  }, 60000);
+  }, 60000); // 60000 = 1 minute
 }
+
 
 // 🔹 Release with 3-level referral
 async function releaseStake(ref) {
@@ -453,6 +499,23 @@ async function openModal(type) {
   // ✅ ensures "You can buy X tokens max" updates immediately (only for BUY)
 if (type === "BUY") updateMaxBuyInfo();
 
+// 💡 Dynamic color theme for modal based on action
+const modalHeader = document.querySelector(".modal-header");
+const confirmBtn = document.querySelector(".confirm");
+
+if (type === "BUY") {
+  modalHeader.style.background = "linear-gradient(135deg, #16a34a, #22c55e)";
+  confirmBtn.style.background = "#16a34a";
+} 
+else if (type === "SELL") {
+  modalHeader.style.background = "linear-gradient(135deg, #dc2626, #ef4444)";
+  confirmBtn.style.background = "#dc2626";
+} 
+else if (type === "STAKE") {
+  modalHeader.style.background = "linear-gradient(135deg, #0ea5a4, #06b6d4)";
+  confirmBtn.style.background = "#0ea5a4";
+}
+
 
  // ✅ NEW PART: Update current price + available balance
   document.getElementById("modalPrice").textContent = `$${currentPrice.toFixed(2)}`;
@@ -468,7 +531,7 @@ qtyInput.oninput = () => {
   total.textContent = `$${(q * currentPrice).toFixed(2)}`;
 };
 
-document.getElementById("confirmTrade").onclick = async () => {
+  document.getElementById("confirmTrade").onclick = async () => {
   const qty = parseFloat(qtyInput.value);
   if (!qty || qty <= 0) return (err.textContent = "Enter valid qty");
   const sum = qty * currentPrice;
@@ -561,13 +624,15 @@ document.getElementById("logoutBtn").onclick = () => {
   });
 };
 
-
 // 🔒 Disable right-click & inspect
 document.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("keydown", e => {
   if ((e.ctrlKey && ["c","x","v","u"].includes(e.key.toLowerCase())) || e.key === "F12")
     e.preventDefault();
 });
+
+
+
 // ❌ Disable text selection
 document.addEventListener("selectstart", e => e.preventDefault());
 
@@ -577,12 +642,20 @@ window.addEventListener("beforeunload", () => clearInterval(window.profitTimer))
 
 // 📱 Adjust modal when keyboard opens (mobile fix)
 const modalInput = document.getElementById("modalQty");
+
+// when input focused — popup goes up
 modalInput.addEventListener("focus", () => {
-  if (window.innerWidth < 768) {
-    document.querySelector(".modal-content")
-      .scrollIntoView({ behavior: "smooth", block: "center" });
-  }
+  const modalContent = document.querySelector(".modal-content");
+  modalContent.style.transition = "transform 0.3s ease";
+  modalContent.style.transform = "translateY(-80px)";
 });
+
+// when input unfocused — popup comes back to center
+modalInput.addEventListener("blur", () => {
+  const modalContent = document.querySelector(".modal-content");
+  modalContent.style.transform = "translateY(0)";
+});
+
 
 // 🔹 Initialize Chart.js
 const ctx = document.getElementById("earningChart").getContext("2d");
@@ -610,6 +683,14 @@ window.earningChart = new Chart(ctx, {
     plugins: { legend: { display: false } }
   }
 });
+
+// 🟢 Chart pre-fill data (last 5 mins zero profit)
+for (let i = 0; i < 5; i++) {
+  const time = new Date(Date.now() - (5 - i) * 60000).toLocaleTimeString();
+  window.earningChart.data.labels.push(time);
+  window.earningChart.data.datasets[0].data.push(0);
+}
+window.earningChart.update();
 
 
 </script>
