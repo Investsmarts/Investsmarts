@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrustDollar — Cloud Mining</title>
+
+<style>
+:root {
+  --green: #16a34a;
+  --bg: #f8fafc;
+  --text-dark: #0f172a;
+}
+body {
+  font-family: "Poppins", sans-serif;
+  background: var(--bg);
+  color: var(--text-dark);
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 850px;
+}
+.wallet {
+  display: flex;
+  justify-content: space-between;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 18px;
+}
+.plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+  gap: 12px;
+}
+.plan {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  text-align: center;
+  padding: 16px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+  transition: transform 0.3s;
+}
+.plan:hover { transform: translateY(-4px); }
+.plan h3 { color: var(--green); margin-bottom: 6px; }
+.plan p { font-size: 14px; color: #475569; }
+.btn {
+  background: linear-gradient(135deg,#16a34a,#22c55e);
+  color: #fff;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  transition: transform 0.2s ease;
+}
+.btn:hover { transform: scale(1.05); }
+.profit-box {
+  background: #ecfdf5;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  padding: 12px;
+  margin: 14px 0;
+  font-size: 15px;
+  color: #166534;
+  line-height: 1.6;
+}
+
+/* ✅ Modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(8px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.modal-card {
+  width: 90%;
+  max-width: 420px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+  animation: zoomIn 0.3s ease;
+  background: #fff;
+}
+.modal-head {
+  background: linear-gradient(135deg,#16a34a,#22c55e);
+  color: #fff;
+  padding: 16px;
+  text-align: center;
+  position: relative;
+}
+.modal-head h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  border: none;
+  background: none;
+  font-size: 22px;
+  color: #fff;
+  cursor: pointer;
+  opacity: 0.9;
+  transition: 0.2s;
+}
+.close-btn:hover { opacity: 1; transform: scale(1.1); }
+.modal-body {
+  background: #fff;
+  padding: 22px 20px 24px;
+  text-align: center;
+}
+.modal-body p { margin: 6px 0; color: #475569; font-size: 14px; }
+.wallet-line { margin-top: 6px; font-weight: 600; color: #0f172a; }
+.modal-error {
+  display: none;
+  color: #dc2626;
+  font-weight: 600;
+  margin: 8px 0;
+}
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.confirm-btn {
+  flex: 1;
+  background: linear-gradient(135deg,#16a34a,#22c55e);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.confirm-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px rgba(22,163,74,0.4);
+}
+.cancel-btn {
+  flex: 1;
+  background: #f1f5f9;
+  color: #0f172a;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.cancel-btn:hover { background: #e2e8f0; }
+
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ✅ Countdown Box */
+#countdown {
+  font-weight: 700;
+  color: #166534;
+  font-size: 16px;
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+  padding: 6px 12px;
+  border-radius: 10px;
+  display: inline-block;
+  margin-top: 6px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 0 rgba(22,163,74,0.6);
+  transition: all 0.2s ease;
+}
+
+
+/* ✅ Glow animation every second */
+@keyframes glowTick {
+  0% { box-shadow: 0 0 0 rgba(22,163,74,0.6); transform: scale(1); }
+  50% { box-shadow: 0 0 15px rgba(34,197,94,0.8); transform: scale(1.05); }
+  100% { box-shadow: 0 0 0 rgba(22,163,74,0.6); transform: scale(1); }
+}
+
+.countdown-glow {
+  animation: glowTick 1s ease-in-out infinite;
+}
+
+/* ✅ Countdown finished */
+.countdown-finished {
+  background: #fef9c3;
+  color: #ca8a04;
+  box-shadow: 0 0 8px rgba(234,179,8,0.5);
+}
+
+#collectProfitBtn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 15px;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
+#collectProfitBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(22, 163, 74, 0.4);
+}
+
+/* 💎 Animated Timer Box */
+/* 💎 Timer Box (Side by Side Version) */
+.timer-card.side-by-side {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+  border: 2px solid #16a34a;
+  border-radius: 12px;
+  padding: 10px 14px;
+  box-shadow: 0 0 12px rgba(22, 163, 74, 0.4);
+  animation: glowPulse 2s infinite alternate;
+  transition: all 0.3s ease;
+}
+
+/* 🕒 Countdown text */
+.timer-text {
+  font-weight: 700;
+  color: #166534;
+  font-size: 15px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+/* 📊 Progress Bar */
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  margin-left: 12px;
+  background: #d1fae5;
+  border-radius: 6px;
+  overflow: hidden;
+}
+#progressFill {
+  height: 8px;
+  width: 0%;
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+  border-radius: 6px;
+  transition: width 1s linear;
+}
+/* 🌟 Center Popup Alert */
+.popup-alert {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: #16a34a;
+  color: white;
+  padding: 16px 28px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 15px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(22, 163, 74, 0.4);
+  opacity: 0;
+  z-index: 9999;
+  pointer-events: none;
+  transition: all 0.4s ease;
+}
+
+/* 🟢 Visible State */
+.popup-alert.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* 🔴 Error Style */
+.popup-alert.error {
+  background: #dc2626;
+  box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4);
+}
+
+
+</style>
+<body>
+  <body>
+    <!-- 💬 Custom Popup Alert -->
+<div id="popupAlert" class="popup-alert"></div>
+
+  <div class="card">
+    
+    <!-- 💰 Wallet Section -->
+    <div class="wallet">
+      <div><strong>Wallet:</strong> <span id="walletBalance">$0.00</span></div>
+      <div><strong>Locked:</strong> <span id="lockedBalance">$0.00</span></div>
+    </div>
+
+    <!-- 💵 Collect Profit Button -->
+    <div style="text-align:center; margin-bottom:18px;">
+      <button id="collectProfitBtn" class="btn" style="max-width:250px;">Collect Today’s Profit</button>
+    </div>
+
+  <!-- 📈 Active Mining Info (With Animated Timer) -->
+<div id="activeMining" class="profit-box" style="display:none;">
+  <div><strong>Active Plan:</strong> <span id="planName">--</span></div>
+  <div><strong>Daily Profit:</strong> <span id="dailyPercent">--</span>%</div>
+  <div><strong>Total Earned:</strong> $<span id="earnedProfit">0.00</span></div>
+  <div style="margin-top:10px;"><strong>Next Payout In:</strong></div>
+
+<div id="timerBox" class="timer-card side-by-side">
+  <div id="countdown" class="timer-text">00h 00m 00s</div>
+  <div class="progress-bar">
+    <div id="progressFill"></div>
+  </div>
+</div>
+
+    <!-- 💠 Cloud Mining Plans -->
+    <h2 style="color:#16a34a;">💠 Cloud Mining Plans</h2>
+
+    <div class="plans">
+      <div class="plan">
+        <h3>Starter Plan</h3>
+        <p>$500 / 45 days</p>
+        <p>2.5% Daily</p>
+        <button class="btn" onclick="openModal('Starter Plan',500,45,2.5)">Buy</button>
+      </div>
+
+      <div class="plan">
+        <h3>Advanced Plan</h3>
+        <p>$1500 / 90 days</p>
+        <p>5% Daily</p>
+        <button class="btn" onclick="openModal('Advanced Plan',1500,90,5)">Buy</button>
+      </div>
+
+      <div class="plan">
+        <h3>Premium Plan</h3>
+        <p>$2000 / 160 days</p>
+        <p>10% Daily</p>
+        <button class="btn" onclick="openModal('Premium Plan',2000,160,10)">Buy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Professional Popup Modal -->
+  <div class="modal" id="planModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 id="mTitle">BUY TRUSTD</h2>
+        <button class="close-btn" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <p id="mDetails">--</p>
+        <p class="wallet-line"><strong>Wallet:</strong> <span id="mWallet">$0.00</span></p>
+        <p id="mError" class="modal-error">⚠️ Insufficient Balance!</p>
+        <div class="modal-actions">
+          <button class="confirm-btn" id="mConfirm">Confirm Purchase</button>
+          <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import { getFirestore, doc, getDoc, updateDoc, addDoc, collection, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25",
+  storageBucket: "btcinvest-c0e25.firebasestorage.app",
+  messagingSenderId: "204937458487",
+  appId: "1:204937458487:web:cc27ece1249999279f60b2"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+let walletBalance = 0, lockedBalance = 0, selectedPlan = {};
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return (window.location.href = "login.html");
+  const ref = doc(db, "users", user.uid);
+  const snap = await getDoc(ref);
+  if (snap.exists()) {
+    const d = snap.data();
+    walletBalance = d.walletBalance || 0;
+    lockedBalance = d.lockedBalance || 0;
+    document.getElementById("walletBalance").textContent = `$${walletBalance.toFixed(2)}`;
+    document.getElementById("lockedBalance").textContent = `$${lockedBalance.toFixed(2)}`;
+  }
+  const q = query(collection(db,"buyhashrate"), where("userId","==",user.uid), where("status","==","running"));
+  const res = await getDocs(q);
+  if (!res.empty) {
+    const plan = res.docs[0].data();
+    checkAndAddProfit(res.docs[0].ref, plan, user.uid);
+    showActivePlan(plan);
+
+// ✅ Fix: correctly convert Firestore timestamp to JS Date
+const nextTime = plan.nextPayout?.toDate ? plan.nextPayout.toDate() : new Date(plan.nextPayout);
+startCountdown(nextTime);
+
+
+  }
+});
+
+window.openModal = function(name, cost, days, profit){
+  selectedPlan = {name,cost,days,profit};
+  const modal=document.getElementById("planModal");
+  modal.style.display="flex";
+  document.getElementById("mTitle").textContent=`BUY ${name.toUpperCase()}`;
+  document.getElementById("mDetails").textContent=`${days} days • ${profit}% per day • Cost: $${cost}`;
+  document.getElementById("mWallet").textContent=`$${walletBalance.toFixed(2)}`;
+  document.getElementById("mError").style.display="none";
+};
+window.closeModal=function(){document.getElementById("planModal").style.display="none";};
+
+document.getElementById("mConfirm").onclick = async () => {
+  const { name, cost, days, profit } = selectedPlan;
+  
+  // 💰 Check Balance
+  if (walletBalance < cost)
+    return (document.getElementById("mError").style.display = "block");
+
+  const user = auth.currentUser;
+  const now = new Date();
+  const next = new Date(now.getTime() + 86400000); // 24h payout
+  const end = new Date(now.getTime() + days * 86400000);
+
+  // 🧾 Save Plan to Firestore
+  await addDoc(collection(db, "buyhashrate"), {
+    userId: user.uid,
+    planName: name,
+    planCost: cost,
+    dailyProfitPercent: profit,
+    durationDays: days,
+    startTime: serverTimestamp(),
+    nextPayout: next,
+    endTime: end,
+    earnedProfit: 0,
+    status: "running",
+  });
+
+  // 💵 Update User Wallet
+  walletBalance -= cost;
+  lockedBalance += cost;
+  await updateDoc(doc(db, "users", user.uid), { walletBalance, lockedBalance });
+
+  // ✅ UI Update
+  closeModal();
+  showActivePlan({
+    planName: name,
+    dailyProfitPercent: profit,
+    earnedProfit: 0,
+    nextPayout: next,
+    endTime: end,
+  });
+
+  // 🕒 Start Live Countdown Immediately (✅ FIXED LINE)
+  startCountdown(next);
+
+  // 💲 Refresh Balance Display
+  document.getElementById("walletBalance").textContent = `$${walletBalance.toFixed(2)}`;
+  document.getElementById("lockedBalance").textContent = `$${lockedBalance.toFixed(2)}`;
+
+  showPopup(" purchased successfully!");
+
+};
+
+
+function showActivePlan(plan){
+  document.getElementById("activeMining").style.display="block";
+  document.getElementById("planName").textContent=plan.planName;
+  document.getElementById("dailyPercent").textContent=plan.dailyProfitPercent;
+  document.getElementById("earnedProfit").textContent=plan.earnedProfit.toFixed(2);
+  startCountdown(new Date(plan.nextPayout));
+}
+
+
+
+async function checkAndAddProfit(ref, plan, uid){
+  const now=new Date();
+  const next=plan.nextPayout.toDate?plan.nextPayout.toDate():new Date(plan.nextPayout);
+  const end=plan.endTime.toDate?plan.endTime.toDate():new Date(plan.endTime);
+  if(now>=next && now<=end){
+    const profit=(plan.planCost*plan.dailyProfitPercent)/100;
+    const newProfit=(plan.earnedProfit||0)+profit;
+    const newNext=new Date(now.getTime()+86400000);
+    await updateDoc(ref,{earnedProfit:newProfit,nextPayout:newNext});
+    document.getElementById("earnedProfit").textContent=newProfit.toFixed(2);
+  }
+  if(now>end){
+    const uRef=doc(db,"users",uid);
+    const userSnap=await getDoc(uRef);
+    if(userSnap.exists()){
+      const u=userSnap.data();
+      const newWallet=(u.walletBalance||0)+plan.planCost+(plan.earnedProfit||0);
+      const newLocked=(u.lockedBalance||0)-plan.planCost;
+      await updateDoc(uRef,{walletBalance:newWallet,lockedBalance:newLocked});
+      await updateDoc(ref,{status:"completed"});
+      showPopup("🎉 Plan completed! Funds released to wallet.");
+    }
+  }
+}
+// 💰 Manual Profit Collect
+document.getElementById("collectProfitBtn").addEventListener("click", async () => {
+  const user = auth.currentUser;
+  if (!user) return showPopup("Please login first.");
+
+  const q = query(collection(db, "buyhashrate"), where("userId", "==", user.uid), where("status", "==", "running"));
+  const res = await getDocs(q);
+  if (res.empty) return showPopup("No active plan found.");
+
+  const docRef = res.docs[0].ref;
+  const plan = res.docs[0].data();
+
+  const now = new Date();
+  const next = plan.nextPayout.toDate ? plan.nextPayout.toDate() : new Date(plan.nextPayout);
+
+  // 🕒 Check if 24 hours passed
+  if (now < next) {
+    const remaining = Math.ceil((next - now) / (1000 * 60 * 60));
+    return showPopup(`⏳ You can collect profit after ${remaining} hours.`);
+  }
+
+  // 💵 Calculate Daily Profit
+  const dailyProfit = (plan.planCost * plan.dailyProfitPercent) / 100;
+  const newProfit = (plan.earnedProfit || 0) + dailyProfit;
+
+  // 🧮 Update next payout (next 24h)
+  const newNext = new Date(now.getTime() + 86400000);
+
+  // 🪙 Update Firestore
+  await updateDoc(docRef, { earnedProfit: newProfit, nextPayout: newNext });
+
+  // 💰 Add profit to user's wallet
+  const userRef = doc(db, "users", user.uid);
+  const userSnap = await getDoc(userRef);
+  const userData = userSnap.data();
+  const updatedWallet = (userData.walletBalance || 0) + dailyProfit;
+  await updateDoc(userRef, { walletBalance: updatedWallet });
+
+  // ✅ Distribute Level Income AFTER profit credited
+  await distributeLevelIncome(user.uid, dailyProfit);
+
+  // 🔄 Update UI
+  document.getElementById("earnedProfit").textContent = newProfit.toFixed(2);
+  document.getElementById("walletBalance").textContent = `$${updatedWallet.toFixed(2)}`;
+  showPopup(`✅ $${dailyProfit.toFixed(2)} profit added to your wallet!`);
+});
+
+
+function startCountdown(nextTime) {
+  const totalTime = 24 * 60 * 60 * 1000; // 24 hours in ms
+  const timer = setInterval(() => {
+    const now = new Date().getTime();
+    const dist = nextTime - now;
+
+    if (dist <= 0) {
+      clearInterval(timer);
+      document.getElementById("countdown").textContent = "Collect Available!";
+      document.getElementById("progressFill").style.width = "100%";
+      document.getElementById("timerBox").classList.add("ready-glow");
+      return;
+    }
+
+    const h = Math.floor((dist / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((dist / (1000 * 60)) % 60);
+    const s = Math.floor((dist / 1000) % 60);
+    document.getElementById("countdown").textContent = `${h}h ${m}m ${s}s`;
+
+    // Progress bar update
+    const elapsed = totalTime - dist;
+    const progressPercent = Math.min((elapsed / totalTime) * 100, 100);
+    document.getElementById("progressFill").style.width = `${progressPercent}%`;
+  }, 1000);
+}
+
+// 💬 Custom Popup Alert Function
+function showPopup(message, type = "success") {
+  const popup = document.getElementById("popupAlert");
+  popup.textContent = message;
+
+  // Change color based on type
+  popup.className = "popup-alert " + (type === "error" ? "error" : "");
+  
+  // Show animation
+  popup.classList.add("show");
+
+  // Auto-hide after 3 seconds
+  setTimeout(() => {
+    popup.classList.remove("show");
+  }, 3000);
+}
+
+// 🪙 3-Level Income Distribution (17%, 8%, 5%)
+async function distributeLevelIncome(userId, profit) {
+  try {
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) return;
+
+    const data = userSnap.data();
+    const uplines = [data.upline1, data.upline2, data.upline3];
+    const percents = [17, 8, 5];
+
+    for (let i = 0; i < uplines.length; i++) {
+      const uplineId = uplines[i];
+      if (!uplineId) continue;
+
+      const commission = (profit * percents[i]) / 100;
+      const uplineRef = doc(db, "users", uplineId);
+      const uplineSnap = await getDoc(uplineRef);
+
+      if (uplineSnap.exists()) {
+        const uplineData = uplineSnap.data();
+        const newWallet = (uplineData.walletBalance || 0) + commission;
+        const newIncome = (uplineData.totalIncome || 0) + commission;
+
+        await updateDoc(uplineRef, {
+          walletBalance: newWallet,
+          totalIncome: newIncome
+        });
+
+        // 💾 Optional: Save transaction for record (only if > 0.0001)
+        if (commission > 0.0001) {
+          await addDoc(collection(db, "referralIncome"), {
+            fromUser: userId,
+            toUser: uplineId,
+            level: i + 1,
+            amount: commission,
+            time: serverTimestamp(),
+          });
+        }
+      } // ✅ ← missing closing bracket added here
+    }
+
+    console.log("✅ Referral income distributed successfully!");
+  } catch (err) {
+    console.error("Error distributing income:", err);
+  }
+}
+
+</script>
+</body>
+</html>
