@@ -167,6 +167,14 @@
       .input-group label { font-size: 14px; }
       button { font-size: 15px; padding: 10px; }
     }
+    .password-container i {
+  transition: 0.2s ease;
+}
+.password-container i:hover {
+  color: #4CAF50;
+  transform: translateY(-50%) scale(1.2);
+}
+
   </style>
 </head>
 <body>
@@ -546,6 +554,25 @@ setTimeout(()=> window.location.href="Dashboard.html", 1500);
         input.scrollIntoView({ behavior: "smooth", block: "center" });
       }, 300);
     });
+  });
+</script>
+<!-- 👁️ Eye icon toggle (show/hide password) -->
+<script>
+  const togglePassword = document.getElementById("toggle-password");
+  const toggleConfirmPassword = document.getElementById("toggle-confirm-password");
+  const passwordInput = document.getElementById("password");
+  const confirmPasswordInput = document.getElementById("confirm-password");
+
+  togglePassword.addEventListener("click", () => {
+    const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+    passwordInput.setAttribute("type", type);
+    togglePassword.textContent = type === "password" ? "👁️" : "🙈";
+  });
+
+  toggleConfirmPassword.addEventListener("click", () => {
+    const type = confirmPasswordInput.getAttribute("type") === "password" ? "text" : "password";
+    confirmPasswordInput.setAttribute("type", type);
+    toggleConfirmPassword.textContent = type === "password" ? "👁️" : "🙈";
   });
 </script>
 
