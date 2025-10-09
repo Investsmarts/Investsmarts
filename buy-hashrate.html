@@ -314,46 +314,45 @@ body {
       <button id="collectProfitBtn" class="btn" style="max-width:250px;">Collect Today’s Profit</button>
     </div>
 
-  <!-- 📈 Active Mining Info (With Animated Timer) -->
+<!-- 📈 Active Mining Info (hidden until user buys) -->
 <div id="activeMining" class="profit-box" style="display:none;">
   <div><strong>Active Plan:</strong> <span id="planName">--</span></div>
   <div><strong>Daily Profit:</strong> <span id="dailyPercent">--</span>%</div>
   <div><strong>Total Earned:</strong> $<span id="earnedProfit">0.00</span></div>
   <div style="margin-top:10px;"><strong>Next Payout In:</strong></div>
 
-<div id="timerBox" class="timer-card side-by-side">
-  <div id="countdown" class="timer-text">00h 00m 00s</div>
-  <div class="progress-bar">
-    <div id="progressFill"></div>
+  <div id="timerBox" class="timer-card side-by-side">
+    <div id="countdown" class="timer-text">00h 00m 00s</div>
+    <div class="progress-bar">
+      <div id="progressFill"></div>
+    </div>
   </div>
 </div>
 
-    <!-- 💠 Cloud Mining Plans -->
-    <h2 style="color:#16a34a;">💠 Cloud Mining Plans</h2>
-
-    <div class="plans">
-      <div class="plan">
-        <h3>Starter Plan</h3>
-        <p>$500 / 45 days</p>
-        <p>2.5% Daily</p>
-        <button class="btn" onclick="openModal('Starter Plan',500,45,2.5)">Buy</button>
-      </div>
-
-      <div class="plan">
-        <h3>Advanced Plan</h3>
-        <p>$1500 / 90 days</p>
-        <p>5% Daily</p>
-        <button class="btn" onclick="openModal('Advanced Plan',1500,90,5)">Buy</button>
-      </div>
-
-      <div class="plan">
-        <h3>Premium Plan</h3>
-        <p>$2000 / 160 days</p>
-        <p>10% Daily</p>
-        <button class="btn" onclick="openModal('Premium Plan',2000,160,10)">Buy</button>
-      </div>
-    </div>
+<!-- ✅ Move Plans Section OUTSIDE (visible always) -->
+<h2 style="color:#16a34a;">💠 Cloud Mining Plans</h2>
+<div class="plans">
+  <div class="plan">
+    <h3>Starter Plan</h3>
+    <p>$500 / 45 days</p>
+    <p>2.5% Daily</p>
+    <button class="btn" onclick="openModal('Starter Plan',500,45,2.5)">Buy</button>
   </div>
+
+  <div class="plan">
+    <h3>Advanced Plan</h3>
+    <p>$1500 / 90 days</p>
+    <p>5% Daily</p>
+    <button class="btn" onclick="openModal('Advanced Plan',1500,90,5)">Buy</button>
+  </div>
+
+  <div class="plan">
+    <h3>Premium Plan</h3>
+    <p>$2000 / 160 days</p>
+    <p>10% Daily</p>
+    <button class="btn" onclick="openModal('Premium Plan',2000,160,10)">Buy</button>
+  </div>
+</div>
 
   <!-- ✅ Professional Popup Modal -->
   <div class="modal" id="planModal">
