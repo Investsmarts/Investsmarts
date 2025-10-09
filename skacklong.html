@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SkackLong — Auto Savings (0.2% Daily)</title>
+<style>
+:root { --green:#16a34a; --bg:#f8fafc; --text:#0f172a; }
+body {
+  font-family: "Poppins", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+.card {
+  width: 100%;
+  max-width: 800px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+h1 {
+  color: var(--green);
+  font-size: 22px;
+  text-align: center;
+  margin-bottom: 18px;
+}
+input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  width: 180px;
+}
+button {
+  background: linear-gradient(135deg,#16a34a,#22c55e);
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+button:hover { transform: scale(1.05); transition: 0.2s; }
+.box { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 10px; margin-top: 14px; }
+small { color: #475569; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>💎 SkackLong — Auto Grow Savings (0.2% Daily)</h1>
+  
+  <div>
+    <strong>Wallet:</strong> $<span id="walletBalance">0.00</span><br>
+    <strong>SkackLong Balance:</strong> $<span id="skAmount">0.00</span><br>
+    <strong>Total Earned Interest:</strong> $<span id="totalInterest">0.00</span>
+  </div>
+
+  <div class="box">
+    <input id="depositAmount" type="number" placeholder="Amount to deposit ($)" min="1" step="0.01" />
+    <button id="depositBtn">Deposit</button>
+    <small style="display:block;margin-top:6px;">
+      📈 Daily 0.2% auto compound interest — no withdrawal, funds grow daily.
+    </small>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import {
+  getFirestore, doc, getDoc, updateDoc, setDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+
+// 🔧 Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25",
+  storageBucket: "btcinvest-c0e25.firebasestorage.app",
+  messagingSenderId: "204937458487",
+  appId: "1:204937458487:web:cc27ece1249999279f60b2"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// ⚙️ Constants
+const DAILY_RATE = 0.002; // 0.2% per day
+
+let walletBalance = 0;
+
+// 🧾 UI elements
+const walletEl = document.getElementById("walletBalance");
+const skEl = document.getElementById("skAmount");
+const interestEl = document.getElementById("totalInterest");
+const depositInput = document.getElementById("depositAmount");
+const depositBtn = document.getElementById("depositBtn");
+
+// 👤 Auth check
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return (window.location.href = "login.html");
+  const userId = user.uid;
+  await loadWallet(userId);
+  await updateInterest(userId); // update auto-compound interest on load
+});
+
+// 💰 Load Wallet Balance
+async function loadWallet(uid) {
+  const ref = doc(db, "users", uid);
+  const snap = await getDoc(ref);
+  if (snap.exists()) {
+    walletBalance = snap.data().walletBalance || 0;
+    walletEl.textContent = walletBalance.toFixed(2);
+  }
+}
+
+// ⚙️ Auto Interest Updater
+async function updateInterest(uid) {
+  const ref = doc(db, "skacklong", uid);
+  const snap = await getDoc(ref);
+
+  if (!snap.exists()) {
+    skEl.textContent = "0.00";
+    interestEl.textContent = "0.00";
+    return;
+  }
+
+  const data = snap.data();
+  const now = new Date();
+  const last = data.lastUpdate?.toDate ? data.lastUpdate.toDate() : new Date(data.lastUpdate);
+  const diffDays = (now - last) / (1000 * 60 * 60 * 24);
+
+  if (diffDays > 0) {
+    // Calculate interest and compound
+    const interest = data.amount * DAILY_RATE * diffDays;
+    const newAmount = data.amount + interest;
+    const totalInterest = (data.totalInterest || 0) + interest;
+
+    await updateDoc(ref, {
+      amount: newAmount,
+      totalInterest: totalInterest,
+      lastUpdate: serverTimestamp()
+    });
+
+    skEl.textContent = newAmount.toFixed(2);
+    interestEl.textContent = totalInterest.toFixed(2);
+  } else {
+    skEl.textContent = data.amount.toFixed(2);
+    interestEl.textContent = (data.totalInterest || 0).toFixed(2);
+  }
+}
+
+// 💵 Deposit Function
+depositBtn.addEventListener("click", async () => {
+  const amt = parseFloat(depositInput.value);
+  if (!amt || amt <= 0) return alert("Enter valid amount.");
+
+  const user = auth.currentUser;
+  const uid = user.uid;
+
+  // check wallet balance
+  const userRef = doc(db, "users", uid);
+  const userSnap = await getDoc(userRef);
+  const userData = userSnap.data();
+  const wallet = userData.walletBalance || 0;
+  if (wallet < amt) return alert("Insufficient balance.");
+
+  // deduct wallet
+  const newWallet = wallet - amt;
+  await updateDoc(userRef, { walletBalance: newWallet });
+  walletBalance = newWallet;
+  walletEl.textContent = newWallet.toFixed(2);
+
+  const ref = doc(db, "skacklong", uid);
+  const snap = await getDoc(ref);
+  const now = serverTimestamp();
+
+  if (!snap.exists()) {
+    // create new record
+    await setDoc(ref, {
+      userId: uid,
+      amount: amt,
+      totalInterest: 0,
+      startTime: now,
+      lastUpdate: now
+    });
+  } else {
+    // update existing: auto compound + add new deposit
+    const data = snap.data();
+    const last = data.lastUpdate?.toDate ? data.lastUpdate.toDate() : new Date(data.lastUpdate);
+    const days = (new Date() - last) / (1000 * 60 * 60 * 24);
+    const interest = data.amount * DAILY_RATE * days;
+    const newAmount = data.amount + interest + amt;
+    const totalInterest = (data.totalInterest || 0) + interest;
+
+    await updateDoc(ref, {
+      amount: newAmount,
+      totalInterest: totalInterest,
+      lastUpdate: now
+    });
+  }
+
+  alert("Deposit successful! Balance will now auto-grow daily.");
+  depositInput.value = "";
+  updateInterest(uid);
+});
+</script>
+</body>
+</html>
+
