@@ -316,9 +316,18 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-  import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+  import { 
+    getAuth, 
+    signInWithEmailAndPassword, 
+    sendPasswordResetEmail 
+  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+  import { 
+    getFirestore, 
+    doc, 
+    getDoc 
+  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
+  // 🔧 Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
     authDomain: "btcinvest-c0e25.firebaseapp.com",
@@ -329,10 +338,12 @@
     measurementId: "G-HG0Q8ZHT6G"
   };
 
+  // 🔥 Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
+  // 🔔 Popup Notification
   const popup = document.getElementById('popup');
   const popupOverlay = document.getElementById('popupOverlay');
 
@@ -347,52 +358,77 @@
     }, 2000);
   }
 
+  // 👁️ Password Toggle
   document.getElementById("toggle-password").addEventListener("click", ()=>{
     const pass = document.getElementById("login-password");
     pass.type = pass.type === "password" ? "text" : "password";
   });
 
-  document.getElementById("loginBtn").addEventListener("click", async ()=>{
-    const loginBtn = document.getElementById("loginBtn");
-    const identifierInput = document.getElementById("login-identifier").value.trim();
-    let identifier = identifierInput;
-    if(identifier.includes("@")){ identifier = identifier.toLowerCase(); }
-    const password = document.getElementById("login-password").value.trim();
-    if(!identifier || !password){ showPopup("Please enter details.","error"); return; }
-
-    showPopup("Checking credentials...","success");
-
+  // 🧠 MAIN LOGIN FUNCTION
+  async function loginUser(identifier, password) {
     try {
-      const usersRef = collection(db, "users");
-      let q, type="";
-      if(identifier.includes("@")){ q=query(usersRef, where("email", "==", identifier.toLowerCase())); type="email"; }
-      else if(/^\d{10}$/.test(identifier)){ q=query(usersRef, where("mobile", "==", identifier)); type="mobile"; }
-      else{ q=query(usersRef, where("username", "==", identifier)); type="username"; }
+      const id = identifier.trim().toLowerCase();
+      if (!id || !password) {
+        showPopup("Please enter login details.","error");
+        return;
+      }
 
-      const snap = await getDocs(q);
-      if(snap.empty){ showPopup("Account not found ("+type+")","error"); return; }
+      showPopup("Checking credentials...","success");
 
-      const userDoc = snap.docs[0];
-      const userEmail = userDoc.data().email;
-      try {
-        await signInWithEmailAndPassword(auth, userEmail, password);
-        loginBtn.disabled = true;
-        loginBtn.innerHTML = `<span class="loader"></span> Logging in...`;
-        showPopup("Welcome "+(userDoc.data().name || ""), "success");
-        setTimeout(()=>{ window.location.href = "Dashboard.html"; },1500);
-      } catch(e){ showPopup("Incorrect password.","error"); return; }
+      // 🔍 STEP 1: lookup "logins" collection se email find karo
+      const lookupRef = doc(db, "logins", id);
+      const lookupSnap = await getDoc(lookupRef);
 
-    } catch(err){ console.error(err); showPopup("Login error","error"); }
+      if (!lookupSnap.exists()) {
+        showPopup("Account not found.","error");
+        return;
+      }
+
+      const userEmail = lookupSnap.data().email;
+
+      // 🔐 STEP 2: Firebase Auth Login
+      const loginBtn = document.getElementById("loginBtn");
+      loginBtn.disabled = true;
+      loginBtn.innerHTML = `<span class="loader"></span> Logging in...`;
+
+      await signInWithEmailAndPassword(auth, userEmail, password);
+
+      showPopup("Login successful!","success");
+      setTimeout(()=>{ 
+        window.location.href = "Dashboard.html"; 
+      },1500);
+
+    } catch (error) {
+      console.error("❌ Login Error:", error);
+      showPopup(error.message.includes("wrong-password") ? "Incorrect password." : "Login failed.","error");
+      const loginBtn = document.getElementById("loginBtn");
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Login";
+    }
+  }
+
+  // 🚀 LOGIN BUTTON CLICK
+  document.getElementById("loginBtn").addEventListener("click", async ()=>{
+    const identifier = document.getElementById("login-identifier").value;
+    const password = document.getElementById("login-password").value;
+    await loginUser(identifier, password);
   });
 
+  // 🔁 FORGOT PASSWORD
   document.getElementById("forgot-btn").addEventListener("click", async ()=>{
     const email = document.getElementById("login-identifier").value.trim();
-    if(!email.includes("@")){ showPopup("Enter valid email.","error"); return; }
+    if(!email.includes("@")){
+      showPopup("Please enter a valid email.","error");
+      return;
+    }
     try {
       await sendPasswordResetEmail(auth, email);
-      showPopup("Password reset link sent.","success");
-    } catch(err){ showPopup(err.message,"error"); }
+      showPopup("Password reset link sent to your email.","success");
+    } catch(err){
+      showPopup(err.message,"error");
+    }
   });
 </script>
+
 </body>
 </html>
