@@ -104,12 +104,11 @@
     }
 
     /* Bottom Nav */
- .bottom-nav {
+.bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 65px;
   background: #fff;
   display: flex;
   justify-content: space-around;
@@ -118,19 +117,23 @@
   box-shadow: 0 -3px 12px rgba(0,0,0,0.05);
   z-index: 999;
 
-  /* 👇 Mobile ke liye fix (important part) */
+  /* 👇 Important for mobile safe area */
+  height: calc(65px + env(safe-area-inset-bottom));
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
+/* ✅ Fallback for browsers that don’t support env() */
+@supports not (padding-bottom: env(safe-area-inset-bottom)) {
   .bottom-nav {
-    padding-bottom: env(safe-area-inset-bottom);
+    height: 70px;
+    padding-bottom: 5px;
   }
 }
 
+/* ✅ Mobile specific tweak */
 @media (max-width: 600px) {
   .bottom-nav {
-    height: 75px; /* Mobile ke liye thoda zyada height */
+    height: calc(75px + env(safe-area-inset-bottom));
   }
 }
 
@@ -148,6 +151,7 @@
   margin-bottom: 2px;
   color: #28a745;
 }
+
 
     /* Responsive */
     @media (max-width: 480px) {
