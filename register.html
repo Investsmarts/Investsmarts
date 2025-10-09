@@ -433,9 +433,14 @@
       }
 
       // ✅ Create user
+// ✅ Create user (Auth)
 const userCredential = await createUserWithEmailAndPassword(auth, normEmail, password);
 const user = userCredential.user;
-const finalReferral = "REF" + Math.floor(Math.random()*900000+100000);
+
+// ✅ Wait for token refresh before Firestore write (important!)
+await user.getIdToken(true);
+
+const finalReferral = "REF" + Math.floor(Math.random() * 900000 + 100000);
 
 // ✅ Pehle object banao
 let userDocData = {
@@ -482,9 +487,13 @@ if(referral){
   }
 }
 
+// ✅ Wait for Firebase Auth token to refresh before Firestore write
+await user.getIdToken(true); // 🔥 important line (fixes permission timing issue)
+await new Promise(res => setTimeout(res, 1000)); // 🔥 token sync delay fix
 
 // ✅ Bas ek hi baar Firestore me save karo
 await setDoc(doc(db, "users", user.uid), userDocData);
+
 
 // ✅ 3-way login lookup entries banao (email / username / mobile)
 try {
@@ -519,31 +528,54 @@ setTimeout(()=> window.location.href="Dashboard.html", 1500);
   }
 </script>
 <script>
-// ❌ Right-click disable
-  document.addEventListener("contextmenu", function(e) {
-    e.preventDefault();
-    
-  });
+  // 🚫 Disable right click, select, drag
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
 
-// ❌ Disable text selection
-  document.addEventListener("selectstart", function(e) {
-    e.preventDefault();
-  });
-
-// ❌ Disable copy (Ctrl+C), cut (Ctrl+X), paste (Ctrl+V), view-source (Ctrl+U)
-  document.addEventListener("keydown", function(e) {
+  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
+  document.addEventListener("keydown", e => {
     if (
-      (e.ctrlKey && (e.key === "c" || e.key === "C")) || 
-      (e.ctrlKey && (e.key === "x" || e.key === "X")) || 
-      (e.ctrlKey && (e.key === "v" || e.key === "V")) || 
-      (e.ctrlKey && (e.key === "u" || e.key === "U")) || 
-    (e.key === "F12") // DevTools
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
     ) {
       e.preventDefault();
-    
-  }
-});
+      return false;
+    }
+  });
+
+  // ⚠️ Block console typing
+  (function() {
+    const devtools = /./;
+    devtools.toString = function() {
+      alert("⚠️ Developer tools are disabled for security reasons.");
+      return "";
+    };
+    console.log("%c", devtools);
+  })();
+
+  // 🔒 Auto-detect DevTools (resize trick)
+  setInterval(() => {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    if (widthDiff || heightDiff) {
+      document.body.innerHTML =
+        "<h1 style='color:red;text-align:center;margin-top:40vh'>🚫 Access Denied — Developer Tools Detected 🚫</h1>";
+    }
+  }, 1000);
+
+  // 🧱 Disable copy/paste/cut at DOM level
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // 🔁 Constant guard — if someone tries to override functions
+  Object.freeze(console);
+  Object.freeze(window.console);
 </script>
+
 
 <script>
 // ✅ Jab bhi input focus ho, usko visible karo
@@ -575,6 +607,186 @@ setTimeout(()=> window.location.href="Dashboard.html", 1500);
     toggleConfirmPassword.textContent = type === "password" ? "👁️" : "🙈";
   });
 </script>
+
+<script>
+  const inputOrder = [
+    "name",
+    "register-email",
+    "username",
+    "mobile",
+    "aadhaar",
+    "cheque",
+    "password",
+    "confirm-password",
+    "referral"
+  ];
+
+  const maxLengths = {
+    mobile: 10,
+    aadhaar: 12,
+    cheque: 6
+  };
+
+  // ✅ Tick icon CSS
+  const style = document.createElement("style");
+  style.innerHTML = `
+    .tick {
+      position: absolute;
+      right: 35px;
+      top: 50%;
+      transform: translateY(-50%) scale(0.8);
+      font-size: 18px;
+      color: #4CAF50;
+      opacity: 0;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .tick.show {
+      opacity: 1;
+      transform: translateY(-50%) scale(1.2);
+    }
+    .validation-msg {
+      font-size: 13px;
+      margin-top: 4px;
+      text-align: left;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      opacity: 0.9;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // ✅ Add tick icon for each input
+  inputOrder.forEach(id => {
+    const parent = document.getElementById(id)?.parentElement;
+    if (parent && !parent.querySelector(".tick")) {
+      const tick = document.createElement("span");
+      tick.classList.add("tick");
+      tick.textContent = "✅";
+      parent.appendChild(tick);
+    }
+  });
+
+  // ✅ Input logic
+  inputOrder.forEach((id, index) => {
+    const current = document.getElementById(id);
+    const next = document.getElementById(inputOrder[index + 1]);
+    if (!current || !next) return;
+    const tick = current.parentElement.querySelector(".tick");
+
+    // 🧩 Add validation message (only for aadhaar & cheque)
+    let msg;
+    if (id === "aadhaar" || id === "cheque") {
+      msg = document.createElement("div");
+      msg.classList.add("validation-msg");
+      current.parentElement.appendChild(msg);
+    }
+
+    // 🚫 Only digits allowed for Aadhaar & Cheque
+    if (id === "aadhaar" || id === "cheque" || id === "mobile") {
+      current.addEventListener("input", () => {
+        current.value = current.value.replace(/\D/g, ""); // remove non-digits
+      });
+    }
+
+    current.addEventListener("input", () => {
+      const val = current.value.trim().toLowerCase();
+
+      // 🟢 NAME field — koi bhi naam likhe aur space lagaye to tick
+      if (id === "name" && val.length >= 3 && current.value.endsWith(" ")) {
+        tick.classList.add("show");
+        setTimeout(() => {
+          tick.classList.remove("show");
+          next.focus();
+        }, 300);
+        return;
+      }
+
+      // 🟢 EMAIL field — jaise hi gmail.com likhe to tick
+      if (id === "register-email" && val.includes("@gmail.com")) {
+        tick.classList.add("show");
+        setTimeout(() => {
+          tick.classList.remove("show");
+          next.focus();
+        }, 300);
+        return;
+      }
+
+      // 🟢 USERNAME field — jab 4+ characters likhe aur space dabaye to tick
+      if (id === "username" && current.value.length >= 4 && current.value.endsWith(" ")) {
+        tick.classList.add("show");
+        setTimeout(() => {
+          tick.classList.remove("show");
+          next.focus();
+        }, 300);
+        return;
+      }
+
+      // 🟢 MOBILE / AADHAAR / CHEQUE — fixed length hone par hi tick
+      if (maxLengths[id] && current.value.length === maxLengths[id]) {
+        tick.classList.add("show");
+        setTimeout(() => {
+          tick.classList.remove("show");
+          next.focus();
+        }, 300);
+      } else if (current.value.length < (maxLengths[id] || 3)) {
+        tick.classList.remove("show");
+      }
+
+      // 🧩 Live Validation for Aadhaar
+      if (id === "aadhaar") {
+        if (current.value.length === 12) {
+          msg.textContent = "✅ Valid Aadhaar number";
+          msg.style.color = "#2e7d32";
+        } else if (current.value.length > 0) {
+          msg.textContent = "❌ Aadhaar must be 12 digits";
+          msg.style.color = "#d32f2f";
+        } else {
+          msg.textContent = "";
+        }
+      }
+
+      // 🧩 Live Validation for Cheque
+      if (id === "cheque") {
+        if (current.value.length === 6) {
+          msg.textContent = "✅ Valid Cheque number";
+          msg.style.color = "#2e7d32";
+        } else if (current.value.length > 0) {
+          msg.textContent = "❌ Cheque number must be 6 digits";
+          msg.style.color = "#d32f2f";
+        } else {
+          msg.textContent = "";
+        }
+      }
+    });
+
+    // 🔄 ENTER key se bhi move next
+    current.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        tick.classList.add("show");
+        setTimeout(() => {
+          tick.classList.remove("show");
+          next.focus();
+        }, 200);
+      }
+    });
+  });
+
+  // 💫 Focus styling
+  inputOrder.forEach(id => {
+    const input = document.getElementById(id);
+    input.addEventListener("focus", () => {
+      input.style.borderColor = "#4CAF50";
+      input.style.boxShadow = "0 0 5px rgba(76,175,80,0.3)";
+    });
+    input.addEventListener("blur", () => {
+      input.style.borderColor = "#ccc";
+      input.style.boxShadow = "none";
+    });
+  });
+</script>
+
+
 
 </body>
 </html>
