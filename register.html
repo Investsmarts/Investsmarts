@@ -474,11 +474,23 @@ if(referral){
   }
 }
 
+
 // ✅ Bas ek hi baar Firestore me save karo
 await setDoc(doc(db, "users", user.uid), userDocData);
 
-      showPopup("Registration Successful!");
-      setTimeout(()=> window.location.href="Dashboard.html", 1500);
+// ✅ 3-way login lookup entries banao (email / username / mobile)
+try {
+  await setDoc(doc(db, "logins", normEmail), { email: normEmail });
+  await setDoc(doc(db, "logins", normUsername), { email: normEmail });
+  await setDoc(doc(db, "logins", mobile), { email: normEmail });
+  console.log("✅ Login lookup entries created for:", normEmail);
+} catch (e) {
+  console.error("❌ Failed to create login lookup:", e);
+}
+
+showPopup("Registration Successful!");
+setTimeout(()=> window.location.href="Dashboard.html", 1500);
+
 
     } catch(err) {
       console.error("❌ Register error:", err.message);
@@ -539,4 +551,3 @@ await setDoc(doc(db, "users", user.uid), userDocData);
 
 </body>
 </html>
-
