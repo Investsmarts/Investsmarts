@@ -506,7 +506,8 @@ window.openModal = function (name, cost, days, profit) {
     }
 
     const user = auth.currentUser;
-    if (!user) return showPopup("Please login first.", "error");
+    if (!user) return showCenterAlert(" Please login first!");
+
 
     const now = new Date();
     const next = new Date(now.getTime() + 86400000);
@@ -545,10 +546,12 @@ window.openModal = function (name, cost, days, profit) {
       startCountdown(next);
       document.getElementById("walletBalance").textContent = `$${walletBalance.toFixed(2)}`;
       document.getElementById("lockedBalance").textContent = `$${lockedBalance.toFixed(2)}`;
-      showPopup(`✅ ${name} purchased successfully!`);
+      showCenterAlert(`✅ ${name} purchased successfully!`);
+
     } catch (err) {
       console.error(err);
-      showPopup("❌ Something went wrong.", "error");
+      showCenterAlert(" Something went wrong!");
+
     }
   };
 };
@@ -592,7 +595,8 @@ async function checkAndAddProfit(ref, plan, uid) {
       const newLocked = (u.lockedBalance || 0) - plan.planCost;
       await updateDoc(uRef, { walletBalance: newWallet, lockedBalance: newLocked });
       await updateDoc(ref, { status: "completed" });
-      showPopup("🎉 Plan completed! Funds released to wallet.");
+      showCenterAlert("🎉 Plan completed! Funds released to wallet!");
+
     }
   }
 }
@@ -607,7 +611,7 @@ document.getElementById("collectProfitBtn").addEventListener("click", async () =
     where("status", "==", "running")
   );
   const res = await getDocs(q);
-  if (res.empty) return showCenterAlert("🚫 No active plan found.");
+  if (res.empty) return showCenterAlert(" No active plan found.");
 
   const docRef = res.docs[0].ref;
   const plan = res.docs[0].data();
@@ -616,7 +620,8 @@ document.getElementById("collectProfitBtn").addEventListener("click", async () =
 
   if (now < next) {
     const remaining = Math.ceil((next - now) / (1000 * 60 * 60));
-    return showPopup(`⏳ You can collect profit after ${remaining} hours.`);
+    return showCenterAlert(` You can collect profit after ${remaining} hours.`);
+
   }
 
   const dailyProfit = (plan.planCost * plan.dailyProfitPercent) / 100;
@@ -635,7 +640,8 @@ document.getElementById("collectProfitBtn").addEventListener("click", async () =
 
   document.getElementById("earnedProfit").textContent = newProfit.toFixed(2);
   document.getElementById("walletBalance").textContent = `$${updatedWallet.toFixed(2)}`;
-  showPopup(`✅ $${dailyProfit.toFixed(2)} profit added to your wallet!`);
+  showCenterAlert(`✅ $${dailyProfit.toFixed(2)} profit added to your wallet!`);
+
 });
 
 // ⏳ Countdown
@@ -687,4 +693,3 @@ function showBalanceAlert() {
 
 </body>
 </html>
-
