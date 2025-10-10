@@ -614,7 +614,7 @@ window.markPaid = async function() {
 
   if (currentUserId && currentDepositId) {
     const ref = doc(db, "users", currentUserId, "deposits", currentDepositId);
-    await updateDoc(ref, { status: "Paid", amount: amount });
+    await updateDoc(ref, { status: "I Have Paid", amount: amount });
     loadDepositHistory(currentUserId);
   }
 
@@ -767,4 +767,3 @@ function showInstruction() {
 </script>
 </body>
 </html>
-
