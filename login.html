@@ -4,195 +4,264 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>User Login</title>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif; 
-      background: linear-gradient(135deg, #e3f2fd, #f9f9f9); 
-      margin:0; 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
 
-    /* Header fixed */
-    .header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;   
-      width: 100%;
-      text-align: center;
-      padding: 14px;
-      font-size: 20px;
-      font-weight: bold;
-      background: linear-gradient(90deg,#4CAF50,#2c7);
-      color: white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      z-index: 1000;
-    }
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #e3f2fd, #f9f9f9);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
 
-    .wrapper {
-      margin-top: 90px; /* Header ke neeche space */
-      width: 100%;
-      max-width: 400px;
-    }
+  .header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    text-align: center;
+    padding: 14px;
+    font-size: 20px;
+    font-weight: bold;
+    background: linear-gradient(90deg,#4CAF50,#2c7);
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    z-index: 1000;
+  }
 
-    /* Card style */
-    .card {
-      background: #fff;
-      padding: 25px 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      margin-bottom: 20px;
-      text-align:center;
-    }
+  .wrapper {
+    margin-top: 100px;
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+  }
 
-    .tagline {
-      font-size: 15px; 
-      color: #222;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
+  .card {
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    margin-bottom: 20px;
+    text-align: center;
+  }
 
-    h2 { margin:0 0 15px 0; font-size:22px; font-weight:bold; color:#333; }
+  h2 {
+    margin: 0 0 20px 0;
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+  }
 
-    /* Floating input group */
-    .input-group {
-      position: relative;
-      margin: 20px 0;
-      width: 100%;
-    }
-    .input-group input {
-      width: 100%;
-      padding: 14px 12px;
-      font-size: 15px;
-      border: 1.5px solid #ccc;
-      border-radius: 8px;
-      outline: none;
-      box-sizing: border-box;
-      background: #fff;
-      transition: 0.3s;
-    }
-    .input-group label {
-      position: absolute;
-      left: 12px;
-      top: 14px;
-      font-size: 15px;
-      color: #888;
-      pointer-events: none;
-      transition: 0.3s;
-      background: #fff;
-      padding: 0 4px;
-    }
-    .input-group input:focus {
-      border-color: #4CAF50;
-      box-shadow: 0 0 6px rgba(76,175,80,0.3);
-    }
-    .input-group input:focus + label,
-    .input-group input:not(:placeholder-shown) + label {
-      top: -8px;
-      font-size: 12px;
-      color: #4CAF50;
-    }
+  .input-group {
+    position: relative;
+    margin: 18px 0;
+    width: 100%;
+  }
 
-    /* Password eye icon */
-    .password-container i {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
-      font-size: 16px;
-      color: #444;
-    }
+  .input-group input {
+    width: 100%;
+    padding: 14px 44px 14px 12px;
+    font-size: 15px;
+    border: 1.5px solid #ccc;
+    border-radius: 10px;
+    outline: none;
+    background: #fff;
+    transition: 0.3s;
+    box-sizing: border-box;
+  }
 
-    /* Buttons */
-    button {
-      width: 100%; padding: 12px; margin-top: 10px;
-      border: none; border-radius: 6px;
-      background: linear-gradient(90deg,#4CAF50,#2c7);
-      color: white;
-      font-size: 16px; font-weight:bold;
-      cursor: pointer; transition: 0.3s;
-    }
-    button:hover { background:#3a9440; }
+  .input-group input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 6px rgba(76,175,80,0.3);
+  }
 
-    .forgot-btn {
-      margin-top: 8px;
-      background: none; border: none;
-      color: #0066ff; font-size: 14px;
-      cursor: pointer; text-decoration: underline;
-    }
-    .forgot-btn:hover { color: #0040aa; }
+  .input-group label {
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    font-size: 15px;
+    color: #888;
+    background: #fff;
+    padding: 0 4px;
+    transition: 0.3s;
+    pointer-events: none;
+  }
 
-    .login-box {
-      margin-top: 14px; padding: 10px;
-      border: 1px solid #ddd; border-radius: 6px;
-      background: #f9f9f9; font-size: 14px; color: #333;
-    }
-    .login-box a { color: #0066ff; font-weight: bold; text-decoration: none; }
-    .login-box a:hover { text-decoration: underline; }
+  .input-group input:focus + label,
+  .input-group input:not(:placeholder-shown) + label {
+    top: -8px;
+    font-size: 12px;
+    color: #4CAF50;
+  }
 
-    .info-box {
-      background: #eef5ff;
-      border: 1px solid #cce0ff; border-radius: 10px;
-      padding: 18px; 
-      font-size: 14px; color: #222;
-      text-align:left;
-    }
-    .info-box h3 {
-      margin-top: 0; font-size: 16px; color: #0066ff;
-    }
-    .info-box ul { padding-left: 18px; margin:0; }
-    .info-box li { margin: 6px 0; }
+  .password-container i {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 17px;
+    color: #555;
+    transition: 0.3s;
+  }
+  .password-container i:hover { color: #4CAF50; }
 
-    /* Popup overlay */
-    .popup-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-    }
-    .popup {
-      background: #fff;
-      padding: 20px 30px;
-      border-radius: 16px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-      text-align: center;
-      font-size: 16px;
-      font-weight: bold;
-      color: #333;
-      transform: scale(0.8);
-      opacity: 0;
-      transition: all 0.3s ease-in-out;
-    }
-    .popup.show { transform: scale(1); opacity: 1; }
-    .popup.success { border-left: 6px solid #28a745; }
-    .popup.error { border-left: 6px solid #dc3545; }
+  /* ✅ Status Icon */
+  .status-icon {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    opacity: 0;
+    transition: all 0.25s ease;
+  }
+  .status-icon.active { opacity: 1; }
+  .status-icon.green { color: #28a745; }
+  .status-icon.red { color: #dc3545; }
 
-    /* Loader */
-    .loader {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #fff;
-      border-radius: 50%;
-      width: 18px; height: 18px;
-      animation: spin 1s linear infinite;
-      display:inline-block;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  /* 🌀 Spinner while checking */
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #ccc;
+    border-top-color: #4CAF50;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  @keyframes spin { 100% { transform: translateY(-50%) rotate(360deg); } }
 
-    @media (max-width: 480px) {
-      .wrapper { padding: 10px; }
-      .card { padding: 20px; }
-    }
-  </style>
+  button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(90deg,#4CAF50,#2c7);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  button:hover { background: #3a9440; }
+
+  .forgot-btn {
+    margin-top: 8px;
+    background: none;
+    border: none;
+    color: #0066ff;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .login-box {
+    margin-top: 16px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #f9f9f9;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .login-box a {
+    color: #0066ff;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  /* Popup center */
+  .popup-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(6px);
+    background: rgba(0,0,0,0.35);
+    z-index: 2000;
+  }
+
+  .popup {
+    background: #fff;
+    padding: 26px 34px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    transform: scale(0.85);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.3, 1);
+  }
+
+  .popup.show {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .popup.success { border-left: 6px solid #28a745; }
+  .popup.error { border-left: 6px solid #dc3545; }
+
+  /* 🌟 3D Powered By Text */
+.powered-by {
+  margin-top: 18px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  letter-spacing: 0.6px;
+  text-align: center;
+  text-shadow: 0px 2px 4px rgba(0,0,0,0.15);
+  transform: perspective(500px) translateZ(0);
+  transition: all 0.4s ease;
+}
+
+.powered-by strong {
+  color: #4CAF50;
+  text-shadow: 0px 2px 6px rgba(76,175,80,0.4);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* 💫 Hover Animation (3D Depth Glow) */
+.powered-by:hover {
+  transform: perspective(500px) translateZ(10px);
+  text-shadow: 0px 4px 8px rgba(76,175,80,0.5);
+}
+
+/* 🔴 Locked Button Style */
+button.locked {
+  background: linear-gradient(90deg, #ff4b2b, #ff416c);
+  color: #fff;
+  font-weight: 700;
+  cursor: not-allowed;
+  opacity: 0.9;
+  
+  transition: all 0.4s ease-in-out;
+}
+
+/* Smooth text pulse for timer */
+button.locked span {
+  animation: pulseText 1s infinite;
+}
+@keyframes pulseText {
+  0% { opacity: 1; }
+  50% { opacity: 0.75; }
+  100% { opacity: 1; }
+}
+
+
+</style>
 </head>
+
 <body>
 
   <div class="header">𝐀𝐜𝐜𝐞𝐬𝐬 𝐘𝐨𝐮𝐫 𝐀𝐜𝐜𝐨𝐮𝐧𝐭 𝐒𝐚𝐟𝐞𝐥𝐲</div>
@@ -202,231 +271,214 @@
   </div>
 
   <div class="wrapper">
-    
-
-<!-- Tagline -->
-<div class="card">
-  <div class="tagline" id="tagline"></div>
-</div>
-
-<style>
-.tagline {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  text-align: left;
-  margin: 0 auto;
-  max-width: 100%;
-  line-height: 1.6;
-  word-wrap: break-word;   /* ✅ allow wrapping */
-}
-
-.tagline span.num {
-  color: #28a745;   /* ✅ Green numbers */
-  font-weight: bold;
-}
-
-.line {
-  border-right: 2px solid #4CAF50; /* cursor */
-  display: block;                  /* ✅ full width line */
-  white-space: normal;             /* ✅ allow wrapping inside box */
-  word-wrap: break-word;           /* ✅ break long text */
-  overflow: hidden;
-  margin-bottom: 6px;
-}
-
-</style>
-
-<script>
-  const texts = [
-   
-    "<span class='num'>3</span> = 💎 Protecting Your Wealth with Next-Gen Blockchain Security",
-    "<span class='num'>4</span> =  Login Securely. Invest Smartly. Earn Confidently."
-  ];
-
-  const tagline = document.getElementById("tagline");
-  let count = 0;
-
-  function typeLine(text, callback) {
-    let i = 0;
-    const lineDiv = document.createElement("div");
-    lineDiv.className = "line";
-    tagline.appendChild(lineDiv);
-
-    function typing() {
-      if (i < text.length) {
-        lineDiv.innerHTML = text.substring(0, i+1);
-        i++;
-        setTimeout(typing, 40); // typing speed
-      } else {
-        lineDiv.style.borderRight = "none"; // remove cursor after complete
-        if (callback) setTimeout(callback, 500);
-      }
-    }
-    typing();
-  }
-
-  function startTyping() {
-    if (count < texts.length) {
-      typeLine(texts[count], () => {
-        count++;
-        startTyping();
-      });
-    }
-  }
-
-  startTyping();
-</script>
-
-    <!-- Login Form -->
     <div class="card">
       <h2>Login</h2>
 
       <div class="input-group">
         <input type="text" id="login-identifier" placeholder=" " required>
         <label for="login-identifier">Email / Mobile / Username</label>
+        <span id="idStatus" class="status-icon"></span>
       </div>
 
       <div class="input-group password-container">
         <input type="password" id="login-password" placeholder=" " required>
         <label for="login-password">Password</label>
+        <span id="passStatus" class="status-icon"></span>
         <i id="toggle-password">👁️</i>
       </div>
 
       <button id="loginBtn">Login</button>
       <button type="button" id="forgot-btn" class="forgot-btn">Forgot Password?</button>
-      
+
       <div class="login-box">
         Don’t have an account? <a href="register.html">Register here</a>
       </div>
     </div>
+    <!-- ✨ Powered by Trustdollar (3D Style) -->
+<div class="powered-by">
+  <span>Powered by</span> <strong>Trustdollar</strong>
+</div>
 
-    <!-- Blockchain Info -->
-    <div class="card info-box">
-      <h3>Why Choose Us?</h3>
-      <ul>
-        <li>✅ Powered by Blockchain Security</li>
-        <li>✅ Earn Referral Income up to 3 Levels</li>
-        <li>✅ Wallet Balance Stored Safely in USDT</li>
-        <li>✅ Instant and Transparent Transactions</li>
-      </ul>
-    </div>
   </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-  import { 
-    getAuth, 
-    signInWithEmailAndPassword, 
-    sendPasswordResetEmail 
-  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-  import { 
-    getFirestore, 
-    doc, 
-    getDoc 
-  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-  // 🔧 Firebase Config
-  const firebaseConfig = {
-    apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
-    authDomain: "btcinvest-c0e25.firebaseapp.com",
-    projectId: "btcinvest-c0e25",
-    storageBucket: "btcinvest-c0e25.firebasestorage.app",
-    messagingSenderId: "204937458487",
-    appId: "1:204937458487:web:cc27ece1249999279f60b2",
-    measurementId: "G-HG0Q8ZHT6G"
-  };
+/* 🔥 Firebase Config */
+const firebaseConfig = {
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25",
+  storageBucket: "btcinvest-c0e25.firebasestorage.app",
+  messagingSenderId: "204937458487",
+  appId: "1:204937458487:web:cc27ece1249999279f60b2",
+  measurementId: "G-HG0Q8ZHT6G"
+};
 
-  // 🔥 Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-  // 🔔 Popup Notification
-  const popup = document.getElementById('popup');
-  const popupOverlay = document.getElementById('popupOverlay');
-
-  function showPopup(msg, type='success'){
-    popup.textContent = msg;
+/* ✅ Popup system */
+const popup = document.getElementById('popup');
+const popupOverlay = document.getElementById('popupOverlay');
+function showPopup(msg, type = 'success') {
+  popup.textContent = msg;
+  popup.className = "popup " + type + " show";
+  popupOverlay.style.display = 'flex';
+  setTimeout(() => {
+    popupOverlay.style.display = 'none';
     popup.className = "popup";
-    popup.classList.add(type, "show");
-    popupOverlay.style.display = 'flex';
-    setTimeout(()=>{
-      popup.classList.remove("show", "success", "error");
-      popupOverlay.style.display = 'none';
-    }, 2000);
+  }, 2000);
+}
+
+/* 👁️ Password Toggle */
+document.getElementById("toggle-password").addEventListener("click", () => {
+  const pass = document.getElementById("login-password");
+  pass.type = pass.type === "password" ? "text" : "password";
+});
+
+/* 🟢 Real-time User Check */
+const idInput = document.getElementById("login-identifier");
+const idStatus = document.getElementById("idStatus");
+let checkTimer;
+
+idInput.addEventListener("input", () => {
+  clearTimeout(checkTimer);
+  idStatus.innerHTML = '<span class="spinner"></span>';
+  checkTimer = setTimeout(() => checkUser(idInput.value), 600);
+});
+
+async function checkUser(value) {
+  if (!value.trim()) { idStatus.innerHTML = ""; return; }
+  try {
+    const ref = doc(db, "logins", value.trim().toLowerCase());
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      idStatus.textContent = "✅";
+      idStatus.className = "status-icon green active";
+    } else {
+      idStatus.textContent = "❌";
+      idStatus.className = "status-icon red active";
+    }
+  } catch (e) {
+    idStatus.textContent = "❌";
+    idStatus.className = "status-icon red active";
+  }
+}
+
+/* 🔴 Real-time Password Check */
+const passInput = document.getElementById("login-password");
+const passStatus = document.getElementById("passStatus");
+passInput.addEventListener("input", async () => {
+  const identifier = idInput.value.trim().toLowerCase();
+  const password = passInput.value;
+  if (!identifier || password.length < 6) { passStatus.innerHTML = ""; return; }
+
+  passStatus.innerHTML = '<span class="spinner"></span>';
+  const ref = doc(db, "logins", identifier);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) { passStatus.innerHTML = "❌"; passStatus.className = "status-icon red active"; return; }
+
+  const email = snap.data().email;
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    passStatus.textContent = "✅";
+    passStatus.className = "status-icon green active";
+  } catch {
+    passStatus.textContent = "❌";
+    passStatus.className = "status-icon red active";
+  }
+});
+
+/* 🧠 Secure Login Function with Lock + Countdown Button */
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  const identifier = idInput.value.trim().toLowerCase();
+  const password = passInput.value;
+  const loginBtn = document.getElementById("loginBtn");
+  if (!identifier || !password) return showPopup("Please enter login details", "error");
+
+  const ref = doc(db, "logins", identifier);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return showPopup("Account not found", "error");
+  const email = snap.data().email;
+  const userRef = doc(db, "users", email);
+  const userSnap = await getDoc(userRef);
+  const userData = userSnap.exists() ? userSnap.data() : {};
+
+  const now = Date.now();
+  const MAX_FAILED = 3;
+  const LOCK_MINUTES = 15;
+
+  if (userData.lockUntil && now < userData.lockUntil) {
+    const remainingSeconds = Math.ceil((userData.lockUntil - now) / 1000);
+    startButtonCountdown(loginBtn, remainingSeconds);
+    return;
   }
 
-  // 👁️ Password Toggle
-  document.getElementById("toggle-password").addEventListener("click", ()=>{
-    const pass = document.getElementById("login-password");
-    pass.type = pass.type === "password" ? "text" : "password";
-  });
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    await updateDoc(userRef, { failedAttempts: 0, lockUntil: 0 });
+    showPopup("Login successful!", "success");
+    setTimeout(() => window.location.href = "Dashboard.html", 1500);
 
-  // 🧠 MAIN LOGIN FUNCTION
-  async function loginUser(identifier, password) {
-    try {
-      const id = identifier.trim().toLowerCase();
-      if (!id || !password) {
-        showPopup("Please enter login details.","error");
-        return;
-      }
+  } catch (error) {
+    console.error("Login error:", error);
+    let newAttempts = (userData.failedAttempts || 0) + 1;
+    const updates = { failedAttempts: newAttempts };
 
-      showPopup("Checking credentials...","success");
+    if (newAttempts >= MAX_FAILED) {
+      updates.lockUntil = Date.now() + LOCK_MINUTES * 60 * 1000;
+      showPopup(`❌ Too many attempts! Account locked for ${LOCK_MINUTES} minutes.`, "error");
+      startButtonCountdown(loginBtn, LOCK_MINUTES * 60);
+    } else if (newAttempts === MAX_FAILED - 1) {
+      showPopup(`⚠️ One more wrong attempt will lock your account!`, "error");
+    } else {
+      showPopup("Incorrect password.", "error");
+    }
 
-      // 🔍 STEP 1: lookup "logins" collection se email find karo
-      const lookupRef = doc(db, "logins", id);
-      const lookupSnap = await getDoc(lookupRef);
+    await setDoc(userRef, updates, { merge: true });
+  }
+});
 
-      if (!lookupSnap.exists()) {
-        showPopup("Account not found.","error");
-        return;
-      }
+/* 🕒 Button Countdown Function */
+function startButtonCountdown(button, secondsLeft) {
+  button.disabled = true;
+  button.classList.add("locked");
+  const originalHTML = button.innerHTML;
 
-      const userEmail = lookupSnap.data().email;
+  function updateCountdown() {
+    const minutes = Math.floor(secondsLeft / 60);
+    const seconds = secondsLeft % 60;
+    button.innerHTML = `<span>🔒 Locked (${minutes}:${seconds.toString().padStart(2, "0")})</span>`;
+    secondsLeft--;
 
-      // 🔐 STEP 2: Firebase Auth Login
-      const loginBtn = document.getElementById("loginBtn");
-      loginBtn.disabled = true;
-      loginBtn.innerHTML = `<span class="loader"></span> Logging in...`;
-
-      await signInWithEmailAndPassword(auth, userEmail, password);
-
-      showPopup("Login successful!","success");
-      setTimeout(()=>{ 
-        window.location.href = "Dashboard.html"; 
-      },1500);
-
-    } catch (error) {
-      console.error("❌ Login Error:", error);
-      showPopup(error.message.includes("wrong-password") ? "Incorrect password." : "Login failed.","error");
-      const loginBtn = document.getElementById("loginBtn");
-      loginBtn.disabled = false;
-      loginBtn.textContent = "Login";
+    if (secondsLeft < 0) {
+      clearInterval(timer);
+      button.disabled = false;
+      button.classList.remove("locked");
+      button.innerHTML = "Login";
+      showPopup("🔓 Account unlocked. Try again.", "success");
     }
   }
 
-  // 🚀 LOGIN BUTTON CLICK
-  document.getElementById("loginBtn").addEventListener("click", async ()=>{
-    const identifier = document.getElementById("login-identifier").value;
-    const password = document.getElementById("login-password").value;
-    await loginUser(identifier, password);
-  });
+  updateCountdown();
+  const timer = setInterval(updateCountdown, 1000);
+}
 
-  // 🔁 FORGOT PASSWORD
-  document.getElementById("forgot-btn").addEventListener("click", async ()=>{
-    const email = document.getElementById("login-identifier").value.trim();
-    if(!email.includes("@")){
-      showPopup("Please enter a valid email.","error");
-      return;
-    }
-    try {
-      await sendPasswordResetEmail(auth, email);
-      showPopup("Password reset link sent to your email.","success");
-    } catch(err){
-      showPopup(err.message,"error");
-    }
-  });
+/* 🔁 Forgot Password */
+document.getElementById("forgot-btn").addEventListener("click", async () => {
+  const email = idInput.value.trim();
+  if (!email.includes("@")) return showPopup("Enter valid email", "error");
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showPopup("Password reset link sent", "success");
+  } catch (e) {
+    showPopup("Error sending link", "error");
+  }
+});
 </script>
 
 </body>
