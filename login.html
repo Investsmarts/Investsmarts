@@ -380,6 +380,7 @@ button.locked span {
     />
   </div>
 </div>
+</div>
 
 
 <script type="module">
@@ -474,41 +475,62 @@ passInput.addEventListener("input", async () => {
   }
 });
 
-/* 🧠 Secure Login Function with Lock + Countdown Button */
+/* 🧠 Secure Login Function with Lock + Countdown Button + Instant Feedback */
 document.getElementById("loginBtn").addEventListener("click", async () => {
   const identifier = idInput.value.trim().toLowerCase();
   const password = passInput.value;
   const loginBtn = document.getElementById("loginBtn");
+
   if (!identifier || !password) return showPopup("Please enter login details", "error");
 
-  const ref = doc(db, "logins", identifier);
-  const snap = await getDoc(ref);
-  if (!snap.exists()) return showPopup("Account not found", "error");
-  const email = snap.data().email;
-  const userRef = doc(db, "users", email);
-  const userSnap = await getDoc(userRef);
-  const userData = userSnap.exists() ? userSnap.data() : {};
-
-  const now = Date.now();
-  const MAX_FAILED = 3;
-  const LOCK_MINUTES = 15;
-
-  if (userData.lockUntil && now < userData.lockUntil) {
-    const remainingSeconds = Math.ceil((userData.lockUntil - now) / 1000);
-    startButtonCountdown(loginBtn, remainingSeconds);
-    return;
-  }
+  // 🔥 Instant visual feedback
+  loginBtn.disabled = true;
+  loginBtn.innerHTML = `<span class="spinner" style="margin-right:8px;"></span> Logging in...`;
+  loginBtn.style.opacity = "0.8";
 
   try {
+    const ref = doc(db, "logins", identifier);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      showPopup("Account not found", "error");
+      return;
+    }
+
+    const email = snap.data().email;
+    const userRef = doc(db, "users", email);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.exists() ? userSnap.data() : {};
+
+    const now = Date.now();
+    const MAX_FAILED = 3;
+    const LOCK_MINUTES = 15;
+
+    if (userData.lockUntil && now < userData.lockUntil) {
+      const remainingSeconds = Math.ceil((userData.lockUntil - now) / 1000);
+      startButtonCountdown(loginBtn, remainingSeconds);
+      return;
+    }
+
     await signInWithEmailAndPassword(auth, email, password);
     await updateDoc(userRef, { failedAttempts: 0, lockUntil: 0 });
-    showPopup("Login successful!", "success");
+    showPopup("✅ Login successful!", "success");
     setTimeout(() => window.location.href = "Dashboard.html", 1500);
 
   } catch (error) {
     console.error("Login error:", error);
+    const ref = doc(db, "logins", identifier);
+    const snap = await getDoc(ref);
+    const email = snap.exists() ? snap.data().email : null;
+    if (!email) return showPopup("User not found", "error");
+
+    const userRef = doc(db, "users", email);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.exists() ? userSnap.data() : {};
     let newAttempts = (userData.failedAttempts || 0) + 1;
     const updates = { failedAttempts: newAttempts };
+
+    const MAX_FAILED = 3;
+    const LOCK_MINUTES = 15;
 
     if (newAttempts >= MAX_FAILED) {
       updates.lockUntil = Date.now() + LOCK_MINUTES * 60 * 1000;
@@ -521,6 +543,11 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
     }
 
     await setDoc(userRef, updates, { merge: true });
+  } finally {
+    // ✅ Restore button to normal state
+    loginBtn.disabled = false;
+    loginBtn.innerHTML = "Login";
+    loginBtn.style.opacity = "1";
   }
 });
 
@@ -561,6 +588,5 @@ document.getElementById("forgot-btn").addEventListener("click", async () => {
   }
 });
 </script>
-
 </body>
 </html>
