@@ -432,7 +432,7 @@
         throw new Error("Similar username already exists: " + usernameCandidate.val);
       }
 
-      // ✅ Create user
+
 // ✅ Create user (Auth)
 const userCredential = await createUserWithEmailAndPassword(auth, normEmail, password);
 const user = userCredential.user;
@@ -453,7 +453,11 @@ let userDocData = {
   referralCode: finalReferral,
   referredBy: referral !== "" ? referral : null,
   walletBalance: 0,
+  lifetimeReferralIncome: 0,
   totalInvested: 0,
+  upline1: null,
+  upline2: null,
+  upline3: null,
   createdAt: new Date().toISOString()
 };
 
