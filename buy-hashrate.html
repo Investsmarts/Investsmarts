@@ -817,6 +817,9 @@ window.openModal = function (name, cost, days, profit) {
         nextPayout: next,
         endTime: end,
       });
+         
+        console.log("⏰ Next profit countdown starting...", next);
+        startCountdown(next);
 
       startCountdown(next);
       document.getElementById("walletBalance").textContent = `$${walletBalance.toFixed(2)}`;
@@ -841,6 +844,7 @@ window.closeModal = function () {
 
 // 🧾 Active Plan Display
 function showActivePlan(plan) {
+  
   // 🟢 Active plan info box show karo
   const box = document.getElementById("activePlanBox");
   if (!box) return; // agar box nahi bana to skip
@@ -987,7 +991,7 @@ async function distributeLevelIncome(userData, totalShare) {
 
 
    // ⏳ Countdown
-// ⏳ Countdown Function — Live Updating Every Second (Fixed)
+// ✅ FINAL LIVE COUNTDOWN (TRUSTDOLLAR FIXED VERSION)
 function startCountdown(nextTime) {
   const countdownBox = document.getElementById("countdownBox");
   const timerEl = document.getElementById("countdownTimer");
@@ -1000,10 +1004,24 @@ function startCountdown(nextTime) {
   countdownBox.style.display = "flex";
   document.getElementById("progressRing").style.display = "block";
 
-  // ✅ Always make sure nextTime is a valid timestamp
-  const target = new Date(nextTime).getTime();
-  const totalMs = 24 * 60 * 60 * 1000;
+  // 🕒 Ensure nextTime is valid Date object
+  let target;
+  if (nextTime?.seconds) {
+    target = new Date(nextTime.seconds * 1000);
+  } else if (nextTime?.toDate) {
+    target = nextTime.toDate();
+  } else {
+    target = new Date(nextTime);
+  }
 
+  // 🧠 If somehow invalid or already passed, reset 24h timer
+  if (isNaN(target.getTime()) || target.getTime() <= Date.now()) {
+    target = new Date(Date.now() + 86400000);
+  }
+
+  console.log("🕒 Countdown started for:", target.toLocaleString()); // debug log
+
+  const totalMs = 24 * 60 * 60 * 1000;
   if (window.activeCountdownTimer) clearInterval(window.activeCountdownTimer);
 
   window.activeCountdownTimer = setInterval(() => {
@@ -1020,6 +1038,7 @@ function startCountdown(nextTime) {
       timerEl.classList.add("ready");
       ring.style.strokeDashoffset = 0;
       ringTime.textContent = "✔";
+      console.log("✅ Countdown complete!");
       return;
     }
 
@@ -1040,8 +1059,12 @@ function startCountdown(nextTime) {
     const offset = 220 - 220 * progress;
     ring.style.strokeDashoffset = offset;
     ringTime.textContent = `${hours}h`;
+
+    // debug
+    // console.log("⏳ Remaining:", remaining);
   }, 1000);
 }
+
 
 
 // 💬 Popup Alerts
