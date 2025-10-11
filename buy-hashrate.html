@@ -371,9 +371,11 @@ body {
   stroke: #16a34a;
   stroke-linecap: round;
   stroke-dasharray: 220;
-  stroke-dashoffset: 0;
+  stroke-dashoffset: 220; /* ✅ fixed default position */
   transition: stroke-dashoffset 1s linear;
 }
+
+
 
 .ring-time {
   position: absolute;
@@ -640,23 +642,9 @@ if (!res.empty) {
   const plansContainer = document.getElementById("activePlanBox");
   plansContainer.innerHTML = ""; // Clear old
 
-// 🟢 Hide progress ring & countdown initially (Safe check)
-const ringEl = document.getElementById("progressRing");
-const countEl = document.getElementById("countdownBox");
-
-if (ringEl && countEl) {
-  ringEl.style.display = "none";
-  countEl.style.display = "none";
-} else {
-  // Agar page abhi load nahi hua to wait karke run karega
-  window.addEventListener("DOMContentLoaded", () => {
-    const r2 = document.getElementById("progressRing");
-    const c2 = document.getElementById("countdownBox");
-    if (r2) r2.style.display = "none";
-    if (c2) c2.style.display = "none";
-  });
-}
-
+    // 🟢 Hide progress ring & countdown initially
+  document.getElementById("progressRing").style.display = "none";
+  document.getElementById("countdownBox").style.display = "none";
 
 
   res.forEach(docSnap => {
@@ -695,20 +683,27 @@ if (ringEl && countEl) {
     // 🔄 Disable button for running plan only
     disableSpecificPlan(plan.planName, plan.status === "running");
 
-    // 🟢 Safe show progress ring & countdown
-    const ringEl = document.getElementById("progressRing");
-    const countEl = document.getElementById("countdownBox");
-
-    if (ringEl) ringEl.style.display = "block";
-    if (countEl) countEl.style.display = "flex";
+    document.getElementById("progressRing").style.display = "block";
+    document.getElementById("countdownBox").style.display = "flex";
 
 
     // ⏰ Countdown start for active plan
     if (plan.status === "running") {
-      checkAndAddProfit(docSnap.ref, plan, user.uid);
-      const nextTime = plan.nextPayout?.toDate ? plan.nextPayout.toDate() : new Date(plan.nextPayout);
-      startCountdown(nextTime);
-    }
+  checkAndAddProfit(docSnap.ref, plan, user.uid);
+
+  // ✅ Safe way to get next payout time (supports Firestore Timestamp, string, or number)
+  let nextTime;
+  if (plan.nextPayout?.toDate) {
+    nextTime = plan.nextPayout.toDate();
+  } else if (typeof plan.nextPayout === "string" || typeof plan.nextPayout === "number") {
+    nextTime = new Date(plan.nextPayout);
+  } else {
+    nextTime = new Date(); // fallback (avoid crash)
+  }
+
+  startCountdown(nextTime);
+}
+
   });
 
   // Make sure Active Plan box visible
