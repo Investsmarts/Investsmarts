@@ -389,6 +389,30 @@ body {
   to {opacity: 1; transform: translateY(0);}
 }
 
+.plan .buy-btn:disabled {
+  background: linear-gradient(135deg, #9ca3af, #d1d5db);
+  color: #1f2937;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+#activePlanBox {
+  display: grid;
+  gap: 12px;
+}
+
+.status-badge {
+  display: inline-block;
+  background: #16a34a;
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+.status-badge.completed {
+  background: #dc2626;
+}
 
 </style>
 </head>
@@ -401,6 +425,7 @@ body {
     <div><strong>Wallet:</strong> <span id="walletBalance">$0.00</span></div>
     <div><strong>Locked:</strong> <span id="lockedBalance">$0.00</span></div>
   </div>
+<span class="status-badge">🔥 Active</span>
 
   <!-- 💎 Active Plan Box -->
   <div id="activePlanBox" style="display:none; margin-top:15px;">
@@ -552,18 +577,63 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   // 🔍 Active running plan check
-  const q = query(collection(db, "buyhashrate"),
-    where("userId", "==", user.uid),
-    where("status", "==", "running")
-  );
-  const res = await getDocs(q);
-  if (!res.empty) {
-    const plan = res.docs[0].data();
-    checkAndAddProfit(res.docs[0].ref, plan, user.uid);
-    showActivePlan(plan);
-    const nextTime = plan.nextPayout?.toDate ? plan.nextPayout.toDate() : new Date(plan.nextPayout);
-    startCountdown(nextTime);
-  }
+// 🔍 Fetch all plans (active + completed)
+const q = query(collection(db, "buyhashrate"), where("userId", "==", user.uid));
+const res = await getDocs(q);
+
+if (!res.empty) {
+  const plansContainer = document.getElementById("activePlanBox");
+  plansContainer.innerHTML = ""; // Clear old
+
+  res.forEach(docSnap => {
+    const plan = docSnap.data();
+    const planCard = document.createElement("div");
+    const next = plan.nextPayout?.toDate ? plan.nextPayout.toDate() : new Date(plan.nextPayout);
+    const end = plan.endTime?.toDate ? plan.endTime.toDate() : new Date(plan.endTime);
+
+    // 🧾 Card Design
+    planCard.className = "plan-summary";
+    planCard.style.background = plan.status === "running" ? "#dcfce7" : "#fef2f2";
+    planCard.style.border = plan.status === "running" ? "1.5px solid #86efac" : "1.5px solid #fecaca";
+    planCard.innerHTML = `
+      <div class="summary-row">
+        <span>Plan:</span>
+        <strong>${plan.planName}</strong>
+      </div>
+      <div class="summary-row">
+        <span>Daily Profit:</span>
+        <strong>${plan.dailyProfitPercent}%</strong>
+      </div>
+      <div class="summary-row">
+        <span>Status:</span>
+        <strong style="color:${plan.status === "running" ? "#16a34a" : "#dc2626"}">
+          ${plan.status.charAt(0).toUpperCase() + plan.status.slice(1)}
+        </strong>
+      </div>
+      <div class="summary-row">
+        <span>End Date:</span>
+        <strong>${end.toLocaleDateString()}</strong>
+      </div>
+    `;
+
+    plansContainer.appendChild(planCard);
+
+    // 🔄 Disable button for running plan only
+    disableSpecificPlan(plan.planName, plan.status === "running");
+
+    // ⏰ Countdown start for active plan
+    if (plan.status === "running") {
+      checkAndAddProfit(docSnap.ref, plan, user.uid);
+      const nextTime = plan.nextPayout?.toDate ? plan.nextPayout.toDate() : new Date(plan.nextPayout);
+      startCountdown(nextTime);
+    }
+  });
+
+  // Make sure Active Plan box visible
+  plansContainer.style.display = "block";
+}
+
+
 });
 
 // 🎯 Auto Bind Buttons (No manual onclick)
@@ -692,18 +762,23 @@ async function checkAndAddProfit(ref, plan, uid) {
     document.getElementById("earnedProfit").textContent = newProfit.toFixed(2);
   }
   if (now > end) {
-    const uRef = doc(db, "users", uid);
-    const userSnap = await getDoc(uRef);
-    if (userSnap.exists()) {
-      const u = userSnap.data();
-      const newWallet = (u.walletBalance || 0) + plan.planCost + (plan.earnedProfit || 0);
-      const newLocked = (u.lockedBalance || 0) - plan.planCost;
-      await updateDoc(uRef, { walletBalance: newWallet, lockedBalance: newLocked });
-      await updateDoc(ref, { status: "completed" });
-      showCenterAlert("🎉 Plan completed! Funds released to wallet!");
+  const uRef = doc(db, "users", uid);
+  const userSnap = await getDoc(uRef);
+  if (userSnap.exists()) {
+    const u = userSnap.data();
+    const newWallet = (u.walletBalance || 0) + plan.planCost + (plan.earnedProfit || 0);
+    const newLocked = (u.lockedBalance || 0) - plan.planCost;
 
-    }
+    await updateDoc(uRef, { walletBalance: newWallet, lockedBalance: newLocked });
+    await updateDoc(ref, { status: "completed" });
+
+    // 💡 Enable that specific plan again
+    disableSpecificPlan(plan.planName, false);
+
+    showCenterAlert("🎉 Plan completed! Funds released to wallet!");
   }
+}
+
 }
 
 // 💸 Manual Profit Collect
@@ -884,6 +959,25 @@ function showBalanceAlert() {
     setTimeout(() => (alertBox.style.display = "none"), 300);
   }, 3000);
 }
+// desble butun for palne kharrrdne ke bad 
+function disableSpecificPlan(planName, state) {
+  const plans = document.querySelectorAll(".plan");
+  plans.forEach(p => {
+    const name = p.dataset.name;
+    const btn = p.querySelector(".buy-btn");
+    if (name === planName) {
+      btn.disabled = state;
+      btn.style.opacity = state ? "0.5" : "1";
+      btn.style.cursor = state ? "not-allowed" : "pointer";
+      if (state) {
+        btn.textContent = "Active Plan";
+      } else {
+        btn.textContent = "Buy";
+      }
+    }
+  });
+}
+
 </script>
 
 </body>
