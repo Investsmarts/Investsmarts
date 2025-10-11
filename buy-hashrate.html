@@ -593,6 +593,8 @@ body {
 </body>
 
 <script type="module">
+window.addEventListener("DOMContentLoaded", () => {
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
 import {
   getFirestore, doc, getDoc, updateDoc, addDoc,
@@ -1063,3 +1065,4 @@ function disableSpecificPlan(planName, state) {
 
 </body>
 </html>
+
