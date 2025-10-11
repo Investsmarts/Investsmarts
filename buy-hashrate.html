@@ -342,6 +342,49 @@ body {
   color: #16a34a;
   letter-spacing: 0.5px;
 }
+/* 🌀 Circular Countdown Ring */
+.progress-ring {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 10px auto;
+}
+
+.ring {
+  transform: rotate(-90deg);
+}
+
+.ring-bg,
+.ring-fill {
+  fill: none;
+  stroke-width: 6;
+  cx: 40;
+  cy: 40;
+  r: 35;
+}
+
+.ring-bg {
+  stroke: #d1fae5;
+}
+
+.ring-fill {
+  stroke: #16a34a;
+  stroke-linecap: round;
+  stroke-dasharray: 220;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear;
+}
+
+.ring-time {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  font-weight: 600;
+  color: #065f46;
+}
+
 
 </style>
 </head>
@@ -372,6 +415,14 @@ body {
       </div>
     </div>
   </div>
+
+<div class="progress-ring">
+  <svg class="ring" width="80" height="80">
+    <circle class="ring-bg" cx="40" cy="40" r="35"></circle>
+    <circle class="ring-fill" cx="40" cy="40" r="35"></circle>
+  </svg>
+  <div class="ring-time" id="ringTime">24h</div>
+</div>
 
   <div style="text-align:center; margin-bottom:20px;">
     <button id="collectProfitBtn" class="btn" style="max-width:250px;">Collect Today’s Profit</button>
@@ -730,27 +781,49 @@ async function distributeLevelIncome(userData, totalShare) {
 
 
    // ⏳ Countdown
-  function startCountdown(nextTime) {
+function startCountdown(nextTime) {
   const countdownEl = document.getElementById("activeCountdown");
-  if (!countdownEl) return; // agar element nahi mila to exit
+  const ring = document.querySelector(".ring-fill");
+  const ringTime = document.getElementById("ringTime");
 
-  const timer = setInterval(() => {
+  if (!countdownEl || !ring) return;
+
+  const totalMs = 24 * 60 * 60 * 1000; // 24h cycle
+  if (window.activeCountdownTimer) clearInterval(window.activeCountdownTimer);
+
+  window.activeCountdownTimer = setInterval(() => {
     const now = new Date().getTime();
     const distance = nextTime - now;
 
     if (distance <= 0) {
-      clearInterval(timer);
+      clearInterval(window.activeCountdownTimer);
       countdownEl.textContent = "Ready to collect!";
+      countdownEl.style.color = "#dc2626";
+      ring.style.strokeDashoffset = 0;
+      ringTime.textContent = "✔";
       return;
     }
 
-    // ⏱️ Time calculations
     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    countdownEl.textContent =
-      `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    countdownEl.textContent = `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
+    // 🌀 Circular progress update
+    const progress = 1 - distance / totalMs;
+    const offset = 220 - 220 * progress;
+    ring.style.strokeDashoffset = offset;
+
+    // 🔢 Text inside circle
+    ringTime.textContent = `${hours}h`;
+
+    // 🎞️ Trigger fade animation for text
+    countdownEl.style.animation = "none";
+    void countdownEl.offsetWidth;
+    countdownEl.style.animation = "fadeSlide 0.8s ease";
   }, 1000);
 }
 
