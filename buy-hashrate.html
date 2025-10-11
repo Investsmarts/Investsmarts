@@ -593,8 +593,6 @@ body {
 </body>
 
 <script type="module">
-
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
 import {
   getFirestore, doc, getDoc, updateDoc, addDoc,
@@ -642,9 +640,23 @@ if (!res.empty) {
   const plansContainer = document.getElementById("activePlanBox");
   plansContainer.innerHTML = ""; // Clear old
 
-    // 🟢 Hide progress ring & countdown initially
-  document.getElementById("progressRing").style.display = "none";
-  document.getElementById("countdownBox").style.display = "none";
+// 🟢 Hide progress ring & countdown initially (Safe check)
+const ringEl = document.getElementById("progressRing");
+const countEl = document.getElementById("countdownBox");
+
+if (ringEl && countEl) {
+  ringEl.style.display = "none";
+  countEl.style.display = "none";
+} else {
+  // Agar page abhi load nahi hua to wait karke run karega
+  window.addEventListener("DOMContentLoaded", () => {
+    const r2 = document.getElementById("progressRing");
+    const c2 = document.getElementById("countdownBox");
+    if (r2) r2.style.display = "none";
+    if (c2) c2.style.display = "none";
+  });
+}
+
 
 
   res.forEach(docSnap => {
@@ -1061,11 +1073,7 @@ function disableSpecificPlan(planName, state) {
   });
 }
 
-
 </script>
 
 </body>
 </html>
-
-
-
