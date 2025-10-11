@@ -414,6 +414,52 @@ body {
   background: #dc2626;
 }
 
+/* 🕒 Active Plan Countdown Box */
+.countdown-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #ecfdf5, #ffffff);
+  border: 1.5px solid #bbf7d0;
+  border-radius: 14px;
+  padding: 18px;
+  margin-top: 10px;
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.15);
+  transition: all 0.4s ease;
+}
+
+.countdown-box h4 {
+  color: #065f46;
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.countdown-timer {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #16a34a;
+  background: #dcfce7;
+  padding: 8px 20px;
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(22,163,74,0.25);
+  transition: all 0.3s ease;
+}
+
+.countdown-timer.ready {
+  background: #fee2e2;
+  color: #dc2626;
+  box-shadow: inset 0 0 5px rgba(220,38,38,0.25);
+  animation: pulseReady 1.5s infinite;
+}
+
+@keyframes pulseReady {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.8; }
+}
+
 </style>
 </head>
 
@@ -425,7 +471,7 @@ body {
     <div><strong>Wallet:</strong> <span id="walletBalance">$0.00</span></div>
     <div><strong>Locked:</strong> <span id="lockedBalance">$0.00</span></div>
   </div>
-<span class="status-badge">🔥 Active</span>
+  <span class="status-badge">🔥 Active</span>
 
   <!-- 💎 Active Plan Box -->
   <div id="activePlanBox" style="display:none; margin-top:15px;">
@@ -443,15 +489,26 @@ body {
         <strong id="activeCountdown">00:00:00</strong>
       </div>
     </div>
+
+    <!-- 🕒 Stylish Countdown Box -->
+    <div class="countdown-box" id="countdownBox" style="display:none;">
+      <h4>⏳ Next Profit Countdown</h4>
+      <div id="countdownTimer" class="countdown-timer">
+        <span id="cdHours">24</span>h :
+        <span id="cdMinutes">00</span>m :
+        <span id="cdSeconds">00</span>s
+      </div>
+    </div>
   </div>
 
-<div class="progress-ring">
-  <svg class="ring" width="80" height="80">
-    <circle class="ring-bg" cx="40" cy="40" r="35"></circle>
-    <circle class="ring-fill" cx="40" cy="40" r="35"></circle>
-  </svg>
-  <div class="ring-time" id="ringTime">24h</div>
-</div>
+  <!-- 🌀 Circular Progress Ring -->
+  <div class="progress-ring" id="progressRing" style="display:none;">
+   <svg class="ring" width="80" height="80">
+      <circle class="ring-bg" cx="40" cy="40" r="35"></circle>
+      <circle class="ring-fill" cx="40" cy="40" r="35"></circle>
+    </svg>
+    <div class="ring-time" id="ringTime">24h</div>
+  </div>
 
   <div style="text-align:center; margin-bottom:20px;">
     <button id="collectProfitBtn" class="btn" style="max-width:250px;">Collect Today’s Profit</button>
@@ -459,83 +516,81 @@ body {
 
   <h2 style="color:#16a34a; text-align:center;">💠 Cloud Mining Plans</h2>
 
-<div class="plans">
-
-  <div class="plan" data-name="Mini Plan" data-cost="500" data-days="30" data-profit="2.1">
-    <h3>Mini Plan</h3>
-    <p>$500 / 30 days</p>
-    <p>2.1% Daily</p>
-    <button class="btn buy-btn">Buy</button>
-  </div>
-
-  <div class="plan" data-name="Starter Plan" data-cost="1500" data-days="45" data-profit="2.5">
-    <h3>Starter Plan</h3>
-    <p>$1500 / 45 days</p>
-    <p>2.5% Daily</p>
-    <button class="btn buy-btn">Buy</button>
-  </div>
-
-  <div class="plan" data-name="Advanced Plan" data-cost="3000" data-days="90" data-profit="3">
-    <h3>Advanced Plan</h3>
-    <p>$3000 / 90 days</p>
-    <p>3% Daily</p>
-    <button class="btn buy-btn">Buy</button>
-  </div>
-
-  <div class="plan" data-name="Premium Plan" data-cost="8000" data-days="160" data-profit="5">
-    <h3>Premium Plan</h3>
-    <p>$8000 / 160 days</p>
-    <p>5% Daily</p>
-    <button class="btn buy-btn">Buy</button>
-  </div>
-
-</div>
-
-<!-- ⚡ Center Alert Message -->
-<div id="centerAlert" class="center-alert"></div>
-
-
-<!-- 💎 Centered Modal -->
-<div class="modal" id="planModal">
-  <div class="modal-card">
-    <div class="modal-head">
-      <h2 id="mTitle">BUY PLAN</h2>
-      <button class="close-btn" onclick="closeModal()">×</button>
+  <div class="plans">
+    <div class="plan" data-name="Mini Plan" data-cost="500" data-days="30" data-profit="2.1">
+      <h3>Mini Plan</h3>
+      <p>$500 / 30 days</p>
+      <p>2.1% Daily</p>
+      <button class="btn buy-btn">Buy</button>
     </div>
-  <div class="modal-body">
-  <div class="plan-summary">
-    <div class="summary-row">
-      <span> Duration:</span>
-      <strong id="mDays">45 days</strong>
+
+    <div class="plan" data-name="Starter Plan" data-cost="1500" data-days="45" data-profit="2.5">
+      <h3>Starter Plan</h3>
+      <p>$1500 / 45 days</p>
+      <p>2.5% Daily</p>
+      <button class="btn buy-btn">Buy</button>
     </div>
-    <div class="summary-row">
-      <span> Daily Profit:</span>
-      <strong id="mProfit">2.5%</strong>
+
+    <div class="plan" data-name="Advanced Plan" data-cost="3000" data-days="90" data-profit="3">
+      <h3>Advanced Plan</h3>
+      <p>$3000 / 90 days</p>
+      <p>3% Daily</p>
+      <button class="btn buy-btn">Buy</button>
     </div>
-    <div class="summary-row">
-      <span> Plan Cost:</span>
-      <strong id="mCost">$500</strong>
-    </div>
-    <div class="summary-row wallet-info">
-      <span> Wallet:</span>
-      <strong id="mWallet">$0.00</strong>
+
+    <div class="plan" data-name="Premium Plan" data-cost="8000" data-days="160" data-profit="5">
+      <h3>Premium Plan</h3>
+      <p>$8000 / 160 days</p>
+      <p>5% Daily</p>
+      <button class="btn buy-btn">Buy</button>
     </div>
   </div>
 
-  <!-- ⚠️ Smart Animated Alert -->
-<div id="mError" class="balance-alert">
-  <span class="alert-icon">⚠️</span>
-  <span class="alert-text">Insufficient Balance!</span>
-</div>
+  <!-- ⚡ Center Alert Message -->
+  <div id="centerAlert" class="center-alert"></div>
 
-  <div class="modal-actions">
-    <button class="confirm-btn" id="mConfirm">Confirm Purchase</button>
-    <button class="cancel-btn" onclick="closeModal()">Cancel</button>
-  </div>
-</div>
+  <!-- 💎 Centered Modal -->
+  <div class="modal" id="planModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 id="mTitle">BUY PLAN</h2>
+        <button class="close-btn" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="plan-summary">
+          <div class="summary-row">
+            <span> Duration:</span>
+            <strong id="mDays">45 days</strong>
+          </div>
+          <div class="summary-row">
+            <span> Daily Profit:</span>
+            <strong id="mProfit">2.5%</strong>
+          </div>
+          <div class="summary-row">
+            <span> Plan Cost:</span>
+            <strong id="mCost">$500</strong>
+          </div>
+          <div class="summary-row wallet-info">
+            <span> Wallet:</span>
+            <strong id="mWallet">$0.00</strong>
+          </div>
+        </div>
 
+        <!-- ⚠️ Smart Animated Alert -->
+        <div id="mError" class="balance-alert">
+          <span class="alert-icon">⚠️</span>
+          <span class="alert-text">Insufficient Balance!</span>
+        </div>
+
+        <div class="modal-actions">
+          <button class="confirm-btn" id="mConfirm">Confirm Purchase</button>
+          <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+</body>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
@@ -585,6 +640,11 @@ if (!res.empty) {
   const plansContainer = document.getElementById("activePlanBox");
   plansContainer.innerHTML = ""; // Clear old
 
+    // 🟢 Hide progress ring & countdown initially
+  document.getElementById("progressRing").style.display = "none";
+  document.getElementById("countdownBox").style.display = "none";
+
+
   res.forEach(docSnap => {
     const plan = docSnap.data();
     const planCard = document.createElement("div");
@@ -620,6 +680,10 @@ if (!res.empty) {
 
     // 🔄 Disable button for running plan only
     disableSpecificPlan(plan.planName, plan.status === "running");
+
+    document.getElementById("progressRing").style.display = "block";
+    document.getElementById("countdownBox").style.display = "flex";
+
 
     // ⏰ Countdown start for active plan
     if (plan.status === "running") {
@@ -676,6 +740,19 @@ window.openModal = function (name, cost, days, profit) {
 
     const user = auth.currentUser;
     if (!user) return showCenterAlert(" Please login first!");
+
+  // 🚫 Check if user already has an active running plan
+  const activeQuery = query(
+    collection(db, "buyhashrate"),
+    where("userId", "==", user.uid),
+    where("status", "==", "running")
+  );
+  const activeSnap = await getDocs(activeQuery);
+  if (!activeSnap.empty) {
+    showCenterAlert("Your plan is running, please wait until it’s closed!");
+    closeModal();
+    return; // stop purchase
+  }
 
 
     const now = new Date();
@@ -882,13 +959,18 @@ async function distributeLevelIncome(userData, totalShare) {
 
    // ⏳ Countdown
 function startCountdown(nextTime) {
-  const countdownEl = document.getElementById("activeCountdown");
+  const countdownBox = document.getElementById("countdownBox");
+  const timerEl = document.getElementById("countdownTimer");
   const ring = document.querySelector(".ring-fill");
   const ringTime = document.getElementById("ringTime");
+  const label = document.getElementById("activeCountdown");
 
-  if (!countdownEl || !ring) return;
+  if (!timerEl || !ring) return;
 
-  const totalMs = 24 * 60 * 60 * 1000; // 24h cycle
+  countdownBox.style.display = "flex"; // show box
+  label.style.color = "#16a34a"; // reset label
+
+  const totalMs = 24 * 60 * 60 * 1000;
   if (window.activeCountdownTimer) clearInterval(window.activeCountdownTimer);
 
   window.activeCountdownTimer = setInterval(() => {
@@ -897,8 +979,11 @@ function startCountdown(nextTime) {
 
     if (distance <= 0) {
       clearInterval(window.activeCountdownTimer);
-      countdownEl.textContent = "Ready to collect!";
-      countdownEl.style.color = "#dc2626";
+      label.textContent = "Ready to Collect Profit";
+      label.style.color = "#dc2626";
+
+      timerEl.textContent = "READY";
+      timerEl.classList.add("ready");
       ring.style.strokeDashoffset = 0;
       ringTime.textContent = "✔";
       return;
@@ -908,22 +993,18 @@ function startCountdown(nextTime) {
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    countdownEl.textContent = `${hours.toString().padStart(2, "0")}:${minutes
+    const formatted = `${hours.toString().padStart(2, "0")}:${minutes
       .toString()
       .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 
-    // 🌀 Circular progress update
+    label.textContent = formatted;
+    timerEl.textContent = formatted;
+
+    // 🌀 Update circular ring progress
     const progress = 1 - distance / totalMs;
     const offset = 220 - 220 * progress;
     ring.style.strokeDashoffset = offset;
-
-    // 🔢 Text inside circle
     ringTime.textContent = `${hours}h`;
-
-    // 🎞️ Trigger fade animation for text
-    countdownEl.style.animation = "none";
-    void countdownEl.offsetWidth;
-    countdownEl.style.animation = "fadeSlide 0.8s ease";
   }, 1000);
 }
 
