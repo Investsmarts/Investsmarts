@@ -384,6 +384,10 @@ body {
   font-weight: 600;
   color: #065f46;
 }
+@keyframes fadeSlide {
+  from {opacity: 0; transform: translateY(-3px);}
+  to {opacity: 1; transform: translateY(0);}
+}
 
 
 </style>
@@ -430,29 +434,38 @@ body {
 
   <h2 style="color:#16a34a; text-align:center;">💠 Cloud Mining Plans</h2>
 
-  <div class="plans">
-    <div class="plan">
-      <h3>Starter Plan</h3>
-      <p>$500 / 45 days</p>
-      <p>2.5% Daily</p>
-      <button class="btn" onclick="openModal('Starter Plan',500,45,2.5)">Buy</button>
-    </div>
+<div class="plans">
 
-    <div class="plan">
-      <h3>Advanced Plan</h3>
-      <p>$1500 / 90 days</p>
-      <p>5% Daily</p>
-      <button class="btn" onclick="openModal('Advanced Plan',1500,90,5)">Buy</button>
-    </div>
-
-    <div class="plan">
-      <h3>Premium Plan</h3>
-      <p>$2000 / 160 days</p>
-      <p>10% Daily</p>
-      <button class="btn" onclick="openModal('Premium Plan',2000,160,10)">Buy</button>
-    </div>
+  <div class="plan" data-name="Mini Plan" data-cost="500" data-days="30" data-profit="2.1">
+    <h3>Mini Plan</h3>
+    <p>$500 / 30 days</p>
+    <p>2.1% Daily</p>
+    <button class="btn buy-btn">Buy</button>
   </div>
+
+  <div class="plan" data-name="Starter Plan" data-cost="1500" data-days="45" data-profit="2.5">
+    <h3>Starter Plan</h3>
+    <p>$1500 / 45 days</p>
+    <p>2.5% Daily</p>
+    <button class="btn buy-btn">Buy</button>
+  </div>
+
+  <div class="plan" data-name="Advanced Plan" data-cost="3000" data-days="90" data-profit="3">
+    <h3>Advanced Plan</h3>
+    <p>$3000 / 90 days</p>
+    <p>3% Daily</p>
+    <button class="btn buy-btn">Buy</button>
+  </div>
+
+  <div class="plan" data-name="Premium Plan" data-cost="8000" data-days="160" data-profit="5">
+    <h3>Premium Plan</h3>
+    <p>$8000 / 160 days</p>
+    <p>5% Daily</p>
+    <button class="btn buy-btn">Buy</button>
+  </div>
+
 </div>
+
 <!-- ⚡ Center Alert Message -->
 <div id="centerAlert" class="center-alert"></div>
 
@@ -551,6 +564,18 @@ onAuthStateChanged(auth, async (user) => {
     const nextTime = plan.nextPayout?.toDate ? plan.nextPayout.toDate() : new Date(plan.nextPayout);
     startCountdown(nextTime);
   }
+});
+
+// 🎯 Auto Bind Buttons (No manual onclick)
+document.querySelectorAll(".buy-btn").forEach(btn => {
+  btn.addEventListener("click", (e) => {
+    const planDiv = e.target.closest(".plan");
+    const name = planDiv.dataset.name;
+    const cost = parseFloat(planDiv.dataset.cost);
+    const days = parseInt(planDiv.dataset.days);
+    const profit = parseFloat(planDiv.dataset.profit);
+    openModal(name, cost, days, profit);
+  });
 });
 
 // 🟢 OPEN MODAL — smooth fade-in
