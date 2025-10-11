@@ -642,9 +642,23 @@ if (!res.empty) {
   const plansContainer = document.getElementById("activePlanBox");
   plansContainer.innerHTML = ""; // Clear old
 
-    // 🟢 Hide progress ring & countdown initially
-  document.getElementById("progressRing").style.display = "none";
-  document.getElementById("countdownBox").style.display = "none";
+    // 🟢 Safe hide progress ring & countdown initially
+const ringSafe = document.getElementById("progressRing");
+const countSafe = document.getElementById("countdownBox");
+
+if (ringSafe) ringSafe.style.display = "none";
+if (countSafe) countSafe.style.display = "none";
+
+// Agar abhi tak element load nahi hua, wait karo
+if (!ringSafe || !countSafe) {
+  window.addEventListener("DOMContentLoaded", () => {
+    const r2 = document.getElementById("progressRing");
+    const c2 = document.getElementById("countdownBox");
+    if (r2) r2.style.display = "none";
+    if (c2) c2.style.display = "none";
+  });
+}
+
 
 
   res.forEach(docSnap => {
@@ -683,26 +697,28 @@ if (!res.empty) {
     // 🔄 Disable button for running plan only
     disableSpecificPlan(plan.planName, plan.status === "running");
 
-    document.getElementById("progressRing").style.display = "block";
-    document.getElementById("countdownBox").style.display = "flex";
-
 
     // ⏰ Countdown start for active plan
-    if (plan.status === "running") {
+if (plan.status === "running") {
   checkAndAddProfit(docSnap.ref, plan, user.uid);
 
-  // ✅ Safe way to get next payout time (supports Firestore Timestamp, string, or number)
+  const ringEl = document.getElementById("progressRing");
+  const countEl = document.getElementById("countdownBox");
+  if (ringEl) ringEl.style.display = "block";
+  if (countEl) countEl.style.display = "flex";
+
   let nextTime;
   if (plan.nextPayout?.toDate) {
     nextTime = plan.nextPayout.toDate();
   } else if (typeof plan.nextPayout === "string" || typeof plan.nextPayout === "number") {
     nextTime = new Date(plan.nextPayout);
   } else {
-    nextTime = new Date(); // fallback (avoid crash)
+    nextTime = new Date();
   }
 
   startCountdown(nextTime);
 }
+
 
   });
 
