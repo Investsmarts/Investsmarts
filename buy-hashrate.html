@@ -337,6 +337,11 @@ body {
   50% { transform: scale(1.2); opacity: 0.7; }
 }
 
+#activeCountdown {
+  font-weight: 700;
+  color: #16a34a;
+  letter-spacing: 0.5px;
+}
 
 </style>
 </head>
@@ -348,6 +353,24 @@ body {
   <div class="wallet">
     <div><strong>Wallet:</strong> <span id="walletBalance">$0.00</span></div>
     <div><strong>Locked:</strong> <span id="lockedBalance">$0.00</span></div>
+  </div>
+
+  <!-- 💎 Active Plan Box -->
+  <div id="activePlanBox" style="display:none; margin-top:15px;">
+    <div class="plan-summary" style="background:#dcfce7; border:1.5px solid #86efac;">
+      <div class="summary-row">
+        <span>Active Plan:</span>
+        <strong id="activePlanName">—</strong>
+      </div>
+      <div class="summary-row">
+        <span>Daily Profit:</span>
+        <strong id="activePlanProfit">—</strong>
+      </div>
+      <div class="summary-row">
+        <span>Next Profit In:</span>
+        <strong id="activeCountdown">00:00:00</strong>
+      </div>
+    </div>
   </div>
 
   <div style="text-align:center; margin-bottom:20px;">
@@ -566,12 +589,18 @@ window.closeModal = function () {
 
 // 🧾 Active Plan Display
 function showActivePlan(plan) {
-  const section = document.getElementById("activeMining");
-  if (section) section.style.display = "block";
-  if (document.getElementById("planName")) document.getElementById("planName").textContent = plan.planName;
-  if (document.getElementById("dailyPercent")) document.getElementById("dailyPercent").textContent = plan.dailyProfitPercent;
-  if (document.getElementById("earnedProfit")) document.getElementById("earnedProfit").textContent = plan.earnedProfit.toFixed(2);
-  startCountdown(new Date(plan.nextPayout));
+  // 🟢 Active plan info box show karo
+  const box = document.getElementById("activePlanBox");
+  if (!box) return; // agar box nahi bana to skip
+  box.style.display = "block";
+
+  // 🧾 Set values
+  document.getElementById("activePlanName").textContent = plan.planName;
+  document.getElementById("activePlanProfit").textContent = plan.dailyProfitPercent + "%";
+
+  // ⏰ Countdown start
+  const nextTime = plan.nextPayout.toDate ? plan.nextPayout.toDate() : new Date(plan.nextPayout);
+  startCountdown(nextTime);
 }
 
 // 💰 Profit Calculation
@@ -604,56 +633,124 @@ async function checkAndAddProfit(ref, plan, uid) {
 // 💸 Manual Profit Collect
 document.getElementById("collectProfitBtn").addEventListener("click", async () => {
   const user = auth.currentUser;
-  if (!user) return showPopup("Please login first.", "error");
+  if (!user) return showCenterAlert("🚫 Please login first!");
 
-  const q = query(collection(db, "buyhashrate"),
+  // 🔍 Check active plan
+  const q = query(
+    collection(db, "buyhashrate"),
     where("userId", "==", user.uid),
     where("status", "==", "running")
   );
+
   const res = await getDocs(q);
-  if (res.empty) return showCenterAlert(" No active plan found.");
+  if (res.empty) return showCenterAlert("🚫 No active plan found.");
 
   const docRef = res.docs[0].ref;
   const plan = res.docs[0].data();
   const now = new Date();
   const next = plan.nextPayout.toDate ? plan.nextPayout.toDate() : new Date(plan.nextPayout);
 
+  // ⏳ If not yet time
   if (now < next) {
     const remaining = Math.ceil((next - now) / (1000 * 60 * 60));
-    return showCenterAlert(` You can collect profit after ${remaining} hours.`);
-
+    return showCenterAlert(`⏳ You can collect profit after ${remaining} hours.`);
   }
 
+  // 💰 Calculate daily profit
   const dailyProfit = (plan.planCost * plan.dailyProfitPercent) / 100;
   const newProfit = (plan.earnedProfit || 0) + dailyProfit;
   const newNext = new Date(now.getTime() + 86400000);
 
+  // 🕒 Update next payout & earned profit
   await updateDoc(docRef, { earnedProfit: newProfit, nextPayout: newNext });
 
+  // 💸 Split profit: 70% user, 30% uplines
+  const userShare = dailyProfit * 0.7;
+  const uplineShare = dailyProfit * 0.3;
+
+  // 👤 Get user document
   const userRef = doc(db, "users", user.uid);
   const userSnap = await getDoc(userRef);
   const userData = userSnap.data();
-  const updatedWallet = (userData.walletBalance || 0) + dailyProfit;
+
+  // 🧾 Update user's wallet (only 70%)
+  const updatedWallet = (userData.walletBalance || 0) + userShare;
   await updateDoc(userRef, { walletBalance: updatedWallet });
 
-  await distributeLevelIncome(user.uid, dailyProfit);
+  // 🧩 Distribute 30% to uplines
+  await distributeLevelIncome(userData, uplineShare);
 
+  // 🧠 Update UI
   document.getElementById("earnedProfit").textContent = newProfit.toFixed(2);
   document.getElementById("walletBalance").textContent = `$${updatedWallet.toFixed(2)}`;
-  showCenterAlert(`✅ $${dailyProfit.toFixed(2)} profit added to your wallet!`);
 
+  // ✅ Success alert
+  showCenterAlert(`✅ $${userShare.toFixed(2)} profit added to your wallet! (30% shared with uplines)`);
 });
 
-// ⏳ Countdown
-function startCountdown(nextTime) {
-  const totalTime = 24 * 60 * 60 * 1000;
+// 🧮 Level 3 Income Distribution (30% of user profit)
+async function distributeLevelIncome(userData, totalShare) {
+  try {
+    const levelPercents = [17, 8, 5]; // 30% total
+    const uplines = [userData.upline1, userData.upline2, userData.upline3];
+
+    for (let i = 0; i < uplines.length; i++) {
+      const uplineId = uplines[i];
+      if (!uplineId) continue;
+
+      const refRef = doc(db, "users", uplineId);
+      const refSnap = await getDoc(refRef);
+      if (!refSnap.exists()) continue;
+
+      const refData = refSnap.data();
+      const commission = (totalShare * levelPercents[i]) / 30;
+
+      // 🔥 Update all balances
+      const newWallet = (refData.walletBalance || 0) + commission;
+      const newReferralLifetime = (refData.lifetimeReferralIncome || 0) + commission;
+
+      await updateDoc(refRef, {
+        walletBalance: newWallet,
+        lifetimeReferralIncome: newReferralLifetime,
+      });
+
+      // 💾 Record in history
+      await addDoc(collection(db, "levelIncomeHistory"), {
+        referrerId: uplineId,
+        fromUser: userData.username || userData.name || "Unknown",
+        level: i + 1,
+        amount: commission,
+        createdAt: serverTimestamp(),
+      });
+    }
+  } catch (err) {
+    console.error("Level income distribution error:", err);
+  }
+}
+
+
+   // ⏳ Countdown
+  function startCountdown(nextTime) {
+  const countdownEl = document.getElementById("activeCountdown");
+  if (!countdownEl) return; // agar element nahi mila to exit
+
   const timer = setInterval(() => {
     const now = new Date().getTime();
-    const dist = nextTime - now;
-    if (dist <= 0) {
+    const distance = nextTime - now;
+
+    if (distance <= 0) {
       clearInterval(timer);
+      countdownEl.textContent = "Ready to collect!";
       return;
     }
+
+    // ⏱️ Time calculations
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    countdownEl.textContent =
+      `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   }, 1000);
 }
 
