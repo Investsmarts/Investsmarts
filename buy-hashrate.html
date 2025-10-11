@@ -987,6 +987,7 @@ async function distributeLevelIncome(userData, totalShare) {
 
 
    // ⏳ Countdown
+// ⏳ Countdown Function — Live Updating Every Second (Fixed)
 function startCountdown(nextTime) {
   const countdownBox = document.getElementById("countdownBox");
   const timerEl = document.getElementById("countdownTimer");
@@ -994,19 +995,23 @@ function startCountdown(nextTime) {
   const ringTime = document.getElementById("ringTime");
   const label = document.getElementById("activeCountdown");
 
-  if (!timerEl || !ring) return;
+  if (!countdownBox || !timerEl || !ring) return;
 
-  countdownBox.style.display = "flex"; // show box
-  label.style.color = "#16a34a"; // reset label
+  countdownBox.style.display = "flex";
+  document.getElementById("progressRing").style.display = "block";
 
+  // ✅ Always make sure nextTime is a valid timestamp
+  const target = new Date(nextTime).getTime();
   const totalMs = 24 * 60 * 60 * 1000;
+
   if (window.activeCountdownTimer) clearInterval(window.activeCountdownTimer);
 
   window.activeCountdownTimer = setInterval(() => {
     const now = new Date().getTime();
-    const distance = nextTime - now;
+    const remaining = target - now;
 
-    if (distance <= 0) {
+    // 🟥 When time is up
+    if (remaining <= 0) {
       clearInterval(window.activeCountdownTimer);
       label.textContent = "Ready to Collect Profit";
       label.style.color = "#dc2626";
@@ -1018,9 +1023,10 @@ function startCountdown(nextTime) {
       return;
     }
 
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    // ⏱ Convert remaining time to h:m:s
+    const hours = Math.floor((remaining / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((remaining / (1000 * 60)) % 60);
+    const seconds = Math.floor((remaining / 1000) % 60);
 
     const formatted = `${hours.toString().padStart(2, "0")}:${minutes
       .toString()
@@ -1029,13 +1035,14 @@ function startCountdown(nextTime) {
     label.textContent = formatted;
     timerEl.textContent = formatted;
 
-    // 🌀 Update circular ring progress
-    const progress = 1 - distance / totalMs;
+    // 🌀 Animate progress ring
+    const progress = 1 - remaining / totalMs;
     const offset = 220 - 220 * progress;
     ring.style.strokeDashoffset = offset;
     ringTime.textContent = `${hours}h`;
   }, 1000);
 }
+
 
 // 💬 Popup Alerts
 function showPopup(message, type = "success") {
