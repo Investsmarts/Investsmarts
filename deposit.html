@@ -601,11 +601,18 @@ window.copyAddress = function() {
   showError("Address copied!");
 };
 
-window.markPaid = async function() {
+window.markPaid = async function () {
   const amountInput = document.getElementById("depositAmount");
   const amount = parseFloat(amountInput.value) || 0;
-  if (amount <= 0) { showError("Enter valid amount"); return; }
-  if (amount < 200) { showError("Minimum is $200"); amountInput.style.border = "2px solid red"; return; }
+  if (amount <= 0) {
+    showError("Enter valid amount");
+    return;
+  }
+  if (amount < 200) {
+    showError("Minimum is $200");
+    amountInput.style.border = "2px solid red";
+    return;
+  }
 
   amountInput.disabled = true;
   instructionEl.style.display = "block";
@@ -618,17 +625,19 @@ window.markPaid = async function() {
     const ref = doc(db, "users", currentUserId, "deposits", currentDepositId);
     await updateDoc(ref, { status: "I Have Paid", amount: amount });
 
-  // ✅ Trigger referral reward system (sirf first deposit ke liye)
-  
+    // ✅ Trigger status watcher (reward chalega jab admin complete karega)
+    watchDepositStatus(currentUserId, currentDepositId);
 
-  loadDepositHistory(currentUserId);
-
+    loadDepositHistory(currentUserId);
   }
 
   thankyouPopup.style.display = "block";
-  setTimeout(() => { thankyouPopup.style.display = "none"; }, 2000);
+  setTimeout(() => {
+    thankyouPopup.style.display = "none";
+  }, 2000);
 };
-// ✅ Referral Commission + Wallet Reward Logic
+
+// ✅ Referral Commission + Wallet Reward Logic (UID Based)
 async function giveReferralCommission(userId, depositAmount) {
   try {
     const userRef = doc(db, "users", userId);
@@ -636,7 +645,9 @@ async function giveReferralCommission(userId, depositAmount) {
     if (!userSnap.exists()) return;
 
     const userData = userSnap.data();
-const ref1 = userData.referredBy || null;
+
+    // ✅ Upline chain (UIDs)
+    const uplines = [userData.upline1, userData.upline2, userData.upline3].filter(Boolean);
 
     // ✅ Step 1: Check if this is user's FIRST successful deposit
     const depositsSnap = await getDocs(collection(db, "users", userId, "deposits"));
@@ -645,48 +656,54 @@ const ref1 = userData.referredBy || null;
       return s === "completed" || s === "success";
     });
 
-    if (successful.length > 1) return; // ❌ Not first deposit, skip reward
+    if (successful.length > 1) return; // ❌ Not first deposit
 
     // ✅ Step 2: 3-Level Commission
     const commissionRates = [0.03, 0.02, 0.01]; // 3%, 2%, 1%
-    let currentRef = ref1;
-    let level = 1;
 
-    while (currentRef && level <= 3) {
-      const refUserRef = doc(db, "users", currentRef);
+    for (let level = 0; level < uplines.length; level++) {
+      const refUID = uplines[level];
+      if (!refUID) continue;
+
+      const refUserRef = doc(db, "users", refUID);
       const refUserSnap = await getDoc(refUserRef);
-      if (!refUserSnap.exists()) break;
+      if (!refUserSnap.exists()) continue;
 
       const refData = refUserSnap.data();
-      const commission = depositAmount * commissionRates[level - 1];
+      const commission = depositAmount * commissionRates[level];
 
       // ✅ Add record in referrer's commission history
-      await addDoc(collection(db, "users", currentRef, "commissions"), {
+      await addDoc(collection(db, "users", refUID, "commissions"), {
         fromUser: userId,
-        level: level,
+        level: level + 1,
         amount: commission.toFixed(2),
         date: serverTimestamp(),
-        note: `Level ${level} reward from ${userId}'s first deposit`,
+        note: `Level ${level + 1} reward from ${userId}'s first deposit`,
       });
 
-      // ✅ Add reward to referrer's wallet balance
+      // ✅ Add reward to referrer's wallet and total lifetime income
       const currentWallet = parseFloat(refData.walletBalance || 0);
       const newWallet = currentWallet + commission;
 
+      const totalReferral = parseFloat(refData.lifetimeReferralIncome || 0);
+      const newTotalReferral = totalReferral + commission;
+
       await updateDoc(refUserRef, {
         walletBalance: newWallet,
+        lifetimeReferralIncome: newTotalReferral,
       });
 
-      console.log(`✅ Level ${level} Reward: $${commission.toFixed(2)} added to ${currentRef}'s wallet`);
-
-      // Go next level
-      currentRef = refData.referrerId || null;
-      level++;
+      console.log(
+        `✅ Level ${level + 1} Reward: $${commission.toFixed(
+          2
+        )} added to ${refUID}'s wallet`
+      );
     }
   } catch (e) {
     console.error("Commission reward error:", e);
   }
 }
+
 // ✅ Listen for status change to "completed"
 function watchDepositStatus(userId, depositId) {
   const depositRef = doc(db, "users", userId, "deposits", depositId);
