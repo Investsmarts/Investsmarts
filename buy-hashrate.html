@@ -724,20 +724,23 @@ res.forEach(docSnap => {
   disableSpecificPlan(plan.planName, plan.status === "running");
 
   // ⏰ Countdown for active plan
-  if (plan.status === "running") {
-    checkAndAddProfit(docSnap.ref, plan, user.uid);
+// ✅ Always start countdown if plan has nextPayout (even if status not yet synced)
+if (plan.nextPayout) {
+  checkAndAddProfit(docSnap.ref, plan, user.uid);
 
-    const ringEl = document.getElementById("progressRing");
-    const countEl = document.getElementById("countdownBox");
-    if (ringEl) ringEl.style.display = "block";
-    if (countEl) countEl.style.display = "flex";
+  const ringEl = document.getElementById("progressRing");
+  const countEl = document.getElementById("countdownBox");
+  if (ringEl) ringEl.style.display = "block";
+  if (countEl) countEl.style.display = "flex";
 
-    let nextTime;
-    if (plan.nextPayout?.toDate) nextTime = plan.nextPayout.toDate();
-    else nextTime = new Date(plan.nextPayout);
+  let nextTime;
+  if (plan.nextPayout?.toDate) nextTime = plan.nextPayout.toDate();
+  else nextTime = new Date(plan.nextPayout);
 
-    startCountdown(nextTime);
-  }
+  console.log("⏳ Countdown triggered for:", plan.planName, nextTime);
+  startCountdown(nextTime);
+}
+
 
 
   });
