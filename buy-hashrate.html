@@ -462,6 +462,13 @@ body {
   50% { transform: scale(1.08); opacity: 0.8; }
 }
 
+.summary-row strong {
+  color: #065f46;
+  font-weight: 600;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.05);
+}
+
+
 </style>
 </head>
 
@@ -661,63 +668,76 @@ if (!ringSafe || !countSafe) {
 
 
 
-  res.forEach(docSnap => {
-    const plan = docSnap.data();
-    const planCard = document.createElement("div");
-    const next = plan.nextPayout?.toDate ? plan.nextPayout.toDate() : new Date(plan.nextPayout);
-    const end = plan.endTime?.toDate ? plan.endTime.toDate() : new Date(plan.endTime);
+res.forEach(docSnap => {
+  const plan = docSnap.data();
+  const planCard = document.createElement("div");
+  const next = plan.nextPayout?.toDate ? plan.nextPayout.toDate() : new Date(plan.nextPayout);
+  const end = plan.endTime?.toDate ? plan.endTime.toDate() : new Date(plan.endTime);
+  const start = plan.startTime?.toDate ? plan.startTime.toDate() : new Date(plan.startTime);
+  const earned = plan.earnedProfit || 0;
 
-    // 🧾 Card Design
-    planCard.className = "plan-summary";
-    planCard.style.background = plan.status === "running" ? "#dcfce7" : "#fef2f2";
-    planCard.style.border = plan.status === "running" ? "1.5px solid #86efac" : "1.5px solid #fecaca";
-    planCard.innerHTML = `
-      <div class="summary-row">
-        <span>Plan:</span>
-        <strong>${plan.planName}</strong>
-      </div>
-      <div class="summary-row">
-        <span>Daily Profit:</span>
-        <strong>${plan.dailyProfitPercent}%</strong>
-      </div>
-      <div class="summary-row">
-        <span>Status:</span>
-        <strong style="color:${plan.status === "running" ? "#16a34a" : "#dc2626"}">
-          ${plan.status.charAt(0).toUpperCase() + plan.status.slice(1)}
-        </strong>
-      </div>
-      <div class="summary-row">
-        <span>End Date:</span>
-        <strong>${end.toLocaleDateString()}</strong>
-      </div>
-    `;
+  // 🧾 Detailed Card Layout
+  planCard.className = "plan-summary";
+  planCard.style.background = plan.status === "running" ? "#dcfce7" : "#fef2f2";
+  planCard.style.border = plan.status === "running" ? "1.5px solid #86efac" : "1.5px solid #fecaca";
 
-    plansContainer.appendChild(planCard);
+  planCard.innerHTML = `
+    <div class="summary-row">
+      <span>Plan Name:</span>
+      <strong>${plan.planName}</strong>
+    </div>
+    <div class="summary-row">
+      <span>Plan Cost:</span>
+      <strong>$${plan.planCost}</strong>
+    </div>
+    <div class="summary-row">
+      <span>Daily Profit:</span>
+      <strong>${plan.dailyProfitPercent}%</strong>
+    </div>
+    <div class="summary-row">
+      <span>Total Earned:</span>
+      <strong>$${earned.toFixed(2)}</strong>
+    </div>
+    <div class="summary-row">
+      <span>Start Date:</span>
+      <strong>${start.toLocaleDateString()}</strong>
+    </div>
+    <div class="summary-row">
+      <span>Next Payout:</span>
+      <strong>${next.toLocaleDateString()}</strong>
+    </div>
+    <div class="summary-row">
+      <span>End Date:</span>
+      <strong>${end.toLocaleDateString()}</strong>
+    </div>
+    <div class="summary-row">
+      <span>Status:</span>
+      <strong style="color:${plan.status === "running" ? "#16a34a" : "#dc2626"}">
+        ${plan.status.charAt(0).toUpperCase() + plan.status.slice(1)}
+      </strong>
+    </div>
+  `;
 
-    // 🔄 Disable button for running plan only
-    disableSpecificPlan(plan.planName, plan.status === "running");
+  plansContainer.appendChild(planCard);
 
+  // 🔄 Disable button for running plan only
+  disableSpecificPlan(plan.planName, plan.status === "running");
 
-    // ⏰ Countdown start for active plan
-if (plan.status === "running") {
-  checkAndAddProfit(docSnap.ref, plan, user.uid);
+  // ⏰ Countdown for active plan
+  if (plan.status === "running") {
+    checkAndAddProfit(docSnap.ref, plan, user.uid);
 
-  const ringEl = document.getElementById("progressRing");
-  const countEl = document.getElementById("countdownBox");
-  if (ringEl) ringEl.style.display = "block";
-  if (countEl) countEl.style.display = "flex";
+    const ringEl = document.getElementById("progressRing");
+    const countEl = document.getElementById("countdownBox");
+    if (ringEl) ringEl.style.display = "block";
+    if (countEl) countEl.style.display = "flex";
 
-  let nextTime;
-  if (plan.nextPayout?.toDate) {
-    nextTime = plan.nextPayout.toDate();
-  } else if (typeof plan.nextPayout === "string" || typeof plan.nextPayout === "number") {
-    nextTime = new Date(plan.nextPayout);
-  } else {
-    nextTime = new Date();
+    let nextTime;
+    if (plan.nextPayout?.toDate) nextTime = plan.nextPayout.toDate();
+    else nextTime = new Date(plan.nextPayout);
+
+    startCountdown(nextTime);
   }
-
-  startCountdown(nextTime);
-}
 
 
   });
