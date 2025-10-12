@@ -36,7 +36,7 @@ body {
   gap: 14px; margin-top: 15px;
 }
 .team-box {
-  background: #f8fafc; border-radius: 14px;
+  background: #f8fafc; border-radius: 1px;
   padding: 16px 0; box-shadow: 0 3px 8px rgba(0,0,0,0.08);
   text-align: center; transition: 0.3s;
 }
@@ -44,7 +44,7 @@ body {
 .team-box .label { font-size: 15px; color: #2563eb; font-weight: 600; margin-bottom: 6px; display:block; }
 .team-box .value {
   font-size: 16px; font-weight: 700; color: #16a34a;
-  background: #e7fbe9; border: 1px solid #a7f3d0;
+   border: 1px solid #a7f3d0;
   padding: 6px 12px; border-radius: 10px;
 }
 .team-box.total { background: linear-gradient(135deg,#22c55e,#16a34a); color:#fff; }
@@ -105,6 +105,31 @@ body {
     .nav-item i { font-size: 22px; display: block; margin-bottom: 3px; color: #28a745; }
     .nav-item:hover { color: #28a745; }
     .nav-item:hover i { color: #218838; }
+
+    .card h2 {
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+  
+  /* ✅ Gradient Text Effect */
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  /* ✅ Soft Shadow Glow */
+  
+  font-family: "Poppins", sans-serif;
+  transition: 0.3s ease;
+}
+
+/* ✅ Optional Hover Effect */
+.card h2:hover {
+  text-shadow: 0px 3px 10px rgba(22, 163, 74, 0.45);
+  transform: scale(1.02);
+}
+
 
 </style>
 </head>
@@ -243,23 +268,59 @@ window.showLevel = function (level) {
 
 // 🔁 Real-time level data
 function subscribeLevel(currentUser, level) {
-  const lv = {
-    1: { field: "referredBy", val: currentUser.referralCode, rate: 0.1 },
-    2: { field: "upline2", val: currentUser.uid, rate: 0.05 },
-    3: { field: "upline3", val: currentUser.uid, rate: 0.02 },
-  }[level];
-  const q = query(collection(db, "users"), where(lv.field, "==", lv.val));
-  onSnapshot(q, (snap) => {
-    let members = [], earn = 0;
-    snap.forEach((d) => {
-      const u = d.data();
-      members.push(u);
-      earn += (u.totalInvested || 0) * lv.rate;
-    });
-    document.getElementById(`level${level}Earning`).textContent = "$" + earn.toFixed(2);
-    renderList(`level${level}List`, members, lv.rate);
+  const q = query(
+    collection(db, "users", currentUser.uid, "commissions"),
+    where("level", "==", level)
+  );
+
+  onSnapshot(q, async (snap) => {
+    const temp = {}; // combine same user commissions
+    let totalEarn = 0;
+
+    for (const docSnap of snap.docs) {
+      const c = docSnap.data();
+      totalEarn += parseFloat(c.amount || 0);
+
+      // 🧠 Fetch downline info
+      let downlineName = "Unknown";
+      let isActive = false;
+
+      try {
+        const downRef = doc(db, "users", c.fromUser);
+        const downSnap = await getDoc(downRef);
+        if (downSnap.exists()) {
+          const d = downSnap.data();
+          downlineName = d.name || "Unnamed";
+          isActive = (d.totalInvested || d.lifetimeDeposit || 0) > 0;
+        }
+      } catch (e) {
+        console.error("Error fetching downline:", e);
+      }
+
+      // Combine by name (avoid duplicates)
+      if (!temp[downlineName]) {
+        temp[downlineName] = {
+          name: downlineName,
+          lifetimeDeposit: isActive ? 1 : 0,
+          totalInvested: parseFloat(c.amount || 0),
+        };
+      } else {
+        temp[downlineName].totalInvested += parseFloat(c.amount || 0);
+      }
+    }
+
+    // Convert combined data to array
+    const members = Object.values(temp);
+
+    // ✅ Show total earnings
+    document.getElementById(`level${level}Earning`).textContent =
+      "$" + totalEarn.toFixed(2);
+
+    // ✅ Render table
+    renderList(`level${level}List`, members, 1);
   });
 }
+
 
 // 🔥 Auth + real-time Firestore
 onAuthStateChanged(auth, async (user) => {
@@ -294,6 +355,55 @@ onAuthStateChanged(auth, async (user) => {
   subscribeLevel(currentUser, 2);
   subscribeLevel(currentUser, 3);
 });
+</script>
+<script>
+  // 🚫 Disable right click, select, drag
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
+
+  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
+  document.addEventListener("keydown", e => {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // 🔒 Silent DevTools detection (no popup)
+  (function() {
+    const devtools = /./;
+    devtools.toString = function() {
+      return ""; // no alert or console log
+    };
+    console.log("%c", devtools);
+  })();
+
+  // 🔐 Detect DevTools using resize trick (no popup)
+  setInterval(() => {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    if (widthDiff || heightDiff) {
+      // Optional: silently redirect or blank the page
+      document.body.innerHTML = "";
+    }
+  }, 1000);
+
+  // 🧱 Disable copy/paste/cut
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // 🔁 Freeze console methods silently
+  Object.freeze(console);
+  Object.freeze(window.console);
+
+
 </script>
 </body>
 </html>
