@@ -185,6 +185,70 @@
   margin-top: 3px;
 }
 
+/* === Stylish Flip Animation for Timer === */
+/* === Bitcoin particle sparkle + light vibration === */
+#miningTimer {
+  position: relative;
+  overflow: visible;
+  animation: timerShake 1.2s infinite ease-in-out;
+}
+
+/* ✅ Softer, slower vibration (real mining engine feel) */
+#miningTimer {
+  animation: timerShake 3s infinite ease-in-out; /* was 1.2s, now slower */
+}
+
+/* smooth vibration motion */
+@keyframes timerShake {
+  0%, 100% { transform: translate(0,0) rotateX(0deg); }
+  20% { transform: translate(0.5px, -0.5px) rotateX(0.5deg); }
+  40% { transform: translate(-0.5px, 0.5px) rotateX(-0.5deg); }
+  60% { transform: translate(0.4px, 0px) rotateX(0.3deg); }
+  80% { transform: translate(-0.3px, -0.4px) rotateX(-0.3deg); }
+}
+/* Bitcoin particles (generated via pseudo elements) */
+#miningTimer::before,
+#miningTimer::after {
+  content: "₿";
+  position: absolute;
+  font-size: 14px;
+  color: gold;
+  text-shadow: 0 0 6px rgba(255,215,0,0.8);
+  opacity: 0;
+  animation: floatBTC 2s linear infinite;
+}
+
+#miningTimer::before {
+  left: -10px;
+  bottom: 0;
+  animation-delay: 0.3s;
+}
+
+#miningTimer::after {
+  right: -10px;
+  top: 0;
+  animation-delay: 1s;
+}
+
+/* BTC float animation */
+@keyframes floatBTC {
+  0% {
+    transform: translateY(0) scale(0.8) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  60% {
+    transform: translateY(-25px) scale(1) rotate(15deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-50px) scale(0.8) rotate(30deg);
+    opacity: 0;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -233,7 +297,7 @@
   </div>
 
 
-  <script type="module">
+<script type="module">
 /* ---------------------------
   FIXED Mining page
   - Returns invested + profit on Stop
@@ -249,7 +313,7 @@ import {
   collection, query, where, getDocs, addDoc, orderBy, onSnapshot
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-// === your firebase config (keep same) ===
+// === your firebase config (same) ===
 const firebaseConfig = {
   apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
   authDomain: "btcinvest-c0e25.firebaseapp.com",
@@ -300,6 +364,11 @@ function startMiningTimer(startedAt){
     const h = String(Math.floor(diff/3600000)).padStart(2,"0");
     const m = String(Math.floor((diff/60000)%60)).padStart(2,"0");
     const s = String(Math.floor((diff/1000)%60)).padStart(2,"0");
+
+     // 💥 flip effect trigger
+    miningTimer.classList.add("flip");
+    setTimeout(()=>miningTimer.classList.remove("flip"),300);
+
     miningTimer.innerText = `${h}h : ${m}m : ${s}s`;
   },1000);
 }
@@ -330,85 +399,79 @@ async function loadUserData(){
   }
 }
 
-// distribute commission to uplines (3 levels) from PROFIT (not from invested)
-async function distributeCommission(fromUID, refCode, profitAmount){
-  if(!refCode || profitAmount <= 0) return;
-  const rates = {1:0.17, 2:0.08, 3:0.05};
-  let lvl = 1;
-  let curRefCode = refCode;
+// ✅ UID-based distributeCommission function
+async function distributeCommission(fromUID, upline1, upline2, upline3, profitAmount) {
+  if (profitAmount <= 0) return;
 
-  while(curRefCode && lvl <= 3){
-    // find upline user by their refCode
-    const q = query(collection(db, "users"), where("refCode", "==", curRefCode));
-    const qsnap = await getDocs(q);
-    if(qsnap.empty) break;
+  const levels = [
+    { uid: upline1, rate: 0.17 },
+    { uid: upline2, rate: 0.08 },
+    { uid: upline3, rate: 0.05 }
+  ];
 
-    const upDoc = qsnap.docs[0];
-    const upUID = upDoc.id;
-    const upRef = doc(db, "users", upUID);
+  for (let i = 0; i < levels.length; i++) {
+    const { uid, rate } = levels[i];
+    if (!uid) continue;
+
+    const upRef = doc(db, "users", uid);
     const upSnap = await getDoc(upRef);
-    if(!upSnap.exists()) break;
+    if (!upSnap.exists()) continue;
 
     const upData = upSnap.data();
-    // Qualification: keep as in your code (active total >= 170)
     const activeTotal = (upData.walletBalance || 0) + (upData.miningAmount || 0);
-    if(activeTotal >= 170){
-      const commission = profitAmount * (rates[lvl] || 0);
-      // credit commission to upline walletBalance
-      await updateDoc(upRef, { walletBalance: increment(commission) });
-      // record commission
+
+    if (activeTotal >= 170) {
+      const commission = profitAmount * rate;
+
+      await updateDoc(upRef, {
+        walletBalance: increment(commission)
+      });
+
       await addDoc(collection(db, "referral_income"), {
         fromUser: fromUID,
-        toUpline: upUID,
-        level: lvl,
+        toUpline: uid,
+        level: i + 1,
         amount: commission,
         time: Date.now()
       });
     }
-    // move to next upline (assume referredBy field holds refCode of next upline)
-    curRefCode = upData.referredBy || null;
-    lvl++;
   }
 }
 
-// auth state
+// 🔽 Auth state listener
 onAuthStateChanged(auth, async(user) => {
   if(!user) {
-    // redirect to login
     location.href = "auth.html";
     return;
   }
   currentUser = user;
   await loadUserData();
 
-  // live listen to miningHistory (last 5)
+  // live listen to mining history (last 5)
   const q = query(collection(db, "users", user.uid, "miningHistory"), orderBy("time", "desc"));
   onSnapshot(q, (snap) => {
     miningHistoryEl.innerHTML = "";
     let i = 0;
-   snap.forEach(docSnap => {
-  if (i >= 5) return;
-  const d = docSnap.data();
-  const li = document.createElement("li");
-  const durMin = (d.duration / 60000).toFixed(1);
-  const date = new Date(d.time).toLocaleString();
+    snap.forEach(docSnap => {
+      if (i >= 5) return;
+      const d = docSnap.data();
+      const li = document.createElement("li");
+      const durMin = (d.duration / 60000).toFixed(1);
+      const date = new Date(d.time).toLocaleString();
 
- li.innerHTML = `
-  <div class="amount"><i class="fa-solid fa-coins"></i> $${Number(d.amount).toFixed(2)} mined</div>
-  <div class="duration"><i class="fa-regular fa-clock"></i> ${durMin} min</div>
-  <div class="profit"><i class="fa-solid fa-arrow-trend-up"></i> +$${Number(d.earned).toFixed(4)}</div>
-  <span class="time"><i class="fa-regular fa-calendar"></i> ${date}</span>
-`;
-
-
-  miningHistoryEl.appendChild(li);
-  i++;
-});
-
+      li.innerHTML = `
+        <div class="amount"><i class="fa-solid fa-coins"></i> $${Number(d.amount).toFixed(2)} mined</div>
+        <div class="duration"><i class="fa-regular fa-clock"></i> ${durMin} min</div>
+        <div class="profit"><i class="fa-solid fa-arrow-trend-up"></i> +$${Number(d.earned).toFixed(4)}</div>
+        <span class="time"><i class="fa-regular fa-calendar"></i> ${date}</span>
+      `;
+      miningHistoryEl.appendChild(li);
+      i++;
+    });
   });
 });
 
-// Main button logic (Start / Stop)
+// 🔽 Main mining button logic
 btn.onclick = async () => {
   if(!currentUser) return showPopup("Not logged in");
   const userRef = doc(db, "users", currentUser.uid);
@@ -420,13 +483,12 @@ btn.onclick = async () => {
   const startedAt = data.miningStartedAt || 0;
 
   if(!mining){
-    // Start mining: validate input and deduct wallet -> set miningAmount + timestamp
+    // Start Mining logic
     const amt = parseFloat(amountInput.value);
     if(isNaN(amt) || amt <= 0) return showPopup("Enter valid amount");
     if(amt > wallet) return showPopup("Insufficient Balance");
     if(amt < 200) return showPopup("Minimum $200 required");
 
-    // Update user doc: deduct wallet, set miningAmount, store start time (ms)
     await updateDoc(userRef, {
       walletBalance: wallet - amt,
       miningAmount: amt,
@@ -440,20 +502,15 @@ btn.onclick = async () => {
     fundEl.innerText = `$${amt.toFixed(2)}`;
     walletEl.innerText = `$${(wallet - amt).toFixed(2)}`;
     startMiningTimer(Date.now());
-
   } else {
-    // Stop mining: compute profit (time-based), return invested + user share of profit,
-    // credit uplines from PROFIT, record history, update totalMined.
+    // Stop Mining logic
     const diff = Date.now() - startedAt;
-    const daysFraction = Math.max(diff / 86400000, 1 / 1440); // protect tiny durations
-    const profit = miningAmount * DAILY_RATE * daysFraction; // 1.5% per day * time fraction
+    const daysFraction = Math.max(diff / 86400000, 1 / 1440);
+    const profit = miningAmount * DAILY_RATE * daysFraction;
 
-    // distribution: user gets 70% of profit, uplines get 17/8/5% of profit (total 100% of profit distributed)
     const userShare = profit * 0.70;
-    // total to return to user = invested + userShare
     const totalReturnToUser = miningAmount + userShare;
 
-    // Update user doc: add invested+userShare back to wallet, reset miningAmount/startedAt, increment totalMined by profit (only profit)
     await updateDoc(userRef, {
       walletBalance: wallet + totalReturnToUser,
       miningAmount: 0,
@@ -461,7 +518,6 @@ btn.onclick = async () => {
       totalMined: increment(profit)
     });
 
-    // add mining history record (under user's subcollection)
     await addDoc(collection(db, "users", currentUser.uid, "miningHistory"), {
       uid: currentUser.uid,
       amount: miningAmount,
@@ -471,7 +527,6 @@ btn.onclick = async () => {
       time: Date.now()
     });
 
-    // record a trade-like release entry (optional)
     await addDoc(collection(db, "mining_releases"), {
       user: currentUser.uid,
       amount: miningAmount,
@@ -480,49 +535,25 @@ btn.onclick = async () => {
       time: Date.now()
     });
 
-    // Distribute commission from PROFIT to uplines (if user has referredBy)
-    if(data.referredBy){
-      // distributeCommission(fromUID, refCode, profitAmount)
-      await distributeCommission(currentUser.uid, data.referredBy, profit);
+    // ✅ Distribute commission by UID chain (3 levels)
+    if (data.upline1 || data.upline2 || data.upline3) {
+      await distributeCommission(
+        currentUser.uid,
+        data.upline1 || null,
+        data.upline2 || null,
+        data.upline3 || null,
+        profit
+      );
     }
 
-    showPopup(`You earned $${profit.toFixed(4)} (profit). Returned $${totalReturnToUser.toFixed(4)} to wallet.`);
-
+    showPopup(`You earned $${profit.toFixed(4)} profit. Returned $${totalReturnToUser.toFixed(4)} to wallet.`);
     mining = false;
     btn.innerText = "Start Mining";
     toggleMiningSections(false);
     stopMiningTimer();
-
-    // refresh UI
     setTimeout(loadUserData, 800);
   }
 };
-
-// ❌ Right-click disable
-  document.addEventListener("contextmenu", function(e) {
-    e.preventDefault();
-    
-  });
-
-// ❌ Disable text selection
-  document.addEventListener("selectstart", function(e) {
-    e.preventDefault();
-  });
-
-// ❌ Disable copy (Ctrl+C), cut (Ctrl+X), paste (Ctrl+V), view-source (Ctrl+U)
-  document.addEventListener("keydown", function(e) {
-    if (
-      (e.ctrlKey && (e.key === "c" || e.key === "C")) || 
-      (e.ctrlKey && (e.key === "x" || e.key === "X")) || 
-      (e.ctrlKey && (e.key === "v" || e.key === "V")) || 
-      (e.ctrlKey && (e.key === "u" || e.key === "U")) || 
-    (e.key === "F12") // DevTools
-    ) {
-      e.preventDefault();
-    
-  }
-});
-
 </script>
 </body>
 </html>
