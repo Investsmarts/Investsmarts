@@ -18,15 +18,69 @@
       color: #222;
     }
 
-    /* ✅ Header */
-    .header {
-      position: fixed; top: 0; left: 0; width: 100%;
-      background: #32cd32;
-      color: white; text-align: center;
-      padding: 14px; font-size: 18px; font-weight: bold;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      z-index: 1000;
-    }
+    /* 🔹 Header layout fix for inline icon */
+.header {
+  display: flex;
+  align-items: center;        /* vertical centering */
+  justify-content: center;    /* center horizontally */
+  gap: 10px;                  /* space between text and icon */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(145deg, #3ed667, #218838);
+  color: white;
+  padding: 10px 0;            /* was too thick, now balanced */
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+
+/* ===== VISIBLE GUIDE BUTTON ===== */
+.guide-icon-btn {
+  background: rgb(212 29 29);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-top: 1px;            /* 👈 just to align perfectly */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.guide-icon-btn i {
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.guide-icon-btn:hover {
+  background: #fff;
+  border-color: #fff;
+}
+
+.guide-icon-btn:hover i {
+  color: #28a745;
+  transform: scale(1.1);
+}
+
+
+/* ===== MOBILE FIX ===== */
+@media (max-width: 480px) {
+  .guide-icon-btn {
+    width: 28px;
+    height: 28px;
+  }
+  .guide-icon-btn i {
+    font-size: 15px;
+  }
+}
+
 
     /* ✅ Top nav */
     .top-nav {
@@ -249,12 +303,337 @@
   }
 }
 
+.income-type-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap; /* ✅ for mobile responsive */
+}
+
+.income-type-buttons button {
+  flex: 1 1 45%;
+  background: linear-gradient(180deg, #0bb157, #058c43);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 0 #046c35;
+}
+
+.income-type-buttons button:hover {
+  transform: scale(1.03);
+}
+
+.income-type-buttons button.active {
+  background: linear-gradient(180deg, #15d87a, #0ab359);
+  box-shadow: 0 4px 0 #058c43;
+}
+
+/* ✅ INCOME HISTORY STYLISH CARDS */
+/* ✅ INCOME HISTORY CLEAN STATIC CARDS */
+#incomeHistoryList {
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 100px;
+}
+
+/* --- CARD STYLE --- */
+#incomeHistoryList li {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 15px 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eaeaea;
+  font-family: "Poppins", sans-serif;
+}
+
+/* --- TEXT STYLE --- */
+#incomeHistoryList .amount {
+  font-weight: 600;
+  font-size: 15px;
+  color: #111;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#incomeHistoryList .duration {
+  font-size: 13px;
+  color: #666;
+  margin: 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#incomeHistoryList .profit {
+  color: #28a745;
+  font-weight: 600;
+  font-size: 14.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+#incomeHistoryList .time {
+  font-size: 12px;
+  color: #888;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* --- ICON STYLE --- */
+#incomeHistoryList i {
+  color: #28a745;
+  font-size: 14px;
+}
+
+/* --- BUTTON GROUP (MINING / REFERRAL) --- */
+.income-type-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.income-type-buttons button {
+  flex: 1;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 0;
+  background: linear-gradient(180deg, #28a745, #218838);
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #1c6c33;
+}
+
+/* --- ACTIVE BUTTON STATE --- */
+.income-type-buttons button.active {
+  background: linear-gradient(180deg, #39d267, #26b856);
+  box-shadow: 0 3px 0 #1d803f;
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 480px) {
+  #incomeHistoryList li {
+    padding: 12px 14px;
+  }
+  #incomeHistoryList .amount {
+    font-size: 14px;
+  }
+  #incomeHistoryList .profit {
+    font-size: 13.5px;
+  }
+}
+
+/* ===========================
+   Mining Guide Popup Styling
+   =========================== */
+.guide-popup {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+
+.guide-content {
+  background: #fff;
+  padding: 22px 18px;
+  border-radius: 14px;
+  max-width: 380px;
+  max-height: 85vh;
+  overflow-y: auto; /* ✅ scroll enable */
+  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+  color: #333;
+  position: relative;
+  scrollbar-width: none; /* ✅ Firefox me scrollbar hide karega */
+}
+
+/* ✅ Chrome, Edge, Safari me scrollbar hide */
+.guide-content::-webkit-scrollbar {
+  display: none;
+}
+
+
+.guide-content h2 {
+  text-align: center;
+  color: #28a745;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.guide-section {
+  margin-top: 14px;
+}
+
+.guide-section h3 {
+  color: #1d7c39;
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.guide-section ul {
+  margin-left: 18px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.guide-section li {
+  margin-bottom: 5px;
+}
+
+.guide-footer {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 16px;
+  color: #777;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 8px; right: 12px;
+  font-size: 22px;
+  cursor: pointer;
+  color: #555;
+  transition: 0.2s;
+}
+
+.close-btn:hover {
+  color: #28a745;
+  transform: scale(1.1);
+}
+
+/* Popup animation */
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* guyd bala part ka css*/
+.guide-footer {
+  text-align: center;
+  font-size: 12.5px;
+  margin-top: 16px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.contact-link {
+  display: inline-block;
+  margin-top: 6px;
+  background: linear-gradient(145deg, #28a745, #1e7e34);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 13px;
+  transition: 0.25s;
+}
+
+.contact-link:hover {
+  background: linear-gradient(145deg, #34c759, #28a745);
+  transform: translateY(-2px);
+}
+
+
   </style>
 </head>
 <body>
 <div id="popupMsg" class="popup"></div>
 
-  <div class="header">Smart Mining </div>
+ <div class="header">
+  <span>Smart Mining</span>
+  <button class="guide-icon-btn" onclick="openMiningGuide()" title="Mining Guide">
+    <i class="fa-solid fa-circle-info"></i>
+  </button>
+</div>
+
+<!-- 🔹 Mining Guide Popup Modal -->
+<div id="miningGuidePopup" class="guide-popup">
+  <div class="guide-content">
+    <span class="close-btn" onclick="closeMiningGuide()">&times;</span>
+   <h2><i class="fa-solid fa-circle-info"></i> Mining Guide</h2>
+
+
+    <p>
+      Welcome to <b>Smart Mining</b>. Please read the following
+      instructions carefully before you start mining.
+    </p>
+
+    <div class="guide-section">
+      <h3>✅ How to Start Mining</h3>
+      <ul>
+        <li>Ensure you have made a <b>deposit</b> in your account wallet.</li>
+        <li>You can only mine up to your <b>total lifetime deposit</b> amount.</li>
+        <li>Enter the mining amount (minimum <b>$200</b> required).</li>
+        <li>Click <b>Start Mining</b> to begin generating profit automatically.</li>
+        <li>You can stop mining anytime to collect your profit instantly.</li>
+      </ul>
+    </div>
+
+    <div class="guide-section">
+      <h3>💰 Referral Income System (3 Levels)</h3>
+      <ul>
+        <li><b>Level 1:</b> 17% of your direct partner’s profit.</li>
+        <li><b>Level 2:</b> 8% of your second-level partner’s profit.</li>
+        <li><b>Level 3:</b> 5% of your third-level partner’s profit.</li>
+        <li>Referral income is automatically added to your wallet balance.</li>
+        <li>Each referral must have an active deposit of at least <b>$200</b>.</li>
+      </ul>
+    </div>
+
+    <div class="guide-section">
+      <h3>⚠️ Important Notes</h3>
+      <ul>
+        <li>Do not refresh or close the page while mining is active.</li>
+        <li>Mining amount cannot exceed your <b>lifetime deposit limit</b>.</li>
+        <li>Mining rewards depend on your selected daily rate plan.</li>
+        <li>Referral commissions are distributed up to <b>3 levels only</b>.</li>
+        <li>Wallet balance must be sufficient before starting mining.</li>
+      </ul>
+    </div>
+
+    <div class="guide-section">
+      <h3>🚫 Avoid These Mistakes</h3>
+      <ul>
+        <li>Do not enter an incorrect amount — it may cause system errors.</li>
+        <li>Do not use multiple accounts or fake referrals.</li>
+        <li>Do not start mining if you have insufficient wallet balance.</li>
+        <li>Do not share your account credentials with anyone.</li>
+      </ul>
+    </div>
+
+  <p class="guide-footer">
+  If you face any issue or need assistance, feel free to reach out to us.<br>
+  <a href="support.html" target="_blank" class="contact-link">
+    📩 Contact Here
+  </a>
+</p>
+
+  </div>
+</div>
+
 
   <div class="top-nav">
     <a href="stacking.html">1.4%</a>
@@ -280,11 +659,19 @@
   </div>
 
   <button id="miningBtn">Unlock Mining Power</button>
+<div class="history-header">
+  <div class="history-title">Income History</div>
 
-  <div class="history-title">Mining Income History</div>
-<ul id="miningHistoryList">
-  <!-- History will appear here -->
+  <div class="income-type-buttons">
+  <button id="miningIncomeBtn" class="active">Mining Income</button>
+  <button id="referralIncomeBtn">Referral Income</button>
+</div>
+
+<!-- Income history list -->
+<ul id="incomeHistoryList">
+  <!-- Mining or Referral data will appear here -->
 </ul>
+
 
 
 
@@ -296,15 +683,33 @@
     <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
   </div>
 
+</div>
+<script>
+function openMiningGuide() {
+  const popup = document.getElementById("miningGuidePopup");
+  popup.style.display = "flex";
+  setTimeout(() => popup.style.opacity = "1", 10); // 👈 delay to trigger transition
+}
+
+function closeMiningGuide() {
+  const popup = document.getElementById("miningGuidePopup");
+  popup.style.opacity = "0";
+  setTimeout(() => (popup.style.display = "none"), 300); // 👈 match CSS transition
+}
+
+
+</script>
 
 <script type="module">
-/* ---------------------------
-  FIXED Mining page
-  - Returns invested + profit on Stop
-  - Tracks totalMined
-  - Pays 3-level referral from profit (17/8/5)
-  - Records miningHistory & referral_income
-----------------------------*/
+/* =====================================
+   ✅ BTCInvest Full Smart Mining Script
+   Features:
+   - Start/Stop Mining
+   - Lifetime deposit check
+   - Referral 3-level income (17%, 8%, 5%)
+   - Real-time mining history
+   - Real-time referral income (same style)
+   ===================================== */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -313,7 +718,7 @@ import {
   collection, query, where, getDocs, addDoc, orderBy, onSnapshot
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-// === your firebase config (same) ===
+// === Firebase Config ===
 const firebaseConfig = {
   apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
   authDomain: "btcinvest-c0e25.firebaseapp.com",
@@ -328,7 +733,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// UI refs
+// === UI Refs ===
 const walletEl = document.getElementById("wallet");
 const fundEl = document.getElementById("miningFund");
 const amountInput = document.getElementById("amount");
@@ -337,52 +742,59 @@ const popup = document.getElementById("popupMsg");
 const timerBox = document.getElementById("timerBox");
 const miningTimer = document.getElementById("miningTimer");
 const inputSection = document.getElementById("inputSection");
-const miningHistoryEl = document.getElementById("miningHistoryList");
+const miningHistoryEl = document.getElementById("incomeHistoryList");
+
+// ✅ Buttons for switching income history
+const miningBtn = document.getElementById("miningIncomeBtn");
+const referralBtn = document.getElementById("referralIncomeBtn");
 
 let currentUser = null;
 let mining = false;
 let timerInterval = null;
 
 // profit rate
-const DAILY_RATE = 0.01; // 1.5% per day
+const DAILY_RATE = 0.01; // 1% per day
 
-function showPopup(msg){
+/* 🔹 Helper: Popup Message */
+function showPopup(msg) {
   popup.innerText = msg;
   popup.style.display = "block";
-  setTimeout(()=>popup.style.display="none",2500);
+  setTimeout(() => (popup.style.display = "none"), 2500);
 }
 
-function toggleMiningSections(active){
+/* 🔹 Toggle Mining Sections */
+function toggleMiningSections(active) {
   timerBox.style.display = active ? "block" : "none";
   inputSection.style.display = active ? "none" : "block";
 }
 
-function startMiningTimer(startedAt){
+/* 🔹 Timer for mining session */
+function startMiningTimer(startedAt) {
   clearInterval(timerInterval);
-  timerInterval = setInterval(()=>{
+  timerInterval = setInterval(() => {
     const diff = Date.now() - startedAt;
-    const h = String(Math.floor(diff/3600000)).padStart(2,"0");
-    const m = String(Math.floor((diff/60000)%60)).padStart(2,"0");
-    const s = String(Math.floor((diff/1000)%60)).padStart(2,"0");
-
-     // 💥 flip effect trigger
+    const h = String(Math.floor(diff / 3600000)).padStart(2, "0");
+    const m = String(Math.floor((diff / 60000) % 60)).padStart(2, "0");
+    const s = String(Math.floor((diff / 1000) % 60)).padStart(2, "0");
     miningTimer.classList.add("flip");
-    setTimeout(()=>miningTimer.classList.remove("flip"),300);
-
+    setTimeout(() => miningTimer.classList.remove("flip"), 300);
     miningTimer.innerText = `${h}h : ${m}m : ${s}s`;
-  },1000);
+  }, 1000);
 }
-function stopMiningTimer(){ clearInterval(timerInterval); miningTimer.innerText="--:--:--"; }
+function stopMiningTimer() {
+  clearInterval(timerInterval);
+  miningTimer.innerText = "--:--:--";
+}
 
-// load user data & UI
-async function loadUserData(){
-  if(!currentUser) return;
+/* 🔹 Load User Data */
+async function loadUserData() {
+  if (!currentUser) return;
   const ref = doc(db, "users", currentUser.uid);
   const snap = await getDoc(ref);
   const data = snap.exists() ? snap.data() : {};
 
-  const wallet = (data.walletBalance || 0);
-  const miningAmt = (data.miningAmount || 0);
+  const wallet = data.walletBalance || 0;
+  const miningAmt = data.miningAmount || 0;
   const startedAt = data.miningStartedAt || null;
 
   walletEl.innerText = `$${wallet.toFixed(2)}`;
@@ -392,14 +804,11 @@ async function loadUserData(){
   btn.innerText = mining ? "Stop Mining" : "Start Mining";
   toggleMiningSections(mining);
 
-  if(mining){
-    startMiningTimer(startedAt);
-  } else {
-    stopMiningTimer();
-  }
+  if (mining) startMiningTimer(startedAt);
+  else stopMiningTimer();
 }
 
-// ✅ UID-based distributeCommission function
+/* 🔹 Referral Commission Distribution */
 async function distributeCommission(fromUID, upline1, upline2, upline3, profitAmount) {
   if (profitAmount <= 0) return;
 
@@ -420,9 +829,8 @@ async function distributeCommission(fromUID, upline1, upline2, upline3, profitAm
     const upData = upSnap.data();
     const activeTotal = (upData.walletBalance || 0) + (upData.miningAmount || 0);
 
-    if (activeTotal >= 170) {
+    if (activeTotal >= 200) {
       const commission = profitAmount * rate;
-
       await updateDoc(upRef, {
         walletBalance: increment(commission)
       });
@@ -438,27 +846,20 @@ async function distributeCommission(fromUID, upline1, upline2, upline3, profitAm
   }
 }
 
-// 🔽 Auth state listener
-onAuthStateChanged(auth, async(user) => {
-  if(!user) {
-    location.href = "auth.html";
-    return;
-  }
-  currentUser = user;
-  await loadUserData();
-
-  // live listen to mining history (last 5)
+/* 🔹 Load Real-time Mining History */
+async function loadMiningHistory(user) {
   const q = query(collection(db, "users", user.uid, "miningHistory"), orderBy("time", "desc"));
   onSnapshot(q, (snap) => {
     miningHistoryEl.innerHTML = "";
-    let i = 0;
-    snap.forEach(docSnap => {
-      if (i >= 5) return;
+    if (snap.empty) {
+      miningHistoryEl.innerHTML = `<li style="opacity:0.7;">No mining history yet</li>`;
+      return;
+    }
+    snap.forEach((docSnap) => {
       const d = docSnap.data();
-      const li = document.createElement("li");
       const durMin = (d.duration / 60000).toFixed(1);
       const date = new Date(d.time).toLocaleString();
-
+      const li = document.createElement("li");
       li.innerHTML = `
         <div class="amount"><i class="fa-solid fa-coins"></i> $${Number(d.amount).toFixed(2)} mined</div>
         <div class="duration"><i class="fa-regular fa-clock"></i> ${durMin} min</div>
@@ -466,14 +867,71 @@ onAuthStateChanged(auth, async(user) => {
         <span class="time"><i class="fa-regular fa-calendar"></i> ${date}</span>
       `;
       miningHistoryEl.appendChild(li);
-      i++;
     });
   });
+}
+
+/* 🔹 Load Real-time Referral Income */
+async function loadReferralIncome(user) {
+  const q = query(collection(db, "referral_income"), where("toUpline", "==", user.uid), orderBy("time", "desc"));
+  onSnapshot(q, async (snap) => {
+    miningHistoryEl.innerHTML = "";
+    if (snap.empty) {
+      miningHistoryEl.innerHTML = `<li style="opacity:0.7;">No referral income yet</li>`;
+      return;
+    }
+
+    for (const docSnap of snap.docs) {
+      const d = docSnap.data();
+      const date = new Date(d.time).toLocaleString();
+      let fromName = "Unknown";
+      try {
+        const userRef = doc(db, "users", d.fromUser);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          fromName = data.name || data.username || "Unnamed";
+        }
+      } catch {}
+
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <div class="amount"><i class="fa-solid fa-user-group"></i> ${fromName}</div>
+        <div class="duration">Level ${d.level}</div>
+        <div class="profit"><i class="fa-solid fa-arrow-trend-up"></i> +$${Number(d.amount).toFixed(4)} received</div>
+        <span class="time"><i class="fa-regular fa-calendar"></i> ${date}</span>
+      `;
+      miningHistoryEl.appendChild(li);
+    }
+  });
+}
+
+/* 🔹 Auth State Listener */
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    location.href = "auth.html";
+    return;
+  }
+  currentUser = user;
+  await loadUserData();
+  await loadMiningHistory(user); // default show mining history
 });
 
-// 🔽 Main mining button logic
+/* 🔹 Toggle Button Controls */
+miningBtn.onclick = () => {
+  miningBtn.classList.add("active");
+  referralBtn.classList.remove("active");
+  loadMiningHistory(currentUser);
+};
+referralBtn.onclick = () => {
+  referralBtn.classList.add("active");
+  miningBtn.classList.remove("active");
+  loadReferralIncome(currentUser);
+};
+
+/* 🔹 Main Mining Start/Stop Logic */
 btn.onclick = async () => {
-  if(!currentUser) return showPopup("Not logged in");
+  if (!currentUser) return showPopup("Not logged in");
   const userRef = doc(db, "users", currentUser.uid);
   const snap = await getDoc(userRef);
   const data = snap.exists() ? snap.data() : {};
@@ -482,12 +940,17 @@ btn.onclick = async () => {
   const miningAmount = Number(data.miningAmount || 0);
   const startedAt = data.miningStartedAt || 0;
 
-  if(!mining){
-    // Start Mining logic
+  if (!mining) {
     const amt = parseFloat(amountInput.value);
-    if(isNaN(amt) || amt <= 0) return showPopup("Enter valid amount");
-    if(amt > wallet) return showPopup("Insufficient Balance");
-    if(amt < 200) return showPopup("Minimum $200 required");
+    if (isNaN(amt) || amt <= 0) return showPopup("Enter valid amount");
+    if (amt > wallet) return showPopup("Insufficient Balance");
+    if (amt < 200) return showPopup("Minimum $200 required");
+
+    const lifetimeDeposit = Number(data.lifetimeDeposit || 0);
+
+    if (amt > lifetimeDeposit) {
+      return showPopup(`Only you can mine ($${lifetimeDeposit.toFixed(2)}).`);
+    }
 
     await updateDoc(userRef, {
       walletBalance: wallet - amt,
@@ -502,59 +965,61 @@ btn.onclick = async () => {
     fundEl.innerText = `$${amt.toFixed(2)}`;
     walletEl.innerText = `$${(wallet - amt).toFixed(2)}`;
     startMiningTimer(Date.now());
-  } else {
-    // Stop Mining logic
-    const diff = Date.now() - startedAt;
-    const daysFraction = Math.max(diff / 86400000, 1 / 1440);
-    const profit = miningAmount * DAILY_RATE * daysFraction;
-
-    const userShare = profit * 0.70;
-    const totalReturnToUser = miningAmount + userShare;
-
-    await updateDoc(userRef, {
-      walletBalance: wallet + totalReturnToUser,
-      miningAmount: 0,
-      miningStartedAt: deleteField(),
-      totalMined: increment(profit)
-    });
-
-    await addDoc(collection(db, "users", currentUser.uid, "miningHistory"), {
-      uid: currentUser.uid,
-      amount: miningAmount,
-      earned: profit,
-      userShare: userShare,
-      duration: diff,
-      time: Date.now()
-    });
-
-    await addDoc(collection(db, "mining_releases"), {
-      user: currentUser.uid,
-      amount: miningAmount,
-      profit: profit,
-      userShare: userShare,
-      time: Date.now()
-    });
-
-    // ✅ Distribute commission by UID chain (3 levels)
-    if (data.upline1 || data.upline2 || data.upline3) {
-      await distributeCommission(
-        currentUser.uid,
-        data.upline1 || null,
-        data.upline2 || null,
-        data.upline3 || null,
-        profit
-      );
-    }
-
-    showPopup(`You earned $${profit.toFixed(4)} profit. Returned $${totalReturnToUser.toFixed(4)} to wallet.`);
-    mining = false;
-    btn.innerText = "Start Mining";
-    toggleMiningSections(false);
-    stopMiningTimer();
-    setTimeout(loadUserData, 800);
+    return;
   }
+
+  // Stop mining logic
+  const diff = Date.now() - startedAt;
+  const daysFraction = Math.max(diff / 86400000, 1 / 1440);
+  const profit = miningAmount * DAILY_RATE * daysFraction;
+  const userShare = profit * 0.70;
+  const totalReturnToUser = miningAmount + userShare;
+
+  await updateDoc(userRef, {
+    walletBalance: wallet + totalReturnToUser,
+    miningAmount: 0,
+    miningStartedAt: deleteField(),
+    totalMined: increment(profit)
+  });
+
+  await addDoc(collection(db, "users", currentUser.uid, "miningHistory"), {
+    uid: currentUser.uid,
+    amount: miningAmount,
+    earned: profit,
+    userShare: userShare,
+    duration: diff,
+    time: Date.now()
+  });
+
+  await addDoc(collection(db, "mining_releases"), {
+    user: currentUser.uid,
+    amount: miningAmount,
+    profit: profit,
+    userShare: userShare,
+    time: Date.now()
+  });
+
+  if (data.upline1 || data.upline2 || data.upline3) {
+    await distributeCommission(
+      currentUser.uid,
+      data.upline1 || null,
+      data.upline2 || null,
+      data.upline3 || null,
+      profit
+    );
+  }
+
+  showPopup(`You earned $${profit.toFixed(4)} profit. Returned $${totalReturnToUser.toFixed(4)} to wallet.`);
+  mining = false;
+  btn.innerText = "Start Mining";
+  toggleMiningSections(false);
+  stopMiningTimer();
+  setTimeout(loadUserData, 800);
 };
+
+
 </script>
+
+
 </body>
 </html>
-
