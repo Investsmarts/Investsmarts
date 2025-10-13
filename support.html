@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Support | Smart Mining</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", sans-serif; }
+
+    body {
+      background: #f5f7fa;
+      display: flex; justify-content: center; align-items: flex-start;
+      min-height: 100vh; padding: 40px 20px;
+    }
+
+    .support-container {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      padding: 24px 20px;
+      border: 1px solid #e2e2e2;
+    }
+
+    .support-container h2 {
+      text-align: center;
+      color: #28a745;
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+
+    label { display:block; font-size:14px; margin:10px 0 6px; color:#333; }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      transition: 0.2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: #28a745;
+      outline: none;
+      box-shadow: 0 0 5px rgba(40,167,69,0.4);
+    }
+
+    textarea { resize:none; height:100px; }
+
+    button {
+      width: 100%;
+      margin-top: 18px;
+      padding: 12px;
+      background: linear-gradient(145deg,#28a745,#1e7e34);
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover { transform: translateY(-2px); }
+
+    .refresh-btn {
+      background: linear-gradient(145deg, #007bff, #0069d9);
+      margin-top: 10px;
+      font-size: 15px;
+    }
+    .refresh-btn:hover {
+      background: linear-gradient(145deg, #1a8cff, #007bff);
+    }
+
+    .status-box {
+      background: #f8fff9;
+      border: 1px solid #cdeccf;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-top: 16px;
+      font-size: 13px;
+      color: #333;
+    }
+
+    .status-box span { font-weight:bold; color:#28a745; }
+
+    /* 🟢 Alert Box */
+    .alert {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: #28a745;
+      color: white;
+      padding: 14px 22px;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+      font-weight: bold;
+      text-align: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      z-index: 2000;
+    }
+
+    .alert.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* 🧾 Ticket History */
+    .ticket-history {
+      margin-top: 20px;
+    }
+
+    .ticket-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      font-size: 13px;
+    }
+
+    .ticket-card .reply {
+      background: #e9fce9;
+      border-left: 4px solid #28a745;
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-top: 6px;
+      color: #1e7e34;
+      font-size: 13px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .ticket-card .status {
+      color: #28a745;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="alert" id="alertBox"></div>
+
+  <div class="support-container">
+    <h2><i class="fa-solid fa-headset"></i> Contact Support</h2>
+
+    <label for="name">Full Name</label>
+    <input type="text" id="name" placeholder="Enter your full name">
+
+    <label for="email">Email Address</label>
+    <input type="email" id="email" placeholder="Enter your email">
+
+    <label for="subject">Subject</label>
+    <select id="subject">
+      <option value="">Select your issue</option>
+      <option>Deposit Not Showing</option>
+      <option>Mining Not Starting</option>
+      <option>Referral Income Issue</option>
+      <option>Withdrawal Pending</option>
+      <option>Account Access Problem</option>
+      <option>Other</option>
+    </select>
+
+    <label for="message">Your Message</label>
+    <textarea id="message" placeholder="Type your issue or question..."></textarea>
+
+    <button id="submitBtn"><i class="fa-solid fa-paper-plane"></i> Submit Request</button>
+    <button class="refresh-btn" id="refreshBtn"><i class="fa-solid fa-rotate"></i> Refresh Tickets</button>
+
+    <div id="statusBox" class="status-box" style="display:none;"></div>
+    <div class="ticket-history" id="ticketHistory"></div>
+  </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import {
+  getFirestore, collection, addDoc, query, where, orderBy, onSnapshot
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25",
+  storageBucket: "btcinvest-c0e25.firebasestorage.app",
+  messagingSenderId: "204937458487",
+  appId: "1:204937458487:web:cc27ece1249999279f60b2",
+  measurementId: "G-HG0Q8ZHT6G"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const nameInput = document.getElementById("name");
+const emailInput = document.getElementById("email");
+const subjectInput = document.getElementById("subject");
+const msgInput = document.getElementById("message");
+const submitBtn = document.getElementById("submitBtn");
+const refreshBtn = document.getElementById("refreshBtn");
+const alertBox = document.getElementById("alertBox");
+const statusBox = document.getElementById("statusBox");
+const ticketHistory = document.getElementById("ticketHistory");
+
+let currentTicketId = null;
+
+// 🟢 Show Alert Centered
+function showAlert(msg, color = "#28a745") {
+  alertBox.textContent = msg;
+  alertBox.style.background = color;
+  alertBox.classList.add("show");
+  setTimeout(() => alertBox.classList.remove("show"), 2500);
+}
+
+// 🟢 Generate Custom Ticket ID
+function generateTicketID() {
+  return "TDCX" + Math.random().toString(36).substring(2, 10).toUpperCase();
+}
+
+// 🟢 Submit Support Request
+submitBtn.onclick = async () => {
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim();
+  const subject = subjectInput.value.trim();
+  const message = msgInput.value.trim();
+
+  if (!name || !email || !subject || !message) {
+    showAlert("⚠️ Please fill all fields before submitting.", "#dc3545");
+    return;
+  }
+
+  const ticketID = generateTicketID();
+
+  try {
+    await addDoc(collection(db, "user_support_tickets"), {
+      name,
+      email,
+      subject,
+      message,
+      status: "Pending",
+      reply: "",
+      ticketCustomID: ticketID,
+      adminSeen: false,
+      time: Date.now()
+    });
+
+    showAlert("✅ Message sent successfully!");
+    statusBox.style.display = "block";
+    statusBox.innerHTML = `Status: <span>Pending</span><br>Ticket ID: <b>${ticketID}</b>`;
+
+    nameInput.value = "";
+    emailInput.value = "";
+    subjectInput.value = "";
+    msgInput.value = "";
+
+    loadUserTickets();
+  } catch (e) {
+    console.error(e);
+    showAlert("❌ Error submitting request!", "#dc3545");
+  }
+};
+
+// 🟢 Load User Tickets
+function loadUserTickets() {
+  const email = localStorage.getItem("userEmail");
+  if (!email) return;
+
+  const q = query(
+    collection(db, "user_support_tickets"),
+    where("email", "==", email),
+    orderBy("time", "desc")
+  );
+
+  onSnapshot(q, (snap) => {
+    ticketHistory.innerHTML = "";
+    if (snap.empty) {
+      ticketHistory.innerHTML = `<p style="text-align:center; opacity:0.7;">No previous tickets found</p>`;
+      return;
+    }
+
+    snap.forEach((doc) => {
+      const d = doc.data();
+      const card = document.createElement("div");
+      card.className = "ticket-card";
+
+      const date = new Date(d.time).toLocaleString();
+
+      card.innerHTML = `
+        <b>${d.name}</b> — <span class="status">${d.status}</span><br>
+        <small>${date}</small><br>
+        <div><b>Ticket ID:</b> ${d.ticketCustomID || "N/A"}</div>
+        <div><b>Subject:</b> ${d.subject}</div>
+        <div style="margin-top:4px;">${d.message}</div>
+        ${d.reply ? `<div class="reply">${d.reply}</div>` : ""}
+      `;
+
+      ticketHistory.appendChild(card);
+    });
+  });
+}
+
+// 🟢 Refresh Button
+refreshBtn.onclick = () => {
+  showAlert("🔄 Refreshing ticket list...");
+  loadUserTickets();
+};
+
+// 🟢 Auto Load Email from LocalStorage
+emailInput.addEventListener("change", () => {
+  localStorage.setItem("userEmail", emailInput.value);
+  loadUserTickets();
+});
+
+if (localStorage.getItem("userEmail")) {
+  emailInput.value = localStorage.getItem("userEmail");
+  loadUserTickets();
+}
+</script>
+</body>
+</html>
