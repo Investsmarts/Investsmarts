@@ -12,6 +12,7 @@
   --text-dark: #0f172a;
 }
 body {
+   
   font-family: "Poppins", sans-serif;
   background: var(--bg);
   color: var(--text-dark);
@@ -604,7 +605,18 @@ body {
   }
   .close-btn { top: 10px; right: 15px; font-size: 22px; }
 }
+/* Header fixed position ka compensation */
+body {
+  padding-top: 80px; /* jitna header ka height hai utna space */
+}
 
+/* Header ko thoda upar z-index de do taaki overlap sahi lage */
+.buy-hashrate {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
 
 
 </style>
