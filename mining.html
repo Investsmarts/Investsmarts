@@ -557,6 +557,20 @@
 }
 
 
+/* 🔴 Stop Mining Button Style */
+button.stop-active {
+  background: linear-gradient(145deg, #dc3545, #b02a37) !important;
+  box-shadow: 0 4px 0 #8b1d2a, 0 0 14px rgba(220, 53, 69, 0.45) !important;
+  color: #fff !important;
+  transition: all 0.3s ease;
+}
+
+button.stop-active:hover {
+  transform: translateY(-2px) scale(1.03);
+  background: linear-gradient(145deg, #e03b4d, #c12b39) !important;
+}
+
+
   </style>
 </head>
 <body>
@@ -961,6 +975,8 @@ btn.onclick = async () => {
     showPopup("Mining Started");
     mining = true;
     btn.innerText = "Stop Mining";
+    btn.classList.add("stop-active"); // 🔴 red ho jayega
+
     toggleMiningSections(true);
     fundEl.innerText = `$${amt.toFixed(2)}`;
     walletEl.innerText = `$${(wallet - amt).toFixed(2)}`;
@@ -1012,6 +1028,8 @@ btn.onclick = async () => {
   showPopup(`You earned $${profit.toFixed(4)} profit. Returned $${totalReturnToUser.toFixed(4)} to wallet.`);
   mining = false;
   btn.innerText = "Start Mining";
+  btn.classList.remove("stop-active"); // 🟢 wapas green
+
   toggleMiningSections(false);
   stopMiningTimer();
   setTimeout(loadUserData, 800);
