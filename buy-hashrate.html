@@ -468,12 +468,214 @@ body {
   text-shadow: 0 1px 1px rgba(0,0,0,0.05);
 }
 
+/* 🔹 Header layout fix for inline icon */
+.header {
+  display: flex;
+  align-items: center;        /* vertical centering */
+  justify-content: center;    /* center horizontally */
+  gap: 10px;                  /* space between text and icon */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(145deg, #3ed667, #218838);
+  color: white;
+  padding: 10px 0;            /* was too thick, now balanced */
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+
+/* 🔴 Header Info Button */
+.guide-icon-btn {
+  background: rgb(212 29 29);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-top: 1px;            /* 👈 just to align perfectly */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.guide-icon-btn i {
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.guide-icon-btn:hover {
+  background: #fff;
+  border-color: #fff;
+}
+
+.guide-icon-btn:hover i {
+  color: #28a745;
+  transform: scale(1.1);
+}
+
+
+/* ===== MOBILE FIX ===== */
+@media (max-width: 480px) {
+  .guide-icon-btn {
+    width: 28px;
+    height: 28px;
+  }
+  .guide-icon-btn i {
+    font-size: 15px;
+  }
+}
+
+/* 🔹 Guide Popup Fullscreen Responsive */
+.guide-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Show Popup */
+.guide-popup.show {
+  display: flex;
+  opacity: 1;
+}
+
+/* Popup Card */
+.guide-content {
+  position: relative;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 25px;
+  width: 90%;
+  max-width: 750px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  animation: popupZoom 0.35s ease;
+}
+
+/* Hide vertical scrollbar */
+.guide-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* Animation */
+@keyframes popupZoom {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  border: none;
+  background: none;
+  color: #333;
+  font-size: 24px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.close-btn:hover {
+  color: #dc2626;
+  transform: scale(1.2);
+}
+
+/* Responsive Fix */
+@media (max-width: 600px) {
+  .guide-content {
+    width: 80%;
+    padding: 18px;
+    font-size: 14px;
+  }
+  .close-btn { top: 10px; right: 15px; font-size: 22px; }
+}
+
+
 
 </style>
 </head>
 
 <body>
-<div id="popupAlert" class="popup-alert"></div>
+
+<!-- 🔹 Header with Guide Button -->
+<div class="header">
+  <span>Buy Hashrate</span>
+  <button class="guide-icon-btn" onclick="openMiningGuide()" title="Buy Hashrate Guide">
+    <i class="fa-solid fa-circle-info"></i>
+  </button>
+</div>
+
+<!-- 🔹 Buy Hashrate Guide Popup -->
+<div id="miningGuidePopup" class="guide-popup">
+  <div class="guide-content">
+    <button class="close-btn" onclick="closeMiningGuide()">&times;</button>
+    <h2><i class="fa-solid fa-circle-info"></i> Buy Hashrate Guide</h2>
+
+    <p>
+      Welcome to <b>TrustDollar Cloud Mining</b> — here’s everything you need to know before purchasing a <b>Buy Hashrate</b> plan.
+    </p>
+
+    <div class="guide-section">
+      <h3>✅ How to Buy a Plan</h3>
+      <ul>
+        <li>Make sure you have enough balance in your <b>wallet</b>.</li>
+        <li>You can only buy up to your <b>lifetime deposit limit</b>.</li>
+        <li>Select your plan and click <b>Buy</b> to confirm.</li>
+        <li>Your plan becomes <b>Active</b> instantly and starts generating daily profit.</li>
+      </ul>
+    </div>
+
+    <div class="guide-section">
+      <h3>💹 How Daily Profit Works</h3>
+      <ul>
+        <li>You’ll continue receiving <b>daily profit</b> and <b>commission</b> until your plan duration ends.</li>
+        <li>Every 24 hours, click the <b>“Collect Profit”</b> button to transfer profit to your wallet.</li>
+        <li>After completion, your <b>investment + total profit</b> automatically returns to your wallet.</li>
+      </ul>
+    </div>
+
+    <div class="guide-section">
+      <h3>💰 Referral Income System (3 Levels)</h3>
+      <ul>
+        <li><b>Level 1:</b> 17% of your direct partner’s profit.</li>
+        <li><b>Level 2:</b> 8% of your second-level partner’s profit.</li>
+        <li><b>Level 3:</b> 5% of your third-level partner’s profit.</li>
+        <li>Referral income continues daily while your plan is active.</li>
+      </ul>
+    </div>
+
+    <div class="guide-section">
+      <h3>⚠️ Important Notes</h3>
+      <ul>
+        <li>You cannot buy a new plan until your current one completes.</li>
+        <li>Profit percentage is based on your selected plan (2.1% – 5%).</li>
+        <li>Even if you close the app, your plan continues automatically.</li>
+      </ul>
+    </div>
+
+    <p class="guide-footer">
+      Need help? Our support is available 24/7.<br>
+      <a href="support.html" target="_blank">📩 Contact Support</a>
+    </p>
+  </div>
+</div>
+
+
 
 <div class="card">
   <div class="wallet">
@@ -600,6 +802,19 @@ body {
   </div>
 </div>
 </body>
+
+<script>
+function openMiningGuide() {
+  const popup = document.getElementById("miningGuidePopup");
+  popup.classList.add("show");
+}
+
+function closeMiningGuide() {
+  const popup = document.getElementById("miningGuidePopup");
+  popup.classList.remove("show");
+}
+</script>
+
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
@@ -914,7 +1129,8 @@ async function checkAndAddProfit(ref, plan, uid) {
 
 }
 
-// 💸 Manual Profit Collect
+
+// 💸 Manual Profit Collect (FIXED FULL VERSION)
 document.getElementById("collectProfitBtn").addEventListener("click", async () => {
   const user = auth.currentUser;
   if (!user) return showCenterAlert("🚫 Please login first!");
@@ -932,7 +1148,17 @@ document.getElementById("collectProfitBtn").addEventListener("click", async () =
   const docRef = res.docs[0].ref;
   const plan = res.docs[0].data();
   const now = new Date();
-  const next = plan.nextPayout.toDate ? plan.nextPayout.toDate() : new Date(plan.nextPayout);
+
+  // ✅ Safe date parsing for next payout
+  let next;
+  if (plan.nextPayout?.toDate) next = plan.nextPayout.toDate();
+  else next = new Date(plan.nextPayout);
+
+  // 🛠 Validate date
+  if (isNaN(next.getTime())) {
+    console.warn("⚠️ Invalid nextPayout format:", plan.nextPayout);
+    return showCenterAlert("⚠️ Invalid payout time. Please refresh the page.");
+  }
 
   // ⏳ If not yet time
   if (now < next) {
@@ -943,10 +1169,15 @@ document.getElementById("collectProfitBtn").addEventListener("click", async () =
   // 💰 Calculate daily profit
   const dailyProfit = (plan.planCost * plan.dailyProfitPercent) / 100;
   const newProfit = (plan.earnedProfit || 0) + dailyProfit;
-  const newNext = new Date(now.getTime() + 86400000);
+  const newNext = new Date(now.getTime() + 86400000); // next 24h
 
   // 🕒 Update next payout & earned profit
-  await updateDoc(docRef, { earnedProfit: newProfit, nextPayout: newNext });
+  try {
+    await updateDoc(docRef, { earnedProfit: newProfit, nextPayout: newNext });
+  } catch (err) {
+    console.error("❌ Error updating plan profit:", err);
+    return showCenterAlert("⚠️ Failed to update profit in plan document.");
+  }
 
   // 💸 Split profit: 70% user, 30% uplines
   const userShare = dailyProfit * 0.7;
@@ -957,20 +1188,59 @@ document.getElementById("collectProfitBtn").addEventListener("click", async () =
   const userSnap = await getDoc(userRef);
   const userData = userSnap.data();
 
+  // 🧾 Fix: define cost before lifetimeDeposit check
+  const cost = plan.planCost;
+  const lifetimeDeposit = Number(userData.lifetimeDeposit || 0);
+  if (cost > lifetimeDeposit) {
+    showCenterAlert(`Buy limit ($${lifetimeDeposit.toFixed(2)})`);
+    closeModal();
+    return; // stop purchase
+  }
+
   // 🧾 Update user's wallet (only 70%)
   const updatedWallet = (userData.walletBalance || 0) + userShare;
-  await updateDoc(userRef, { walletBalance: updatedWallet });
+
+  try {
+    await updateDoc(userRef, { walletBalance: updatedWallet });
+  } catch (err) {
+    console.error("❌ Wallet update failed:", err);
+    return showCenterAlert("⚠️ Failed to update wallet balance.");
+  }
 
   // 🧩 Distribute 30% to uplines
-  await distributeLevelIncome(userData, uplineShare);
+  try {
+    await distributeLevelIncome(userData, uplineShare);
+  } catch (err) {
+    console.error("⚠️ Level income distribution error:", err);
+  }
 
-  // 🧠 Update UI
-  document.getElementById("earnedProfit").textContent = newProfit.toFixed(2);
-  document.getElementById("walletBalance").textContent = `$${updatedWallet.toFixed(2)}`;
+  // 🧠 Update UI safely
+  if (document.getElementById("earnedProfit")) {
+    document.getElementById("earnedProfit").textContent = newProfit.toFixed(2);
+  }
+  if (document.getElementById("walletBalance")) {
+    document.getElementById("walletBalance").textContent = `$${updatedWallet.toFixed(2)}`;
+  }
 
   // ✅ Success alert
   showCenterAlert(`✅ $${userShare.toFixed(2)} profit added to your wallet! (30% shared with uplines)`);
+
+  console.log("💰 Profit collection successful:", {
+    collectedAt: now.toLocaleString(),
+    userShare,
+    uplineShare,
+    newNext
+  });
 });
+
+  // ♻️ Re-enable button for next profit cycle
+  const collectBtn = document.getElementById("collectProfitBtn");
+  if (collectBtn) {
+    collectBtn.textContent = "Collect Today’s Profit";
+    collectBtn.disabled = false;
+    collectBtn.style.background = "linear-gradient(135deg,#16a34a,#22c55e)";
+    collectBtn.style.cursor = "pointer";
+  }
 
 // 🧮 Level 3 Income Distribution (30% of user profit)
 async function distributeLevelIncome(userData, totalShare) {
@@ -1051,19 +1321,31 @@ function startCountdown(nextTime) {
     const now = new Date().getTime();
     const remaining = target - now;
 
-    // 🟥 When time is up
-    if (remaining <= 0) {
-      clearInterval(window.activeCountdownTimer);
-      label.textContent = "Ready to Collect Profit";
-      label.style.color = "#dc2626";
+    
+ // 🟥 When time is up
+if (remaining <= 0) {
+  clearInterval(window.activeCountdownTimer);
+  label.textContent = "Ready to Collect Profit";
+  label.style.color = "#dc2626";
 
-      timerEl.textContent = "READY";
-      timerEl.classList.add("ready");
-      ring.style.strokeDashoffset = 0;
-      ringTime.textContent = "✔";
-      console.log("✅ Countdown complete!");
-      return;
-    }
+  timerEl.textContent = "READY";
+  timerEl.classList.add("ready");
+  ring.style.strokeDashoffset = 0;
+  ringTime.textContent = "✔";
+  console.log("✅ Countdown complete!");
+
+  // 🟢 Change Collect button after 24h completion
+  const collectBtn = document.getElementById("collectProfitBtn");
+  if (collectBtn) {
+    collectBtn.textContent = "Received Earning ✅";
+    collectBtn.disabled = true;
+    collectBtn.style.background = "#9ca3af";
+    collectBtn.style.cursor = "not-allowed";
+  }
+
+  return;
+}
+
 
     // ⏱ Convert remaining time to h:m:s
     const hours = Math.floor((remaining / (1000 * 60 * 60)) % 24);
