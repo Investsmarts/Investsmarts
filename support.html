@@ -321,5 +321,1096 @@ if (localStorage.getItem("userEmail")) {
   loadUserTickets();
 }
 </script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+
+    body {
+      background: #f5f7fa;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 120px 14px 140px; /* space for fixed header + nav */
+      max-width: 420px;
+      margin: 0 auto;
+      color: #222;
+    }
+
+    /* 🔹 Header layout fix for inline icon */
+.header {
+  display: flex;
+  align-items: center;        /* vertical centering */
+  justify-content: center;    /* center horizontally */
+  gap: 10px;                  /* space between text and icon */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(145deg, #3ed667, #218838);
+  color: white;
+  padding: 10px 0;            /* was too thick, now balanced */
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+
+/* ===== VISIBLE GUIDE BUTTON ===== */
+.guide-icon-btn {
+  background: rgb(212 29 29);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-top: 1px;            /* 👈 just to align perfectly */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.guide-icon-btn i {
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.guide-icon-btn:hover {
+  background: #fff;
+  border-color: #fff;
+}
+
+.guide-icon-btn:hover i {
+  color: #28a745;
+  transform: scale(1.1);
+}
+
+
+/* ===== MOBILE FIX ===== */
+@media (max-width: 480px) {
+  .guide-icon-btn {
+    width: 28px;
+    height: 28px;
+  }
+  .guide-icon-btn i {
+    font-size: 15px;
+  }
+}
+
+
+    /* ✅ Top nav */
+    .top-nav {
+      position: fixed; top: 54px; left: 0; width: 100%;
+      display: flex; justify-content: space-between; gap: 10px;
+      background: #f5f7fa; padding: 8px 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08); z-index: 999;
+    }
+    .top-nav a {
+      flex: 1; text-align: center; padding: 10px 0;
+      background: #fff; border-radius: 8px; text-decoration: none;
+      font-size: 14px; font-weight: 600; color: #28a745;
+      border: 1px solid #ddd; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: 0.2s;
+    }
+    .top-nav a:hover { background:#28a745; color:#fff; transform:translateY(-2px); }
+
+    /* Wallet Boxes */
+    .grid-boxes { display:flex; justify-content:space-between; gap:14px; margin-bottom:20px; }
+    .box {
+      background: linear-gradient(145deg,#fff,#f1f1f1);
+      border-radius: 14px; padding:16px;
+      box-shadow:0 4px 10px rgba(0,0,0,0.08);
+      flex:0 0 48%; border:1px solid #e2e2e2;
+      transition: transform 0.2s ease;
+    }
+    .box:hover { transform:translateY(-2px); box-shadow:0 6px 14px rgba(0,0,0,0.12); }
+    .label { color:#666; font-size:13px; margin-bottom:6px; }
+    .value { font-size:22px; color:#111; font-weight:bold; }
+
+    .input-box {
+      background:#fff; border:1px solid #ddd; border-radius:14px;
+      padding:16px; box-shadow:0 2px 6px rgba(0,0,0,0.05); margin-top:20px;
+    }
+
+    input[type="number"] {
+      width:100%; padding:12px; background:#fff; border:1px solid #ccc;
+      border-radius:10px; font-size:16px; margin-top:8px;
+    }
+
+    button {
+      margin-top:18px; width:100%; padding:14px;
+      font-size:17px; font-weight:bold; border:none; border-radius:14px;
+      color:#fff; background:linear-gradient(145deg,#28a745,#218838);
+      box-shadow:0 4px 0 #1e7e34,0 0 14px rgba(40,167,69,0.4);
+      cursor:pointer; transition:0.25s;
+    }
+    button:hover { transform:translateY(-2px) scale(1.02); }
+
+    .referral-btn {
+      padding:14px 32px; font-size:16px; font-weight:bold; color:#fff;
+      background:linear-gradient(145deg,#28a745,#218838);
+      border-radius:14px; box-shadow:0 4px 0 #1e7e34,0 0 14px rgba(40,167,69,0.3);
+      text-decoration:none; display:inline-block; text-align:center; margin:20px 0;
+    }
+
+    .history-title {
+      background:#28a745; color:white; font-weight:bold; text-align:center;
+      padding:14px; margin:20px 0; border-radius:14px; font-size:16px;
+    }
+
+    /* ✅ Bottom nav */
+    .nav-bar {
+      position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+      background:#fff; display:flex; justify-content:space-between; align-items:center;
+      width:100%; max-width:480px; padding:8px 0;
+      box-shadow:0 -2px 12px rgba(0,0,0,0.08); z-index:999; border-top:1px solid #ddd;
+    }
+    .nav-bar a { flex:1; text-align:center; font-size:12px; color:#555; text-decoration:none; }
+    .nav-bar a i { display:block; font-size:18px; margin-bottom:4px; color:#777; }
+    .nav-bar a.active i, .nav-bar a.active span { color:#28a745; font-weight:bold; }
+
+    /* ✅ Timer + waves */
+    #timerBox {
+      display:none; text-align:center; margin-top:14px;
+      background:#fff; border:1px solid #ccc; padding:14px;
+      border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    }
+    #miningTimer {
+      font-size:22px; color:#111; margin-top:6px;
+      background:#fafafa; padding:12px 24px; border-radius:12px;
+      display:inline-block; box-shadow:0 2px 6px rgba(0,0,0,0.08);
+    }
+    .mining-waves { display:flex; justify-content:center; align-items:center; gap:6px; margin-top:18px; height:30px; }
+    .wave { width:6px; height:100%; background:#28a745; border-radius:4px; animation:waveFlow 1.2s ease-in-out infinite; }
+    .wave:nth-child(1){animation-delay:0s;} .wave:nth-child(2){animation-delay:0.2s;}
+    .wave:nth-child(3){animation-delay:0.4s;} .wave:nth-child(4){animation-delay:0.6s;} .wave:nth-child(5){animation-delay:0.8s;}
+    @keyframes waveFlow { 0%,100%{height:15%;opacity:0.3;} 50%{height:100%;opacity:1;} }
+
+    /* ✅ Popup */
+    .popup {
+      display:none; position:fixed; bottom:120px; left:50%; transform:translateX(-50%);
+      background:#fff; padding:12px 18px; border-radius:12px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.2); font-size:15px; font-weight:bold;
+      color:#28a745; z-index:2000;
+    }
+
+      /* Bottom Navbar */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0;
+      width: 100%; height: 70px; background: #fff;
+      display: flex; justify-content: space-around; align-items: center;
+      border-top: 2px solid #28a745; z-index: 100;
+    }
+    .nav-item { flex: 1; text-align: center; font-size: 12px; color: #333; text-decoration: none; transition: 0.3s; position: relative; padding: 10px 0; }
+    .nav-item i { font-size: 22px; display: block; margin-bottom: 3px; color: #28a745; }
+    .nav-item:hover { color: #28a745; }
+    .nav-item:hover i { color: #218838; }
+
+  /* === Stylish History List === */
+/* === Compact Stylish History List === */
+#miningHistoryList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 90px 0;
+}
+
+#miningHistoryList li {
+  background: #fff;
+  border: 1px solid #e2e2e2;
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+  transition: all 0.2s ease;
+  font-size: 13.5px;
+}
+
+#miningHistoryList li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+
+#miningHistoryList li .amount {
+  font-weight: 600;
+  color: #111;
+  font-size: 14px;
+}
+
+#miningHistoryList li .profit {
+  color: #28a745;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+#miningHistoryList li .duration {
+  color: #555;
+  font-size: 12.5px;
+  margin-top: 2px;
+}
+
+#miningHistoryList li .time {
+  display: block;
+  font-size: 11.5px;
+  color: #888;
+  margin-top: 3px;
+}
+
+/* === Stylish Flip Animation for Timer === */
+/* === Bitcoin particle sparkle + light vibration === */
+#miningTimer {
+  position: relative;
+  overflow: visible;
+  animation: timerShake 1.2s infinite ease-in-out;
+}
+
+/* ✅ Softer, slower vibration (real mining engine feel) */
+#miningTimer {
+  animation: timerShake 3s infinite ease-in-out; /* was 1.2s, now slower */
+}
+
+/* smooth vibration motion */
+@keyframes timerShake {
+  0%, 100% { transform: translate(0,0) rotateX(0deg); }
+  20% { transform: translate(0.5px, -0.5px) rotateX(0.5deg); }
+  40% { transform: translate(-0.5px, 0.5px) rotateX(-0.5deg); }
+  60% { transform: translate(0.4px, 0px) rotateX(0.3deg); }
+  80% { transform: translate(-0.3px, -0.4px) rotateX(-0.3deg); }
+}
+/* Bitcoin particles (generated via pseudo elements) */
+#miningTimer::before,
+#miningTimer::after {
+  content: "₿";
+  position: absolute;
+  font-size: 14px;
+  color: gold;
+  text-shadow: 0 0 6px rgba(255,215,0,0.8);
+  opacity: 0;
+  animation: floatBTC 2s linear infinite;
+}
+
+#miningTimer::before {
+  left: -10px;
+  bottom: 0;
+  animation-delay: 0.3s;
+}
+
+#miningTimer::after {
+  right: -10px;
+  top: 0;
+  animation-delay: 1s;
+}
+
+/* BTC float animation */
+@keyframes floatBTC {
+  0% {
+    transform: translateY(0) scale(0.8) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  60% {
+    transform: translateY(-25px) scale(1) rotate(15deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-50px) scale(0.8) rotate(30deg);
+    opacity: 0;
+  }
+}
+
+.income-type-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap; /* ✅ for mobile responsive */
+}
+
+.income-type-buttons button {
+  flex: 1 1 45%;
+  background: linear-gradient(180deg, #0bb157, #058c43);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 0 #046c35;
+}
+
+.income-type-buttons button:hover {
+  transform: scale(1.03);
+}
+
+.income-type-buttons button.active {
+  background: linear-gradient(180deg, #15d87a, #0ab359);
+  box-shadow: 0 4px 0 #058c43;
+}
+
+/* ✅ INCOME HISTORY STYLISH CARDS */
+/* ✅ INCOME HISTORY CLEAN STATIC CARDS */
+#incomeHistoryList {
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 100px;
+}
+
+/* --- CARD STYLE --- */
+#incomeHistoryList li {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 15px 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eaeaea;
+  font-family: "Poppins", sans-serif;
+}
+
+/* --- TEXT STYLE --- */
+#incomeHistoryList .amount {
+  font-weight: 600;
+  font-size: 15px;
+  color: #111;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#incomeHistoryList .duration {
+  font-size: 13px;
+  color: #666;
+  margin: 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#incomeHistoryList .profit {
+  color: #28a745;
+  font-weight: 600;
+  font-size: 14.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+#incomeHistoryList .time {
+  font-size: 12px;
+  color: #888;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* --- ICON STYLE --- */
+#incomeHistoryList i {
+  color: #28a745;
+  font-size: 14px;
+}
+
+/* --- BUTTON GROUP (MINING / REFERRAL) --- */
+.income-type-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.income-type-buttons button {
+  flex: 1;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 0;
+  background: linear-gradient(180deg, #28a745, #218838);
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #1c6c33;
+}
+
+/* --- ACTIVE BUTTON STATE --- */
+.income-type-buttons button.active {
+  background: linear-gradient(180deg, #39d267, #26b856);
+  box-shadow: 0 3px 0 #1d803f;
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 480px) {
+  #incomeHistoryList li {
+    padding: 12px 14px;
+  }
+  #incomeHistoryList .amount {
+    font-size: 14px;
+  }
+  #incomeHistoryList .profit {
+    font-size: 13.5px;
+  }
+}
+
+/* ===========================
+   Mining Guide Popup Styling
+   =========================== */
+.guide-popup {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+
+.guide-content {
+  background: #fff;
+  padding: 22px 18px;
+  border-radius: 14px;
+  max-width: 380px;
+  max-height: 85vh;
+  overflow-y: auto; /* ✅ scroll enable */
+  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+  color: #333;
+  position: relative;
+  scrollbar-width: none; /* ✅ Firefox me scrollbar hide karega */
+}
+
+/* ✅ Chrome, Edge, Safari me scrollbar hide */
+.guide-content::-webkit-scrollbar {
+  display: none;
+}
+
+
+.guide-content h2 {
+  text-align: center;
+  color: #28a745;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.guide-section {
+  margin-top: 14px;
+}
+
+.guide-section h3 {
+  color: #1d7c39;
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.guide-section ul {
+  margin-left: 18px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.guide-section li {
+  margin-bottom: 5px;
+}
+
+.guide-footer {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 16px;
+  color: #777;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 8px; right: 12px;
+  font-size: 22px;
+  cursor: pointer;
+  color: #555;
+  transition: 0.2s;
+}
+
+.close-btn:hover {
+  color: #28a745;
+  transform: scale(1.1);
+}
+
+/* Popup animation */
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* guyd bala part ka css*/
+.guide-footer {
+  text-align: center;
+  font-size: 12.5px;
+  margin-top: 16px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.contact-link {
+  display: inline-block;
+  margin-top: 6px;
+  background: linear-gradient(145deg, #28a745, #1e7e34);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 13px;
+  transition: 0.25s;
+}
+
+.contact-link:hover {
+  background: linear-gradient(145deg, #34c759, #28a745);
+  transform: translateY(-2px);
+}
+
+
+/* 🔴 Stop Mining Button Style */
+button.stop-active {
+  background: linear-gradient(145deg, #dc3545, #b02a37) !important;
+  box-shadow: 0 4px 0 #8b1d2a, 0 0 14px rgba(220, 53, 69, 0.45) !important;
+  color: #fff !important;
+  transition: all 0.3s ease;
+}
+
+button.stop-active:hover {
+  transform: translateY(-2px) scale(1.03);
+  background: linear-gradient(145deg, #e03b4d, #c12b39) !important;
+}
+
+
+  </style>
+</head>
+<body>
+<div id="popupMsg" class="popup"></div>
+
+ <div class="header">
+  <span>Smart Mining</span>
+  <button class="guide-icon-btn" onclick="openMiningGuide()" title="Mining Guide">
+    <i class="fa-solid fa-circle-info"></i>
+  </button>
+</div>
+
+<!-- 🔹 Mining Guide Popup Modal -->
+<div id="miningGuidePopup" class="guide-popup">
+  <div class="guide-content">
+    <span class="close-btn" onclick="closeMiningGuide()">&times;</span>
+   <h2><i class="fa-solid fa-circle-info"></i> Mining Guide</h2>
+
+
+    <p>
+      Welcome to <b>Smart Mining</b>. Please read the following
+      instructions carefully before you start mining.
+    </p>
+
+    <div class="guide-section">
+      <h3>✅ How to Start Mining</h3>
+      <ul>
+        <li>Ensure you have made a <b>deposit</b> in your account wallet.</li>
+        <li>You can only mine up to your <b>total lifetime deposit</b> amount.</li>
+        <li>Enter the mining amount (minimum <b>$200</b> required).</li>
+        <li>Click <b>Start Mining</b> to begin generating profit automatically.</li>
+        <li>You can stop mining anytime to collect your profit instantly.</li>
+      </ul>
+    </div>
+
+    <div class="guide-section">
+      <h3>💰 Referral Income System (3 Levels)</h3>
+      <ul>
+        <li><b>Level 1:</b> 17% of your direct partner’s profit.</li>
+        <li><b>Level 2:</b> 8% of your second-level partner’s profit.</li>
+        <li><b>Level 3:</b> 5% of your third-level partner’s profit.</li>
+        <li>Referral income is automatically added to your wallet balance.</li>
+        <li>Each referral must have an active deposit of at least <b>$200</b>.</li>
+      </ul>
+    </div>
+
+    <div class="guide-section">
+      <h3>⚠️ Important Notes</h3>
+      <ul>
+        <li>Do not refresh or close the page while mining is active.</li>
+        <li>Mining amount cannot exceed your <b>lifetime deposit limit</b>.</li>
+        <li>Mining rewards depend on your selected daily rate plan.</li>
+        <li>Referral commissions are distributed up to <b>3 levels only</b>.</li>
+        <li>Wallet balance must be sufficient before starting mining.</li>
+      </ul>
+    </div>
+
+    <div class="guide-section">
+      <h3>🚫 Avoid These Mistakes</h3>
+      <ul>
+        <li>Do not enter an incorrect amount — it may cause system errors.</li>
+        <li>Do not use multiple accounts or fake referrals.</li>
+        <li>Do not start mining if you have insufficient wallet balance.</li>
+        <li>Do not share your account credentials with anyone.</li>
+      </ul>
+    </div>
+
+  <p class="guide-footer">
+  If you face any issue or need assistance, feel free to reach out to us.<br>
+  <a href="support.html" target="_blank" class="contact-link">
+    📩 Contact Here
+  </a>
+</p>
+
+  </div>
+</div>
+
+
+  <div class="top-nav">
+    <a href="stacking.html">1.4%</a>
+    <a href="markets.html">1.5%</a>
+    <a href="buy-hashrate.html">2.5%</a>
+  </div>
+
+    <div class="grid-boxes">
+    <div class="box"><div class="label">Wallet</div><div class="value" id="wallet">$0.00</div></div>
+    <div class="box"><div class="label">Mining Fund</div><div class="value" id="miningFund">$0.00</div></div>
+  </div>
+
+  <div class="input-box" id="inputSection">
+    <div class="label">Enter Amount to Mine (min $200)</div>
+    <input type="number" id="amount" min="1" placeholder="Enter amount...">
+  </div>
+  
+  <div id="timerBox">
+    <div id="miningTimer">--:--:--</div>
+    <div class="mining-waves">
+      <span class="wave"></span><span class="wave"></span><span class="wave"></span><span class="wave"></span><span class="wave"></span>
+    </div>
+  </div>
+
+  <button id="miningBtn">Unlock Mining Power</button>
+<div class="history-header">
+  <div class="history-title">Income History</div>
+
+  <div class="income-type-buttons">
+  <button id="miningIncomeBtn" class="active">Mining Income</button>
+  <button id="referralIncomeBtn">Referral Income</button>
+</div>
+
+<!-- Income history list -->
+<ul id="incomeHistoryList">
+  <!-- Mining or Referral data will appear here -->
+</ul>
+
+
+
+
+   <!-- Bottom Navbar -->
+  <div class="bottom-nav">
+    <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
+    <a href="mining.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
+    <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
+    <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
+  </div>
+
+</div>
+<script>
+function openMiningGuide() {
+  const popup = document.getElementById("miningGuidePopup");
+  popup.style.display = "flex";
+  setTimeout(() => popup.style.opacity = "1", 10); // 👈 delay to trigger transition
+}
+
+function closeMiningGuide() {
+  const popup = document.getElementById("miningGuidePopup");
+  popup.style.opacity = "0";
+  setTimeout(() => (popup.style.display = "none"), 300); // 👈 match CSS transition
+}
+
+
+</script>
+
+<script type="module">
+/* =====================================
+   ✅ BTCInvest Full Smart Mining Script
+   Features:
+   - Start/Stop Mining
+   - Lifetime deposit check
+   - Referral 3-level income (17%, 8%, 5%)
+   - Real-time mining history
+   - Real-time referral income (same style)
+   ===================================== */
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, updateDoc, increment, deleteField,
+  collection, query, where, getDocs, addDoc, orderBy, onSnapshot
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+// === Firebase Config ===
+const firebaseConfig = {
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25",
+  storageBucket: "btcinvest-c0e25.firebasestorage.app",
+  messagingSenderId: "204937458487",
+  appId: "1:204937458487:web:cc27ece1249999279f60b2",
+  measurementId: "G-HG0Q8ZHT6G"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// === UI Refs ===
+const walletEl = document.getElementById("wallet");
+const fundEl = document.getElementById("miningFund");
+const amountInput = document.getElementById("amount");
+const btn = document.getElementById("miningBtn");
+const popup = document.getElementById("popupMsg");
+const timerBox = document.getElementById("timerBox");
+const miningTimer = document.getElementById("miningTimer");
+const inputSection = document.getElementById("inputSection");
+const miningHistoryEl = document.getElementById("incomeHistoryList");
+
+// ✅ Buttons for switching income history
+const miningBtn = document.getElementById("miningIncomeBtn");
+const referralBtn = document.getElementById("referralIncomeBtn");
+
+let currentUser = null;
+let mining = false;
+let timerInterval = null;
+
+// profit rate
+const DAILY_RATE = 0.01; // 1% per day
+
+/* 🔹 Helper: Popup Message */
+function showPopup(msg) {
+  popup.innerText = msg;
+  popup.style.display = "block";
+  setTimeout(() => (popup.style.display = "none"), 2500);
+}
+
+/* 🔹 Toggle Mining Sections */
+function toggleMiningSections(active) {
+  timerBox.style.display = active ? "block" : "none";
+  inputSection.style.display = active ? "none" : "block";
+}
+
+/* 🔹 Timer for mining session */
+function startMiningTimer(startedAt) {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    const diff = Date.now() - startedAt;
+    const h = String(Math.floor(diff / 3600000)).padStart(2, "0");
+    const m = String(Math.floor((diff / 60000) % 60)).padStart(2, "0");
+    const s = String(Math.floor((diff / 1000) % 60)).padStart(2, "0");
+    miningTimer.classList.add("flip");
+    setTimeout(() => miningTimer.classList.remove("flip"), 300);
+    miningTimer.innerText = `${h}h : ${m}m : ${s}s`;
+  }, 1000);
+}
+function stopMiningTimer() {
+  clearInterval(timerInterval);
+  miningTimer.innerText = "--:--:--";
+}
+
+/* 🔹 Load User Data */
+async function loadUserData() {
+  if (!currentUser) return;
+  const ref = doc(db, "users", currentUser.uid);
+  const snap = await getDoc(ref);
+  const data = snap.exists() ? snap.data() : {};
+
+  const wallet = data.walletBalance || 0;
+  const miningAmt = data.miningAmount || 0;
+  const startedAt = data.miningStartedAt || null;
+
+  walletEl.innerText = `$${wallet.toFixed(2)}`;
+  fundEl.innerText = `$${miningAmt.toFixed(2)}`;
+
+  mining = !!startedAt;
+  btn.innerText = mining ? "Stop Mining" : "Start Mining";
+  toggleMiningSections(mining);
+
+  if (mining) startMiningTimer(startedAt);
+  else stopMiningTimer();
+}
+
+/* 🔹 Referral Commission Distribution */
+async function distributeCommission(fromUID, upline1, upline2, upline3, profitAmount) {
+  if (profitAmount <= 0) return;
+
+  const levels = [
+    { uid: upline1, rate: 0.17 },
+    { uid: upline2, rate: 0.08 },
+    { uid: upline3, rate: 0.05 }
+  ];
+
+  for (let i = 0; i < levels.length; i++) {
+    const { uid, rate } = levels[i];
+    if (!uid) continue;
+
+    const upRef = doc(db, "users", uid);
+    const upSnap = await getDoc(upRef);
+    if (!upSnap.exists()) continue;
+
+    const upData = upSnap.data();
+    const activeTotal = (upData.walletBalance || 0) + (upData.miningAmount || 0);
+
+    if (activeTotal >= 200) {
+      const commission = profitAmount * rate;
+      await updateDoc(upRef, {
+        walletBalance: increment(commission)
+      });
+
+      await addDoc(collection(db, "referral_income"), {
+        fromUser: fromUID,
+        toUpline: uid,
+        level: i + 1,
+        amount: commission,
+        time: Date.now()
+      });
+    }
+  }
+}
+
+/* 🔹 Load Real-time Mining History */
+async function loadMiningHistory(user) {
+  const q = query(collection(db, "users", user.uid, "miningHistory"), orderBy("time", "desc"));
+  onSnapshot(q, (snap) => {
+    miningHistoryEl.innerHTML = "";
+    if (snap.empty) {
+      miningHistoryEl.innerHTML = `<li style="opacity:0.7;">No mining history yet</li>`;
+      return;
+    }
+    snap.forEach((docSnap) => {
+      const d = docSnap.data();
+      const durMin = (d.duration / 60000).toFixed(1);
+      const date = new Date(d.time).toLocaleString();
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <div class="amount"><i class="fa-solid fa-coins"></i> $${Number(d.amount).toFixed(2)} mined</div>
+        <div class="duration"><i class="fa-regular fa-clock"></i> ${durMin} min</div>
+        <div class="profit"><i class="fa-solid fa-arrow-trend-up"></i> +$${Number(d.earned).toFixed(4)}</div>
+        <span class="time"><i class="fa-regular fa-calendar"></i> ${date}</span>
+      `;
+      miningHistoryEl.appendChild(li);
+    });
+  });
+}
+
+/* 🔹 Load Real-time Referral Income */
+async function loadReferralIncome(user) {
+  const q = query(collection(db, "referral_income"), where("toUpline", "==", user.uid), orderBy("time", "desc"));
+  onSnapshot(q, async (snap) => {
+    miningHistoryEl.innerHTML = "";
+    if (snap.empty) {
+      miningHistoryEl.innerHTML = `<li style="opacity:0.7;">No referral income yet</li>`;
+      return;
+    }
+
+    for (const docSnap of snap.docs) {
+      const d = docSnap.data();
+      const date = new Date(d.time).toLocaleString();
+      let fromName = "Unknown";
+      try {
+        const userRef = doc(db, "users", d.fromUser);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          fromName = data.name || data.username || "Unnamed";
+        }
+      } catch {}
+
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <div class="amount"><i class="fa-solid fa-user-group"></i> ${fromName}</div>
+        <div class="duration">Level ${d.level}</div>
+        <div class="profit"><i class="fa-solid fa-arrow-trend-up"></i> +$${Number(d.amount).toFixed(4)} received</div>
+        <span class="time"><i class="fa-regular fa-calendar"></i> ${date}</span>
+      `;
+      miningHistoryEl.appendChild(li);
+    }
+  });
+}
+
+/* 🔹 Auth State Listener */
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    location.href = "auth.html";
+    return;
+  }
+  currentUser = user;
+  await loadUserData();
+  await loadMiningHistory(user); // default show mining history
+});
+
+/* 🔹 Toggle Button Controls */
+miningBtn.onclick = () => {
+  miningBtn.classList.add("active");
+  referralBtn.classList.remove("active");
+  loadMiningHistory(currentUser);
+};
+referralBtn.onclick = () => {
+  referralBtn.classList.add("active");
+  miningBtn.classList.remove("active");
+  loadReferralIncome(currentUser);
+};
+
+/* 🔹 Main Mining Start/Stop Logic */
+btn.onclick = async () => {
+  if (!currentUser) return showPopup("Not logged in");
+  const userRef = doc(db, "users", currentUser.uid);
+  const snap = await getDoc(userRef);
+  const data = snap.exists() ? snap.data() : {};
+
+  const wallet = Number(data.walletBalance || 0);
+  const miningAmount = Number(data.miningAmount || 0);
+  const startedAt = data.miningStartedAt || 0;
+
+  if (!mining) {
+    const amt = parseFloat(amountInput.value);
+    if (isNaN(amt) || amt <= 0) return showPopup("Enter valid amount");
+    if (amt > wallet) return showPopup("Insufficient Balance");
+    if (amt < 200) return showPopup("Minimum $200 required");
+
+    const lifetimeDeposit = Number(data.lifetimeDeposit || 0);
+
+    if (amt > lifetimeDeposit) {
+      return showPopup(`Only you can mine ($${lifetimeDeposit.toFixed(2)}).`);
+    }
+
+    await updateDoc(userRef, {
+      walletBalance: wallet - amt,
+      miningAmount: amt,
+      miningStartedAt: Date.now()
+    });
+
+    showPopup("Mining Started");
+    mining = true;
+    btn.innerText = "Stop Mining";
+    btn.classList.add("stop-active"); // 🔴 red ho jayega
+
+    toggleMiningSections(true);
+    fundEl.innerText = `$${amt.toFixed(2)}`;
+    walletEl.innerText = `$${(wallet - amt).toFixed(2)}`;
+    startMiningTimer(Date.now());
+    return;
+  }
+
+  // Stop mining logic
+  const diff = Date.now() - startedAt;
+  const daysFraction = Math.max(diff / 86400000, 1 / 1440);
+  const profit = miningAmount * DAILY_RATE * daysFraction;
+  const userShare = profit * 0.70;
+  const totalReturnToUser = miningAmount + userShare;
+
+  await updateDoc(userRef, {
+    walletBalance: wallet + totalReturnToUser,
+    miningAmount: 0,
+    miningStartedAt: deleteField(),
+    totalMined: increment(profit)
+  });
+
+  await addDoc(collection(db, "users", currentUser.uid, "miningHistory"), {
+    uid: currentUser.uid,
+    amount: miningAmount,
+    earned: profit,
+    userShare: userShare,
+    duration: diff,
+    time: Date.now()
+  });
+
+  await addDoc(collection(db, "mining_releases"), {
+    user: currentUser.uid,
+    amount: miningAmount,
+    profit: profit,
+    userShare: userShare,
+    time: Date.now()
+  });
+
+  if (data.upline1 || data.upline2 || data.upline3) {
+    await distributeCommission(
+      currentUser.uid,
+      data.upline1 || null,
+      data.upline2 || null,
+      data.upline3 || null,
+      profit
+    );
+  }
+
+  showPopup(`You earned $${profit.toFixed(4)} profit. Returned $${totalReturnToUser.toFixed(4)} to wallet.`);
+  mining = false;
+  btn.innerText = "Start Mining";
+  btn.classList.remove("stop-active"); // 🟢 wapas green
+
+  toggleMiningSections(false);
+  stopMiningTimer();
+  setTimeout(loadUserData, 800);
+};
+
+
+</script>
+<script>
+  // 🚫 Disable right click, select, drag
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
+
+  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
+  document.addEventListener("keydown", e => {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // 🔒 Silent DevTools detection (no popup)
+  (function() {
+    const devtools = /./;
+    devtools.toString = function() {
+      return ""; // no alert or console log
+    };
+    console.log("%c", devtools);
+  })();
+
+  // 🔐 Detect DevTools using resize trick (no popup)
+  setInterval(() => {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    if (widthDiff || heightDiff) {
+      // Optional: silently redirect or blank the page
+      document.body.innerHTML = "";
+    }
+  }, 1000);
+
+  // 🧱 Disable copy/paste/cut
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // 🔁 Freeze console methods silently
+  Object.freeze(console);
+  Object.freeze(window.console);
+</script>
+
+
+
+</body>
+</html>
 </body>
 </html>
