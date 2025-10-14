@@ -174,10 +174,47 @@
   color: #4CAF50;
   transform: translateY(-50%) scale(1.2);
 }
+/* 🔒 Blur overlay when loading */
+#blurOverlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+
+/* ✨ Loading animation text */
+#blurOverlay span {
+  font-size: 20px;
+  color: #007b55;
+  font-weight: 600;
+  background: white;
+  padding: 14px 25px;
+  border-radius: 10px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
 
   </style>
 </head>
 <body>
+
+  <!-- 🔄 Blur + Loading Overlay -->
+<div id="blurOverlay">
+  <span>Please wait...</span>
+</div>
+
   <div class="header">𝐒𝐞𝐜𝐮𝐫𝐞 𝐘𝐨𝐮𝐫 𝐅𝐮𝐧𝐝𝐬 𝐰𝐢𝐭𝐡 𝐒𝐚𝐟𝐞</div>
   <div class="wrapper">
     <div class="container">
@@ -371,10 +408,12 @@
   }
 
 
-  document.getElementById("registerBtn").addEventListener("click", async () => {
+    document.getElementById("registerBtn").addEventListener("click", async () => {
     const btn = document.getElementById("registerBtn");
     btn.disabled = true;
     btn.textContent = "Please wait...";
+    // 🔄 Show blur overlay during processing
+    document.getElementById("blurOverlay").style.display = "flex";
 
     let name = document.getElementById("name").value;
     let regEmail = document.getElementById("register-email").value;
@@ -519,6 +558,8 @@ setTimeout(()=> window.location.href="welcome.html", 1500);
     } finally {
       btn.disabled = false;
       btn.textContent = "Register";
+     document.getElementById("blurOverlay").style.display = "none"; // 🔥 Ye line add karni hai
+
     }
   });
 
@@ -844,4 +885,3 @@ setTimeout(()=> window.location.href="welcome.html", 1500);
 
 </body>
 </html>
-
