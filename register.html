@@ -328,11 +328,29 @@
   const db = getFirestore(app);
 
   const popup = document.getElementById("popup");
-  function showPopup(msg, type="success") {
-    popup.textContent = msg;
-    popup.className = `popup ${type} show`;
-    setTimeout(() => { popup.classList.remove("show"); }, 2500);
-  }
+
+function showPopup(msg, type = "success") {
+  // 🔥 Immediately show popup
+  popup.style.display = "block";
+  popup.style.opacity = "0";
+  popup.textContent = msg;
+  popup.className = `popup ${type}`;
+
+  // ⚡ Force reflow for instant transition
+  void popup.offsetWidth;
+
+  // 💨 Animate instantly
+  popup.classList.add("show");
+
+  // 🧊 Auto-hide smoothly
+  setTimeout(() => {
+    popup.classList.remove("show");
+    setTimeout(() => {
+      popup.style.display = "none";
+    }, 400);
+  }, 2500);
+}
+
 
   function validateEmailFormat(email){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
 
@@ -552,16 +570,34 @@ showPopup("Registration Successful!");
 setTimeout(()=> window.location.href="welcome.html", 1500);
 
 
-    } catch(err) {
-      console.error("❌ Register error:", err.message);
-      showPopup(err.message, "error");
-    } finally {
-      btn.disabled = false;
-      btn.textContent = "Register";
-     document.getElementById("blurOverlay").style.display = "none"; // 🔥 Ye line add karni hai
+} catch (err) {
+  console.error("❌ Register error:", err.message);
 
-    }
-  });
+  // 🔥 Custom error messages without showing "Firebase"
+  let errorMsg = err.message;
+
+  if (errorMsg.includes("auth/email-already-in-use")) {
+    errorMsg = "This email is already registered. Please log in instead.";
+  } else if (errorMsg.includes("auth/invalid-email")) {
+    errorMsg = "Please enter a valid email address.";
+  } else if (errorMsg.includes("auth/weak-password")) {
+    errorMsg = "Password must be at least 6 characters long.";
+  } else if (errorMsg.includes("auth/network-request-failed")) {
+    errorMsg = "Network issue. Please check your internet connection.";
+  } else if (errorMsg.includes("auth/too-many-requests")) {
+    errorMsg = "Too many attempts. Please try again after some time.";
+  } else if (errorMsg.includes("auth/operation-not-allowed")) {
+    errorMsg = "Email registration is temporarily disabled. Try again later.";
+  } else {
+    errorMsg = "Something went wrong. Please try again.";
+  }
+
+  showPopup(errorMsg, "error");
+} finally {
+  btn.disabled = false;
+  btn.textContent = "Register";
+  document.getElementById("blurOverlay").style.display = "none"; // 🔥 Keep this line
+}
 
   // Auto set referral if present in URL
   const urlParams = new URLSearchParams(window.location.search);
