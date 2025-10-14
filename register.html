@@ -607,105 +607,10 @@ setTimeout(()=> window.location.href="welcome.html", 1500);
     referralInput.value = refFromLink;
     referralInput.readOnly = true;
   }
-</script>
-
-<script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
-
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
+  
   });
-
-  // ⚙️ Custom center auto-hide popup
-  function showCenterAlert(message) {
-    // Agar old alert exist karta hai to use hata do
-    let oldAlert = document.getElementById("autoHideAlert");
-    if (oldAlert) oldAlert.remove();
-
-    const div = document.createElement("div");
-    div.id = "autoHideAlert";
-    div.textContent = message;
-
-    // 🌈 Styling
-    div.style.position = "fixed";
-    div.style.top = "50%";
-    div.style.left = "50%";
-    div.style.transform = "translate(-50%, -50%) scale(0.9)";
-    div.style.background = "linear-gradient(135deg, #ff9800, #f44336)";
-    div.style.color = "white";
-    div.style.fontSize = "16px";
-    div.style.fontWeight = "600";
-    div.style.padding = "15px 25px";
-    div.style.borderRadius = "10px";
-    div.style.boxShadow = "0 4px 20px rgba(0,0,0,0.3)";
-    div.style.textAlign = "center";
-    div.style.zIndex = "9999";
-    div.style.opacity = "0";
-    div.style.transition = "opacity 0.4s ease, transform 0.4s ease";
-
-    document.body.appendChild(div);
-
-    // 🧊 Animate in
-    setTimeout(() => {
-      div.style.opacity = "1";
-      div.style.transform = "translate(-50%, -50%) scale(1)";
-    }, 100);
-
-    // ⏳ Auto-hide after 2.5 sec
-    setTimeout(() => {
-      div.style.opacity = "0";
-      div.style.transform = "translate(-50%, -50%) scale(0.9)";
-      setTimeout(() => div.remove(), 500);
-    }, 2500);
-  }
-
-  // ⚙️ Block console typing (skip on refresh)
-  (function() {
-    // 🚫 Skip alert on page reload
-    if (performance.navigation.type === 1) return;
-
-    const devtools = /./;
-    devtools.toString = function() {
-      if (!sessionStorage.getItem("alertShown")) {
-        showCenterAlert("Please enter real details.");
-        sessionStorage.setItem("alertShown", "true");
-      }
-      return "";
-    };
-    console.log("%c", devtools);
-  })();
-
-  // 🔒 Auto-detect DevTools (resize trick)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      document.body.innerHTML =
-        "<h1 style='color:red;text-align:center;margin-top:40vh'>🚫 Access Denied — Developer Tools Detected 🚫</h1>";
-    }
-  }, 1000);
-
-  // 🧱 Disable copy/paste/cut at DOM level
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Constant guard — prevent override attempts
-  Object.freeze(console);
-  Object.freeze(window.console);
 </script>
+
 
 
 <script>
@@ -917,6 +822,53 @@ setTimeout(()=> window.location.href="welcome.html", 1500);
   });
 </script>
 
+<script>
+  // 🚫 Disable right click, select, drag
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
+
+  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
+  document.addEventListener("keydown", e => {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // 🔒 Silent DevTools detection (no popup)
+  (function() {
+    const devtools = /./;
+    devtools.toString = function() {
+      return ""; // no alert or console log
+    };
+    console.log("%c", devtools);
+  })();
+
+  // 🔐 Detect DevTools using resize trick (no popup)
+  setInterval(() => {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    if (widthDiff || heightDiff) {
+      // Optional: silently redirect or blank the page
+      document.body.innerHTML = "";
+    }
+  }, 1000);
+
+  // 🧱 Disable copy/paste/cut
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // 🔁 Freeze console methods silently
+  Object.freeze(console);
+  Object.freeze(window.console);
+</script>
 
 
 </body>
