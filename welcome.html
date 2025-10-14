@@ -13,21 +13,15 @@
       animation: gradient 10s ease infinite;
       display:flex;justify-content:center;align-items:center;text-align:center;overflow:hidden;
     }
-    @keyframes gradient {
-      0%{background-position:0% 50%;}
-      50%{background-position:100% 50%;}
-      100%{background-position:0% 50%;}
-    }
+    @keyframes gradient {0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
     .card {
       background:#fff;border-radius:20px;padding:30px;width:90%;max-width:380px;text-align:center;
       box-shadow:0 0 35px rgba(0,255,120,0.5);color:#111;animation:fadeIn 1s ease;
     }
     @keyframes fadeIn {from{opacity:0;transform:scale(0.9);}to{opacity:1;transform:scale(1);}}
-    h1{color:#009933;font-size:1.8rem;margin-bottom:8px;font-weight:700;}
-    h2{color:#333;font-size:1.1rem;margin-bottom:5px;}
-    .userid{color:#0f5132;font-weight:600;background:#e6ffed;border:1px solid #00c070;padding:6px 10px;
-      border-radius:6px;display:inline-block;margin-bottom:15px;font-size:0.9rem;}
-    p{color:#444;font-size:0.95rem;margin-bottom:10px;}
+    h1{color:#009933;font-size:1.8rem;margin-bottom:10px;font-weight:700;}
+    h2{color:#004d1a;font-size:1.2rem;margin-bottom:15px;font-weight:600;}
+    p{color:#444;font-size:0.9rem;margin-bottom:10px;}
     input{width:100%;padding:10px;border:2px solid #00c070;border-radius:8px;font-weight:600;text-align:center;color:#004d1a;margin-bottom:10px;}
     .qr-box{margin-top:15px;display:flex;justify-content:center;}
     canvas{border:2px solid #00ff88;border-radius:8px;padding:6px;width:180px;height:180px;}
@@ -36,29 +30,25 @@
     .copy-btn{background-color:#007bff;}.share-btn{background-color:#ffb300;}button:hover{transform:scale(1.05);}
     .msg{color:#008000;font-size:0.9rem;margin-top:8px;font-weight:600;}
     footer{position:fixed;bottom:10px;color:#a6ffb0;font-size:0.8rem;text-align:center;width:100%;}
+    .popup-overlay {position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);
+      display:none;justify-content:center;align-items:center;z-index:999;animation:fadeIn 0.3s ease;}
+    .popup-card {background:#ffffff;border-radius:15px;padding:20px;width:90%;max-width:350px;text-align:center;
+      box-shadow:0 0 25px rgba(0,255,120,0.5);color:#004d1a;animation:scaleIn 0.3s ease;}
+   @keyframes scaleIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
 
-    /* Popups */
-    .popup-overlay {
-      position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);
-      display:none;justify-content:center;align-items:center;z-index:999;animation:fadeIn 0.3s ease;
-    }
-    .popup-card {
-      background:#ffffff;border-radius:15px;padding:20px;width:90%;max-width:350px;text-align:center;
-      box-shadow:0 0 25px rgba(0,255,120,0.5);color:#004d1a;animation:scaleIn 0.3s ease;
-    }
-    @keyframes scaleIn {from{transform:scale(0.8);opacity:0;}to{transform:scale(1);opacity:1);}}
     .popup-card h2{color:#00c070;font-size:1.1rem;margin-bottom:8px;font-weight:700;}
-    .popup-card p{color:#333;font-size:0.9rem;margin-bottom:18px;line-height:1.4;}
+    .popup-card p{color:#333;font-size:0.88rem;margin-bottom:18px;line-height:1.4;}
     .popup-btns button{background-color:#00c070;color:white;border:none;padding:8px 16px;border-radius:8px;font-weight:600;cursor:pointer;transition:0.3s;font-size:0.9rem;}
     .popup-btns button:hover{background-color:#009c55;}
-    @media (max-width:500px){.popup-card p{font-size:0.85rem;}}
   </style>
 </head>
 <body>
   <div class="card">
     <h1>Welcome to TRUSTdollar V2</h1>
     <h2 id="userName">Loading user...</h2>
-    <div id="userId" class="userid">Fetching ID...</div>
     <p>Your personal referral link:</p>
     <input type="text" id="refLink" readonly />
     <div class="qr-box"><canvas id="qrCode"></canvas></div>
@@ -68,6 +58,7 @@
     </div>
     <div class="msg" id="msg"></div>
   </div>
+
   <footer>© 2025 TRUSTdollar V2 — All Rights Reserved.</footer>
 
   <!-- English Popup -->
@@ -82,9 +73,7 @@
         Thank you for your continued trust and support.<br>
         Together, we build a stronger future with <strong>TrustDollar</strong>. 💚
       </p>
-      <div class="popup-btns">
-        <button onclick="nextPopup()">Got It</button>
-      </div>
+      <div class="popup-btns"><button onclick="nextPopup()">Got It</button></div>
     </div>
   </div>
 
@@ -94,21 +83,20 @@
       <h2> महत्वपूर्ण सूचना: पुनः पंजीकरण जारी है</h2>
       <p>
         हम अपने सिस्टम को बेहतर सुरक्षा और प्रदर्शन के लिए अपडेट कर रहे हैं।<br><br>
-        सभी पुराने यूज़र्स को अब हमारे नए और अधिक सुरक्षित <strong>TrustDollar V2 सिस्टम</strong> में दोबारा रजिस्टर किया जा रहा है।<br><br>
+        सभी मौजूदा उपयोगकर्ताओं को अब हमारे नए और अधिक सुरक्षित <strong>TrustDollar V2 सिस्टम</strong> में <strong>पुनः पंजीकृत</strong> किया जा रहा है।<br><br>
         कृपया आप और आपकी टीम जितनी जल्दी हो सके नया रजिस्ट्रेशन पूरा करें।<br><br>
         जितनी जल्दी आप रजिस्टर करेंगे, उतनी जल्दी हम <strong>TrustDollar</strong> को पूरी सुविधाओं के साथ लाइव कर पाएंगे।<br><br>
         आपके निरंतर विश्वास और समर्थन के लिए धन्यवाद।<br>
         आइए मिलकर <strong>TrustDollar</strong> के साथ एक मजबूत भविष्य बनाते हैं। 💚
       </p>
-      <div class="popup-btns">
-        <button onclick="closePopup()">ठीक है</button>
-      </div>
+      <div class="popup-btns"><button onclick="closePopup()">ठीक है</button></div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -122,53 +110,60 @@
     };
 
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const db = getFirestore(app);
-    const userId = "USER123";
 
-    async function loadUserData() {
-      const userRef = doc(db, "users", userId);
-      const docSnap = await getDoc(userRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        const name = data.name || "TRUST User";
-        const refLink = data.referralLink || `https://smartfundad.com/index.html?ref=${userId}`;
-        showUser(name, userId, refLink);
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const uid = user.uid;
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          // ✅ Use username field from Firestore
+          const name = data.username || data.name || user.displayName || "Trust User";
+          const refLink = data.referralLink || `https://smartfundad.com/index.html?ref=${uid}`;
+          showUser(name, refLink);
+        } else {
+          showUser(user.displayName || "New User", `https://smartfundad.com/index.html?ref=${uid}`);
+        }
       } else {
-        showUser("New User", userId, `https://smartfundad.com/index.html?ref=${userId}`);
+        document.getElementById("userName").innerText = "Please Login First";
       }
-    }
+    });
 
-    loadUserData();
-
-    function showUser(name, id, link) {
+    function showUser(name, link) {
       document.getElementById("userName").innerText = `Welcome, ${name}!`;
-      document.getElementById("userId").innerText = `User ID: ${id}`;
       document.getElementById("refLink").value = link;
-      new QRious({element:document.getElementById("qrCode"),value:link,size:180,background:"white",foreground:"#004d1a"});
+      new QRious({
+        element: document.getElementById("qrCode"),
+        value: link,
+        size: 180,
+        background: "white",
+        foreground: "#004d1a"
+      });
     }
 
     window.copyLink = function(){
-      const input=document.getElementById("refLink");input.select();document.execCommand("copy");
+      const input=document.getElementById("refLink");
+      input.select();document.execCommand("copy");
       document.getElementById("msg").innerText="✅ Link copied successfully!";
       setTimeout(()=>document.getElementById("msg").innerText="",2000);
     };
 
     window.shareLink = function(){
       const link=document.getElementById("refLink").value;
-      if(navigator.share){navigator.share({title:"Join TRUSTdollar V2",text:"Use my referral link to register:",url:link});}
-      else{window.open(link,"_blank");}
+      if(navigator.share){
+        navigator.share({title:"Join TRUSTdollar V2",text:"Use my referral link to register:",url:link});
+      } else {window.open(link,"_blank");}
     };
 
     window.addEventListener("load",()=>{document.getElementById("popupEng").style.display="flex";});
-
     window.nextPopup=function(){
       document.getElementById("popupEng").style.display="none";
       setTimeout(()=>{document.getElementById("popupHin").style.display="flex";},300);
     };
-
-    window.closePopup=function(){
-      document.getElementById("popupHin").style.display="none";
-    };
+    window.closePopup=function(){document.getElementById("popupHin").style.display="none";};
   </script>
 </body>
 </html>
