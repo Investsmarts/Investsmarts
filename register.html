@@ -562,9 +562,9 @@ try {
   await setDoc(doc(db, "logins", normEmail), { email: normEmail });
   await setDoc(doc(db, "logins", normUsername), { email: normEmail });
   await setDoc(doc(db, "logins", mobile), { email: normEmail });
-  console.log("✅ Login lookup entries created for:", normEmail);
+  console.log(" Login lookup entries created for:", normEmail);
 } catch (e) {
-  console.error("❌ Failed to create login lookup:", e);
+  console.error(" Failed to create login lookup:", e);
 }
 
 showPopup("Registration Successful!");
@@ -573,34 +573,83 @@ setTimeout(()=> window.location.href="welcome.html", 1500);
 
 } catch (err) {
   console.error("❌ Register error:", err.message);
-  
-   if (err.message === "stop-flow") return; // ✅ Stop duplicate popup
 
-  // 🔥 Custom error messages without showing "Firebase"
-  let errorMsg = err.message;
+  if (err.message === "stop-flow") return; // stop duplicate popup
 
-  if (errorMsg.includes("auth/email-already-in-use")) {
-    errorMsg = "This email is already registered. Please log in instead.";
-  } else if (errorMsg.includes("auth/invalid-email")) {
-    errorMsg = "Please enter a valid email address.";
-  } else if (errorMsg.includes("auth/weak-password")) {
-    errorMsg = "Password must be at least 6 characters long.";
-  } else if (errorMsg.includes("auth/network-request-failed")) {
-    errorMsg = "Network issue. Please check your internet connection.";
-  } else if (errorMsg.includes("auth/too-many-requests")) {
-    errorMsg = "Too many attempts. Please try again after some time.";
-  } else if (errorMsg.includes("auth/operation-not-allowed")) {
-    errorMsg = "Email registration is temporarily disabled. Try again later.";
-  } else {
-    errorMsg = "Something went wrong. Please try again.";
+  let errorMsg = err.message.trim();
+
+  // ✅ Custom meaningful validation messages
+  if (errorMsg.includes("Please complete all required fields")) {
+    errorMsg = " Please fill out all required fields before continuing.";
+  } 
+  else if (errorMsg.includes("Invalid Email format")) {
+    errorMsg = " Please enter a valid email address (example@gmail.com).";
+  } 
+  else if (errorMsg.includes("Passwords do not match")) {
+    errorMsg = " Password and Confirm Password must match exactly.";
+  } 
+  else if (errorMsg.includes("Password must be at least 6 chars")) {
+    errorMsg = " Password should be at least 6 characters long.";
+  } 
+  else if (errorMsg.includes("Mobile must be 10 digits")) {
+    errorMsg = " Mobile number must be exactly 10 digits.";
+  } 
+  else if (errorMsg.includes("Aadhaar must be 12 digits")) {
+    errorMsg = " Aadhaar number must be exactly 12 digits.";
+  } 
+  else if (errorMsg.includes("Cheque must be 6-20 digits")) {
+    errorMsg = " Cheque number must be between 6 and 20 digits.";
+  } 
+  else if (errorMsg.startsWith("Similar name already registered:")) {
+    errorMsg = " This name is already similar to (" + errorMsg.split(":")[1].trim() + "). Please use your full legal name.";
+  } 
+  else if (errorMsg.startsWith("Similar username already exists:")) {
+    errorMsg = " This username looks similar to (" + errorMsg.split(":")[1].trim() + "). Try a unique one.";
+  } 
+  else if (errorMsg.includes("Email already registered")) {
+    errorMsg = " This email is already registered. Please log in instead.";
+  } 
+  else if (errorMsg.includes("Mobile already registered")) {
+    errorMsg = " This mobile number is already registered.";
+  } 
+  else if (errorMsg.includes("Username already taken")) {
+    errorMsg = " This username is already taken. Try another one.";
+  } 
+  else if (errorMsg.includes("Aadhaar already registered")) {
+    errorMsg = " This Aadhaar number is already registered.";
+  } 
+  else if (errorMsg.includes("auth/email-already-in-use")) {
+    errorMsg = " This email is already registered. Please log in instead.";
+  } 
+  else if (errorMsg.includes("auth/invalid-email")) {
+    errorMsg = "Invalid email address. Please check and try again.";
+  } 
+  else if (errorMsg.includes("auth/weak-password")) {
+    errorMsg = " Password must be at least 6 characters long.";
+  } 
+  else if (errorMsg.includes("auth/network-request-failed")) {
+    errorMsg = " Network issue — please check your internet connection.";
+  } 
+  else if (errorMsg.includes("auth/too-many-requests")) {
+    errorMsg = " Too many attempts. Please wait a few minutes.";
+  } 
+  else if (errorMsg.includes("auth/operation-not-allowed")) {
+    errorMsg = " Registration temporarily disabled. Try again later.";
+  } 
+  else {
+    // 🔥 Default case — fallback with actual Firebase message (no “something went wrong”)
+    errorMsg = "⚠️ " + errorMsg;
   }
 
+  // ✅ Final popup show
   showPopup(errorMsg, "error");
-} finally {
+} 
+finally {
   btn.disabled = false;
   btn.textContent = "Register";
-  document.getElementById("blurOverlay").style.display = "none"; // 🔥 Keep this line
+  document.getElementById("blurOverlay").style.display = "none";
 }
+
 
   // Auto set referral if present in URL
   const urlParams = new URLSearchParams(window.location.search);
