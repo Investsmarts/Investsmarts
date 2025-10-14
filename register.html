@@ -453,7 +453,10 @@ function showPopup(msg, type = "success") {
 
       // validations
       if(!validateEmailFormat(regEmail)) throw new Error("Invalid Email format");
-      if(password !== confirmPassword) throw new Error("Passwords do not match");
+
+    if (password !== confirmPassword) {showPopup("❌ Passwords do not match!", "error");throw new Error("stop-flow"); // stop further execution
+     }
+
       if(password.length < 6) throw new Error("Password must be at least 6 chars");
       if(!/^\d{10}$/.test(mobile)) throw new Error("Mobile must be 10 digits");
       if(!/^\d{12}$/.test(aadhaar)) throw new Error("Aadhaar must be 12 digits");
@@ -570,6 +573,8 @@ setTimeout(()=> window.location.href="welcome.html", 1500);
 
 } catch (err) {
   console.error("❌ Register error:", err.message);
+  
+   if (err.message === "stop-flow") return; // ✅ Stop duplicate popup
 
   // 🔥 Custom error messages without showing "Firebase"
   let errorMsg = err.message;
