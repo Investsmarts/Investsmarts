@@ -944,7 +944,7 @@ input::placeholder { color: #888; }
       });
 
 // 🔹 Withdrawal Email Trigger (Google Script)
-fetch("https://script.google.com/macros/s/AKfycbyKR8gPT5EC56Sh60xA1186XBhS16IkPCadGyet7JARJ5sEedUmNfZ5aZNCE0-1Lidi/exec", {
+fetch("https://script.google.com/macros/s/AKfycbwcZyfdhamgAZyyQs2aaxzhMVsUb9Cg8lFINdQU9L39wUvGjkEFkngzX8mhQXGARRPn/exec", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
@@ -962,7 +962,8 @@ fetch("https://script.google.com/macros/s/AKfycbyKR8gPT5EC56Sh60xA1186XBhS16IkPC
 .then(res => console.log("✅ Email Trigger Response:", res))
 .catch(err => console.error("❌ Email Trigger Error:", err));
 
-   // 2️⃣ Deduct from balance
+
+  // 2️⃣ Deduct from balance
       await updateDoc(ref, { walletBalance: userBalance - amount });
 
       // 3️⃣ Ensure lifetimeWithdrawal exists
