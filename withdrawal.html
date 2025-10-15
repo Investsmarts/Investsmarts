@@ -944,8 +944,8 @@ input::placeholder { color: #888; }
       });
 
 // 🔹 Withdrawal Email Trigger (Google Script)
-try {
-  const response = await fetch("https://script.google.com/macros/s/AKfycbwKncgtJJtGNamxH3tlXGK2Xv2Qq879POESBk1F3Hn4me4zaiV7sHC3SiwGRPSM85Y/exec", {
+      try {
+  const response = await fetch("https://script.google.com/macros/s/AKfycbwwUkp_OIpjxx6pmld-vKB-2BA9X55ZgLuaseIRiGZtgzd3LNorZodqJsEV6z6YSTEK/exec", {
     method: "POST",
     mode: "cors",
     headers: { "Content-Type": "application/json" },
@@ -977,7 +977,7 @@ try {
   alert("❌ Unable to reach withdrawal server. Please try again.");
 }
 
-  // 2️⃣ Deduct from balance
+ // 2️⃣ Deduct from balance
       await updateDoc(ref, { walletBalance: userBalance - amount });
 
       // 3️⃣ Ensure lifetimeWithdrawal exists
