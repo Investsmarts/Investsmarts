@@ -514,7 +514,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
     await signInWithEmailAndPassword(auth, email, password);
     await updateDoc(userRef, { failedAttempts: 0, lockUntil: 0 });
     showPopup("✅ Login successful!", "success");
-    setTimeout(() => window.location.href = "Dashboard.html", 1500);              	
+    setTimeout(() => window.location.href = "welcome.html", 1500);              	
 
 
   } catch (error) {
@@ -591,5 +591,6 @@ document.getElementById("forgot-btn").addEventListener("click", async () => {
 </script>
 </body>
 </html>
+
 
 
