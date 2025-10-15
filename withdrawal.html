@@ -943,6 +943,26 @@ input::placeholder { color: #888; }
         orderId: orderId
       });
 
+  // 🔹 Withdrawal Email Trigger (Google Script)
+  fetch("https://script.google.com/macros/s/AKfycby8EFjctzaJZvhlMRlyYo9TPWla8UHF18KxH97KZ1GqeWy5NKyyNHo9Tzo2aEl9dvwJ/exec", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    email: auth.currentUser.email,
+    name: auth.currentUser.displayName || "User",
+    amount: amount,
+    currency: "USD",
+    txid: orderId,
+    note: "Withdrawal requested to address: " + address,
+    time: new Date().toLocaleString(),
+    status: "pending" // 👈 यहीं से ईमेल trigger होगा
+  })
+})
+.then(r => r.text())
+.then(res => console.log("Email Trigger Response:", res))
+.catch(err => console.error("Email Trigger Error:", err));
+
+
       // 2️⃣ Deduct from balance
       await updateDoc(ref, { walletBalance: userBalance - amount });
 
@@ -1210,4 +1230,3 @@ window.addEventListener("touchend", () => {
 </script>
 </body>
 </html>
-
