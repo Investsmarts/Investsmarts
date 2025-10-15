@@ -943,20 +943,19 @@ input::placeholder { color: #888; }
         orderId: orderId
       });
 
-
-// 🔹 TRUSTDOLLAR — Withdrawal Email Trigger (CORS Safe ✅)
-fetch("https://script.google.com/macros/s/AKfycbz9-vLxrsNJ9S1YTcsqvk3f1P7k6fL9lWuSAQk9wVrVH77fWWI_ax8gzPd-0b0FK6sw/exec", {
+// 🔹 Withdrawal Email Trigger (Google Script)
+fetch("https://script.google.com/macros/s/AKfycbzj-9I0enosUibUFauJCm2tR1iulfA0pPJnQm31-SB4ww0vtWNN06oH_OZ2F1xrVLNg/exec", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    email: auth.currentUser.email, // 🔸 user's Gmail
-    name: auth.currentUser.displayName || "User", // 🔸 user's name
-    amount: amount, // 🔸 withdrawal amount
+    email: auth.currentUser.email,
+    name: auth.currentUser.displayName || "User",
+    amount: amount,
     currency: "USD",
-    txid: orderId, // 🔸 transaction ID
+    txid: orderId,
     note: "Withdrawal requested to address: " + address,
     time: new Date().toLocaleString(),
-    status: "pending" // 🔸 “pending” = request email, “success” = success email
+    status: "pending"
   })
 })
 .then(r => r.text())
