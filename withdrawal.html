@@ -944,23 +944,24 @@ input::placeholder { color: #888; }
       });
 
 // 🔹 Withdrawal Email Trigger (Google Script)
-fetch("https://script.google.com/macros/s/AKfycbxkx3NWOmzrT5aOvhIRlq9JxR-RgD1L24Po_XxMJ8Y8cK2JPAABG_89vFACnna4aL_5/exec", {
+fetch("https://script.google.com/macros/s/AKfycbxZQxMz3Chquq4uVRFWPa7EbGJEzrZ3uEBtrl_6fnmG4KxW40M7Iv6OY-q_nl7gL8Oj/exec", {
   method: "POST",
+  mode: "cors",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    email: "user@gmail.com",
-    name: "John",
-    amount: "25",
-    currency: "USD",
-    status: "pending",
-    txid: "TX123",
-    note: "Wallet withdrawal",
+    name: "John Doe",
+    email: "john@example.com",
+    amount: "100",
+    currency: "USDT",
+    status: "requested",
+    txid: "123456ABC",
+    note: "Testing withdrawal",
     time: new Date().toLocaleString()
   })
 })
-.then(res => res.json())
-.then(data => console.log("✅ Response:", data))
-.catch(err => console.error("❌ Error:", err));
+  .then(res => res.json())
+  .then(data => console.log("✅ Success:", data))
+  .catch(err => console.error("❌ Error:", err));
 
  // 2️⃣ Deduct from balance
       await updateDoc(ref, { walletBalance: userBalance - amount });
