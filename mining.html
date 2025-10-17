@@ -28,8 +28,8 @@
   top: 0;
   left: 0;
   width: 100%;
-  background: linear-gradient(145deg, #3ed667, #218838);
-  color: white;
+  background: #ffffff00;
+   color: #21d82b;
   padding: 10px 0;            /* was too thick, now balanced */
   font-size: 18px;
   font-weight: bold;
@@ -178,19 +178,95 @@
       color:#28a745; z-index:2000;
     }
 
-      /* Bottom Navbar */
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 0;
-      width: 100%; height: 70px; background: #fff;
-      display: flex; justify-content: space-around; align-items: center;
-      border-top: 2px solid #28a745; z-index: 100;
-    }
-    .nav-item { flex: 1; text-align: center; font-size: 12px; color: #333; text-decoration: none; transition: 0.3s; position: relative; padding: 10px 0; }
-    .nav-item i { font-size: 22px; display: block; margin-bottom: 3px; color: #28a745; }
-    .nav-item:hover { color: #28a745; }
-    .nav-item:hover i { color: #218838; }
 
-  /* === Stylish History List === */
+    /* ✅ Ultra Clear Bottom Nav (No Blur, High Contrast) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 94%;
+  max-width: 480px;
+  background: #ffffff; /* solid white */
+  border: 1px solid #e0e0e0;
+  border-radius: 18px;
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  z-index: 1000;
+  animation: slideUp 0.6s ease;
+}
+
+/* Slide animation */
+@keyframes slideUp {
+  from { transform: translate(-50%, 60px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+/* Nav Items */
+.nav-item {
+  flex: 1;
+  text-align: center;
+  color: #888;
+  font-size: 12px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  position: relative;
+  padding: 4px 0;
+}
+
+/* Icons */
+.nav-item i {
+  font-size: 22px;
+  display: block;
+  margin-bottom: 3px;
+  color: #666;
+  transition: all 0.25s ease;
+  filter: none; /* remove soft edges */
+}
+
+/* Hover & Active */
+.nav-item:hover i,
+.nav-item.active i {
+  color: #00c853;
+  transform: translateY(-3px) scale(1.15);
+  text-shadow: 0 0 8px rgba(0, 200, 83, 0.4);
+}
+
+.nav-item:hover span,
+.nav-item.active span {
+  color: #00c853;
+  font-weight: 600;
+}
+
+/* Glow dot under active item */
+.nav-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: #00c853;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 200, 83, 0.4);
+}
+
+/* Responsive fix */
+@media(max-width:600px){
+  .bottom-nav {
+    border-radius: 10px;
+    padding: 8px 0;
+  }
+  .nav-item i {
+    font-size: 20px;
+  }
+}
+
+  
 /* === Compact Stylish History List === */
 #miningHistoryList {
   list-style: none;
@@ -689,13 +765,13 @@ button.stop-active:hover {
 
 
 
-   <!-- Bottom Navbar -->
-  <div class="bottom-nav">
-    <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
-    <a href="mining.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
-    <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
-    <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
-  </div>
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="Dashboard.html" class="nav-item active"><i class='bx bxs-dashboard'></i><span>Home</span></a>
+  <a href="mining.html" class="nav-item"><i class='bx bxs-coin-stack'></i><span>Invest</span></a>
+  <a href="promotion.html" class="nav-item"><i class='bx bxs-user-plus'></i><span>Refer</span></a>
+  <a href="account.html" class="nav-item"><i class='bx bxs-user-circle'></i><span>Account</span></a>
+</div>
 
 </div>
 <script>
@@ -1084,6 +1160,8 @@ btn.onclick = async () => {
   Object.freeze(console);
   Object.freeze(window.console);
 </script>
+
+
 
 
 </body>
