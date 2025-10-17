@@ -411,7 +411,7 @@
   box-shadow: 0 4px 0 #058c43;
 }
 
-/* ✅ INCOME HISTORY STYLISH CARDS */
+
 /* ✅ INCOME HISTORY CLEAN STATIC CARDS */
 #incomeHistoryList {
   list-style: none;
@@ -646,11 +646,151 @@ button.stop-active:hover {
   background: linear-gradient(145deg, #e03b4d, #c12b39) !important;
 }
 
+/* ⚡ Instant button press feedback */
+button:active {
+  transform: scale(0.97);
+  transition: transform 0.05s;
+}
+
+
+/* ✅ Perfect Center Position */
+.pro-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.45s cubic-bezier(0.25, 1, 0.3, 1);
+  z-index: 99999;
+}
+.pro-popup.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* 🌟 Popup Card */
+.popup-3d-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(145deg, #1f1f1f, #292929);
+  border-radius: 22px;
+  padding: 25px 22px 20px;
+  width: 290px;
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.6),
+    inset 2px 2px 6px rgba(255, 255, 255, 0.08),
+    inset -2px -2px 6px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  animation: bounceIn 0.5s ease forwards;
+}
+
+/* 🟢 Icon Top (Glow Circle) */
+.popup-icon-top {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #00ffcc, #0077ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow:
+    0 0 25px rgba(0, 255, 200, 0.5),
+    inset 0 2px 8px rgba(255, 255, 255, 0.3);
+  margin-bottom: 16px;
+  animation: glowPulse 2s infinite ease-in-out;
+}
+.popup-icon-top img {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.5));
+}
+
+/* ✨ Premium Text */
+.popup-texts h3 {
+  color: #fff;
+  font-size: 19px;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.3px;
+  margin: 0 0 6px 0;
+  background: linear-gradient(90deg, #00ffae, #00b8ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.popup-texts p {
+  color: #ccc;
+  font-size: 15px;
+  text-align: center;
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* 🔥 Animations */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 25px rgba(0, 255, 200, 0.4); }
+  50% { box-shadow: 0 0 45px rgba(0, 255, 200, 0.8); }
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.8) translateY(20px); opacity: 0; }
+  60% { transform: scale(1.05) translateY(-5px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); }
+}
+
+
+/* === Fixed Scrollable Income History Section === */
+#incomeHistoryList {
+  max-height: 380px; /* 🔹 Height control yahan se adjust kar */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
+  margin-bottom: 80px;
+  scroll-behavior: smooth;
+  border-radius: 14px;
+  background: #fdfdfd;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+
+/* Scrollbar Styling (minimal + green) */
+#incomeHistoryList::-webkit-scrollbar {
+  width: 6px;
+}
+#incomeHistoryList::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #28a745, #1e7e34);
+  border-radius: 3px;
+}
+#incomeHistoryList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
 
   </style>
 </head>
 <body>
 <div id="popupMsg" class="popup"></div>
+
+
+<!-- 3D Premium Popup (Updated Vertical Style) -->
+<div id="proPopup" class="pro-popup">
+  <div class="popup-3d-card">
+    <div class="popup-icon-top">
+      <img id="proPopupImg" src="" alt="icon">
+    </div>
+    <div class="popup-texts">
+      <h3 id="proPopupTitle">Mining Started ⚡</h3>
+      <p id="proPopupMsg">Your mining process has begun successfully!</p>
+    </div>
+  </div>
+</div>
 
  <div class="header">
   <span>Smart Mining</span>
@@ -816,7 +956,22 @@ function closeMiningGuide() {
 
 
 </script>
+<script >
+function showProPopup(title, msg, img) {
+  const popup = document.getElementById("proPopup");
+  const titleEl = document.getElementById("proPopupTitle");
+  const msgEl = document.getElementById("proPopupMsg");
+  const imgEl = document.getElementById("proPopupImg");
 
+  titleEl.innerText = title;
+  msgEl.innerText = msg;
+  imgEl.src = img || "https://cdn-icons-png.flaticon.com/512/190/190411.png";
+
+  popup.classList.add("show");
+  setTimeout(() => popup.classList.remove("show"), 3500);
+}
+
+</script>
 <script type="module">
 /* =====================================
    ✅ BTCInvest Full Smart Mining Script
@@ -1048,94 +1203,124 @@ referralBtn.onclick = () => {
 
 /* 🔹 Main Mining Start/Stop Logic */
 btn.onclick = async () => {
-  if (!currentUser) return showPopup("Not logged in");
-  const userRef = doc(db, "users", currentUser.uid);
-  const snap = await getDoc(userRef);
-  const data = snap.exists() ? snap.data() : {};
+  // prevent multiple clicks
+  if (btn.disabled) return;
+  btn.disabled = true;
+  btn.style.opacity = "0.7";
+  btn.style.pointerEvents = "none";
 
-  const wallet = Number(data.walletBalance || 0);
-  const miningAmount = Number(data.miningAmount || 0);
-  const startedAt = data.miningStartedAt || 0;
+  try {
+    if (!currentUser) return showPopup("Not logged in");
 
-  if (!mining) {
-    const amt = parseFloat(amountInput.value);
-    if (isNaN(amt) || amt <= 0) return showPopup("Enter valid amount");
-    if (amt > wallet) return showPopup("Insufficient Balance");
-    if (amt < 200) return showPopup("Minimum $200 required");
+    const userRef = doc(db, "users", currentUser.uid);
+    const snap = await getDoc(userRef);
+    const data = snap.exists() ? snap.data() : {};
 
-    const lifetimeDeposit = Number(data.lifetimeDeposit || 0);
+    const wallet = Number(data.walletBalance || 0);
+    const miningAmount = Number(data.miningAmount || 0);
+    const startedAt = data.miningStartedAt || 0;
 
-    if (amt > lifetimeDeposit) {
-      return showPopup(`Only you can mine ($${lifetimeDeposit.toFixed(2)}).`);
+    // === START MINING ===
+    if (!mining) {
+      const amt = parseFloat(amountInput.value);
+      if (isNaN(amt) || amt <= 0) return showPopup("Enter valid amount");
+      if (amt > wallet) return showPopup("Insufficient Balance");
+      if (amt < 200) return showPopup("Minimum $200 required");
+
+      const lifetimeDeposit = Number(data.lifetimeDeposit || 0);
+      if (amt > lifetimeDeposit) {
+        return showPopup(`Only you can mine ($${lifetimeDeposit.toFixed(2)}).`);
+      }
+
+      await updateDoc(userRef, {
+        walletBalance: wallet - amt,
+        miningAmount: amt,
+        miningStartedAt: Date.now()
+      });
+
+     // ✅ When mining starts
+  showProPopup(
+  "Mining Started ⚡",
+  "Your mining process has begun successfully!",
+  "https://cdn-icons-png.flaticon.com/512/727/727399.png"
+   );
+
+      mining = true;
+      btn.innerText = "Stop Mining";
+      btn.classList.add("stop-active");
+
+      toggleMiningSections(true);
+      fundEl.innerText = `$${amt.toFixed(2)}`;
+      walletEl.innerText = `$${(wallet - amt).toFixed(2)}`;
+      startMiningTimer(Date.now());
+      return;
     }
 
+    // === STOP MINING ===
+    const diff = Date.now() - startedAt;
+    const daysFraction = Math.max(diff / 86400000, 1 / 1440);
+    const profit = miningAmount * DAILY_RATE * daysFraction;
+    const userShare = profit * 0.70;
+    const totalReturnToUser = miningAmount + userShare;
+
     await updateDoc(userRef, {
-      walletBalance: wallet - amt,
-      miningAmount: amt,
-      miningStartedAt: Date.now()
+      walletBalance: wallet + totalReturnToUser,
+      miningAmount: 0,
+      miningStartedAt: deleteField(),
+      totalMined: increment(profit)
     });
 
-    showPopup("Mining Started");
-    mining = true;
-    btn.innerText = "Stop Mining";
-    btn.classList.add("stop-active"); // 🔴 red ho jayega
+    await addDoc(collection(db, "users", currentUser.uid, "miningHistory"), {
+      uid: currentUser.uid,
+      amount: miningAmount,
+      earned: profit,
+      userShare: userShare,
+      duration: diff,
+      time: Date.now()
+    });
 
-    toggleMiningSections(true);
-    fundEl.innerText = `$${amt.toFixed(2)}`;
-    walletEl.innerText = `$${(wallet - amt).toFixed(2)}`;
-    startMiningTimer(Date.now());
-    return;
+    await addDoc(collection(db, "mining_releases"), {
+      user: currentUser.uid,
+      amount: miningAmount,
+      profit: profit,
+      userShare: userShare,
+      time: Date.now()
+    });
+
+    // === REFERRAL COMMISSION LOGIC ===
+    if (data.upline1 || data.upline2 || data.upline3) {
+      await distributeCommission(
+        currentUser.uid,
+        data.upline1 || null,
+        data.upline2 || null,
+        data.upline3 || null,
+        profit
+      );
+    }
+
+// ✅ When mining stops
+showProPopup(
+  "Mining Completed 💰",
+  `You earned $${profit.toFixed(4)} profit. Returned $${totalReturnToUser.toFixed(2)} to wallet.`,
+  "https://cdn-icons-png.flaticon.com/512/190/190411.png"
+);
+
+
+    mining = false;
+    btn.innerText = "Start Mining";
+    btn.classList.remove("stop-active");
+    toggleMiningSections(false);
+    stopMiningTimer();
+    setTimeout(loadUserData, 800);
+  } catch (err) {
+    console.error(err);
+    showPopup("Error, please try again.");
+  } finally {
+    // ✅ Re-enable button
+    btn.disabled = false;
+    btn.style.opacity = "1";
+    btn.style.pointerEvents = "auto";
   }
-
-  // Stop mining logic
-  const diff = Date.now() - startedAt;
-  const daysFraction = Math.max(diff / 86400000, 1 / 1440);
-  const profit = miningAmount * DAILY_RATE * daysFraction;
-  const userShare = profit * 0.70;
-  const totalReturnToUser = miningAmount + userShare;
-
-  await updateDoc(userRef, {
-    walletBalance: wallet + totalReturnToUser,
-    miningAmount: 0,
-    miningStartedAt: deleteField(),
-    totalMined: increment(profit)
-  });
-
-  await addDoc(collection(db, "users", currentUser.uid, "miningHistory"), {
-    uid: currentUser.uid,
-    amount: miningAmount,
-    earned: profit,
-    userShare: userShare,
-    duration: diff,
-    time: Date.now()
-  });
-
-  await addDoc(collection(db, "mining_releases"), {
-    user: currentUser.uid,
-    amount: miningAmount,
-    profit: profit,
-    userShare: userShare,
-    time: Date.now()
-  });
-
-  if (data.upline1 || data.upline2 || data.upline3) {
-    await distributeCommission(
-      currentUser.uid,
-      data.upline1 || null,
-      data.upline2 || null,
-      data.upline3 || null,
-      profit
-    );
-  }
-
-  showPopup(`You earned $${profit.toFixed(4)} profit. Returned $${totalReturnToUser.toFixed(4)} to wallet.`);
-  mining = false;
-  btn.innerText = "Start Mining";
-  btn.classList.remove("stop-active"); // 🟢 wapas green
-
-  toggleMiningSections(false);
-  stopMiningTimer();
-  setTimeout(loadUserData, 800);
 };
 
 
