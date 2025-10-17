@@ -774,6 +774,33 @@ button.stop-active:hover {
 </div>
 
 </div>
+
+<script>
+  // 🔥 Bottom nav auto-active highlight logic
+  const navLinks = document.querySelectorAll(".bottom-nav a");
+
+  // current page ka URL filename nikalta hai (e.g., mining.html)
+  const currentPage = window.location.pathname.split("/").pop();
+
+  navLinks.forEach(link => {
+    const linkPage = link.getAttribute("href");
+
+    if (linkPage === currentPage) {
+      link.classList.add("active"); // ✅ Active highlight add karega
+    } else {
+      link.classList.remove("active");
+    }
+
+    // Optional: click par bhi active ho turant
+    link.addEventListener("click", () => {
+      navLinks.forEach(nav => nav.classList.remove("active"));
+      link.classList.add("active");
+    });
+  });
+</script>
+
+
+
 <script>
 function openMiningGuide() {
   const popup = document.getElementById("miningGuidePopup");
