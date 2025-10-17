@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+ 
+<!-- ⚡ Fast Alternative CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
+
+
   <style>
      body {
        font-family: 'Poppins', sans-serif;
@@ -19,31 +23,6 @@
      }
 
 
-    /* Balance Card */
-    .balance-card {
-      max-width: 480px;
-      margin: 0 auto 20px;
-      background: linear-gradient(135deg,#28a745,#34d058);
-      color: #fff;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-    }
-    .balance-card h4 {
-      font-size: 14px;
-      margin: 0 0 8px;
-      opacity: 0.9;
-    }
-    .balance-card .amount {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .balance-card .username {
-      font-size: 13px;
-      font-weight: 500;
-      opacity: 0.9;
-    }
 
     /* Action Buttons */
     .action-buttons {
@@ -103,65 +82,95 @@
       font-weight: 600;
     }
 
-    /* Bottom Nav */
+
+/* ✅ Ultra Clear Bottom Nav (No Blur, High Contrast) */
 .bottom-nav {
   position: fixed;
   bottom: 0;
-  left: 0;
-  width: 100%;
-  background: #fff;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 94%;
+  max-width: 480px;
+  background: #ffffff; /* solid white */
+  border: 1px solid #e0e0e0;
+  border-radius: 18px;
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
   display: flex;
   justify-content: space-around;
   align-items: center;
-  border-top: 2px solid #28a745;
-  box-shadow: 0 -3px 12px rgba(0,0,0,0.05);
-  z-index: 999;
-
-  /* 👇 Important for mobile safe area */
-  height: calc(65px + env(safe-area-inset-bottom));
-  padding-bottom: env(safe-area-inset-bottom);
+  padding: 10px 0;
+  z-index: 1000;
+  animation: slideUp 0.6s ease;
 }
 
-/* ✅ Fallback for browsers that don’t support env() */
-@supports not (padding-bottom: env(safe-area-inset-bottom)) {
-  .bottom-nav {
-    height: 70px;
-    padding-bottom: 5px;
-  }
+/* Slide animation */
+@keyframes slideUp {
+  from { transform: translate(-50%, 60px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
 }
 
-/* ✅ Mobile specific tweak */
-@media (max-width: 600px) {
-  .bottom-nav {
-    height: calc(75px + env(safe-area-inset-bottom));
-  }
-}
-
+/* Nav Items */
 .nav-item {
   flex: 1;
   text-align: center;
+  color: #888;
   font-size: 12px;
-  color: #444;
   text-decoration: none;
+  transition: all 0.25s ease;
+  position: relative;
+  padding: 4px 0;
 }
 
+/* Icons */
 .nav-item i {
   font-size: 22px;
   display: block;
-  margin-bottom: 2px;
-  color: #28a745;
+  margin-bottom: 3px;
+  color: #666;
+  transition: all 0.25s ease;
+  filter: none; /* remove soft edges */
 }
 
+/* Hover & Active */
+.nav-item:hover i,
+.nav-item.active i {
+  color: #00c853;
+  transform: translateY(-3px) scale(1.15);
+  text-shadow: 0 0 8px rgba(0, 200, 83, 0.4);
+}
 
-    /* Responsive */
-    @media (max-width: 480px) {
-      .balance-card { padding: 16px; }
-      .balance-card .amount { font-size: 24px; }
-      .action-buttons { gap: 8px; }
-      .action-buttons .btn { font-size: 13px; padding: 12px 6px; }
-    }
+.nav-item:hover span,
+.nav-item.active span {
+  color: #00c853;
+  font-weight: 600;
+}
 
-    .level-badge {
+/* Glow dot under active item */
+.nav-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: #00c853;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 200, 83, 0.4);
+}
+
+/* Responsive fix */
+@media(max-width:600px){
+  .bottom-nav {
+    border-radius: 22px;
+    padding: 8px 0;
+  }
+  .nav-item i {
+    font-size: 20px;
+  }
+}
+     
+   .level-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -175,15 +184,15 @@
    /* ✅ Header */
     .header {
       position: fixed; top: 0; left: 0; width: 100%;
-      background: #32cd32;
-      color: white; text-align: center;
-      padding: 14px; font-size: 18px; font-weight: bold;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      background: #ffffff00;
+      color: #21d82b; text-align: center;
+      padding: 10px; font-size: 18px; font-weight: bold;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
       z-index: 1000;
     }
-.wallet-card {
-  margin-top: 80px;  /* sirf wallet box ko neeche karega */
-}
+   .wallet-card {
+   margin-top: 80px;  /* sirf wallet box ko neeche karega */
+   }
 
   /* SUBSCRIBE FROM */
   .subscribe-form {
@@ -546,21 +555,230 @@
 <body>
 
    <div class="header">MY Dashword </div>
+<!-- 🌿 TrustDollar Balance Card -->
+<div class="trust-card">
+  <style>
+    .trust-card {
+      background: linear-gradient(135deg, #00994e, #00c853);
+      color: #fff;
+      border-radius: 18px;
+      padding: 18px 16px;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto 20px; /* ✅ Center fix */
+      box-shadow: 0 4px 16px rgba(0, 128, 0, 0.25);
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+      text-align: left;
+    }
 
-  <!-- Balance Card -->
-    <div class="balance-card">
-    <h4>Current Balance (USDT)</h4>
+    /* Header */
+    .trust-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .trust-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .trust-left i { font-size: 16px; }
+    .trust-right {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #ffeb3b;
+      font-size: 13px;
+      font-weight: 500;
+    }
 
-     <div class="amount">
-      <!-- USDT Logo -->
-      <svg class="usdt-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-        <circle cx="16" cy="16" r="16" fill="#26A17B"/>
-        <path fill="#fff" d="M17.03 17.41v-2.29h6.41V10h-14v5.12h6.4v2.29c-5.21.24-9.14 1.28-9.14 2.52s3.93 2.29 9.14 2.52v6.28h4.2v-6.28c5.2-.24 9.13-1.28 9.13-2.52s-3.93-2.28-9.13-2.52z"/>
-      </svg>
+    /* Balance Info */
+    .trust-info { margin-bottom: 10px; }
+    .trust-info h5 {
+      font-size: 13px;
+      opacity: 0.9;
+      margin: 0 0 4px;
+    }
+    .trust-amount {
+      font-size: 26px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .trust-amount i {
+      font-size: 20px;
+      opacity: 0.9;
+      transition: 0.3s;
+    }
+    .trust-note {
+      font-size: 11.5px;
+      opacity: 0.85;
+      margin-top: 3px;
+    }
 
-      <span id="walletBalance">0.00</span> </div><div class="username">
-      <span id="userName">User</span> | <span id="userLevel">No Level</span></div>
-     </div>
+    /* User + Level Line */
+    .trust-userline {
+    display: flex;
+    justify-content: space-between;
+     align-items: center;
+    margin: 4px 0 12px;  /* thoda upar laya gaya */
+   font-size: 13px;
+   transform: translateY(-4px); /* balance se thoda upar shift */
+  }
+
+
+    .trust-level {
+      background: #ffca28;
+      color: #333;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 12.5px;
+    }
+
+    /* Buttons */
+    .trust-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .trust-actions button {
+      flex: 1;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 0;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+    }
+    .btn-upgrade {
+      background: #00e676;
+    }
+    .btn-add {
+      background: #00e676;
+    }
+    .trust-actions button:hover {
+      background: #00c853;
+    }
+
+    /* Responsive Fix */
+    @media(max-width:480px){
+      .trust-card {
+        padding: 16px;
+        border-radius: 10px;
+        max-width: 90%;
+      }
+      .trust-amount { font-size: 22px; }
+      .trust-actions button { font-size: 12px; padding: 9px 0; }
+    }
+  </style>
+<style>
+.username-box {
+  display: inline-block;
+  padding: 4px 10px;
+  border: 1.8px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  backdrop-filter: blur(3px);
+  transition: all 0.3s ease-in-out;
+}
+
+.username-box:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.25);
+}
+</style>
+
+
+  <!-- Header -->
+  <div class="trust-header">
+    <div class="trust-left">
+      <i class='bx bx-wallet'></i> TrustDollar Account
+    </div>
+    <div class="trust-right">
+      My Rewards <i class='bx bx-coin-stack'></i>
+    </div>
+  </div>
+
+  <!-- Balance -->
+  <div class="trust-info">
+    <h5>Available Balance</h5>
+    <div class="trust-amount" id="balanceClick">
+      ₮ <span id="walletBalance">0.00</span>
+      <i class='bx bx-hide' id="toggleBalance"></i>
+    </div>
+    <div class="trust-note">Tap to hide balance</div>
+  </div>
+
+ <!-- 🔥 User Info (Live from Firebase) -->
+<div class="trust-userline">
+  <span id="userLevel" class="trust-level">No Level</span>
+ <span id="userName" class="username-box typing">User</span>
+
+
+</div>
+
+  <!-- Actions -->
+  <div class="trust-actions">
+    <button class="btn-upgrade">Upgrade Account</button>
+    <button class="btn-add">Add Cash</button>
+  </div>
+</div>
+
+<!-- 👁 Hide/Show Balance JS -->
+<script>
+const walletEl = document.getElementById("walletBalance");
+const toggleEl = document.getElementById("toggleBalance");
+
+// agar user click area alag banana chahe to ye optional hai
+let hidden = false;
+let realValue = walletEl.textContent.trim(); // 🔹 store current balance
+
+function toggleBalance() {
+  if (!hidden) {
+    // 🔒 Hide balance
+    realValue = walletEl.textContent.trim();
+    walletEl.textContent = "••••••";
+    toggleEl.classList.remove("bx-hide");
+    toggleEl.classList.add("bx-show");
+    hidden = true;
+  } else {
+    // 👁 Show balance again
+    walletEl.textContent = realValue;
+    toggleEl.classList.remove("bx-show");
+    toggleEl.classList.add("bx-hide");
+    hidden = false;
+  }
+}
+
+// ✅ Click event for hide/show
+toggleEl.addEventListener("click", toggleBalance);
+
+// ✅ Buttons functionality
+document.querySelector(".btn-upgrade").addEventListener("click", () => {
+  // ye tujhe jis page par le jaana ho waha likh de
+  window.location.href = "upgrade.html"; // ya "plan.html"
+});
+
+document.querySelector(".btn-add").addEventListener("click", () => {
+  window.location.href = "deposit.html"; // Add Cash page
+});
+</script>
 
    <!-- Action Buttons -->
    <div class="action-buttons">
@@ -666,13 +884,14 @@
     <div class="stats-item blue full"><h4>Countries Covered</h4><div class="stats-subvalue">135+</div></div></div>
    </div>
 
-  <!-- Bottom Navigation -->
+<!-- Bottom Navigation -->
 <div class="bottom-nav">
-  <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
-  <a href="mining.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
-  <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
-  <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
+  <a href="Dashboard.html" class="nav-item active"><i class='bx bxs-dashboard'></i><span>Home</span></a>
+  <a href="mining.html" class="nav-item"><i class='bx bxs-coin-stack'></i><span>Invest</span></a>
+  <a href="promotion.html" class="nav-item"><i class='bx bxs-user-plus'></i><span>Refer</span></a>
+  <a href="account.html" class="nav-item"><i class='bx bxs-user-circle'></i><span>Account</span></a>
 </div>
+
 
 
 <footer class="footer">
@@ -728,11 +947,12 @@
 
 
 <!-- Firebase Logic -->
+<!-- Firebase Logic -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
   import { 
-    getFirestore, doc, getDoc, collection, query, where, getDocs 
+    getFirestore, doc, getDoc, collection, query, where, getDocs, onSnapshot 
   } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
   // 🔥 Firebase Config
@@ -758,22 +978,26 @@
 
   // 👇 Main logic
   onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      try {
-        const userRef = doc(db, "users", user.uid);
-        const userDoc = await getDoc(userRef);
+  if (user) {
+    try {
+      const userRef = doc(db, "users", user.uid);
 
-        if (userDoc.exists()) {
-          const data = userDoc.data();
+      // 🔥 Realtime listener (auto update without refresh)
+      onSnapshot(userRef, async (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
 
-          // 🟢 Wallet balance + name
-          const balance = parseFloat(data.walletBalance) || 0;
-          walletBalanceEl.textContent = balance.toFixed(2);
+          // 🟢 Wallet Balance + Name
+          walletBalanceEl.textContent = parseFloat(data.walletBalance || 0).toFixed(2);
           userNameEl.textContent = data.name || data.username || "User";
 
-          // 🟢 Level logic
+
+          // 🟢 Level Logic
           const lifetimeDeposit = parseFloat(data.lifetimeDeposit) || 0;
-          let level = "No Level", levelColor = "#999", bgColor = "#eee", levelIcon = "";
+          let level = "No Level",
+              levelColor = "#999",
+              bgColor = "#eee",
+              levelIcon = "";
 
           if (lifetimeDeposit >= 200 && lifetimeDeposit < 500) {
             level = "Starter"; levelColor = "#FF9800"; bgColor = "#FFE0B2"; levelIcon = "🌱";
@@ -790,13 +1014,13 @@
           }
 
           userLevelEl.innerHTML = `
-            <span class="level-badge" style="color:${levelColor}; background:${bgColor};">
+            <span class="trust-level" style="color:${levelColor}; background:${bgColor};">
               ${levelIcon} ${level}
             </span>
           `;
 
           // 🟢 Mining income (from totalMined)
-          const miningIncome = parseFloat(data.totalMined) || 0;
+          const miningIncome = parseFloat(data.totalMined || 0);
           document.getElementById("miningIncome").textContent = miningIncome.toFixed(2);
 
           // 🟢 Referral income (from referral_income collection)
@@ -806,8 +1030,7 @@
           const querySnap = await getDocs(q);
           querySnap.forEach((docSnap) => {
             const rData = docSnap.data();
-            const amt = parseFloat(rData.amount) || 0;
-            teamIncome += amt;
+            teamIncome += parseFloat(rData.amount || 0);
           });
           document.getElementById("teamIncome").textContent = teamIncome.toFixed(2);
 
@@ -817,44 +1040,33 @@
           const commissionSnap = await getDocs(commissionRef);
           commissionSnap.forEach((docSnap) => {
             const cData = docSnap.data();
-            const amt = parseFloat(cData.amount) || 0;
-            commissionIncome += amt;
+            commissionIncome += parseFloat(cData.amount || 0);
           });
           document.getElementById("commissionIncome").textContent = commissionIncome.toFixed(2);
 
           // 🟢 Staking income (from users doc)
-          const stakingIncome = parseFloat(data.stakingIncome) || 0;
+          const stakingIncome = parseFloat(data.stakingIncome || 0);
           document.getElementById("stakingIncome").textContent = stakingIncome.toFixed(2);
 
-          // 🟢 Total income = Mining + Team + Commission + Staking
-          const total = 
-            (miningIncome || 0) + 
-            (teamIncome || 0) + 
-            (commissionIncome || 0) + 
-            (stakingIncome || 0);
-
+          // 🟢 Total income = sum of all
+          const total = miningIncome + teamIncome + commissionIncome + stakingIncome;
           document.getElementById("totalIncome").textContent = total.toFixed(2);
 
-          console.log("✅ Dashboard Data Loaded:");
-          console.log("User:", data.name || user.email);
-          console.log("Mining:", miningIncome);
-          console.log("Team:", teamIncome);
-          console.log("Commission:", commissionIncome);
-          console.log("Staking:", stakingIncome);
-          console.log("Total:", total);
-
+          console.log("✅ Dashboard Auto Updated for:", data.name || user.email);
         } else {
-          console.warn("⚠️ No user document found in Firestore");
+          console.warn("⚠️ User document not found in Firestore.");
         }
+      });
 
-      } catch (err) {
-        console.error("❌ Error fetching user dashboard data:", err);
-      }
-    } else {
-      // user not logged in
-      window.location.href = "register.html";
+    } catch (err) {
+      console.error("❌ Error in dashboard listener:", err);
     }
-  });
+  } else {
+    // Not logged in
+    window.location.href = "register.html";
+  }
+});
+
 
 // ✅ Subscribe form logic
   document.getElementById("subscribeForm").addEventListener("submit", function(e){
@@ -1017,4 +1229,3 @@ setInterval(updateParticipants, 50000);
 
 </body>
 </html>
-
