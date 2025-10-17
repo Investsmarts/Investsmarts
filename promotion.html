@@ -17,7 +17,7 @@ body {
   padding-bottom: 100px;
   color: #333;
 }
-.container { max-width: 950px; margin: auto; padding: 15px; }
+.container { max-width: 950px; margin: auto; padding: 20px; }
 .card {
   background: #fff; padding: 20px; border-radius: 16px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.08); margin-bottom: 20px;
@@ -25,12 +25,12 @@ body {
 }
 .header {
   position: fixed; top: 0; left: 0; width: 100%;
-  background: #32cd32; color: #fff; text-align: center;
-  padding: 14px; font-size: 18px; font-weight: bold;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15); z-index: 1000;
+  background: #ffffff00;
+  color: #21d82b; text-align: center;
+  padding: 10px; font-size: 18px; font-weight: bold;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  z-index: 1000;
 }
-
-/* team section */
 .team-grid {
   display: grid; grid-template-columns: repeat(2,1fr);
   gap: 14px; margin-top: 15px;
@@ -47,10 +47,9 @@ body {
    border: 1px solid #a7f3d0;
   padding: 6px 12px; border-radius: 10px;
 }
-.team-box.total { background: linear-gradient(135deg,#22c55e,#16a34a); color:#fff; }
-.team-box.total .value { background:rgba(255,255,255,0.2); color:#fff; }
+.team-box.total { background: #f8fafc; }
+.team-box.total .value { background:#7299c0; color:#fff; }
 
-/* buttons and QR */
 .btn-row { display:flex; justify-content:center; gap:10px; margin-top:15px; }
 .btn { padding:10px 18px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; color:#fff; transition:0.3s; }
 .btn-copy { background:#00aaff; }
@@ -82,52 +81,160 @@ body {
   display:none; z-index:999;
 }
 
-/* referral card */
-.referral-card {
-  text-align:center; background:#fff; border-radius:16px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
-  padding:20px; max-width:360px; margin:0 auto 25px;
+/* scroll & search */
+.scrollable-list {
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 8px;
+  margin-top: 10px;
+  background: #fff;
 }
-.referral-link {
-  display:block; word-break:break-all; background:#f9fafb;
-  padding:10px 12px; border-radius:10px; border:1px solid #e5e7eb;
-  margin:10px auto 15px; overflow:hidden; white-space:normal;
+.scrollable-list::-webkit-scrollbar { width: 6px; }
+.scrollable-list::-webkit-scrollbar-thumb { background: #00c853; border-radius: 6px; }
+.scrollable-list::-webkit-scrollbar-track { background: #f1f5f9; }
+
+.search-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0 8px;
+  gap: 6px;
+}
+.search-bar input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.search-bar button {
+  background: #00c853;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.search-bar button:hover { background: #00994e; }
+
+
+ /* ✅ Ultra Clear Bottom Nav (No Blur, High Contrast) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 94%;
+  max-width: 480px;
+  background: #ffffff; /* solid white */
+  border: 1px solid #e0e0e0;
+  border-radius: 18px;
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  z-index: 1000;
+  animation: slideUp 0.6s ease;
 }
 
-   /* Bottom Navbar */
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 0;
-      width: 100%; height: 70px; background: #fff;
-      display: flex; justify-content: space-around; align-items: center;
-      border-top: 2px solid #28a745; z-index: 100;
-    }
-    .nav-item { flex: 1; text-align: center; font-size: 12px; color: #333; text-decoration: none; transition: 0.3s; position: relative; padding: 10px 0; }
-    .nav-item i { font-size: 22px; display: block; margin-bottom: 3px; color: #28a745; }
-    .nav-item:hover { color: #28a745; }
-    .nav-item:hover i { color: #218838; }
+/* Slide animation */
+@keyframes slideUp {
+  from { transform: translate(-50%, 60px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
 
-    .card h2 {
-  font-size: 24px;
-  font-weight: 700;
+/* Nav Items */
+.nav-item {
+  flex: 1;
   text-align: center;
-  margin-bottom: 20px;
-  letter-spacing: 0.5px;
-  
-  /* ✅ Gradient Text Effect */
-  background: linear-gradient(135deg, #16a34a, #22c55e);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  
-  /* ✅ Soft Shadow Glow */
-  
-  font-family: "Poppins", sans-serif;
-  transition: 0.3s ease;
+  color: #888;
+  font-size: 12px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  position: relative;
+  padding: 4px 0;
 }
 
-/* ✅ Optional Hover Effect */
-.card h2:hover {
-  text-shadow: 0px 3px 10px rgba(22, 163, 74, 0.45);
-  transform: scale(1.02);
+/* Icons */
+.nav-item i {
+  font-size: 22px;
+  display: block;
+  margin-bottom: 3px;
+  color: #666;
+  transition: all 0.25s ease;
+  filter: none; /* remove soft edges */
+}
+
+/* Hover & Active */
+.nav-item:hover i,
+.nav-item.active i {
+  color: #00c853;
+  transform: translateY(-3px) scale(1.15);
+  text-shadow: 0 0 8px rgba(0, 200, 83, 0.4);
+}
+
+.nav-item:hover span,
+.nav-item.active span {
+  color: #00c853;
+  font-weight: 600;
+}
+
+/* Glow dot under active item */
+.nav-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: #00c853;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 200, 83, 0.4);
+}
+
+/* Responsive fix */
+@media(max-width:600px){
+  .bottom-nav {
+    border-radius: 10px;
+    padding: 8px 0;
+  }
+  .nav-item i {
+    font-size: 20px;
+  }
+}
+
+#qrcode img {
+  border-radius: 10px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+}
+
+
+/* 🌟 TrustDollar Popup Notification */
+.td-popup {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #00c853;
+  color: #fff;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s ease;
+  z-index: 9999;
+}
+.td-popup.show {
+  opacity: 1;
+  bottom: 110px;
 }
 
 
@@ -135,6 +242,7 @@ body {
 </head>
 <body>
 <div class="header">My Referrals</div>
+
 
 <div class="container">
   <div class="card">
@@ -146,6 +254,8 @@ body {
       <div class="team-box total"><span class="label">Total</span><span id="teamTotal" class="value">0</span></div>
     </div>
   </div>
+<!-- ✅ Popup Notification -->
+<div id="tdPopup" class="td-popup"></div>
 
   <div class="card referral-card">
     <b>Your link:</b>
@@ -165,35 +275,66 @@ body {
 
   <div id="level1" class="level-content active">
     <h3>Earning: <b id="level1Earning">$0</b></h3>
-    <div id="level1List"></div>
+    <div class="search-bar">
+      <input type="text" id="searchLv1" placeholder="Search member by name...">
+      <button onclick="searchLevel(1)">Search</button>
+    </div>
+    <div id="level1List" class="scrollable-list"></div>
   </div>
+
   <div id="level2" class="level-content">
     <h3>Earning: <b id="level2Earning">$0</b></h3>
-    <div id="level2List"></div>
+    <div class="search-bar">
+      <input type="text" id="searchLv2" placeholder="Search member by name...">
+      <button onclick="searchLevel(2)">Search</button>
+    </div>
+    <div id="level2List" class="scrollable-list"></div>
   </div>
+
   <div id="level3" class="level-content">
     <h3>Earning: <b id="level3Earning">$0</b></h3>
-    <div id="level3List"></div>
+    <div class="search-bar">
+      <input type="text" id="searchLv3" placeholder="Search member by name...">
+      <button onclick="searchLevel(3)">Search</button>
+    </div>
+    <div id="level3List" class="scrollable-list"></div>
   </div>
 </div>
 
- <!-- Bottom Navbar -->
-  <div class="bottom-nav">
-    <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
-    <a href="mining.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
-    <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
-    <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
-  </div>
+<div class="bottom-nav">
+  <a href="Dashboard.html" class="nav-item active"><i class='bx bxs-dashboard'></i><span>Home</span></a>
+  <a href="mining.html" class="nav-item"><i class='bx bxs-coin-stack'></i><span>Invest</span></a>
+  <a href="promotion.html" class="nav-item"><i class='bx bxs-user-plus'></i><span>Refer</span></a>
+  <a href="account.html" class="nav-item"><i class='bx bxs-user-circle'></i><span>Account</span></a>
+</div>
+<script>
+  // 🔥 Bottom nav auto-active highlight logic
+  const navLinks = document.querySelectorAll(".bottom-nav a");
 
+  // current page ka URL filename nikalta hai (e.g., mining.html)
+  const currentPage = window.location.pathname.split("/").pop();
 
+  navLinks.forEach(link => {
+    const linkPage = link.getAttribute("href");
+
+    if (linkPage === currentPage) {
+      link.classList.add("active"); // ✅ Active highlight add karega
+    } else {
+      link.classList.remove("active");
+    }
+
+    // Optional: click par bhi active ho turant
+    link.addEventListener("click", () => {
+      navLinks.forEach(nav => nav.classList.remove("active"));
+      link.classList.add("active");
+    });
+  });
+</script>
 <div id="popup" class="popup"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getFirestore, collection, query, where,
-  onSnapshot, doc, getDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, query, where, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -209,200 +350,151 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-let finalRefLink = "";
-let currentUserGlobal = null;
 
-function showPopup(msg) {
-  const pop = document.getElementById("popup");
-  pop.innerText = msg;
-  pop.style.display = "block";
-  setTimeout(() => (pop.style.display = "none"), 2000);
-}
-window.copyReferral = function () {
-  if (!finalRefLink) return showPopup("Login first");
-  navigator.clipboard.writeText(finalRefLink);
-  showPopup("Referral link copied!");
-};
-window.shareReferral = function () {
-  if (navigator.share)
-    navigator.share({
-      title: "TrustDollar Invite",
-      text: "Join TrustDollar and earn!",
-      url: finalRefLink,
-    });
-  else showPopup("Browser not supported");
-};
-
-// ✅ Render level user list
-function renderList(listId, members, rate) {
-  const c = document.getElementById(listId);
-  if (!members.length) {
-    c.innerHTML = "<em>No users</em>";
-    return;
-  }
-  c.innerHTML = `
-  <table class="user-table">
-    <thead><tr><th>Name</th><th>Status</th><th>Received</th></tr></thead>
-    <tbody>
-      ${members.map(
-        (u) => `
-        <tr>
-          <td>${u.name || "Unnamed"}</td>
-          <td>${u.lifetimeDeposit > 0
-            ? "<span class='status-active'>Active</span>"
-            : "<span class='status-inactive'>Inactive</span>"}</td>
-          <td>$${((u.totalInvested || 0) * rate).toFixed(2)}</td>
-        </tr>`
-      ).join("")}
-    </tbody>
-  </table>`;
-}
-
-// ✅ Global function for tab switch
 window.showLevel = function (level) {
-  document.querySelectorAll(".level-btn").forEach((b) => b.classList.remove("active"));
-  document.querySelectorAll(".level-content").forEach((c) => c.classList.remove("active"));
+  document.querySelectorAll(".level-btn").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".level-content").forEach(c=>c.classList.remove("active"));
   document.querySelector(`.level-btn:nth-child(${level})`).classList.add("active");
   document.getElementById(`level${level}`).classList.add("active");
 };
 
-// 🔁 Real-time level data
-function subscribeLevel(currentUser, level) {
-  const q = query(
-    collection(db, "users", currentUser.uid, "commissions"),
-    where("level", "==", level)
-  );
-
-  onSnapshot(q, async (snap) => {
-    const temp = {}; // combine same user commissions
-    let totalEarn = 0;
-
-    for (const docSnap of snap.docs) {
-      const c = docSnap.data();
-      totalEarn += parseFloat(c.amount || 0);
-
-      // 🧠 Fetch downline info
-      let downlineName = "Unknown";
-      let isActive = false;
-
-      try {
-        const downRef = doc(db, "users", c.fromUser);
-        const downSnap = await getDoc(downRef);
-        if (downSnap.exists()) {
-          const d = downSnap.data();
-          downlineName = d.name || "Unnamed";
-          isActive = (d.totalInvested || d.lifetimeDeposit || 0) > 0;
-        }
-      } catch (e) {
-        console.error("Error fetching downline:", e);
-      }
-
-      // Combine by name (avoid duplicates)
-      if (!temp[downlineName]) {
-        temp[downlineName] = {
-          name: downlineName,
-          lifetimeDeposit: isActive ? 1 : 0,
-          totalInvested: parseFloat(c.amount || 0),
-        };
-      } else {
-        temp[downlineName].totalInvested += parseFloat(c.amount || 0);
-      }
+window.searchLevel = function(level){
+  const val=document.getElementById(`searchLv${level}`).value.toLowerCase();
+  const table=document.querySelector(`#level${level}List table`);
+  if(!table)return;
+  const rows=table.getElementsByTagName("tr");
+  for(let i=1;i<rows.length;i++){
+    const td=rows[i].getElementsByTagName("td")[0];
+    if(td){
+      const name=td.textContent||td.innerText;
+      rows[i].style.display=name.toLowerCase().includes(val)?"":"none";
     }
+  }
+};
 
-    // Convert combined data to array
-    const members = Object.values(temp);
+// hybrid + team counts
+function hybridLevelSystem(currentUser, level){
+  const membersMap={};
+  let q;
+  if(level===1) q=query(collection(db,"users"),where("referredBy","==",currentUser.referralCode));
+  else if(level===2) q=query(collection(db,"users"),where("upline2","==",currentUser.uid));
+  else if(level===3) q=query(collection(db,"users"),where("upline3","==",currentUser.uid));
 
-    // ✅ Show total earnings
-    document.getElementById(`level${level}Earning`).textContent =
-      "$" + totalEarn.toFixed(2);
+  onSnapshot(q,s=>{
+    s.forEach(docSnap=>{
+      const d=docSnap.data();
+      membersMap[d.uid||docSnap.id]={name:d.name||"Unnamed",lifetimeDeposit:(d.totalInvested||d.lifetimeDeposit||0),totalInvested:d.totalInvested||0};
+    });
+    renderHybrid(level,membersMap);
+  });
 
-    // ✅ Render table
-    renderList(`level${level}List`, members, 1);
+  const cq=query(collection(db,"users",currentUser.uid,"commissions"),where("level","==",level));
+  onSnapshot(cq,async snap=>{
+    for(const docSnap of snap.docs){
+      const c=docSnap.data();let name="Unknown",active=false;
+      try{
+        const downSnap=await getDoc(doc(db,"users",c.fromUser));
+        if(downSnap.exists()){
+          const d=downSnap.data();name=d.name||"Unnamed";active=(d.totalInvested||d.lifetimeDeposit||0)>0;
+        }
+      }catch{}
+      membersMap[c.fromUser]={name,lifetimeDeposit:active?1:0,totalInvested:(membersMap[c.fromUser]?.totalInvested||0)+parseFloat(c.amount||0)};
+    }
+    renderHybrid(level,membersMap);
   });
 }
 
+function renderHybrid(level,map){
+  const members=Object.values(map);
+  const c=document.getElementById(`level${level}List`);
+  if(!members.length){c.innerHTML="<em>No users found</em>";return;}
+  let total=0;members.forEach(m=>total+=m.totalInvested);
+  document.getElementById(`level${level}Earning`).textContent="$"+total.toFixed(2);
+  c.innerHTML=`<table class="user-table"><thead><tr><th>Name</th><th>Status</th><th>Received</th></tr></thead><tbody>${
+    members.map(u=>`<tr><td>${u.name}</td><td>${u.lifetimeDeposit>0?"<span class='status-active'>Active</span>":"<span class='status-inactive'>Inactive</span>"}</td><td>$${(u.totalInvested||0).toFixed(2)}</td></tr>`).join("")
+  }</tbody></table>`;
+}
 
-// 🔥 Auth + real-time Firestore
-onAuthStateChanged(auth, async (user) => {
+
+// QR CODE KA HAI YE 
+
+onAuthStateChanged(auth, async user => {
   if (!user) return (window.location.href = "login.html");
-  const docu = await getDoc(doc(db, "users", user.uid));
-  if (!docu.exists()) return;
-  const currentUser = { ...docu.data(), uid: user.uid };
-  currentUserGlobal = currentUser;
+  const snap = await getDoc(doc(db, "users", user.uid));
+  if (!snap.exists()) return;
+  const currentUser = { ...snap.data(), uid: user.uid };
 
-  finalRefLink = `https://smartfundad.com/index.html?ref=${currentUser.referralCode || user.uid}`;
+  // ✅ Generate Referral Link + QR Code (add this)
+  const finalRefLink = `https://smartfundad.com/index.html?ref=${currentUser.referralCode || user.uid}`;
   const shortLink = finalRefLink.length > 35 ? finalRefLink.slice(0, 35) + "..." : finalRefLink;
   document.getElementById("refLink").innerHTML = `<span style="color:#2563eb">${shortLink}</span>`;
-  new QRCode(document.getElementById("qrcode"), { text: finalRefLink, width: 120, height: 120 });
 
-  // Real-time total team counts
+  document.getElementById("qrcode").innerHTML = ""; // clear old QR if any
+  new QRCode(document.getElementById("qrcode"), {
+    text: finalRefLink,
+    width: 120,
+    height: 120,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+  });
+
+  // ✅ team query and level system continue as before
   const ref1 = query(collection(db, "users"), where("referredBy", "==", currentUser.referralCode));
   const ref2 = query(collection(db, "users"), where("upline2", "==", user.uid));
   const ref3 = query(collection(db, "users"), where("upline3", "==", user.uid));
   let lv1 = 0, lv2 = 0, lv3 = 0;
-  const updateTotals = () => {
+  const updateCounts = () => {
     document.getElementById("teamLv1").textContent = lv1;
     document.getElementById("teamLv2").textContent = lv2;
     document.getElementById("teamLv3").textContent = lv3;
     document.getElementById("teamTotal").textContent = lv1 + lv2 + lv3;
   };
-  onSnapshot(ref1, (s) => { lv1 = s.size; updateTotals(); });
-  onSnapshot(ref2, (s) => { lv2 = s.size; updateTotals(); });
-  onSnapshot(ref3, (s) => { lv3 = s.size; updateTotals(); });
+  onSnapshot(ref1, s => { lv1 = s.size; updateCounts(); });
+  onSnapshot(ref2, s => { lv2 = s.size; updateCounts(); });
+  onSnapshot(ref3, s => { lv3 = s.size; updateCounts(); });
 
-  // Subscribe levels
-  subscribeLevel(currentUser, 1);
-  subscribeLevel(currentUser, 2);
-  subscribeLevel(currentUser, 3);
+  ["1", "2", "3"].forEach(lv => hybridLevelSystem(currentUser, parseInt(lv)));
 });
-</script>
-<script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  });
+// ✅ Copy & Share Referral Functions
+window.copyReferral = function () {
+  const refLink = document.getElementById("refLink").innerText;
+  if (!refLink || refLink.includes("Loading")) {
+    showPopup("Referral link not ready yet!");
+    return;
+  }
+  navigator.clipboard.writeText(refLink);
+  showPopup("Referral link copied!");
+};
 
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
+window.shareReferral = function () {
+  const refLink = document.getElementById("refLink").innerText;
+  if (!refLink || refLink.includes("Loading")) {
+    showPopup("Referral link not ready yet!");
+    return;
+  }
 
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
+  if (navigator.share) {
+    navigator.share({
+      title: "TrustDollar Invite",
+      text: "Join TrustDollar and earn secure rewards!",
+      url: refLink,
+    });
+  } else {
+    alert("Sharing not supported on this device.");
+  }
+};
 
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
-
+// puip up ke liey hai 
+// 🌿 TrustDollar Popup Function
+function showPopup(message, color = "#00c853") {
+  const popup = document.getElementById("tdPopup");
+  popup.style.background = color;
+  popup.innerText = message;
+  popup.classList.add("show");
+  setTimeout(() => popup.classList.remove("show"), 2000);
+}
 
 </script>
 </body>
