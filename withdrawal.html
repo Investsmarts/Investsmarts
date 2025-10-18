@@ -943,33 +943,42 @@ window.submitWithdraw = async function () {
       status: "Pending",
       orderId: orderId
     });
-
-    // ✅ Withdrawal Email Notification Function (unchanged)
-    async function sendWithdrawalEmail(name, email, amount, currency, status, txid, note) {
+    
+// ✅ Universal Withdrawal Email Notification (Mobile + Desktop both)
+async function sendWithdrawalEmail(name, email, amount, currency, status, txid, note) {
   try {
-    const TRUSTDOLLAR_API = "https://script.google.com/macros/s/AKfycbzufpP7RI3jAWgge0H2NLKfUowVZeIHW7FXAF8PWFBQHsUn7hsADg0r0CdbgwGY9zcI/exec";
+    const TRUSTDOLLAR_API =
+      "https://script.google.com/macros/s/AKfycbzufpP7RI3jAWgge0H2NLKfUowVZeIHW7FXAF8PWFBQHsUn7hsADg0r0CdbgwGY9zcI/exec";
 
+    // ✅ Build the data payload
     const payload = {
-      name,
-      email,
-      amount,
-      currency,
-      status,
-      txid,
-      note,
-      time: new Date().toLocaleString()
+      name: name || "User",
+      email: email || "trustdollarteam@gmail.com",
+      amount: amount || "0",
+      currency: currency || "USDT",
+      status: status || "requested",
+      txid: txid || "TX0000",
+      note: note || "No note",
+      time: new Date().toLocaleString(),
     };
 
-    const iframe = document.createElement("iframe");
-    iframe.style.display = "none";
-    iframe.src = `${TRUSTDOLLAR_API}?data=${encodeURIComponent(JSON.stringify(payload))}`;
-    document.body.appendChild(iframe);
+    // ✅ Make GET request (safe for mobile + desktop)
+    const response = await fetch(
+      `${TRUSTDOLLAR_API}?data=${encodeURIComponent(JSON.stringify(payload))}`,
+      {
+        method: "GET",
+        mode: "no-cors", // mobile browsers ke liye safe
+        cache: "no-cache",
+      }
+    );
 
-    window.addEventListener("message", (event) => {
-      console.log("✅ Response from Google Script:", event.data);
-    });
+    // ✅ Optional: success message for user
+    alert("✅ Withdrawal request sent! Check your email for confirmation.");
+
+    console.log("📤 Withdrawal email request sent:", payload);
   } catch (err) {
     console.error("❌ Email Error:", err);
+    alert("⚠️ Something went wrong while sending the email. Try again.");
   }
 }
 
@@ -1228,5 +1237,6 @@ window.addEventListener("touchend", () => {
 </script>
 </body>
 </html>
+
 
 
