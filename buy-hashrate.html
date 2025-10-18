@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TrustDollar — Cloud Mining</title>
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
 <style>
 :root {
   --green: #16a34a;
@@ -70,11 +70,11 @@ body {
   margin: 5px 0;
 }
 .btn {
-  background: linear-gradient(135deg,#16a34a,#22c55e);
+  background: linear-gradient(135deg,#ddc203,#22c55e);
   color: #fff;
   padding: 12px;
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
   font-weight: 600;
   cursor: pointer;
   width: 100%;
@@ -96,7 +96,6 @@ body {
   line-height: 1.6;
 }
 
-/* ✅ Modal Overlay */
 /* ✅ Smooth Modal (no flicker, with fade + zoom animation) */
 .modal {
   position: fixed;
@@ -146,6 +145,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.5px;
 }
+
 .modal-head h2 {
   margin: 0;
   font-size: 1.3rem;
@@ -479,9 +479,9 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  background: linear-gradient(145deg, #3ed667, #218838);
-  color: white;
-  padding: 10px 0;            /* was too thick, now balanced */
+  background: #ffffff00;
+   color: #21d82b; text-align: center;
+   padding: 10px; font-size: 18px; font-weight: bold;          /* was too thick, now balanced */
   font-size: 18px;
   font-weight: bold;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
@@ -619,10 +619,263 @@ body {
 }
 
 
+/* plane histry butun */
+  .pro-btn {
+    background: linear-gradient(135deg, #3bff00, #00b4d8);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 18px;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+
+  .pro-btn:hover {
+    background: linear-gradient(135deg, #0056b3, #0077b6);
+    box-shadow: 0 6px 18px rgba(0, 123, 255, 0.45);
+    transform: translateY(-3px);
+  }
+
+
+/* ✅ Ultra Clear Bottom Nav (No Blur, High Contrast) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 94%;
+  max-width: 480px;
+  background: #ffffff; /* solid white */
+  border: 1px solid #e0e0e0;
+  border-radius: 18px;
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  z-index: 1000;
+  animation: slideUp 0.6s ease;
+}
+
+/* Slide animation */
+@keyframes slideUp {
+  from { transform: translate(-50%, 60px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+/* Nav Items */
+.nav-item {
+  flex: 1;
+  text-align: center;
+  color: #888;
+  font-size: 12px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  position: relative;
+  padding: 4px 0;
+}
+
+/* Icons */
+.nav-item i {
+  font-size: 22px;
+  display: block;
+  margin-bottom: 3px;
+  color: #666;
+  transition: all 0.25s ease;
+  filter: none; /* remove soft edges */
+}
+
+/* Hover & Active */
+.nav-item:hover i,
+.nav-item.active i {
+  color: #00c853;
+  transform: translateY(-3px) scale(1.15);
+  text-shadow: 0 0 8px rgba(0, 200, 83, 0.4);
+}
+
+.nav-item:hover span,
+.nav-item.active span {
+  color: #00c853;
+  font-weight: 600;
+}
+
+/* Glow dot under active item */
+.nav-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: #00c853;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 200, 83, 0.4);
+}
+
+/* Responsive fix */
+@media(max-width:600px){
+  .bottom-nav {
+    border-radius: 22px;
+    padding: 8px 0;
+  }
+  .nav-item i {
+    font-size: 20px;
+  }
+}
 </style>
 </head>
 
 <body>
+  <!-- 🌟 3D Auto-Hide Alert Box -->
+<div id="customAlert" class="alert-box"></div>
+
+<!-- 🌟 Glass 3D Alert Box -->
+<div id="glassAlert" class="glass-alert">
+  <div class="alert-content">
+    <span id="closeAlert" class="close-btn">×</span>
+    <h2 id="alertTitle">ERROR</h2>
+    <p id="alertMessage">Ready to Start</p>
+    <button id="alertOk">OK</button>
+  </div>
+</div>
+
+<style>
+  /* Background overlay */
+  .glass-alert {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    backdrop-filter: blur(6px);
+  }
+
+  /* Card style (Glassmorphism) */
+  .alert-content {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 16px;
+    padding: 25px 30px;
+    text-align: center;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
+    animation: popIn 0.4s ease;
+    color: white;
+    width: 240px;
+    position: relative;
+  }
+
+  .alert-content h2 {
+    margin: 0;
+    font-size: 22px;
+    letter-spacing: 2px;
+    font-weight: 600;
+  }
+
+  .alert-content p {
+    margin: 12px 0 20px;
+    font-size: 14px;
+    color: #e0e0e0;
+    line-height: 1.4;
+  }
+
+  /* OK button */
+  #alertOk {
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: white;
+    font-weight: 500;
+    padding: 8px 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+
+  #alertOk:hover {
+    background: rgba(255, 255, 255, 0.45);
+    transform: scale(1.05);
+  }
+
+  /* Close X button */
+  .close-btn {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 18px;
+    color: #ff4d4d;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .close-btn:hover {
+    transform: scale(1.2);
+  }
+
+  @keyframes popIn {
+    from {
+      transform: scale(0.85);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+  }
+</style>
+
+
+<script>
+  // 🔥 Function to show the smooth alert
+  function showGlassAlert(title = "ERROR", message = "Something went wrong!", autoHide = true, duration = 3000) {
+    const alertBox = document.getElementById("glassAlert");
+    const alertTitle = document.getElementById("alertTitle");
+    const alertMessage = document.getElementById("alertMessage");
+
+    alertTitle.textContent = title;
+    alertMessage.textContent = message;
+
+    alertBox.style.display = "flex";
+    alertBox.querySelector(".alert-content").style.animation = "popIn 0.4s ease";
+
+    // Auto hide after duration
+    if (autoHide) {
+      setTimeout(() => {
+        alertBox.querySelector(".alert-content").style.animation = "fadeOut 0.4s ease";
+        setTimeout(() => {
+          alertBox.style.display = "none";
+        }, 400);
+      }, duration);
+    }
+  }
+
+  // Close alert manually
+  document.getElementById("closeAlert").onclick = () => {
+    document.getElementById("glassAlert").style.display = "none";
+  };
+  document.getElementById("alertOk").onclick = () => {
+    document.getElementById("glassAlert").style.display = "none";
+  };
+</script>
+
 
 <!-- 🔹 Header with Guide Button -->
 <div class="header">
@@ -694,80 +947,158 @@ body {
     <div><strong>Wallet:</strong> <span id="walletBalance">$0.00</span></div>
     <div><strong>Locked:</strong> <span id="lockedBalance">$0.00</span></div>
   </div>
-  <span class="status-badge">🔥 Active</span>
+  
+<!-- 🌐 Professional Button -->
+<div style="text-align:center; margin: 25px 0;">
+  <a href="hashratehistry.html" target="_blank" class="pro-btn">
+    Activate Plan
+  </a>
+</div>
 
-  <!-- 💎 Active Plan Box -->
-  <div id="activePlanBox" style="display:none; margin-top:15px;">
-    <div class="plan-summary" style="background:#dcfce7; border:1.5px solid #86efac;">
-      <div class="summary-row">
-        <span>Active Plan:</span>
-        <strong id="activePlanName">—</strong>
-      </div>
-      <div class="summary-row">
-        <span>Daily Profit:</span>
-        <strong id="activePlanProfit">—</strong>
-      </div>
-      <div class="summary-row">
-        <span>Next Profit In:</span>
-        <strong id="activeCountdown">00:00:00</strong>
-      </div>
-    </div>
-
-    <!-- 🕒 Stylish Countdown Box -->
-    <div class="countdown-box" id="countdownBox" style="display:none;">
-      <h4>⏳ Next Profit Countdown</h4>
-      <div id="countdownTimer" class="countdown-timer">
-        <span id="cdHours">24</span>h :
-        <span id="cdMinutes">00</span>m :
-        <span id="cdSeconds">00</span>s
-      </div>
-    </div>
+<div class="plans">
+  <div class="plan">
+    <h3>Plan 1</h3>
+    <p>$500 / 20 days</p>
+    <p>1.7% Daily</p>
+    <button class="btn buy-btn" onclick="openModal('Plan 1', 500, 20, 1.7)">Buy</button>
   </div>
 
-  <!-- 🌀 Circular Progress Ring -->
-  <div class="progress-ring" id="progressRing" style="display:none;">
-   <svg class="ring" width="80" height="80">
-      <circle class="ring-bg" cx="40" cy="40" r="35"></circle>
-      <circle class="ring-fill" cx="40" cy="40" r="35"></circle>
-    </svg>
-    <div class="ring-time" id="ringTime">24h</div>
+  <div class="plan">
+    <h3>Plan 2</h3>
+    <p>$700 / 30 days</p>
+    <p>1.8% Daily</p>
+    <button class="btn buy-btn" onclick="openModal('Plan 2', 700, 30, 1.8)">Buy</button>
   </div>
 
-  <div style="text-align:center; margin-bottom:20px;">
-    <button id="collectProfitBtn" class="btn" style="max-width:250px;">Collect Today’s Profit</button>
+  <div class="plan">
+    <h3>Plan 3</h3>
+    <p>$900 / 40 days</p>
+    <p>1.9% Daily</p>
+    <button class="btn buy-btn" onclick="openModal('Plan 3', 900, 40, 1.9)">Buy</button>
   </div>
 
-  <h2 style="color:#16a34a; text-align:center;">💠 Cloud Mining Plans</h2>
-
-  <div class="plans">
-    <div class="plan" data-name="Mini Plan" data-cost="500" data-days="30" data-profit="2.1">
-      <h3>Mini Plan</h3>
-      <p>$500 / 30 days</p>
-      <p>2.1% Daily</p>
-      <button class="btn buy-btn">Buy</button>
-    </div>
-
-    <div class="plan" data-name="Starter Plan" data-cost="1500" data-days="45" data-profit="2.5">
-      <h3>Starter Plan</h3>
-      <p>$1500 / 45 days</p>
-      <p>2.5% Daily</p>
-      <button class="btn buy-btn">Buy</button>
-    </div>
-
-    <div class="plan" data-name="Advanced Plan" data-cost="3000" data-days="90" data-profit="3">
-      <h3>Advanced Plan</h3>
-      <p>$3000 / 90 days</p>
-      <p>3% Daily</p>
-      <button class="btn buy-btn">Buy</button>
-    </div>
-
-    <div class="plan" data-name="Premium Plan" data-cost="8000" data-days="160" data-profit="5">
-      <h3>Premium Plan</h3>
-      <p>$8000 / 160 days</p>
-      <p>5% Daily</p>
-      <button class="btn buy-btn">Buy</button>
-    </div>
+  <div class="plan">
+    <h3>Plan 4</h3>
+    <p>$1100 / 50 days</p>
+    <p>2.0% Daily</p>
+    <button class="btn buy-btn" onclick="openModal('Plan 4', 1100, 50, 2.0)">Buy</button>
   </div>
+
+  <div class="plan">
+    <h3>Plan 5</h3>
+    <p>$1300 / 60 days</p>
+    <p>2.1% Daily</p>
+    <button class="btn buy-btn" onclick="openModal('Plan 5', 1300, 60, 2.1)">Buy</button>
+  </div>
+
+  <div class="plan">
+    <h3>Plan 6</h3>
+    <p>$1500 / 70 days</p>
+    <p>2.2% Daily</p>
+    <button class="btn buy-btn" onclick="openModal('Plan 6', 1500, 70, 2.2)">Buy</button>
+  </div>
+
+  <div class="plan">
+    <h3>Plan 7</h3>
+    <p>$1700 / 80 days</p>
+    <p>2.3% Daily</p>
+    <button class="btn buy-btn" onclick="openModal('Plan 7', 1700, 80, 2.3)">Buy</button>
+  </div>
+
+  <div class="plan">
+    <h3>Plan 8</h3>
+    <p>$1900 / 90 days</p>
+    <p>2.4% Daily</p>
+    <button class="btn buy-btn" onclick="openModal('Plan 8', 1900, 90, 2.4)">Buy</button>
+  </div>
+
+  <div class="plan">
+    <h3>Plan 9</h3>
+    <p>$2100 / 100 days</p>
+    <p>2.5% Daily</p>
+    <button class="btn buy-btn" onclick="openModal('Plan 9', 2100, 100, 2.5)">Buy</button>
+  </div>
+
+  <div class="plan">
+    <h3>Plan 10</h3>
+    <p>$2300 / 110 days</p>
+    <p>2.6% Daily</p>
+    <button class="btn buy-btn" onclick="openModal('Plan 10', 2300, 110, 2.6)">Buy</button>
+  </div>
+
+  <div class="plan">
+    <h3>Plan 11</h3>
+    <p>$2500 / 120 days</p>
+    <p>2.7% Daily</p>
+    <button class="btn buy-btn" onclick="openModal('Plan 11', 2500, 120, 2.7)">Buy</button>
+  </div>
+
+  <div class="plan">
+    <h3>Plan 12</h3>
+    <p>$2700 / 130 days</p>
+    <p>2.8% Daily</p>
+    <button class="btn buy-btn" onclick="openModal('Plan 12', 2700, 130, 2.8)">Buy</button>
+  </div>
+
+  <div class="plan">
+    <h3>Plan 13</h3>
+    <p>$2900 / 140 days</p>
+    <p>2.9% Daily</p>
+    <button class="btn buy-btn" onclick="openModal('Plan 13', 2900, 140, 2.9)">Buy</button>
+  </div>
+</div>
+
+<div class="plan">
+  <h3>💼 Custom Plan</h3>
+  <p>Enter your own amount (Min $3000)</p>
+  <p>Dynamic Profit Based on Investment</p>
+
+  <input 
+    type="number" 
+    id="customAmount" 
+    min="3000" 
+    placeholder="Enter Amount (Min $3000)" 
+    style="margin-top:10px; padding:8px; width:80%; border-radius:8px; border:1px solid #ccc; text-align:center;"
+  />
+
+  <button class="btn buy-btn" onclick="handleCustomPlan()">Buy</button>
+</div>
+
+<script>
+  function handleCustomPlan() {
+    const amount = parseFloat(document.getElementById("customAmount").value);
+
+    if (isNaN(amount)) {
+      showGlassAlert(" Please enter a valid amount.");
+      return;
+    }
+
+    if (amount < 3000) {
+      showGlassAlert(" Minimum amount is $3000.");
+      return;
+    }
+
+    let days, percent;
+
+    if (amount >= 3000 && amount < 5000) {
+      percent = 3.0;
+      days = 120;
+    } else if (amount >= 5000 && amount < 10000) {
+      percent = 3.5;
+      days = 140;
+    } else if (amount >= 10000 && amount < 20000) {
+      percent = 4.0;
+      days = 160;
+    } else {
+      percent = 4.5;
+      days = 180;
+    }
+
+    // ✅ Opens your existing modal
+    openModal('Custom Plan', amount, days, percent);
+  }
+</script>
+
 
   <!-- ⚡ Center Alert Message -->
   <div id="centerAlert" class="center-alert"></div>
@@ -815,6 +1146,14 @@ body {
 </div>
 </body>
 
+<div class="bottom-nav">
+  <a href="Dashboard.html" class="nav-item active"><i class='bx bxs-dashboard'></i><span>Home</span></a>
+  <a href="mining.html" class="nav-item"><i class='bx bxs-coin-stack'></i><span>Invest</span></a>
+  <a href="promotion.html" class="nav-item"><i class='bx bxs-user-plus'></i><span>Refer</span></a>
+  <a href="account.html" class="nav-item"><i class='bx bxs-user-circle'></i><span>Account</span></a>
+</div>
+
+
 <script>
 function openMiningGuide() {
   const popup = document.getElementById("miningGuidePopup");
@@ -836,7 +1175,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 
-// 🔥 Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
   authDomain: "btcinvest-c0e25.firebaseapp.com",
@@ -846,19 +1184,21 @@ const firebaseConfig = {
   appId: "1:204937458487:web:cc27ece1249999279f60b2"
 };
 
-// 🔗 Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
 let walletBalance = 0, lockedBalance = 0;
 
-// 🔐 Auth state check
 onAuthStateChanged(auth, async (user) => {
-  if (!user) return (window.location.href = "login.html");
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
 
   const ref = doc(db, "users", user.uid);
   const snap = await getDoc(ref);
+
   if (snap.exists()) {
     const d = snap.data();
     walletBalance = d.walletBalance || 0;
@@ -866,286 +1206,6 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById("walletBalance").textContent = `$${walletBalance.toFixed(2)}`;
     document.getElementById("lockedBalance").textContent = `$${lockedBalance.toFixed(2)}`;
   }
-
-  // 🔍 Active running plan check
-// 🔍 Fetch all plans (active + completed)
-const q = query(collection(db, "buyhashrate"), where("userId", "==", user.uid));
-const res = await getDocs(q);
-
-if (!res.empty) {
-  const plansContainer = document.getElementById("activePlanBox");
-  plansContainer.innerHTML = ""; // Clear old
-
-    // 🟢 Safe hide progress ring & countdown initially
-const ringSafe = document.getElementById("progressRing");
-const countSafe = document.getElementById("countdownBox");
-
-if (ringSafe) ringSafe.style.display = "none";
-if (countSafe) countSafe.style.display = "none";
-
-// Agar abhi tak element load nahi hua, wait karo
-if (!ringSafe || !countSafe) {
-  window.addEventListener("DOMContentLoaded", () => {
-    const r2 = document.getElementById("progressRing");
-    const c2 = document.getElementById("countdownBox");
-    if (r2) r2.style.display = "none";
-    if (c2) c2.style.display = "none";
-  });
-}
-
-
-
-res.forEach(docSnap => {
-  const plan = docSnap.data();
-  const planCard = document.createElement("div");
-  const next = plan.nextPayout?.toDate ? plan.nextPayout.toDate() : new Date(plan.nextPayout);
-  const end = plan.endTime?.toDate ? plan.endTime.toDate() : new Date(plan.endTime);
-  const start = plan.startTime?.toDate ? plan.startTime.toDate() : new Date(plan.startTime);
-  const earned = plan.earnedProfit || 0;
-
-  // 🧾 Detailed Card Layout
-  planCard.className = "plan-summary";
-  planCard.style.background = plan.status === "running" ? "#dcfce7" : "#fef2f2";
-  planCard.style.border = plan.status === "running" ? "1.5px solid #86efac" : "1.5px solid #fecaca";
-
-  planCard.innerHTML = `
-    <div class="summary-row">
-      <span>Plan Name:</span>
-      <strong>${plan.planName}</strong>
-    </div>
-    <div class="summary-row">
-      <span>Plan Cost:</span>
-      <strong>$${plan.planCost}</strong>
-    </div>
-    <div class="summary-row">
-      <span>Daily Profit:</span>
-      <strong>${plan.dailyProfitPercent}%</strong>
-    </div>
-    <div class="summary-row">
-      <span>Total Earned:</span>
-      <strong>$${earned.toFixed(2)}</strong>
-    </div>
-    <div class="summary-row">
-      <span>Start Date:</span>
-      <strong>${start.toLocaleDateString()}</strong>
-    </div>
-    <div class="summary-row">
-      <span>Next Payout:</span>
-      <strong>${next.toLocaleDateString()}</strong>
-    </div>
-    <div class="summary-row">
-      <span>End Date:</span>
-      <strong>${end.toLocaleDateString()}</strong>
-    </div>
-    <div class="summary-row">
-      <span>Status:</span>
-      <strong style="color:${plan.status === "running" ? "#16a34a" : "#dc2626"}">
-        ${plan.status.charAt(0).toUpperCase() + plan.status.slice(1)}
-      </strong>
-    </div>
-  `;
-
-  plansContainer.appendChild(planCard);
-
-  // 🔄 Disable button for running plan only
-  disableSpecificPlan(plan.planName, plan.status === "running");
-
-  // ⏰ Countdown for active plan
-// ✅ Always start countdown if plan has nextPayout (even if status not yet synced)
-if (plan.nextPayout) {
-  checkAndAddProfit(docSnap.ref, plan, user.uid);
-
-  const ringEl = document.getElementById("progressRing");
-  const countEl = document.getElementById("countdownBox");
-  if (ringEl) ringEl.style.display = "block";
-  if (countEl) countEl.style.display = "flex";
-
-  let nextTime;
-  if (plan.nextPayout?.toDate) nextTime = plan.nextPayout.toDate();
-  else nextTime = new Date(plan.nextPayout);
-
-  console.log("⏳ Countdown triggered for:", plan.planName, nextTime);
-  startCountdown(nextTime);
-}
-
-
-
-  });
-
-  // Make sure Active Plan box visible
-  plansContainer.style.display = "block";
-}
-
-
-});
-
-// 🎯 Auto Bind Buttons (No manual onclick)
-document.querySelectorAll(".buy-btn").forEach(btn => {
-  btn.addEventListener("click", (e) => {
-    const planDiv = e.target.closest(".plan");
-    const name = planDiv.dataset.name;
-    const cost = parseFloat(planDiv.dataset.cost);
-    const days = parseInt(planDiv.dataset.days);
-    const profit = parseFloat(planDiv.dataset.profit);
-    openModal(name, cost, days, profit);
-  });
-});
-
-// 🟢 OPEN MODAL — smooth fade-in
-window.openModal = function (name, cost, days, profit) {
-  const modal = document.getElementById("planModal");
-  document.getElementById("mTitle").textContent = `BUY ${name.toUpperCase()}`;
-  document.getElementById("mDays").textContent = `${days} days`;
-  document.getElementById("mProfit").textContent = `${profit}%`;
-  document.getElementById("mCost").textContent = `$${cost}`;
-  document.getElementById("mWallet").textContent = `$${walletBalance.toFixed(2)}`;
-  document.getElementById("mError").style.display = "none";
-
-  modal.style.display = "flex";
-  modal.style.opacity = "0";
-  requestAnimationFrame(() => {
-    modal.classList.add("show");
-    modal.style.opacity = "1";
-  });
-
-  // ✅ Confirm button click
-  document.getElementById("mConfirm").onclick = async () => {
-    // 💰 Check balance
-    if (walletBalance < cost) {
-      document.getElementById("mError").style.display = "flex";
-      showBalanceAlert();
-      return; // ✅ stop if insufficient balance
-    }
-
-    const user = auth.currentUser;
-    if (!user) return showCenterAlert(" Please login first!");
-
-  // 🚫 Check if user already has an active running plan
-  const activeQuery = query(
-    collection(db, "buyhashrate"),
-    where("userId", "==", user.uid),
-    where("status", "==", "running")
-  );
-  const activeSnap = await getDocs(activeQuery);
-  if (!activeSnap.empty) {
-    showCenterAlert("Your plan is running, please wait until it’s closed!");
-    closeModal();
-    return; // stop purchase
-  }
-
-
-    const now = new Date();
-    const next = new Date(now.getTime() + 86400000);
-    const end = new Date(now.getTime() + days * 86400000);
-
-    try {
-      // 🧾 Save plan
-      await addDoc(collection(db, "buyhashrate"), {
-        userId: user.uid,
-        planName: name,
-        planCost: cost,
-        dailyProfitPercent: profit,
-        durationDays: days,
-        startTime: serverTimestamp(),
-        nextPayout: next,
-        endTime: end,
-        earnedProfit: 0,
-        status: "running",
-      });
-
-      // 💵 Update wallet
-      walletBalance -= cost;
-      lockedBalance += cost;
-      await updateDoc(doc(db, "users", user.uid), { walletBalance, lockedBalance });
-
-      // 🧩 Update UI
-      closeModal();
-      showActivePlan({
-        planName: name,
-        dailyProfitPercent: profit,
-        earnedProfit: 0,
-        nextPayout: next,
-        endTime: end,
-      });
-         
-        console.log("⏰ Next profit countdown starting...", next);
-        startCountdown(next);
-
-      startCountdown(next);
-      document.getElementById("walletBalance").textContent = `$${walletBalance.toFixed(2)}`;
-      document.getElementById("lockedBalance").textContent = `$${lockedBalance.toFixed(2)}`;
-      showCenterAlert(`✅ ${name} purchased successfully!`);
-
-    } catch (err) {
-      console.error(err);
-      showCenterAlert(" Something went wrong!");
-
-    }
-  };
-};
-
-// 🔴 CLOSE MODAL
-window.closeModal = function () {
-  const modal = document.getElementById("planModal");
-  modal.classList.remove("show");
-  modal.style.opacity = "0";
-  setTimeout(() => (modal.style.display = "none"), 300);
-};
-
-// 🧾 Active Plan Display
-function showActivePlan(plan) {
-  
-  // 🟢 Active plan info box show karo
-  const box = document.getElementById("activePlanBox");
-  if (!box) return; // agar box nahi bana to skip
-  box.style.display = "block";
-
-  // 🧾 Set values
-  document.getElementById("activePlanName").textContent = plan.planName;
-  document.getElementById("activePlanProfit").textContent = plan.dailyProfitPercent + "%";
-
-  // ⏰ Countdown start
-  const nextTime = plan.nextPayout.toDate ? plan.nextPayout.toDate() : new Date(plan.nextPayout);
-  startCountdown(nextTime);
-}
-
-// 💰 Profit Calculation
-async function checkAndAddProfit(ref, plan, uid) {
-  const now = new Date();
-  const next = plan.nextPayout.toDate ? plan.nextPayout.toDate() : new Date(plan.nextPayout);
-  const end = plan.endTime.toDate ? plan.endTime.toDate() : new Date(plan.endTime);
-  if (now >= next && now <= end) {
-    const profit = (plan.planCost * plan.dailyProfitPercent) / 100;
-    const newProfit = (plan.earnedProfit || 0) + profit;
-    const newNext = new Date(now.getTime() + 86400000);
-    await updateDoc(ref, { earnedProfit: newProfit, nextPayout: newNext });
-    document.getElementById("earnedProfit").textContent = newProfit.toFixed(2);
-  }
-  if (now > end) {
-  const uRef = doc(db, "users", uid);
-  const userSnap = await getDoc(uRef);
-  if (userSnap.exists()) {
-    const u = userSnap.data();
-    const newWallet = (u.walletBalance || 0) + plan.planCost + (plan.earnedProfit || 0);
-    const newLocked = (u.lockedBalance || 0) - plan.planCost;
-
-    await updateDoc(uRef, { walletBalance: newWallet, lockedBalance: newLocked });
-    await updateDoc(ref, { status: "completed" });
-
-    // 💡 Enable that specific plan again
-    disableSpecificPlan(plan.planName, false);
-
-    showCenterAlert("🎉 Plan completed! Funds released to wallet!");
-  }
-}
-
-}
-
-
-// 💸 Manual Profit Collect (FIXED FULL VERSION)
-document.getElementById("collectProfitBtn").addEventListener("click", async () => {
-  const user = auth.currentUser;
-  if (!user) return showCenterAlert("🚫 Please login first!");
 
   // 🔍 Check active plan
   const q = query(
@@ -1155,245 +1215,116 @@ document.getElementById("collectProfitBtn").addEventListener("click", async () =
   );
 
   const res = await getDocs(q);
-  if (res.empty) return showCenterAlert("🚫 No active plan found.");
 
-  const docRef = res.docs[0].ref;
-  const plan = res.docs[0].data();
-  const now = new Date();
-
-  // ✅ Safe date parsing for next payout
-  let next;
-  if (plan.nextPayout?.toDate) next = plan.nextPayout.toDate();
-  else next = new Date(plan.nextPayout);
-
-  // 🛠 Validate date
-  if (isNaN(next.getTime())) {
-    console.warn("⚠️ Invalid nextPayout format:", plan.nextPayout);
-    return showCenterAlert("⚠️ Invalid payout time. Please refresh the page.");
+  if (!res.empty) {
+    const ringSafe = document.getElementById("progressRing");
+    const countSafe = document.getElementById("countdownBox");
+    if (ringSafe) ringSafe.style.display = "none";
+    if (countSafe) countSafe.style.display = "none";
   }
-
-  // ⏳ If not yet time
-  if (now < next) {
-    const remaining = Math.ceil((next - now) / (1000 * 60 * 60));
-    return showCenterAlert(`⏳ You can collect profit after ${remaining} hours.`);
-  }
-
-  // 💰 Calculate daily profit
-  const dailyProfit = (plan.planCost * plan.dailyProfitPercent) / 100;
-  const newProfit = (plan.earnedProfit || 0) + dailyProfit;
-  const newNext = new Date(now.getTime() + 86400000); // next 24h
-
-  // 🕒 Update next payout & earned profit
-  try {
-    await updateDoc(docRef, { earnedProfit: newProfit, nextPayout: newNext });
-  } catch (err) {
-    console.error("❌ Error updating plan profit:", err);
-    return showCenterAlert("⚠️ Failed to update profit in plan document.");
-  }
-
-  // 💸 Split profit: 70% user, 30% uplines
-  const userShare = dailyProfit * 0.7;
-  const uplineShare = dailyProfit * 0.3;
-
-  // 👤 Get user document
-  const userRef = doc(db, "users", user.uid);
-  const userSnap = await getDoc(userRef);
-  const userData = userSnap.data();
-
-  // 🧾 Fix: define cost before lifetimeDeposit check
-  const cost = plan.planCost;
-  const lifetimeDeposit = Number(userData.lifetimeDeposit || 0);
-  if (cost > lifetimeDeposit) {
-    showCenterAlert(`Buy limit ($${lifetimeDeposit.toFixed(2)})`);
-    closeModal();
-    return; // stop purchase
-  }
-
-  // 🧾 Update user's wallet (only 70%)
-  const updatedWallet = (userData.walletBalance || 0) + userShare;
-
-  try {
-    await updateDoc(userRef, { walletBalance: updatedWallet });
-  } catch (err) {
-    console.error("❌ Wallet update failed:", err);
-    return showCenterAlert("⚠️ Failed to update wallet balance.");
-  }
-
-  // 🧩 Distribute 30% to uplines
-  try {
-    await distributeLevelIncome(userData, uplineShare);
-  } catch (err) {
-    console.error("⚠️ Level income distribution error:", err);
-  }
-
-  // 🧠 Update UI safely
-  if (document.getElementById("earnedProfit")) {
-    document.getElementById("earnedProfit").textContent = newProfit.toFixed(2);
-  }
-  if (document.getElementById("walletBalance")) {
-    document.getElementById("walletBalance").textContent = `$${updatedWallet.toFixed(2)}`;
-  }
-
-  // ✅ Success alert
-  showCenterAlert(`✅ $${userShare.toFixed(2)} profit added to your wallet! (30% shared with uplines)`);
-
-  console.log("💰 Profit collection successful:", {
-    collectedAt: now.toLocaleString(),
-    userShare,
-    uplineShare,
-    newNext
-  });
 });
 
-  // ♻️ Re-enable button for next profit cycle
-  const collectBtn = document.getElementById("collectProfitBtn");
-  if (collectBtn) {
-    collectBtn.textContent = "Collect Today’s Profit";
-    collectBtn.disabled = false;
-    collectBtn.style.background = "linear-gradient(135deg,#16a34a,#22c55e)";
-    collectBtn.style.cursor = "pointer";
+// 🟢 OPEN MODAL
+window.openModal = function (name, cost, days, profit) {
+  // ✅ Safety check
+  if (!name) {
+    console.warn("openModal called without plan name!");
+    return;
   }
 
-// 🧮 Level 3 Income Distribution (30% of user profit)
-async function distributeLevelIncome(userData, totalShare) {
-  try {
-    const levelPercents = [17, 8, 5]; // 30% total
-    const uplines = [userData.upline1, userData.upline2, userData.upline3];
+  const modal = document.getElementById("planModal");
 
-    for (let i = 0; i < uplines.length; i++) {
-      const uplineId = uplines[i];
-      if (!uplineId) continue;
+  // ✅ Reset previous animation or style
+  modal.style.display = "flex";
+  modal.style.opacity = "0";
+  modal.classList.remove("show");
 
-      const refRef = doc(db, "users", uplineId);
-      const refSnap = await getDoc(refRef);
-      if (!refSnap.exists()) continue;
+  // ✅ Fill modal details
+  document.getElementById("mTitle").textContent = `BUY ${String(name).toUpperCase()}`;
+  document.getElementById("mDays").textContent = `${days} days`;
+  document.getElementById("mProfit").textContent = `${profit}%`;
+  document.getElementById("mCost").textContent = `$${cost}`;
+  document.getElementById("mWallet").textContent = `$${walletBalance.toFixed(2)}`;
+  document.getElementById("mError").style.display = "none";
 
-      const refData = refSnap.data();
-      const commission = (totalShare * levelPercents[i]) / 30;
+  // ✅ Show with smooth transition
+  requestAnimationFrame(() => {
+    modal.classList.add("show");
+    modal.style.opacity = "1";
+  });
 
-      // 🔥 Update all balances
-      const newWallet = (refData.walletBalance || 0) + commission;
-      const newReferralLifetime = (refData.lifetimeReferralIncome || 0) + commission;
+  // ✅ Confirm button click event
+  const confirmBtn = document.getElementById("mConfirm");
 
-      await updateDoc(refRef, {
-        walletBalance: newWallet,
-        lifetimeReferralIncome: newReferralLifetime,
-      });
+  // 🔄 Remove any previous event listener (so double click issue naa ho)
+  confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+  const newConfirmBtn = document.getElementById("mConfirm");
 
-      // 💾 Record in history
-      await addDoc(collection(db, "levelIncomeHistory"), {
-        referrerId: uplineId,
-        fromUser: userData.username || userData.name || "Unknown",
-        level: i + 1,
-        amount: commission,
-        createdAt: serverTimestamp(),
-      });
+  newConfirmBtn.onclick = async () => {
+    if (walletBalance < cost) {
+      document.getElementById("mError").style.display = "flex";
+      showBalanceAlert();
+      return;
     }
-  } catch (err) {
-    console.error("Level income distribution error:", err);
-  }
-}
+
+    const user = auth.currentUser;
+    if (!user) return showCenterAlert("Please login first!");
+
+    const activeQuery = query(
+      collection(db, "buyhashrate"),
+      where("userId", "==", user.uid),
+      where("status", "==", "running")
+    );
+    const activeSnap = await getDocs(activeQuery);
+    if (!activeSnap.empty) {
+      showCenterAlert("Your plan is running, please wait until it’s closed!");
+      closeModal();
+      return;
+    }
+
+    const now = new Date();
+    const next = new Date(now.getTime() + 86400000);
+    const end = new Date(now.getTime() + days * 86400000);
+
+    try {
+      await addDoc(collection(db, "buyhashrate"), {
+        userId: user.uid,
+        planName: name,
+        planCost: cost,
+        dailyProfitPercent: profit,
+        durationDays: days,
+        remainingDays:
+        startTime: serverTimestamp(),
+        nextPayout: next,
+        endTime: end,
+        earnedProfit: 0,
+        status: "running",
+      });
+
+      walletBalance -= cost;
+      lockedBalance += cost;
+      await updateDoc(doc(db, "users", user.uid), { walletBalance, lockedBalance });
+
+      document.getElementById("walletBalance").textContent = `$${walletBalance.toFixed(2)}`;
+      document.getElementById("lockedBalance").textContent = `$${lockedBalance.toFixed(2)}`;
+      showCenterAlert(`✅ ${name} purchased successfully!`);
+      closeModal();
+
+    } catch (err) {
+      console.error(err);
+      showCenterAlert("Something went wrong!");
+    }
+  };
+};
 
 
-   // ⏳ Countdown
-// ✅ FINAL LIVE COUNTDOWN (TRUSTDOLLAR FIXED VERSION)
-function startCountdown(nextTime) {
-  const countdownBox = document.getElementById("countdownBox");
-  const timerEl = document.getElementById("countdownTimer");
-  const ring = document.querySelector(".ring-fill");
-  const ringTime = document.getElementById("ringTime");
-  const label = document.getElementById("activeCountdown");
+window.closeModal = function () {
+  const modal = document.getElementById("planModal");
+  modal.classList.remove("show");
+  setTimeout(() => (modal.style.display = "none"), 300);
+};
 
-  if (!countdownBox || !timerEl || !ring) return;
-
-  countdownBox.style.display = "flex";
-  document.getElementById("progressRing").style.display = "block";
-
-  // 🕒 Ensure nextTime is valid Date object
-  let target;
-  if (nextTime?.seconds) {
-    target = new Date(nextTime.seconds * 1000);
-  } else if (nextTime?.toDate) {
-    target = nextTime.toDate();
-  } else {
-    target = new Date(nextTime);
-  }
-
-  // 🧠 If somehow invalid or already passed, reset 24h timer
-  if (isNaN(target.getTime()) || target.getTime() <= Date.now()) {
-    target = new Date(Date.now() + 86400000);
-  }
-
-  console.log("🕒 Countdown started for:", target.toLocaleString()); // debug log
-
-  const totalMs = 24 * 60 * 60 * 1000;
-  if (window.activeCountdownTimer) clearInterval(window.activeCountdownTimer);
-
-  window.activeCountdownTimer = setInterval(() => {
-    const now = new Date().getTime();
-    const remaining = target - now;
-
-    
- // 🟥 When time is up
-if (remaining <= 0) {
-  clearInterval(window.activeCountdownTimer);
-  label.textContent = "Ready to Collect Profit";
-  label.style.color = "#dc2626";
-
-  timerEl.textContent = "READY";
-  timerEl.classList.add("ready");
-  ring.style.strokeDashoffset = 0;
-  ringTime.textContent = "✔";
-  console.log("✅ Countdown complete!");
-
-  // 🟢 Change Collect button after 24h completion
-  const collectBtn = document.getElementById("collectProfitBtn");
-  if (collectBtn) {
-    collectBtn.textContent = "Received Earning ✅";
-    collectBtn.disabled = true;
-    collectBtn.style.background = "#9ca3af";
-    collectBtn.style.cursor = "not-allowed";
-  }
-
-  return;
-}
-
-
-    // ⏱ Convert remaining time to h:m:s
-    const hours = Math.floor((remaining / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((remaining / (1000 * 60)) % 60);
-    const seconds = Math.floor((remaining / 1000) % 60);
-
-    const formatted = `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-
-    label.textContent = formatted;
-    timerEl.textContent = formatted;
-
-    // 🌀 Animate progress ring
-    const progress = 1 - remaining / totalMs;
-    const offset = 220 - 220 * progress;
-    ring.style.strokeDashoffset = offset;
-    ringTime.textContent = `${hours}h`;
-
-    // debug
-    // console.log("⏳ Remaining:", remaining);
-  }, 1000);
-}
-
-
-
-// 💬 Popup Alerts
-function showPopup(message, type = "success") {
-  const popup = document.getElementById("popupAlert");
-  popup.textContent = message;
-  popup.className = "popup-alert " + (type === "error" ? "error" : "");
-  popup.classList.add("show");
-  setTimeout(() => popup.classList.remove("show"), 3000);
-}
-
-// ⚡ Center Screen Alert
+// Alert helpers
 function showCenterAlert(message, duration = 3000) {
   const alertBox = document.getElementById("centerAlert");
   alertBox.textContent = message;
@@ -1407,7 +1338,6 @@ function showCenterAlert(message, duration = 3000) {
   }, duration);
 }
 
-// ⚠️ Smart Balance Alert Animation
 function showBalanceAlert() {
   const alertBox = document.getElementById("mError");
   alertBox.classList.add("show");
@@ -1416,76 +1346,21 @@ function showBalanceAlert() {
     setTimeout(() => (alertBox.style.display = "none"), 300);
   }, 3000);
 }
-// desble butun for palne kharrrdne ke bad 
-function disableSpecificPlan(planName, state) {
-  const plans = document.querySelectorAll(".plan");
-  plans.forEach(p => {
-    const name = p.dataset.name;
-    const btn = p.querySelector(".buy-btn");
-    if (name === planName) {
-      btn.disabled = state;
-      btn.style.opacity = state ? "0.5" : "1";
-      btn.style.cursor = state ? "not-allowed" : "pointer";
-      if (state) {
-        btn.textContent = "Active Plan";
-      } else {
-        btn.textContent = "Buy";
-      }
-    }
-  });
-}
-
 </script>
-  <script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
-
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Har plan ke liye click listener auto add karega
+  document.querySelectorAll(".plan").forEach(plan => {
+    const name = plan.dataset.name;
+    const cost = parseFloat(plan.dataset.cost);
+    const days = parseInt(plan.dataset.days);
+    const profit = parseFloat(plan.dataset.profit);
+    const btn = plan.querySelector(".buy-btn");
+    btn.addEventListener("click", () => openModal(name, cost, days, profit));
   });
-
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
-
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
-
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
+});
 </script>
-
 
 
 </body>
 </html>
-
