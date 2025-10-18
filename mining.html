@@ -102,7 +102,7 @@
     .grid-boxes { display:flex; justify-content:space-between; gap:14px; margin-bottom:20px; }
     .box {
       background: linear-gradient(145deg,#fff,#f1f1f1);
-      border-radius: 14px; padding:16px;
+      border-radius: 5px; padding:16px;
       box-shadow:0 4px 10px rgba(0,0,0,0.08);
       flex:0 0 48%; border:1px solid #e2e2e2;
       transition: transform 0.2s ease;
@@ -112,7 +112,7 @@
     .value { font-size:22px; color:#111; font-weight:bold; }
 
     .input-box {
-      background:#fff; border:1px solid #ddd; border-radius:14px;
+      background:#fff; border:1px solid #ddd; border-radius:5px;
       padding:16px; box-shadow:0 2px 6px rgba(0,0,0,0.05); margin-top:20px;
     }
 
@@ -123,7 +123,7 @@
 
     button {
       margin-top:18px; width:100%; padding:14px;
-      font-size:17px; font-weight:bold; border:none; border-radius:14px;
+      font-size:17px; font-weight:bold; border:none; border-radius:5px;
       color:#fff; background:linear-gradient(145deg,#28a745,#218838);
       box-shadow:0 4px 0 #1e7e34,0 0 14px rgba(40,167,69,0.4);
       cursor:pointer; transition:0.25s;
@@ -157,11 +157,11 @@
     #timerBox {
       display:none; text-align:center; margin-top:14px;
       background:#fff; border:1px solid #ccc; padding:14px;
-      border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.08);
+      border-radius:5px; box-shadow:0 2px 8px rgba(0,0,0,0.08);
     }
     #miningTimer {
       font-size:22px; color:#111; margin-top:6px;
-      background:#fafafa; padding:12px 24px; border-radius:12px;
+      background:#fafafa; padding:12px 24px; border-radius:5px;
       display:inline-block; box-shadow:0 2px 6px rgba(0,0,0,0.08);
     }
     .mining-waves { display:flex; justify-content:center; align-items:center; gap:6px; margin-top:18px; height:30px; }
@@ -484,7 +484,7 @@
 .income-type-buttons button {
   flex: 1;
   border: none;
-  border-radius: 12px;
+  border-radius: 5px;
   padding: 12px 0;
   background: linear-gradient(180deg, #28a745, #218838);
   color: white;
@@ -772,6 +772,47 @@ button:active {
 }
 
 
+/* 💎 Always Side-by-Side Income Boxes (Fixed for all devices) */
+.income-summary-compact {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 10px 0;
+  flex-wrap: nowrap;           /* ✅ Never wrap to next line */
+  width: 100%;
+  max-width: 100%;
+}
+
+.income-box-compact {
+  flex: 1 1 50%;               /* ✅ Each box takes 50% width always */
+  background: linear-gradient(145deg, #28a745, #1e7e34);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  padding: 14px 0;
+  border-radius: 5px;
+  box-shadow: 0 3px 0 #1c6c33;
+  transition: transform 0.2s ease;
+  min-width: 48%;              /* ✅ Ensures both stay side by side even on narrow screens */
+}
+
+.income-box-compact:hover {
+  transform: scale(1.02);
+}
+
+/* 🚫 Disable mobile stacking */
+@media (max-width: 480px) {
+  .income-summary-compact {
+    flex-direction: row !important;   /* ✅ Force row layout */
+    gap: 10px;
+  }
+  .income-box-compact {
+    font-size: 18px;                  /* Slightly smaller for mobile but still side-by-side */
+    padding: 12px 0;
+  }
+}
 
   </style>
 </head>
@@ -890,7 +931,12 @@ button:active {
 
   <button id="miningBtn">Unlock Mining Power</button>
 <div class="history-header">
-  <div class="history-title">Income History</div>
+
+<!-- 💰 Compact Income Summary Boxes -->
+<div class="income-summary-compact">
+  <div class="income-box-compact" id="selfIncomeBox">$0.00</div>
+  <div class="income-box-compact" id="refIncomeBox">$0.00</div>
+</div>
 
   <div class="income-type-buttons">
   <button id="miningIncomeBtn" class="active">Mining Income</button>
@@ -1187,6 +1233,8 @@ onAuthStateChanged(auth, async (user) => {
   currentUser = user;
   await loadUserData();
   await loadMiningHistory(user); // default show mining history
+  listenIncomeBoxes(); // realtime updates enable
+
 });
 
 /* 🔹 Toggle Button Controls */
@@ -1323,8 +1371,77 @@ showProPopup(
   }
 };
 
+async function updateIncomeBoxes() {
+  if (!currentUser) return;
+
+  const uid = currentUser.uid;
+  let selfTotal = 0;
+  let refTotal = 0;
+
+  // Self (mining) income total
+  const miningQuery = query(collection(db, "users", uid, "miningHistory"));
+  const miningSnap = await getDocs(miningQuery);
+  miningSnap.forEach(docSnap => {
+    selfTotal += Number(docSnap.data().earned || 0);
+  });
+
+  // Referral income total
+  const refQuery = query(collection(db, "referral_income"), where("toUpline", "==", uid));
+  const refSnap = await getDocs(refQuery);
+  refSnap.forEach(docSnap => {
+    refTotal += Number(docSnap.data().amount || 0);
+  });
+
+  // Update UI values with smooth animation
+  animateCounter("selfIncomeBox", selfTotal);
+  animateCounter("refIncomeBox", refTotal);
+}
+
+
+/* 🔥 REALTIME Income Boxes — with animation */
+function listenIncomeBoxes() {
+  if (!currentUser) return;
+
+  const uid = currentUser.uid;
+
+  // --- Self (Mining) Income realtime listener ---
+  const miningQuery = query(collection(db, "users", uid, "miningHistory"));
+  onSnapshot(miningQuery, (snap) => {
+    let selfTotal = 0;
+    snap.forEach(docSnap => {
+      selfTotal += Number(docSnap.data().earned || 0);
+    });
+    animateCounter("selfIncomeBox", selfTotal); // 🔥 animation stays
+  });
+
+  // --- Referral Income realtime listener ---
+  const refQuery = query(collection(db, "referral_income"), where("toUpline", "==", uid));
+  onSnapshot(refQuery, (snap) => {
+    let refTotal = 0;
+    snap.forEach(docSnap => {
+      refTotal += Number(docSnap.data().amount || 0);
+    });
+    animateCounter("refIncomeBox", refTotal); // 🔥 animation stays
+  });
+}
+
+/* 🔹 Smooth animated counter (same mast version) */
+function animateCounter(elementId, targetValue) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  const current = Number(el.innerText.replace(/[^0-9.-]+/g, "")) || 0;
+  const increment = (targetValue - current) / 25;
+  let count = 0;
+  const timer = setInterval(() => {
+    count++;
+    const val = current + increment * count;
+    el.innerText = `$${val.toFixed(2)}`;
+    if (count >= 25) clearInterval(timer);
+  }, 40);
+}
 
 </script>
+
 <script>
   // 🚫 Disable right click, select, drag
   document.addEventListener("contextmenu", e => e.preventDefault());
@@ -1372,7 +1489,6 @@ showProPopup(
   Object.freeze(console);
   Object.freeze(window.console);
 </script>
-
 
 
 
