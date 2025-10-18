@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TrustDollar — Hashrate Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+<style>
+:root {
+  --green: #16a34a;
+  --green-dark: #15803d;
+  --text: #0f172a;
+  --light: #f9fafb;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: var(--light);
+  color: var(--text);
+  margin: 0;
+  padding: 20px;
+  overflow-y: auto;
+  min-height: 100vh;
+  display: flex;              /* ✅ Use flex for center alignment */
+  justify-content: center;    /* ✅ Horizontally center */
+  align-items: flex-start;    /* ✅ Keep content from top (not middle) */
+}
+
+.card {
+  width: 100%;
+  max-width: 900px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  padding: 10px;
+  margin-bottom: 100px;       /* ✅ Space for bottom-nav */
+  box-sizing: border-box;
+}
+
+
+/* ✅ Bottom nav ke upar space fix */
+
+html, body {
+  overflow-x: hidden; /* ✅ remove side scroll line */
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 12px;
+  }
+}
+
+
+
+/* ✅ Responsive 2x2 Grid Layout (Even on Mobile) */
+.balance-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 25px;
+}
+
+/* ✅ Balance Box Design */
+.balance-box {
+    background: linear-gradient(135deg, #41b66c, #d86813);
+
+  color: #fff;
+  border-radius: 12px;
+  padding: 20px 12px;
+  text-align: center;
+  font-weight: 600;
+  box-shadow: 0 4px 0 #0d7035;
+  transition: all 0.25s ease;
+}
+
+.balance-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 0 #0d7035;
+}
+
+.balance-box p {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.balance-box h3 {
+  margin: 6px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ✅ Always 2 boxes per row — even on mobile */
+@media (max-width: 480px) {
+  .balance-section {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .balance-box p {
+    font-size: 18px;
+  }
+
+  .balance-box h3 {
+    font-size: 13px;
+  }
+}
+
+/* ✅ Plan Card (unchanged) */
+.plan-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 15px 18px;
+  margin-top: 25px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+.plan-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  flex: 1;
+}
+.plan-item {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  color: #475569;
+}
+.plan-item strong {
+  font-size: 15px;
+  color: #065f46;
+}
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #065f46;
+  background: #bbf7d0;
+}
+.countdown {
+  text-align: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--green);
+}
+.collect-btn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.collect-btn:disabled {
+  background: #d1d5db;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+.collect-btn:hover:enabled {
+  transform: scale(1.05);
+}
+.loader {
+  text-align: center;
+  color: var(--green);
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+
+
+
+
+    /* ✅ Ultra Clear Bottom Nav (No Blur, High Contrast) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 94%;
+  max-width: 480px;
+  background: #ffffff; /* solid white */
+  border: 1px solid #e0e0e0;
+  border-radius: 18px;
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  z-index: 1000;
+  animation: slideUp 0.6s ease;
+}
+
+/* Slide animation */
+@keyframes slideUp {
+  from { transform: translate(-50%, 60px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+/* Nav Items */
+.nav-item {
+  flex: 1;
+  text-align: center;
+  color: #888;
+  font-size: 12px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  position: relative;
+  padding: 4px 0;
+}
+
+/* Icons */
+.nav-item i {
+  font-size: 22px;
+  display: block;
+  margin-bottom: 3px;
+  color: #666;
+  transition: all 0.25s ease;
+  filter: none; /* remove soft edges */
+}
+
+/* Hover & Active */
+.nav-item:hover i,
+.nav-item.active i {
+  color: #00c853;
+  transform: translateY(-3px) scale(1.15);
+  text-shadow: 0 0 8px rgba(0, 200, 83, 0.4);
+}
+
+.nav-item:hover span,
+.nav-item.active span {
+  color: #00c853;
+  font-weight: 600;
+}
+
+/* Glow dot under active item */
+.nav-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: #00c853;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 200, 83, 0.4);
+}
+
+/* Responsive fix */
+@media(max-width:600px){
+  .bottom-nav {
+    border-radius: 22px;
+    padding: 8px 0;
+  }
+  .nav-item i {
+    font-size: 20px;
+  }
+}
+
+
+</style>
+
+
+</head>
+
+<body>
+  <div class="card">
+
+<div class="balance-section">
+  <div class="balance-box">
+    <p id="walletBalance">$0.00</p>
+    <h3>Wallet</h3>
+  </div>
+
+  <div class="balance-box">
+    <p id="lockedBalance">$0.00</p>
+    <h3>Locked</h3>
+  </div>
+
+  <div class="balance-box">
+    <p id="totalIncome">$0.00</p>
+    <h3>Mining Income</h3>
+  </div>
+
+  <div class="balance-box">
+    <p id="totalReferralIncome">$0.00</p>
+    <h3>Referral Income</h3>
+  </div>
+</div>
+
+    <!-- ✅ Active Plan Section -->
+    <div id="planSection" style="margin-top:15px;">
+      <p class="loader">Loading active plan...</p>
+    </div>
+
+    <!-- ✅ Referral History INSIDE the card -->
+    <div style="margin-top:25px;">
+      <h3 style="color:#065f46;">Referral History</h3>
+      <div id="referralHistoryBox"
+           style="background:#ecfdf5; border:1px solid #bbf7d0; border-radius:12px; padding:15px;">
+        <p style="text-align:center; color:#777;">Loading your referral history...</p>
+      </div>
+    </div>
+
+    <!-- ✅ Notification Sound -->
+    <audio id="bellSound"
+      src="https://cdn.pixabay.com/download/audio/2021/09/06/audio_3b25e82c2a.mp3?filename=notification-3-204024.mp3"
+      preload="auto"></audio>
+  </div>
+
+<div class="bottom-nav">
+  <a href="Dashboard.html" class="nav-item active"><i class='bx bxs-dashboard'></i><span>Home</span></a>
+  <a href="mining.html" class="nav-item"><i class='bx bxs-coin-stack'></i><span>Invest</span></a>
+  <a href="promotion.html" class="nav-item"><i class='bx bxs-user-plus'></i><span>Refer</span></a>
+  <a href="account.html" class="nav-item"><i class='bx bxs-user-circle'></i><span>Account</span></a>
+</div>
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import {
+  getFirestore, doc, getDoc, updateDoc, collection, query, where, getDocs,
+  addDoc, serverTimestamp, orderBy
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+
+// 🔥 Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25",
+  storageBucket: "btcinvest-c0e25.firebasestorage.app",
+  messagingSenderId: "204937458487",
+  appId: "1:204937458487:web:cc27ece1249999279f60b2"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const bell = document.getElementById("bellSound");
+
+// 🧮 Calculate Total Referral Income (All Levels)
+async function calculateTotalReferralIncome(user) {
+  const q = query(collection(db, "referralHistory"), where("receiverId", "==", user.uid));
+  const res = await getDocs(q);
+
+  if (res.empty) {
+    document.getElementById("totalReferralIncome").textContent = "$0.00";
+    return;
+  }
+
+  let total = 0;
+  res.forEach((doc) => {
+    const d = doc.data();
+    total += d.amount || 0;
+  });
+
+  document.getElementById("totalReferralIncome").textContent = `$${total.toFixed(2)}`;
+}
+
+// 🧾 Referral History Loader
+async function loadReferralHistory(user) {
+  const historyBox = document.getElementById("referralHistoryBox");
+  const q = query(
+    collection(db, "referralHistory"),
+    where("receiverId", "==", user.uid),
+    orderBy("timestamp", "desc")
+  );
+  const res = await getDocs(q);
+
+  if (res.empty) {
+    historyBox.innerHTML = `<p style="text-align:center;color:#999;">No referral income yet.</p>`;
+    return;
+  }
+
+  let html = `
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr style="background:#d1fae5; color:#065f46;">
+          <th style="padding:6px;">From</th>
+          <th style="padding:6px;">Level</th>
+          <th style="padding:6px;">Amount</th>
+          <th style="padding:6px;">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  res.forEach(docSnap => {
+    const d = docSnap.data();
+    const date = d.timestamp?.toDate?.()?.toLocaleDateString() || "N/A";
+    html += `
+      <tr style="border-bottom:1px solid #bbf7d0;">
+        <td style="padding:6px;">${d.fromUser || "Unknown"}</td>
+        <td style="padding:6px; text-align:center;">${d.level}</td>
+        <td style="padding:6px; text-align:right;">$${(d.amount || 0).toFixed(2)}</td>
+        <td style="padding:6px; text-align:center;">${date}</td>
+      </tr>
+    `;
+  });
+
+  html += "</tbody></table>";
+  historyBox.innerHTML = html;
+}
+
+// 🧠 User Login Listener
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    document.getElementById("planSection").innerHTML = `<p style="text-align:center;color:#888;">Please login first.</p>`;
+    return;
+  }
+
+  const userRef = doc(db, "users", user.uid);
+  const userSnap = await getDoc(userRef);
+  if (!userSnap.exists()) return;
+
+  const u = userSnap.data();
+  document.getElementById("walletBalance").textContent = `$${(u.walletBalance || 0).toFixed(2)}`;
+  document.getElementById("lockedBalance").textContent = `$${(u.lockedBalance || 0).toFixed(2)}`;
+  document.getElementById("totalIncome").textContent = `$${(u.totalIncome || 0).toFixed(2)}`;
+
+  await calculateTotalReferralIncome(user);
+  await loadReferralHistory(user);
+
+  // 🔍 Load active plan
+  const q = query(collection(db, "buyhashrate"), where("userId", "==", user.uid));
+  const res = await getDocs(q);
+  if (res.empty) {
+    document.getElementById("planSection").innerHTML = `<p style="text-align:center;color:#888;">No active plans.</p>`;
+    return;
+  }
+
+  let plan;
+  res.forEach((doc) => { if (doc.data().status === "running") plan = { id: doc.id, ...doc.data() }; });
+  if (!plan) plan = { id: res.docs[0].id, ...res.docs[0].data() };
+
+  const start = plan.startTime?.toDate?.()?.toLocaleDateString() || "N/A";
+  const end = plan.endTime?.toDate?.()?.toLocaleDateString() || "N/A";
+  const next = plan.nextPayout?.toDate?.()?.getTime() || null;
+  const earned = (plan.earnedProfit || 0).toFixed(2);
+
+  document.getElementById("planSection").innerHTML = `
+    <div class="plan-card">
+      <div class="plan-info">
+        <div class="plan-item"><small>Plan</small><strong>${plan.planName}</strong></div>
+        <div class="plan-item"><small>Cost</small><strong>$${plan.planCost}</strong></div>
+        <div class="plan-item"><small>Daily</small><strong>${plan.dailyProfitPercent}%</strong></div>
+        <div class="plan-item"><small>Earned</small><strong id="earnedProfit">$${earned}</strong></div>
+        <div class="plan-item"><small>Remaining</small><strong id="remainingDays">${plan.remainingDays || plan.durationDays} days</strong></div>
+        <div class="plan-item"><small>Start</small><strong>${start}</strong></div>
+        <div class="plan-item"><small>End</small><strong>${end}</strong></div>
+        <div class="plan-item"><small>Status</small><span class="status-badge">${plan.status}</span></div>
+      </div>
+      <div style="text-align:center;">
+        <div class="countdown" id="countdown">--:--:--</div>
+        <button id="collectBtn" class="collect-btn" disabled>Collect</button>
+      </div>
+    </div>`;
+
+  const btn = document.getElementById("collectBtn");
+  const display = document.getElementById("countdown");
+  startCountdown(next, btn, display, plan, userRef, plan.id);
+});
+
+// ⏱ Countdown Timer with Live Earning
+function startCountdown(target, btn, display, plan, userRef, planId) {
+  const earnedEl = document.getElementById("earnedProfit");
+  let localEarned = plan.earnedProfit || 0;
+  const dailyProfit = (plan.planCost * plan.dailyProfitPercent) / 100;
+  const perMinuteProfit = dailyProfit / 1440;
+
+  const interval = setInterval(() => {
+    const now = Date.now();
+    const diff = target - now;
+
+    if (diff <= 0) {
+      display.textContent = "Ready!";
+      display.style.color = "#dc2626";
+      btn.disabled = false;
+      bell.play();
+      clearInterval(interval);
+      btn.onclick = () => collectProfit(plan, userRef, planId, btn, display);
+      return;
+    }
+
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+    display.textContent = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+
+    const secondsPassed = Math.floor((86400000 - diff) / 1000);
+    const newEarned = localEarned + (secondsPassed / 60) * perMinuteProfit;
+    earnedEl.textContent = `$${newEarned.toFixed(4)}`;
+  }, 1000);
+}
+
+// 💰 Profit Collection + Upline Distribution
+async function collectProfit(plan, userRef, planId, btn, display) {
+  btn.disabled = true;
+  bell.pause(); bell.currentTime = 0;
+
+  const totalProfit = (plan.planCost * plan.dailyProfitPercent) / 100;
+  const selfProfit = totalProfit * 0.7;
+  const next = new Date(Date.now() + 86400000);
+  const newDays = (plan.remainingDays || plan.durationDays) - 1;
+
+  const userSnap = await getDoc(userRef);
+  const user = userSnap.data();
+
+  const newWallet = (user.walletBalance || 0) + selfProfit;
+  const newIncome = (user.totalIncome || 0) + selfProfit;
+  await updateDoc(userRef, { walletBalance: newWallet, totalIncome: newIncome });
+
+  await distributeReferralIncome(user, totalProfit);
+
+  const planRef = doc(db, "buyhashrate", planId);
+  const planUpdate = {
+    earnedProfit: (plan.earnedProfit || 0) + totalProfit,
+    nextPayout: next,
+    remainingDays: newDays,
+    updatedAt: serverTimestamp(),
+  };
+
+  if (newDays <= 0) {
+    planUpdate.status = "completed";
+    await updateDoc(userRef, {
+      walletBalance: newWallet + plan.planCost,
+      lockedBalance: (user.lockedBalance || 0) - plan.planCost
+    });
+    alert("🎉 Plan Completed! Investment Returned.");
+  }
+
+  await updateDoc(planRef, planUpdate);
+
+  document.getElementById("walletBalance").textContent = `$${newWallet.toFixed(2)}`;
+  document.getElementById("totalIncome").textContent = `$${newIncome.toFixed(2)}`;
+  document.getElementById("earnedProfit").textContent = `$${((plan.earnedProfit || 0) + totalProfit).toFixed(2)}`;
+  document.getElementById("remainingDays").textContent = `${newDays} days`;
+
+  await calculateTotalReferralIncome(user);
+  await loadReferralHistory(user);
+
+  if (newDays > 0) startCountdown(next.getTime(), btn, display, { ...plan, remainingDays: newDays }, userRef, planId);
+
+  alert(`✅ Collected $${totalProfit.toFixed(2)} — You received $${selfProfit.toFixed(2)}`);
+}
+
+// 👥 Distribute Referral Income to Uplines
+async function distributeReferralIncome(user, totalProfit) {
+  const uplines = [
+    { id: user.upline1, percent: 0.17, level: 1 },
+    { id: user.upline2, percent: 0.08, level: 2 },
+    { id: user.upline3, percent: 0.05, level: 3 },
+  ];
+
+  for (const u of uplines) {
+    if (!u.id) continue;
+    try {
+      const refRef = doc(db, "users", u.id);
+      const refSnap = await getDoc(refRef);
+      if (!refSnap.exists()) continue;
+
+      const refUser = refSnap.data();
+      const commission = totalProfit * u.percent;
+
+      const newWallet = (refUser.walletBalance || 0) + commission;
+      const newReferral = (refUser.lifetimeReferralIncome || 0) + commission;
+      const newTotal = (refUser.totalIncome || 0) + commission;
+
+      await updateDoc(refRef, {
+        walletBalance: newWallet,
+        lifetimeReferralIncome: newReferral,
+        totalIncome: newTotal,
+      });
+
+      await addDoc(collection(db, "referralHistory"), {
+        receiverId: u.id,
+        fromUser: user.username || "Unknown",
+        amount: commission,
+        level: u.level,
+        timestamp: serverTimestamp(),
+      });
+    } catch (err) {
+      console.error(`Error paying level ${u.level}:`, err);
+    }
+  }
+}
+</script>
+</body>
+</html>
