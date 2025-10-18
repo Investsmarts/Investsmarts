@@ -1287,19 +1287,20 @@ window.openModal = function (name, cost, days, profit) {
     const end = new Date(now.getTime() + days * 86400000);
 
     try {
-      await addDoc(collection(db, "buyhashrate"), {
-        userId: user.uid,
-        planName: name,
-        planCost: cost,
-        dailyProfitPercent: profit,
-        durationDays: days,
-        remainingDays:
-        startTime: serverTimestamp(),
-        nextPayout: next,
-        endTime: end,
-        earnedProfit: 0,
-        status: "running",
-      });
+  await addDoc(collection(db, "buyhashrate"), {
+  userId: user.uid,
+  planName: name,
+  planCost: cost,
+  dailyProfitPercent: profit,
+  durationDays: days,
+  remainingDays: days,  // ✅ ye line fix hai
+  startTime: serverTimestamp(),
+  nextPayout: next,
+  endTime: end,
+  earnedProfit: 0,
+  status: "running",
+});
+
 
       walletBalance -= cost;
       lockedBalance += cost;
