@@ -181,64 +181,121 @@
     .close-btn { background: #dc3545; }
     .submit-btn { background: #28a745; }
 
-    /* Success & Error Popups */
-    .thankyou-popup, .error-popup {
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%,-50%);
-      padding: 12px 20px;
-      border-radius: 10px;
-      font-weight: bold;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-      z-index: 3000;
-      display: none;
-      animation: fadeInOut 1.5s ease forwards;
-    }
-    .thankyou-popup { background: #28a745; color: #fff; }
-    .error-popup { background: #dc3545; color: #fff; }
-    @keyframes fadeInOut {
-      0% {opacity: 0; transform: translate(-50%,-50%) scale(0.9);}
-      20% {opacity: 1; transform: translate(-50%,-50%) scale(1);}
-      80% {opacity: 1;}
-      100% {opacity: 0; transform: translate(-50%,-50%) scale(0.9);}
-    }
+/* ✅ Success & Error Popups (Always on Top of Modal) */
+.thankyou-popup, .error-popup {
+  position: fixed;
+  top: 50%; 
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 14px 26px;
+  border-radius: 10px;
+  font-weight: bold;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  z-index: 200000 !important; /* 🔥 popup-withdraw ke upar bhi dikhega */
+  display: none;
+  animation: fadeInOut 1.5s ease forwards;
+  text-align: center;
+}
 
-    /* Bottom Nav */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0; left: 0;
-      width: 100%; height: 70px;
-      background: #fff;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      border-top: 2px solid #28a745;
-      z-index: 100;
-    }
-    .nav-item {
-      flex: 1;
-      text-align: center;
-      font-size: 12px;
-      color: #333;
-      text-decoration: none;
-      transition: 0.3s;
-      position: relative;
-      padding: 10px 0;
-    }
-    .nav-item i {
-      font-size: 22px;
-      display: block;
-      margin-bottom: 3px;
-      color: #28a745;
-    }
-    .nav-item:hover { color: #28a745; }
-    .nav-item:hover i { color: #218838; }
-    .nav-item:not(:last-child)::after {
-      content: "";
-      position: absolute;
-      right: 0; top: 20%; bottom: 20%;
-      width: 1px; background: #e0e0e0;
-    }
+/* ✅ Color styles */
+.thankyou-popup { background: #28a745; color: #fff; }
+.error-popup { background: #dc3545; color: #fff; }
+
+/* ✅ Animation same rehne do */
+@keyframes fadeInOut {
+  0% {opacity: 0; transform: translate(-50%,-60%) scale(0.9);}
+  20% {opacity: 1; transform: translate(-50%,-50%) scale(1);}
+  80% {opacity: 1;}
+  100% {opacity: 0; transform: translate(-50%,-60%) scale(0.9);}
+}
+
+    /* ✅ Ultra Clear Bottom Nav (No Blur, High Contrast) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 94%;
+  max-width: 480px;
+  background: #ffffff; /* solid white */
+  border: 1px solid #e0e0e0;
+  border-radius: 18px;
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  z-index: 1000;
+  animation: slideUp 0.6s ease;
+}
+
+/* Slide animation */
+@keyframes slideUp {
+  from { transform: translate(-50%, 60px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+/* Nav Items */
+.nav-item {
+  flex: 1;
+  text-align: center;
+  color: #888;
+  font-size: 12px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  position: relative;
+  padding: 4px 0;
+}
+
+/* Icons */
+.nav-item i {
+  font-size: 22px;
+  display: block;
+  margin-bottom: 3px;
+  color: #666;
+  transition: all 0.25s ease;
+  filter: none; /* remove soft edges */
+}
+
+/* Hover & Active */
+.nav-item:hover i,
+.nav-item.active i {
+  color: #00c853;
+  transform: translateY(-3px) scale(1.15);
+  text-shadow: 0 0 8px rgba(0, 200, 83, 0.4);
+}
+
+.nav-item:hover span,
+.nav-item.active span {
+  color: #00c853;
+  font-weight: 600;
+}
+
+/* Glow dot under active item */
+.nav-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: #00c853;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 200, 83, 0.4);
+}
+
+/* Responsive fix */
+@media(max-width:600px){
+  .bottom-nav {
+    border-radius: 22px;
+    padding: 8px 0;
+  }
+  .nav-item i {
+    font-size: 20px;
+  }
+}
+  
     /* ✅ Balance Card (Withdraw Page) */
 .balance-card {
   max-width: 480px;
@@ -483,7 +540,7 @@ input::placeholder { color: #888; }
   line-height: 1.4;
 }
 
-/*record.html ka code */
+
 /* Record Section */
 .records-section h2 {
   color: #28a745;
@@ -564,71 +621,167 @@ input::placeholder { color: #888; }
   margin-left: 6px;
 }
 
-/* requestwithrowal pop up */ 
+/* 💎 Premium Withdraw Popup */
 .popup-withdraw {
-  background: #fff;
-  border-radius: 12px;
-  padding: 20px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 22px 26px;
   width: 90%;
-  max-width: 360px;
+  max-width: 380px;
   text-align: center;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-  animation: fadeIn 0.3s ease;   /* ✅ ye smooth opening dega */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border: 2px solid #16a34a; /* 💚 Smooth green border */
+  animation: fadeIn 0.35s ease-in-out;
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  /* ✅ center alignment */
+  /* Center */
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
-/* Info Box for Min + Balance */
+/* 🌈 Info Box (min withdrawal + balance) */
 .popup-info-box {
-  border: 1.5px solid #28a745;
-  background: #f9fffa;
-  border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 15px;
+  border: 2px dashed #16a34a;
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 18px;
   text-align: center;
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 15px;
+  color: #1f2937;
+  width: 100%;
+  box-shadow: inset 0 0 5px rgba(22, 163, 74, 0.1);
 }
 
-/* Buttons */
+.popup-info-box span {
+  font-weight: 600;
+}
+
+.popup-info-box .green {
+  color: #16a34a;
+}
+
+.popup-info-box .blue {
+  color: #2563eb;
+}
+
+/* 🧾 Labels + Inputs */
+.popup-withdraw label {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 10px 0 5px;
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
+.popup-withdraw input,
+.popup-withdraw select {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1.8px solid #d1d5db;
+  border-radius: 10px;
+  background: #f9fafb;
+  color: #111827;
+  transition: all 0.25s ease;
+}
+
+.popup-withdraw input:focus,
+.popup-withdraw select:focus {
+  border-color: #16a34a;
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(22, 163, 74, 0.25);
+  outline: none;
+}
+
+.popup-withdraw {
+  z-index: 99999; /* ⬆️ Popup ko sabse upar le aayega */
+  position: fixed; /* absolute se fixed karo for layering */
+}
+
+/* 🟩 Buttons Section */
 .action-buttons {
   display: flex;
-  gap: 10px;
-  margin-top: 14px;
+  justify-content: space-between;
   width: 100%;
+  gap: 10px;
+  margin-top: 18px;
 }
+
 .action-buttons button {
   flex: 1;
-  padding: 10px;
+  padding: 10px 0;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: bold;
-  font-size: 14px;
+  font-weight: 600;
+  font-size: 15px;
   color: #fff;
+  transition: all 0.25s ease;
 }
 
 /* ❌ Cancel Button */
 .close-btn {
-  background: #dc3545;
+  background: #dc2626;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }
 .close-btn:hover {
-  background: #a71d2a;
+  background: #b91c1c;
+  transform: scale(1.05);
 }
 
 /* ✅ Submit Button */
 .submit-btn {
-  background: #28a745;
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
 }
 .submit-btn:hover {
-  background: #218838;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  transform: scale(1.05);
+}
+
+/* ✨ Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* 📱 Responsive Design */
+@media (max-width: 480px) {
+  .popup-withdraw {
+    max-width: 95%;
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .popup-info-box {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .popup-withdraw input {
+    font-size: 14px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .action-buttons button {
+    width: 100%;
+  }
 }
 
 
@@ -694,16 +847,147 @@ input::placeholder { color: #888; }
   font-size: 14px;
 }
 
+/* ✅ TrustDollar Withdrawal Popup (Responsive + Green Border) */
+.popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+}
 
+/* 💚 Popup Box */
+.popup-box {
+  background: #ffffff;
+  padding: 25px 30px;
+  border-radius: 18px;
+  border: 2.5px solid #16a34a; /* Green border */
+  box-shadow: 0 0 15px rgba(22, 163, 74, 0.25),
+              0 8px 25px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 90%;
+  max-width: 380px;
+  animation: popupFade 0.3s ease-in-out;
+  transition: all 0.3s ease;
+}
+
+/* 💬 Popup Heading */
+.popup-box h2 {
+  color: #16a34a;
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+/* 📄 Message Text */
+.popup-box p {
+  color: #1f2937;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.popup-box .green {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.popup-box .red {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* 🟩 OK Button */
+.popup-box button {
+  margin-top: 15px;
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 26px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.25s ease;
+}
+
+.popup-box button:hover {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  transform: scale(1.05);
+}
+
+/* ✨ Smooth popup animation */
+@keyframes popupFade {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 📱 Responsive Design (for all screens) */
+@media (max-width: 480px) {
+  .popup-box {
+    padding: 20px 18px;
+    max-width: 90%;
+    border-radius: 14px;
+  }
+
+  .popup-box h2 {
+    font-size: 1.2rem;
+  }
+
+  .popup-box p {
+    font-size: 0.9rem;
+  }
+
+  .popup-box button {
+    font-size: 0.9rem;
+    padding: 8px 20px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .popup-box {
+    max-width: 400px;
+    padding: 28px;
+  }
+}
+
+</style>
 
 
 </style>
+
 </head>
 <body>
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
   <div class="dashboard">
 
+
+<!-- ✅ TrustDollar Popup -->
+<div id="withdrawalPopup" class="popup-overlay">
+  <div class="popup-box">
+    <h2>✅ Withdrawal Request Submitted!</h2>
+    <p>
+      <span class="green">Thank you!</span> Your withdrawal request has been received.<br><br>
+      <span class="red">⚠ Please do not submit multiple withdrawals.</span><br>
+      Our system is securely processing your transaction.<br>
+      You’ll receive a confirmation email shortly.
+    </p>
+    <button id="closePopupBtn">OK</button>
+  </div>
+</div>
 
     <!-- ✅ Withdrawal Card -->
    <div class="balance-card">
@@ -809,22 +1093,63 @@ input::placeholder { color: #888; }
 
 <!-- Bottom Navigation -->
 <div class="bottom-nav">
-  <a href="Dashboard.html" class="nav-item"><i class='bx bx-home'></i><span>Home</span></a>
-  <a href="mining.html" class="nav-item"><i class='bx bx-wallet'></i><span>Invest</span></a>
-  <a href="promotion.html" class="nav-item"><i class='bx bx-gift'></i><span>Refer</span></a>
-  <a href="account.html" class="nav-item"><i class='bx bx-user'></i><span>Account</span></a>
+  <a href="Dashboard.html" class="nav-item active"><i class='bx bxs-dashboard'></i><span>Home</span></a>
+  <a href="mining.html" class="nav-item"><i class='bx bxs-coin-stack'></i><span>Invest</span></a>
+  <a href="promotion.html" class="nav-item"><i class='bx bxs-user-plus'></i><span>Refer</span></a>
+  <a href="account.html" class="nav-item"><i class='bx bxs-user-circle'></i><span>Account</span></a>
 </div>
 
+
 <script>
-    // Highlight active nav
-  const links = document.querySelectorAll("nav a");
-  links.forEach(link => {
-    link.addEventListener("click", function() {
-      links.forEach(l => l.classList.remove("active"));
-      this.classList.add("active");
+  // 🔥 Bottom nav auto-active highlight logic
+  const navLinks = document.querySelectorAll(".bottom-nav a");
+
+  // current page ka URL filename nikalta hai (e.g., mining.html)
+  const currentPage = window.location.pathname.split("/").pop();
+
+  navLinks.forEach(link => {
+    const linkPage = link.getAttribute("href");
+
+    if (linkPage === currentPage) {
+      link.classList.add("active"); // ✅ Active highlight add karega
+    } else {
+      link.classList.remove("active");
+    }
+
+    // Optional: click par bhi active ho turant
+    link.addEventListener("click", () => {
+      navLinks.forEach(nav => nav.classList.remove("active"));
+      link.classList.add("active");
     });
   });
 </script>
+
+
+<script>
+  // ✅ Show popup
+  function showPopup() {
+    const popup = document.getElementById("withdrawalPopup");
+    popup.style.display = "flex";
+
+    // ✅ (Optional) auto-close after 3 seconds
+    // setTimeout(closePopup, 3000);
+  }
+
+  // ✅ Close popup
+  function closePopup() {
+    const popup = document.getElementById("withdrawalPopup");
+    popup.style.display = "none";
+  }
+
+  // ✅ Ensure close button works (bind event after DOM loaded)
+  document.addEventListener("DOMContentLoaded", () => {
+    const closeBtn = document.getElementById("closePopupBtn");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", closePopup);
+    }
+  });
+</script>
+
 
 <!-- ✅ Firebase + Logic -->
 <script type="module">
@@ -973,7 +1298,7 @@ async function sendWithdrawalEmail(name, email, amount, currency, status, txid, 
     );
 
     // ✅ Optional: success message for user
-    alert("✅ Withdrawal request sent! Check your email for confirmation.");
+    showPopup("✅ Withdrawal request sent! Check your email for confirmation.");
 
     console.log("📤 Withdrawal email request sent:", payload);
   } catch (err) {
@@ -1233,10 +1558,10 @@ window.addEventListener("touchend", () => {
 });
 
 
-
 </script>
 </body>
 </html>
+
 
 
 
