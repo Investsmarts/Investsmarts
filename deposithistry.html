@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Deposit — TrustDollar</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<style>
+:root {
+  --green: #00c853;
+  --orange: #ff9800;
+  --blue: #007bff;
+  --red: #f44336;
+  --gray: #9e9e9e;
+  --bg: #f9fafb;
+  --muted: #757a80;
+}
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg);
+  margin: 0;
+  color: #222;
+}
+.header {
+  background: linear-gradient(145deg, #00c853, #00bfa5);
+  color: #fff;
+  padding: 15px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  position: sticky;top:0;z-index:10;
+}
+.header .back {
+  display:flex;align-items:center;cursor:pointer;gap:6px;font-weight:600;
+}
+.header h1 {font-size:18px;margin:0;}
+.filter-bar {
+  position: sticky;
+  top: 60px;
+  z-index: 9;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  background: #fff;
+  padding: 12px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+  border-radius: 5px;
+  max-width: 700px;
+  margin: 20px auto;
+  transition: all 0.3s ease;
+}
+body:has(.filter-bar:sticky) .filter-bar {
+  backdrop-filter: blur(4px);
+}
+.filter-bar select,
+.filter-bar input {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-family: 'Poppins';
+}
+.filter-bar {
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+.filter-bar.is-sticky {
+  box-shadow: 0 4px 16px rgba(0, 200, 83, 0.2);
+  border-color: #00c85320;
+}
+.container {padding:20px 14px;max-width:700px;margin:0 auto;}
+.deposit-card {
+  background:#fff;border-radius:5px;padding:18px 15px;
+  margin-bottom:16px;box-shadow:0 3px 10px rgba(0,0,0,0.06);
+  border:1px solid #f0f0f0;transition:transform 0.2s ease;
+}
+.deposit-card:hover {transform:translateY(-2px);}
+.deposit-header {
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;
+}
+.deposit-header .left {
+  background:var(--green);color:#fff;padding:3px 12px;
+  border-radius:6px;font-size:13px;font-weight:600;
+}
+.deposit-header .right {
+  font-weight:600;font-size:13px;border-radius:6px;
+  padding:3px 10px;
+}
+.status-complete {background:#e6ffe6;color:var(--green);}
+.status-pending {background:#fff4e5;color:var(--orange);}
+.status-paid {background:#e6f0ff;color:var(--blue);}
+.status-rejected {background:#ffe6e6;color:var(--red);}
+.status-cancel {background:#f2f2f2;color:var(--gray);}
+.detail-row {
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:14px;padding:6px 0;border-top:1px solid #f1f3f4;
+}
+.detail-row:first-child {border-top:none;}
+.detail-row .label {color:var(--muted);}
+.detail-row .value {font-weight:600;}
+.amount {color:#ff8800;font-size:18px;font-weight:700;text-align:right;}
+.copy-btn {
+  background:transparent;border:none;color:var(--muted);
+  cursor:pointer;margin-left:6px;
+}
+.copy-btn i {font-size:16px;}
+.empty {
+  background:#fff;border-radius:10px;padding:20px;text-align:center;
+  color:#999;box-shadow:0 4px 12px rgba(0,0,0,0.04);margin-top:40px;
+}
+.popup-alert {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  color: #222;
+  padding: 10px 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  animation: fadeShow 2s ease forwards;
+  font-family: "Poppins", sans-serif;
+  z-index: 9999;
+}
+@keyframes fadeShow {
+  0% {opacity:0;transform:translate(-50%,-60%);}
+  10%,80% {opacity:1;transform:translate(-50%,-50%);}
+  100% {opacity:0;transform:translate(-50%,-40%);}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="back" onclick="window.location.href='account.html'">
+    <i class='bx bx-left-arrow-alt'></i> Back
+  </div>
+  <h1>Deposits</h1>
+  <span id="count"></span>
+</div>
+
+<div class="filter-bar">
+  <select id="filterStatus">
+    <option value="All">All</option>
+    <option value="Complete">Complete</option>
+    <option value="Pending">Pending</option>
+    <option value="I Have Paid">I Have Paid</option>
+    <option value="Rejected">Rejected</option>
+    <option value="Cancel">Cancel</option>
+  </select>
+  <input type="date" id="filterDate">
+</div>
+
+<div class="container">
+  <div id="depositList"></div>
+  <div class="empty" id="emptyMsg" style="display:none;">No deposit history found.</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25",
+  storageBucket: "btcinvest-c0e25.firebasestorage.app",
+  messagingSenderId: "204937458487",
+  appId: "1:204937458487:web:cc27ece1249999279f60b2"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+const depositList = document.getElementById("depositList");
+const emptyMsg = document.getElementById("emptyMsg");
+const countEl = document.getElementById("count");
+const filterStatus = document.getElementById("filterStatus");
+const filterDate = document.getElementById("filterDate");
+
+let allDeposits = [];
+
+function formatDate(data) {
+  if (data?.seconds) return new Date(data.seconds * 1000).toLocaleString();
+  if (typeof data === "string") return data;
+  return new Date().toLocaleString();
+}
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) { location.href = "login.html"; return; }
+  const depositsRef = collection(db, "users", user.uid, "deposits");
+  const q = query(depositsRef, orderBy("date", "desc"));
+  onSnapshot(q, (snapshot) => {
+    allDeposits = [];
+    snapshot.forEach(doc => allDeposits.push({ id: doc.id, ...doc.data() }));
+    renderDeposits(true);
+  });
+});
+
+function renderDeposits(forceAll = false) {
+  const selectedStatus = filterStatus.value;
+  const selectedDate = filterDate.value;
+  let filtered = allDeposits.filter(d => {
+    const status = (d.status || "Pending").toLowerCase();
+    let matchStatus = selectedStatus === "All" || status === selectedStatus.toLowerCase();
+    let matchDate = true;
+    if (selectedDate) {
+      const docDate = new Date(d.date?.seconds ? d.date.seconds * 1000 : d.date);
+      const selDate = new Date(selectedDate);
+      matchDate = docDate.toDateString() === selDate.toDateString();
+    }
+    return matchStatus && matchDate;
+  });
+
+  if (forceAll || selectedStatus === "All") filtered = allDeposits;
+
+  depositList.innerHTML = "";
+  if (filtered.length === 0) {
+    emptyMsg.style.display = "block";
+    countEl.textContent = "0";
+    return;
+  }
+  emptyMsg.style.display = "none";
+  countEl.textContent = filtered.length;
+
+  filtered.forEach(data => {
+    const amount = data.amount || 0;
+    const dateStr = formatDate(data.date || data.createdAt);
+    const order = data.orderId || data.orderNumber || data.id;
+    const status = (data.status || "Pending").toLowerCase();
+
+    let statusClass = "status-pending";
+    if (status.includes("complete")) statusClass = "status-complete";
+    else if (status.includes("i have paid")) statusClass = "status-paid";
+    else if (status.includes("rejected")) statusClass = "status-rejected";
+    else if (status.includes("cancel")) statusClass = "status-cancel";
+
+    const card = document.createElement("div");
+    card.className = "deposit-card";
+    card.innerHTML = `
+      <div class="deposit-header">
+        <div class="left">Deposit</div>
+        <div class="right ${statusClass}">${data.status || "Pending"}</div>
+      </div>
+      <div class="detail-row">
+        <span class="label">Balance</span>
+        <span class="value amount">₹${parseFloat(amount).toLocaleString()}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Type</span>
+        <span class="value">🪙 USDT</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Time</span>
+        <span class="value">${dateStr}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Order number</span>
+        <span class="value">
+          ${order}
+          <button class="copy-btn" data-order="${order}" title="Copy"><i class='bx bx-copy'></i></button>
+        </span>
+      </div>
+    `;
+
+    const copyBtn = card.querySelector(".copy-btn");
+copyBtn.addEventListener("click", async (e) => {
+  const val = e.currentTarget.dataset.order;
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(val);
+    } else {
+      const temp = document.createElement("textarea");
+      temp.value = val;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand("copy");
+      temp.remove();
+    }
+
+    // ✅ center alert
+    const popup = document.createElement("div");
+    popup.className = "popup-alert";
+    popup.innerText = "✅ Copied Successfully!";
+    document.body.appendChild(popup);
+    setTimeout(() => popup.remove(), 2000);
+
+    // ✅ safer button update
+    const btn = e.target.closest(".copy-btn");
+    if (btn) {
+      btn.innerHTML = "<i class='bx bx-check' style='color:green;'></i>";
+      setTimeout(() => {
+        if (btn) btn.innerHTML = "<i class='bx bx-copy'></i>";
+      }, 1000);
+    }
+
+  } catch (err) {
+    console.error("Copy failed:", err);
+  }
+});
+
+    depositList.appendChild(card);
+  });
+}
+
+// ✅ moved outside loop — only runs once
+filterStatus.addEventListener("change", () => renderDeposits());
+filterDate.addEventListener("change", () => renderDeposits());
+filterStatus.addEventListener("click", () => renderDeposits(filterStatus.value === "All"));
+filterDate.addEventListener("click", () => renderDeposits(filterStatus.value === "All"));
+
+window.addEventListener("scroll", () => {
+  const bar = document.querySelector(".filter-bar");
+  if (window.scrollY > 50) bar.classList.add("is-sticky");
+  else bar.classList.remove("is-sticky");
+});
+</script>
+</body>
+</html>
