@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Record — TrustDollar</title>
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 16px;
+      color: #0f172a;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      padding: 18px;
+      margin-bottom: 18px;
+      width: 100%;
+      max-width: 900px;
+      margin-inline: auto;
+      box-sizing: border-box;
+    }
+    h2 {
+      color: #065f46;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #bbf7d0;
+      display: inline-block;
+      padding-bottom: 4px;
+      font-size: 1.1rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 8px 6px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+    th {
+      background: #d1fae5;
+      color: #065f46;
+      font-weight: 600;
+    }
+    .highlight {
+      color: #16a34a;
+      font-weight: 600;
+    }
+    .totals {
+      background: #ecfdf5;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 8px;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+    
+  </style>
+</head>
+
+<body>
+<!-- 📢 Announcement Section -->
+<div class="announcement-section">
+  <h3 class="section-title">
+    <i class='bx bxs-megaphone'></i> Latest Announcement
+  </h3>
+  <div id="announcementBox" class="announcement-box">
+    <p style="text-align:center; color:#666;">Loading announcement...</p>
+  </div>
+</div>
+
+<style>
+/* 📢 Clean Announcement Section */
+.announcement-section {
+  margin: 25px 0;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.section-title {
+  color: #065f46;
+  font-weight: 700;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 2px solid #16a34a;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+
+.announcement-box {
+  border: 1.8px solid #16a34a; /* ✅ only border */
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: #064e3b;
+  background: white;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.announcement-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #065f46;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.announcement-message {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #083344;
+  margin-bottom: 8px;
+  word-break: break-word;
+}
+
+.announcement-footer {
+  font-size: 13px;
+  color: #047857;
+  text-align: right;
+  border-top: 1px dashed #86efac;
+  padding-top: 5px;
+}
+
+/* 📱 Mobile Responsive */
+@media (max-width: 600px) {
+  .section-title {
+    font-size: 16px;
+  }
+  .announcement-box {
+    padding: 12px;
+  }
+  .announcement-title {
+    font-size: 15px;
+  }
+  .announcement-message {
+    font-size: 13.5px;
+  }
+}
+
+
+
+
+/* ✅ Ultra Clear Bottom Nav (No Blur, High Contrast) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 94%;
+  max-width: 480px;
+  background: #ffffff; /* solid white */
+  border: 1px solid #e0e0e0;
+  border-radius: 18px;
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  z-index: 1000;
+  animation: slideUp 0.6s ease;
+}
+
+/* Slide animation */
+@keyframes slideUp {
+  from { transform: translate(-50%, 60px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+/* Nav Items */
+.nav-item {
+  flex: 1;
+  text-align: center;
+  color: #888;
+  font-size: 12px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  position: relative;
+  padding: 4px 0;
+}
+
+/* Icons */
+.nav-item i {
+  font-size: 22px;
+  display: block;
+  margin-bottom: 3px;
+  color: #666;
+  transition: all 0.25s ease;
+  filter: none; /* remove soft edges */
+}
+
+/* Hover & Active */
+.nav-item:hover i,
+.nav-item.active i {
+  color: #00c853;
+  transform: translateY(-3px) scale(1.15);
+  text-shadow: 0 0 8px rgba(0, 200, 83, 0.4);
+}
+
+.nav-item:hover span,
+.nav-item.active span {
+  color: #00c853;
+  font-weight: 600;
+}
+
+/* Glow dot under active item */
+.nav-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: #00c853;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 200, 83, 0.4);
+}
+
+/* Responsive fix */
+@media(max-width:600px){
+  .bottom-nav {
+    border-radius: 22px;
+    padding: 8px 0;
+  }
+  .nav-item i {
+    font-size: 20px;
+  }
+}
+
+</style>
+
+  <!-- ✅ User Overview -->
+  <div class="card">
+    <h2>User Overview</h2>
+    <p><strong>Username:</strong> <span id="username">Loading...</span></p>
+    <p><strong>Email:</strong> <span id="email">Loading...</span></p>
+    <p><strong>Wallet Balance:</strong> <span class="highlight" id="walletBalance">$0.00</span></p>
+    <p><strong>Locked Balance:</strong> <span class="highlight" id="lockedBalance">$0.00</span></p>
+    <p><strong>Total Earned:</strong> <span class="highlight" id="totalIncome">$0.00</span></p>
+    <p><strong>Total Referral Income:</strong> <span class="highlight" id="referralIncome">$0.00</span></p>
+  </div>
+
+  <!-- ✅ Investments -->
+  <div class="card">
+    <h2>Investments</h2>
+    <div id="investmentTable">Loading investments...</div>
+    <div class="totals">Total Invested: <span id="totalInvested">$0.00</span></div>
+  </div>
+
+  <!-- ✅ Referral -->
+  <div class="card">
+    <h2>Referral History</h2>
+    <div id="referralHistory">Loading referral records...</div>
+  </div>
+
+  <!-- ✅ Deposits -->
+  <div class="card">
+    <h2>Deposits</h2>
+    <div id="depositHistory">Loading deposits...</div>
+    <div class="totals">Total Deposits: <span id="depositTotal">$0.00</span></div>
+  </div>
+
+  <!-- ✅ Withdrawals -->
+  <div class="card">
+    <h2>Withdrawals</h2>
+    <div id="withdrawHistory">Loading withdrawals...</div>
+    <div class="totals">Total Withdrawals: <span id="withdrawTotal">$0.00</span></div>
+  </div>
+  <!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="Dashboard.html" class="nav-item active"><i class='bx bxs-dashboard'></i><span>Home</span></a>
+  <a href="mining.html" class="nav-item"><i class='bx bxs-coin-stack'></i><span>Invest</span></a>
+  <a href="promotion.html" class="nav-item"><i class='bx bxs-user-plus'></i><span>Refer</span></a>
+  <a href="account.html" class="nav-item"><i class='bx bxs-user-circle'></i><span>Account</span></a>
+</div>
+
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+    import {
+      getFirestore, doc, getDoc, collection, query, getDocs, orderBy, limit, onSnapshot
+    } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+
+    // 🔥 Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+      authDomain: "btcinvest-c0e25.firebaseapp.com",
+      projectId: "btcinvest-c0e25",
+      storageBucket: "btcinvest-c0e25.firebasestorage.app",
+      messagingSenderId: "204937458487",
+      appId: "1:204937458487:web:cc27ece1249999279f60b2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        alert("Please login first!");
+        window.location.href = "login.html";
+        return;
+      }
+
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+      if (!userSnap.exists()) return alert("User not found!");
+
+      const u = userSnap.data();
+      document.getElementById("username").textContent = u.username || "Unknown";
+      document.getElementById("email").textContent = user.email;
+      document.getElementById("walletBalance").textContent = `$${(u.walletBalance || 0).toFixed(2)}`;
+      document.getElementById("lockedBalance").textContent = `$${(u.lockedBalance || 0).toFixed(2)}`;
+      document.getElementById("totalIncome").textContent = `$${(u.totalIncome || 0).toFixed(2)}`;
+
+      loadInvestments(user.uid);
+      loadReferralHistory(user.uid);
+      loadDeposits(user.uid);
+      loadWithdrawals(user.uid);
+      calculateReferralTotal(user.uid);
+      loadAnnouncement(); // ✅ call announcement loader
+    });
+
+   async function loadAnnouncement() {
+  const box = document.getElementById("announcementBox");
+  const q = query(collection(db, "announcements"), orderBy("timestamp", "desc"), limit(1));
+  const res = await getDocs(q);
+
+  if (res.empty) {
+    box.innerHTML = `<p style="text-align:center;color:#666;">No announcements yet.</p>`;
+    return;
+  }
+
+  res.forEach(docSnap => {
+    const d = docSnap.data();
+    const date = d.timestamp?.toDate?.()?.toLocaleString() || "N/A";
+    box.innerHTML = `
+      <div class="announcement-title">
+        <i class='bx bxs-megaphone'></i> ${d.title}
+      </div>
+      <div class="announcement-message">
+        ${d.message}
+      </div>
+      <div class="announcement-footer">
+        — ${d.adminName || "Admin"} | ${date}
+      </div>
+    `;
+  });
+}
+
+// 🔄 Auto call announcement loader
+loadAnnouncement(); // ✅ correct
+
+
+    // 🧾 Investments
+    async function loadInvestments(uid) {
+      const q = query(collection(db, "buyhashrate"), orderBy("startTime", "desc"));
+      const snapshot = await getDocs(q);
+      let html = "", totalInvested = 0;
+      snapshot.forEach(docSnap => {
+        const d = docSnap.data();
+        if (d.userId === uid) {
+          totalInvested += d.planCost || 0;
+          html += `<tr><td>${d.planName}</td><td>$${d.planCost}</td><td>${d.dailyProfitPercent}%</td><td>${d.status}</td><td>$${(d.earnedProfit || 0).toFixed(2)}</td></tr>`;
+        }
+      });
+      if (!html) html = `<tr><td colspan="5">No investments found.</td></tr>`;
+      document.getElementById("investmentTable").innerHTML = `
+        <table><thead><tr><th>Plan</th><th>Cost</th><th>Daily %</th><th>Status</th><th>Earned</th></tr></thead><tbody>${html}</tbody></table>`;
+      document.getElementById("totalInvested").textContent = `$${totalInvested.toFixed(2)}`;
+    }
+
+    // 👥 Referral Subcollection
+    async function loadReferralHistory(uid) {
+      const q = query(collection(db, "users", uid, "buyhashrefarl"), orderBy("timestamp", "desc"));
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) {
+        document.getElementById("referralHistory").innerHTML = "<p>No referral history.</p>";
+        return;
+      }
+      let html = "";
+      snapshot.forEach(docSnap => {
+        const d = docSnap.data();
+        html += `<tr><td>${d.fromUser}</td><td>${d.level}</td><td>$${(d.amount || 0).toFixed(2)}</td><td>${d.timestamp?.toDate().toLocaleDateString() || "N/A"}</td></tr>`;
+      });
+      document.getElementById("referralHistory").innerHTML = `
+        <table><thead><tr><th>From</th><th>Level</th><th>Amount</th><th>Date</th></tr></thead><tbody>${html}</tbody></table>`;
+    }
+
+    // 💰 Referral Total
+    async function calculateReferralTotal(uid) {
+      const q = query(collection(db, "users", uid, "buyhashrefarl"));
+      const snapshot = await getDocs(q);
+      let total = 0;
+      snapshot.forEach(docSnap => total += docSnap.data().amount || 0);
+      document.getElementById("referralIncome").textContent = `$${total.toFixed(2)}`;
+    }
+
+    // 💵 Deposits (Subcollection)
+    async function loadDeposits(uid) {
+      const q = query(collection(db, "users", uid, "deposits"), orderBy("timestamp", "desc"));
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) {
+        document.getElementById("depositHistory").innerHTML = "<p>No deposits found.</p>";
+        document.getElementById("depositTotal").textContent = "$0.00";
+        return;
+      }
+      let html = "", total = 0;
+      snapshot.forEach(docSnap => {
+        const d = docSnap.data();
+        total += d.amount || 0;
+        html += `<tr><td>$${d.amount}</td><td>${d.method || "N/A"}</td><td>${d.status || "Pending"}</td><td>${d.timestamp?.toDate().toLocaleDateString() || "N/A"}</td></tr>`;
+      });
+      document.getElementById("depositHistory").innerHTML = `
+        <table><thead><tr><th>Amount</th><th>Method</th><th>Status</th><th>Date</th></tr></thead><tbody>${html}</tbody></table>`;
+      document.getElementById("depositTotal").textContent = `$${total.toFixed(2)}`;
+    }
+
+    // 💸 Withdrawals (Subcollection)
+    async function loadWithdrawals(uid) {
+      const q = query(collection(db, "users", uid, "withdrawals"), orderBy("timestamp", "desc"));
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) {
+        document.getElementById("withdrawHistory").innerHTML = "<p>No withdrawals yet.</p>";
+        document.getElementById("withdrawTotal").textContent = "$0.00";
+        return;
+      }
+      let html = "", total = 0;
+      snapshot.forEach(docSnap => {
+        const d = docSnap.data();
+        total += d.amount || 0;
+        html += `<tr><td>$${d.amount}</td><td>${d.status || "Pending"}</td><td>${d.timestamp?.toDate().toLocaleDateString() || "N/A"}</td></tr>`;
+      });
+      document.getElementById("withdrawHistory").innerHTML = `
+        <table><thead><tr><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>${html}</tbody></table>`;
+      document.getElementById("withdrawTotal").textContent = `$${total.toFixed(2)}`;
+    }
+  </script>
+
+  <script>
+  // 🚫 Disable right click, select, drag
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
+
+  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
+  document.addEventListener("keydown", e => {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // 🔒 Silent DevTools detection (no popup)
+  (function() {
+    const devtools = /./;
+    devtools.toString = function() {
+      return ""; // no alert or console log
+    };
+    console.log("%c", devtools);
+  })();
+
+  // 🔐 Detect DevTools using resize trick (no popup)
+  setInterval(() => {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    if (widthDiff || heightDiff) {
+      // Optional: silently redirect or blank the page
+      document.body.innerHTML = "";
+    }
+  }, 1000);
+
+  // 🧱 Disable copy/paste/cut
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // 🔁 Freeze console methods silently
+  Object.freeze(console);
+  Object.freeze(window.console);
+</script>
+
+
+
+
+
+<style type="style"></style>  
+
+
+
+
+</body>
+</html>
