@@ -3,28 +3,267 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>Account — Auto Hide Popup</title>
+<title>Account — TrustDollar</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 <style>
-:root{--green:#32cd32;--muted:#777;}
-body{font-family:'Poppins',sans-serif;background:#f5f7fa;margin:0;padding:15px;padding-top:70px;padding-bottom:90px;color:#222}
-.container{max-width:480px;margin:0 auto}
-.header{position:fixed;top:0;left:0;width:100%;background:var(--green);color:#fff;text-align:center;padding:14px;font-size:18px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.15);z-index:1000}
-.profile-card{background:#fff;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 18px rgba(0,0,0,.08);margin-bottom:18px}
-.profile-pic{width:100px;height:100px;margin:0 auto}
-.profile-pic img{width:100px;height:100px;border-radius:18px;object-fit:cover;display:block;background:#fff}
-.profile-name{font-size:18px;font-weight:600;color:#1e293b;margin-top:10px}
-.profile-email{color:var(--muted);font-size:14px;margin-top:4px}
-.button-box{background:#fff;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:16px;margin-top:10px}
-.button-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.action-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;border-radius:12px;background:#fff;border:1px solid #eee;cursor:pointer;transition:all .2s;text-align:center}
-.action-btn:hover{background:#f6fff6;border-color:var(--green);transform:translateY(-3px)}
-.action-btn i{font-size:26px;color:var(--green);margin-bottom:8px}
-.action-btn span{font-size:14px;font-weight:500;color:#222}
-.btn-logout{background:#ef4444;color:#fff;width:100%;border:none;border-radius:12px;padding:12px;font-size:16px;font-weight:600;margin-top:20px;cursor:pointer}
+:root {
+  --green: #00c853;
+  --light-green: #b9f6ca;
+  --bg: #f9fafb;
+  --muted: #777;
+}
 
- /* ✅ Ultra Clear Bottom Nav (No Blur, High Contrast) */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg);
+  color: #222;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* HEADER PROFILE CARD */
+.profile-header {
+  background: linear-gradient(145deg, #00c853, #00bfa5);
+  color: #fff;
+  border-radius: 5px
+  padding: 25px 20px 60px;
+  text-align: center;
+ 
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-pic {
+  width: 90px;
+  height: 90px;
+  border-radius: 5px;
+  border: 3px solid #fff;
+  overflow: hidden;
+  margin: 0 auto 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.profile-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-info {
+  font-size: 18px;
+}
+.profile-name {
+  font-size: 18px;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+/* UID + LAST LOGIN */
+.uid {
+  font-size: 13px;
+  opacity: 0.9;
+  word-break: break-all;
+}
+.last-login {
+  font-size: 12px;
+  color: #e0f2f1;
+}
+
+/* BALANCE CARD */
+.balance-card {
+  background: #ffffff;
+  border-radius: 18px;
+  width: 92%;
+  max-width: 450px;
+  margin: 20px auto 20px; /* added top margin instead of overlap */
+  box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+  text-align: center;
+  padding: 20px 10px 25px;
+  position: relative;
+  z-index: 1;
+}
+
+.balance-amount {
+  font-size: 22px;
+  font-weight: 700;
+  color: #00c853;
+  margin-bottom: 10px;
+}
+
+.enter-wallet {
+  background: #00c853;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: all 0.2s ease;
+}
+.enter-wallet:hover {
+  background: #00b34a;
+}
+
+/* Responsive fine-tuning */
+@media (max-width: 480px) {
+  .balance-card {
+    width: 94%;
+    margin: 16px auto 18px; /* reduced for small screens */
+    padding: 18px 8px 22px;
+  }
+}
+
+/* ACTION GRID */
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+  gap: 12px;
+  padding: 0 18px;
+}
+.action-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px 6px;
+  text-align: center;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.action-item:hover {
+  transform: translateY(-3px);
+}
+.action-item i {
+  color: #00c853;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+.action-item span {
+  font-size: 12px;
+  font-weight: 500;
+  color: #333;
+  display: block;
+}
+
+/* SECTION BOXES */
+.section {
+  background: #fff;
+  border-radius: 5px;
+  margin: 14px 18px;
+  padding: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.section-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 6px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.section-row:hover {
+  background: #f6fff8;
+}
+.section-row i {
+  font-size: 18px;
+  color: var(--green);
+  margin-right: 10px;
+}
+.section-row span {
+  font-size: 14px;
+  color: #222;
+}
+
+/* SERVICE CENTER GRID */
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+  text-align: center;
+  margin-top: 10px;
+}
+.service-grid div {
+  background: #f6fff8;
+  border-radius: 10px;
+  padding: 12px 0;
+  color: #00c853;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.service-grid div:hover {
+  background: #e8f5e9;
+}
+
+/* LOGOUT BUTTON */
+.logout-btn {
+  display: block;
+  margin: 25px auto;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  width: 90%;
+  max-width: 450px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+.logout-btn:hover {
+  background: #dc2626;
+}
+
+/* RESPONSIVE BREAKPOINTS */
+@media (max-width: 768px) {
+  .balance-card {
+    width: 94%;
+  }
+  .section {
+    margin: 12px;
+  }
+  .profile-pic {
+    width: 75px;
+    height: 75px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-header {
+    padding: 20px 15px 50px;
+  }
+  .profile-name {
+    font-size: 16px;
+  }
+  .action-grid {
+    gap: 8px;
+  }
+  .action-item i {
+    font-size: 20px;
+  }
+  .action-item span {
+    font-size: 11px;
+  }
+  .logout-btn {
+    width: 92%;
+  }
+}
+
+/* ✅ Ultra Clear Bottom Nav (No Blur, High Contrast) */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -103,193 +342,70 @@ body{font-family:'Poppins',sans-serif;background:#f5f7fa;margin:0;padding:15px;p
 /* Responsive fix */
 @media(max-width:600px){
   .bottom-nav {
-    border-radius: 10px;
+    border-radius: 22px;
     padding: 8px 0;
   }
   .nav-item i {
     font-size: 20px;
   }
 }
-
-/* Main Modal (Center Edit Box) */
-.modal {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.45);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 1000;
-  padding: 15px; /* small padding for mobile edges */
-  box-sizing: border-box;
-}
-
-.modal.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* ✅ Responsive modal box */
-.modal-content {
-  background: #fff;
-  border-radius: 16px;
-  padding: 25px 20px;
-  width: 100%;
-  max-width: 420px;
-  max-height: 90vh; /* prevents overflow */
-  text-align: center;
-  transform: scale(0.9);
-  transition: transform 0.3s ease;
-  box-sizing: border-box;
-  overflow-y: auto; /* scroll if content bigger */
-  -webkit-overflow-scrolling: touch;
-}
-
-.modal.show .modal-content {
-  transform: scale(1);
-}
-
-/* Titles */
-.modal-content h3 {
-  margin-top: 0;
-  color: #222;
-}
-.modal-content h4 {
-  color: #555;
-  margin-bottom: 10px;
-  font-weight: 500;
-}
-
-/* Inputs and textarea */
-.modal-content input,
-.modal-content textarea {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 14px;
-  margin-top: 10px;
-  box-sizing: border-box;
-}
-.modal-content textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-/* Action buttons */
-.modal-actions {
-  margin-top: 14px;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.modal-actions button {
-  padding: 10px 18px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-}
-.save-btn {
-  background: var(--green);
-  color: #fff;
-}
-.cancel-btn {
-  background: #ef4444;
-  color: #fff;
-}
-
-/* 📱 Mobile specific tuning */
-@media (max-width: 480px) {
-  .modal-content {
-    padding: 20px 15px;
-    width: 100%;
-    border-radius: 14px;
-  }
-  .modal-content input,
-  .modal-content textarea {
-    font-size: 15px;
-  }
-}
-
-/* ✅ Notification popup (center auto-hide) */
-.notify{
-  position:fixed;
-  top:50%; left:50%;
-  transform:translate(-50%,-50%) scale(0.9);
-  background:#333;color:#fff;
-  padding:15px 25px;
-  border-radius:10px;
-  font-weight:500;
-  font-size:15px;
-  text-align:center;
-  opacity:0;
-  pointer-events:none;
-  transition:all .4s ease;
-  z-index:2000;
-}
-.notify.show{
-  opacity:1;
-  transform:translate(-50%,-50%) scale(1);
-  pointer-events:auto;
-}
-.notify.success{background:#32cd32;}
-.notify.error{background:#e53935;}
-
-/* 🌟 Premium text look for Joining Date */
-.join-date-text {
-  margin-top: 6px;
-  font-size: 13.5px;
-  font-weight: 600;
-  background: linear-gradient(90deg, #16a34a, #4ade80);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  letter-spacing: 0.3px;
-  transition: all 0.3s ease;
-}
-
-
-
-.join-date-text:hover {
-  filter: brightness(1.1);
-  transform: scale(1.02);
-}
-
 </style>
+
 </head>
 <body>
-<div class="header">My Account</div>
 
-<div class="container">
-  <div class="profile-card">
-    <div class="profile-pic"><img id="profileImage" alt=""></div>
-  <div id="userJoinDate" class="join-date-text">Joining Date: Loading...</div>
-
-
-<div id="userName" class="profile-name">Loading...</div>
-<div id="userEmail" class="profile-email">Loading...</div>
-
+<div class="profile-header">
+  <div class="profile-pic">
+    <img id="profileImage" alt="User">
   </div>
+  <div class="profile-info">
+    <div class="profile-name" id="userName">Loading...</div>
+    <div class="join-date" id="joinDate">Joined: --</div>
 
-  <div class="button-box">
-    <div class="button-grid">
-      <div class="action-btn" onclick="openModal('Edit Email')"><i class='bx bx-envelope'></i><span> Email</span></div>
-      <div class="action-btn" onclick="openModal('Edit Password')"><i class='bx bx-lock'></i><span> Password</span></div>
-      <div class="action-btn" onclick="openModal('Edit Mobile')"><i class='bx bx-mobile'></i><span> Mobile</span></div>
-      <div class="action-btn" onclick="window.location.href='withdrawal.html'"><i class='bx bx-wallet'></i><span> Wallet</span></div>
-      <div class="action-btn" onclick="openModal('Revenue Details')"><i class='bx bx-line-chart'></i><span>Revenue</span></div>
-      <div class="action-btn" onclick="openModal('Withdrawal Report')"><i class='bx bx-file'></i><span>Withdrawal Report</span></div>
-    </div>
+    <div class="uid" id="userUID">Email: Loading...</div>
+    <div class="last-login" id="lastLogin">Last login: --</div>
   </div>
+</div>
 
-  <button class="btn-logout" onclick="logout()"> Log out</button>
+<div class="balance-card">
+  <div class="balance-amount" id="userBalance"><div>₮</div>0.00</div>
+  <button class="enter-wallet">Enter Wallet</button>
+</div>
+
+<div class="action-grid">
+  <div class="action-item"><i class='bx bx-wallet'></i><span>Paytm</span></div>
+  <div class="action-item"><i class='bx bx-download'></i><span>Deposit</span></div>
+  <div class="action-item"><i class='bx bx-upload'></i><span>Withdraw</span></div>
+  <div class="action-item"><i class='bx bx-crown'></i><span>VIP</span></div>
+</div>
+
+<!-- 🔹 HISTORY SECTION -->
+<div class="section">
+  <div class="section-title">History</div>
+  <div class="section-row" id="txnLink"><i class='bx bx-history'></i><span>Transaction History</span></div>
+  <div class="section-row" id="depHist"><i class='bx bx-file'></i><span>Deposit History</span></div>
+  <div class="section-row" id="withHist"><i class='bx bx-up-arrow-circle'></i><span>Withdraw History</span></div>
+</div>
+
+<!-- 🔹 MORE SECTION -->
+<div class="section">
+  <div class="section-title">More</div>
+  <div class="section-row" id="notifyLink"><i class='bx bx-bell'></i><span>Notifications</span></div>
+  <div class="section-row" id="giftLink"><i class='bx bx-gift'></i><span>Gifts</span></div>
+  <div class="section-row" id="langLink"><i class='bx bx-globe'></i><span>Language</span></div>
+</div>
+
+<!-- 🔹 SERVICE CENTER SECTION -->
+<div class="section">
+  <div class="section-title">Service Center</div>
+  <div class="service-grid">
+    <div id="settingsLink"><i class='bx bx-cog'></i><br>Settings</div>
+    <div id="feedbackLink"><i class='bx bx-message-dots'></i><br>Feedback</div>
+    <div id="announceLink"><i class='bx bx-megaphone'></i><br>Announcement</div>
+    <div id="supportLink"><i class='bx bx-support'></i><br>Support</div>
+    <div id="guideLink"><i class='bx bx-book'></i><br>Guide</div>
+    <div id="aboutLink"><i class='bx bx-info-circle'></i><br>About</div>
+  </div>
 </div>
 
 <!-- Bottom Navigation -->
@@ -323,130 +439,114 @@ body{font-family:'Poppins',sans-serif;background:#f5f7fa;margin:0;padding:15px;p
     });
   });
 </script>
-<!-- Modal -->
-<div class="modal" id="popupModal">
-  <div class="modal-content">
-    <h4 id="modalUser">Hey User 👋</h4>
-    <h3 id="modalTitle"></h3>
-    <input id="modalInput" type="text" placeholder="Enter value" style="display:none">
-    <textarea id="modalTextarea" placeholder="Enter details..." style="display:none"></textarea>
-    <div class="modal-actions">
-      <button class="save-btn" onclick="saveModal()">Save</button>
-      <button class="cancel-btn" onclick="closeModal()">Close</button>
-    </div>
-  </div>
-</div>
 
-<!-- Notification -->
-<div id="notify" class="notify"></div>
+
+
+<button class="logout-btn">Log Out</button>
+
 
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getFirestore,doc,getDoc,updateDoc,arrayUnion} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import {getAuth,onAuthStateChanged,signOut,updateEmail as fbUpdateEmail,updatePassword as fbUpdatePassword} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-const firebaseConfig={apiKey:"AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",authDomain:"btcinvest-c0e25.firebaseapp.com",projectId:"btcinvest-c0e25",storageBucket:"btcinvest-c0e25.firebasestorage.app",messagingSenderId:"204937458487",appId:"1:204937458487:web:cc27ece1249999279f60b2"};
-const app=initializeApp(firebaseConfig);
-const db=getFirestore(app);
-const auth=getAuth(app);
+// 🔥 Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25",
+  storageBucket: "btcinvest-c0e25.firebasestorage.app",
+  messagingSenderId: "204937458487",
+  appId: "1:204937458487:web:cc27ece1249999279f60b2"
+};
 
-const modal=document.getElementById("popupModal");
-const notify=document.getElementById("notify");
-const modalTitle=document.getElementById("modalTitle");
-const modalUser=document.getElementById("modalUser");
-const modalInput=document.getElementById("modalInput");
-const modalTextarea=document.getElementById("modalTextarea");
-const userNameEl=document.getElementById("userName");
-const userEmailEl=document.getElementById("userEmail");
-const profileImage=document.getElementById("profileImage");
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-let currentUser,userDocRef,currentAction;
-profileImage.src=`https://i.pravatar.cc/150?img=${Math.floor(Math.random()*70)+1}`;
+// 🔗 Elements
+const userNameEl = document.getElementById("userName");
+const userUIDEl = document.getElementById("userUID");
+const lastLoginEl = document.getElementById("lastLogin");
+const userBalanceEl = document.getElementById("userBalance");
+const profileImage = document.getElementById("profileImage");
+const joinDateEl = document.getElementById("joinDate");
 
-function maskEmail(e){if(!e)return"";const[n,d]=e.split("@");return n.substring(0,3)+"****@"+d;}
+profileImage.src = `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70) + 1}`;
 
-onAuthStateChanged(auth,async user=>{
- if(!user){location.href="login.html";return;}
- currentUser=user;
- userDocRef=doc(db,"users",user.uid);
- const s=await getDoc(userDocRef);
- const data=s.exists()?s.data():{};
-const uname = data.name || "User";
-
-let joinDateText = "Not set";
-let daysSince = "";
-
-// ✅ createdAt se date aur difference nikaalna
-if (data.createdAt) {
-  const joinDate = new Date(data.createdAt);
-  const now = new Date();
-
-// Compare only by date (ignore timezone hours)
-const joinDay = new Date(joinDate.getFullYear(), joinDate.getMonth(), joinDate.getDate());
-const todayDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
-const diffMs = todayDay - joinDay;
-const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
-
-
-joinDateText = joinDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-
-  if (diffDays === 0) daysSince = " (Joined today)";
-  else if (diffDays === 1) daysSince = " (1 day ago)";
-  else if (diffDays < 30) daysSince = ` (${diffDays} days ago)`;
-  else {
-    const months = Math.floor(diffDays / 30);
-    const days = diffDays % 30;
-    daysSince = ` (${months} month${months > 1 ? "s" : ""} ${days} day${days > 1 ? "s" : ""} ago)`;
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    location.href = "login.html";
+    return;
   }
-}
 
-// ✅ UI me dikhana
-document.getElementById("userJoinDate").textContent = `${joinDateText}${daysSince}`;
-userNameEl.textContent = uname;
-userEmailEl.textContent = maskEmail(data.email || user.email);
-modalUser.textContent = `Hey ${uname} 👋`;
+  const createdAt = new Date(user.metadata.creationTime);
+  joinDateEl.textContent = "Joined: " + createdAt.toLocaleDateString();
 
+  try {
+    const userRef = doc(db, "users", user.uid);
+    const snap = await getDoc(userRef);
+
+    if (snap.exists()) {
+      const data = snap.data();
+
+      userNameEl.textContent = data.name || user.displayName || "User";
+      userUIDEl.textContent = `Email: ${user.email}`;
+      lastLoginEl.textContent = "Last login: " + new Date().toLocaleString();
+
+      const balanceValue = data.walletBalance ?? data.balance ?? data.wallet ?? data.amount ?? 0;
+      userBalanceEl.textContent = parseFloat(balanceValue).toFixed(2);
+
+      profileImage.src = user.photoURL || `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70) + 1}`;
+    } else {
+      console.warn("⚠️ User document not found in Firestore.");
+      userBalanceEl.textContent = "0.00";
+    }
+  } catch (error) {
+    console.error("🔥 Firestore fetch error:", error);
+    userBalanceEl.textContent = "0.00";
+  }
 });
 
-window.openModal=(a)=>{
- currentAction=a;
- modal.classList.add("show");
- modalInput.style.display="none";
- modalTextarea.style.display="none";
- if(a==="Revenue Details"||a==="Withdrawal Report"){modalTextarea.style.display="block";modalTitle.textContent=a;}
- else{modalInput.style.display="block";modalTitle.textContent=a;}
-};
-window.closeModal=()=>{modal.classList.remove("show");setTimeout(()=>{modalInput.value="";modalTextarea.value="";},300);};
-
-function showNotify(msg,type="success"){
- notify.textContent=msg;
- notify.className=`notify show ${type}`;
- setTimeout(()=>{notify.classList.remove("show");},2000);
-}
-
-window.saveModal=async()=>{
- if(!currentUser){showNotify("User not loaded","error");return;}
- const val=modalTextarea.style.display==="block"?modalTextarea.value.trim():modalInput.value.trim();
- if(!val){showNotify("Please enter details","error");return;}
- try{
-  if(currentAction==="Edit Email"){await fbUpdateEmail(currentUser,val);await updateDoc(userDocRef,{email:val});userEmailEl.textContent=maskEmail(val);showNotify("Email updated ✅");}
-  else if(currentAction==="Edit Password"){await fbUpdatePassword(currentUser,val);showNotify("Password updated ✅");}
-  else if(currentAction==="Edit Mobile"){await updateDoc(userDocRef,{mobileNumber:val});showNotify("Mobile updated ✅");}
-  else if(currentAction==="Revenue Details"){await updateDoc(userDocRef,{revenueInfo:val});showNotify("Revenue details sent ✅");}
-  else if(currentAction==="Withdrawal Report"){
-    const r={email:currentUser.email,message:val,time:new Date().toISOString()};
-    await updateDoc(userDocRef,{withdrawalReports:arrayUnion(r)});
-    showNotify("Withdrawal report sent ✅");
+// ✅ Logout (safe listener)
+window.addEventListener("DOMContentLoaded", () => {
+  const logoutBtn = document.querySelector(".logout-btn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      location.href = "login.html";
+    });
   }
- }catch(e){showNotify("Error: "+e.message,"error");}
- closeModal();
-};
 
-window.logout=async()=>{await signOut(auth);location.href="login.html";};
-modal.addEventListener("click",e=>{if(e.target===modal)closeModal();});
+  // ✅ All page navigations — same tab
+  const pageLinks = {
+    txnLink: "",
+    depHist: "deposithistry.html",
+    withHist: "withdraw-history.html",
+    notifyLink: "notifications.html",
+    giftLink: "gifts.html",
+    langLink: "language.html",
+    settingsLink: "settings.html",
+    feedbackLink: "feedback.html",
+    announceLink: "announcement.html",
+    supportLink: "support.html",
+    guideLink: "guide.html",
+    aboutLink: "about.html",
+  };
+
+  Object.entries(pageLinks).forEach(([id, url]) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener("click", () => {
+        window.location.href = url;
+      });
+    }
+  });
+});
+
 </script>
-  <script>
+
+<script>
   // 🚫 Disable right click, select, drag
   document.addEventListener("contextmenu", e => e.preventDefault());
   document.addEventListener("selectstart", e => e.preventDefault());
@@ -493,7 +593,5 @@ modal.addEventListener("click",e=>{if(e.target===modal)closeModal();});
   Object.freeze(console);
   Object.freeze(window.console);
 </script>
-
-
 </body>
 </html>
