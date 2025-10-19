@@ -265,10 +265,7 @@ html, body {
   }
 }
 
-
 </style>
-
-
 </head>
 
 <body>
@@ -285,14 +282,14 @@ html, body {
     <h3>Locked</h3>
   </div>
 
-  <div class="balance-box">
-    <p id="totalIncome">$0.00</p>
-    <h3>Mining Income</h3>
-  </div>
+ <div class="balance-box">
+  <p id="totalIncome">$0.00</p>
+  <h3>Earned</h3>
+</div>
 
   <div class="balance-box">
     <p id="totalReferralIncome">$0.00</p>
-    <h3>Referral Income</h3>
+    <h3>Referral </h3>
   </div>
 </div>
 
@@ -331,7 +328,6 @@ import {
   addDoc, serverTimestamp, orderBy
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
-
 // 🔥 Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
@@ -349,7 +345,10 @@ const bell = document.getElementById("bellSound");
 
 // 🧮 Calculate Total Referral Income (All Levels)
 async function calculateTotalReferralIncome(user) {
-  const q = query(collection(db, "referralHistory"), where("receiverId", "==", user.uid));
+  const q = query(
+    collection(db, "users", user.uid, "buyhashrefarl"),
+    orderBy("timestamp", "desc")
+  );
   const res = await getDocs(q);
 
   if (res.empty) {
@@ -370,8 +369,7 @@ async function calculateTotalReferralIncome(user) {
 async function loadReferralHistory(user) {
   const historyBox = document.getElementById("referralHistoryBox");
   const q = query(
-    collection(db, "referralHistory"),
-    where("receiverId", "==", user.uid),
+    collection(db, "users", user.uid, "buyhashrefarl"),
     orderBy("timestamp", "desc")
   );
   const res = await getDocs(q);
@@ -581,13 +579,14 @@ async function distributeReferralIncome(user, totalProfit) {
         totalIncome: newTotal,
       });
 
-      await addDoc(collection(db, "referralHistory"), {
-        receiverId: u.id,
-        fromUser: user.username || "Unknown",
-        amount: commission,
-        level: u.level,
-        timestamp: serverTimestamp(),
-      });
+     await addDoc(collection(db, "users", u.id, "buyhashrefarl"), {
+    receiverId: u.id,
+    fromUser: user.username || "Unknown",
+    amount: commission,
+    level: u.level,
+   timestamp: serverTimestamp(),
+   });
+
     } catch (err) {
       console.error(`Error paying level ${u.level}:`, err);
     }
