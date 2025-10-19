@@ -19,7 +19,7 @@ body {
 }
 .container { max-width: 950px; margin: auto; padding: 20px; }
 .card {
-  background: #fff; padding: 20px; border-radius: 16px;
+  background: #fff; padding: 20px; border-radius: 5px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.08); margin-bottom: 20px;
   text-align: center;
 }
@@ -238,6 +238,68 @@ body {
 }
 
 
+
+
+/* 🌟 Top Fixed Level Navigation (like Smart Mining) */
+.top-level-nav {
+  position: fixed;
+  top: 48px; /* Just below your header */
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  z-index: 999;
+}
+
+.level-tab {
+  background: #f1f5f9;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  padding: 8px 16px;
+  font-weight: 600;
+  color: #2563eb;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.level-tab.active {
+  background: #22c55e;
+  color: white;
+  border-color: #22c55e;
+  box-shadow: 0 3px 8px rgba(34,197,94,0.4);
+}
+
+.level-tab:hover {
+  background: #dcfce7;
+}
+
+/* ✅ Adjust padding so content doesn't hide under top nav */
+body {
+  padding-top: 120px !important;
+}
+
+
+.referral-link {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  max-width: 100%;
+  display: inline-block;
+  color: #2563eb;
+  font-weight: 500;
+  text-align: center;
+  font-size: 14px;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  padding: 6px 8px;
+  word-break: break-all;
+}
+
 </style>
 </head>
 <body>
@@ -267,10 +329,11 @@ body {
     </div>
   </div>
 
- <div class="level-buttons">
-  <button class="level-btn active" onclick="showLevel(1)">Level 1</button>
-  <button class="level-btn" onclick="showLevel(2)">Level 2</button>
-  <button class="level-btn" onclick="showLevel(3)">Level 3</button>
+<!-- 🌟 Top Level Navigation -->
+<div class="top-level-nav">
+  <button class="level-tab active" onclick="showLevel(1)">Level 1</button>
+  <button class="level-tab" onclick="showLevel(2)">Level 2</button>
+  <button class="level-tab" onclick="showLevel(3)">Level 3</button>
 </div>
 
   <div id="level1" class="level-content active">
@@ -351,10 +414,12 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-window.showLevel = function (level) {
-  document.querySelectorAll(".level-btn").forEach(b=>b.classList.remove("active"));
-  document.querySelectorAll(".level-content").forEach(c=>c.classList.remove("active"));
-  document.querySelector(`.level-btn:nth-child(${level})`).classList.add("active");
+// 🔄 Switch Level Tabs (top nav buttons)
+window.showLevel = function(level) {
+  document.querySelectorAll(".level-tab").forEach(btn => btn.classList.remove("active"));
+  document.querySelector(`.level-tab:nth-child(${level})`).classList.add("active");
+
+  document.querySelectorAll(".level-content").forEach(c => c.classList.remove("active"));
   document.getElementById(`level${level}`).classList.add("active");
 };
 
@@ -496,6 +561,54 @@ function showPopup(message, color = "#00c853") {
   setTimeout(() => popup.classList.remove("show"), 2000);
 }
 
+</script>
+<script>
+  // 🚫 Disable right click, select, drag
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
+
+  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
+  document.addEventListener("keydown", e => {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // 🔒 Silent DevTools detection (no popup)
+  (function() {
+    const devtools = /./;
+    devtools.toString = function() {
+      return ""; // no alert or console log
+    };
+    console.log("%c", devtools);
+  })();
+
+  // 🔐 Detect DevTools using resize trick (no popup)
+  setInterval(() => {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    if (widthDiff || heightDiff) {
+      // Optional: silently redirect or blank the page
+      document.body.innerHTML = "";
+    }
+  }, 1000);
+
+  // 🧱 Disable copy/paste/cut
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // 🔁 Freeze console methods silently
+  Object.freeze(console);
+  Object.freeze(window.console);
+  
 </script>
 </body>
 </html>
