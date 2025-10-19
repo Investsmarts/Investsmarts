@@ -40,7 +40,7 @@
       width: 90%;
       max-width: 400px;
       text-align: center;
-      box-shadow: 0 0 35px rgba(0, 255, 120, 0.5);
+     
       color: #111;
       animation: fadeIn 1s ease;
       margin-bottom: 40px; /* ✅ Bottom space for scroll */
@@ -63,7 +63,7 @@
     h1 {
       color: #009933;
       font-size: 1.8rem;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
       font-weight: 700;
     }
 
@@ -149,7 +149,82 @@
     <!-- 🖼️ Photo -->
     <img src="myphoto/fgasjhgajgdajgajhgs.png" alt="TrustDollar Banner" class="welcome-img" />
 
-    <h1>Welcome to TRUSTdollar V2</h1>
+
+<div class="welcome-container">
+  <div class="welcome-box">
+    <h1> 20 October<br>12:12 AM   Go Live 💎</h1>
+    <p class="TRUSTdollar V2”">
+   <p class="go-live">🌟 Official Launch Trust the Spark of Innovation 🌟</p>
+   
+  </div>
+</div>
+
+<style>
+  /* ✅ Clean single container layout */
+  .welcome-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+  }
+
+  .welcome-box {
+    background: linear-gradient(145deg, #1a1a1a, #000);
+    border-radius: 18px;
+    padding: 30px 60px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.5),
+                inset 0 0 15px rgba(255, 255, 255, 0.1);
+    animation: boxGlow 2s infinite alternate;
+  }
+
+  /* Glowing animation around box */
+  @keyframes boxGlow {
+    from { box-shadow: 0 0 20px #ffd700; }
+    to { box-shadow: 0 0 40px #ffea00; }
+  }
+
+  /* ✨ 3D Gold Text Style ✨ */
+  .welcome-box h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: linear-gradient(45deg, #b8860b, #ffd700, #fff5a3, #b8860b);
+    -webkit-background-clip: text;
+    background-size: 200% 200%;
+    color: transparent;
+    text-shadow:
+      2px 2px 3px #8b7500,
+      3px 3px 6px rgba(0, 0, 0, 0.5),
+      0 0 20px rgba(255, 215, 0, 0.7);
+    animation: goldShine 3s linear infinite;
+    letter-spacing: 1px;
+  }
+
+  /* Light reflection animation on text */
+  @keyframes goldShine {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+  }
+
+  .welcome-box .go-live {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff8dc;
+    margin-top: 10px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+  }
+
+  @media (max-width: 600px) {
+    .welcome-box {
+      padding: 20px 25px;
+    }
+    .welcome-box h1 {
+      font-size: 1.6rem;
+    }
+  }
+</style>
+
+
     <h2 id="userName">Loading user...</h2>
     <p>Your personal referral link:</p>
     <input type="text" id="refLink" readonly />
