@@ -36,7 +36,7 @@
       flex: 1;
       background: #fff;
       border: none;
-      border-radius: 14px;
+      border-radius: 5px;
       padding: 14px 8px;
       font-size: 14px;
       font-weight: 500;
@@ -60,7 +60,7 @@
       max-width: 480px;
       margin: 0 auto 20px;
       background: #fff;
-      border-radius: 16px;
+      border-radius: 5px;
       padding: 16px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
@@ -93,7 +93,7 @@
   max-width: 480px;
   background: #ffffff; /* solid white */
   border: 1px solid #e0e0e0;
-  border-radius: 18px;
+  border-radius: 5px;
   box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
   display: flex;
   justify-content: space-around;
@@ -175,7 +175,7 @@
       align-items: center;
       gap: 6px;
       padding: 4px 10px;
-      border-radius: 12px;
+      border-radius: 5px;
       font-weight: bold;
       font-size: 14px;
       background: rgba(0,0,0,0.1); /* default transparent background */
@@ -272,7 +272,7 @@
   max-width: 480px;
   margin: 0 auto 20px;
   background: #fff;
-  border-radius: 16px;
+  border-radius: 5px;
   padding: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
@@ -317,7 +317,7 @@
   max-width: 480px;
   margin: 0 auto 20px;
   background: #fff;
-  border-radius: 16px;
+  border-radius: 5px;
   padding: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
@@ -428,7 +428,7 @@
   max-width: 480px;
   margin: 0 auto 20px;
   background: #fff;
-  border-radius: 16px;
+  border-radius: 5px;
   padding: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
@@ -483,7 +483,7 @@
 .stats-card {
   max-width: 480px;
   margin: 0 auto 20px;
-  border-radius: 16px;
+  border-radius: 5px;
   overflow: hidden;
   background: #fff;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
@@ -550,6 +550,9 @@
 .stats-item.pink { background: #ffe6e9; }
 .stats-item.blue { background: #e6f2ff; }
 
+
+
+
 </style>
 </head>
 <body>
@@ -561,7 +564,7 @@
     .trust-card {
       background: linear-gradient(135deg, #00994e, #00c853);
       color: #fff;
-      border-radius: 18px;
+      border-radius: 5px;
       padding: 18px 16px;
       width: 100%;
       max-width: 400px;
@@ -640,7 +643,7 @@
       background: #ffca28;
       color: #333;
       padding: 3px 8px;
-      border-radius: 10px;
+      border-radius: 5px;
       font-weight: 600;
       font-size: 12.5px;
     }
@@ -654,7 +657,7 @@
     .trust-actions button {
       flex: 1;
       border: none;
-      border-radius: 10px;
+      border-radius: 5px;
       padding: 10px 0;
       font-weight: 600;
       font-size: 13px;
@@ -688,7 +691,7 @@
   display: inline-block;
   padding: 4px 10px;
   border: 1.8px solid rgba(255, 255, 255, 0.8);
-  border-radius: 10px;
+  border-radius: 5px;
   font-size: 13px;
   font-weight: 500;
   color: #fff;
@@ -711,7 +714,7 @@
       <i class='bx bx-wallet'></i> TrustDollar Account
     </div>
     <div class="trust-right">
-      My Rewards <i class='bx bx-coin-stack'></i>
+      Dashboard <i class='bx bx-coin-stack'></i>
     </div>
   </div>
 
@@ -829,41 +832,51 @@ document.querySelector(".btn-add").addEventListener("click", () => {
 
 <!-- Deposit Usage Process Card -->
 <div class="card usage-card">
-  <h3>Deposit Process</h3>
+  <h3>Deposit / Withdrawal Process</h3>
 
-  <div class="usage-step">
-    <i class='bx bx-link icon green'></i>
-    <div>
-      <h4>Connect Wallet <span class="tag">Coming</span></h4>
-      <p>Click the "Connect Wallet" button</p>
-    </div>
-  </div>
-
-  <div class="usage-step">
-    <i class='bx bx-wallet icon blue'></i>
-    <div>
-      <h4>Deposit USDT</h4>
-      <p>Add funds securely into your wallet</p>
-    </div>
-  </div>
-
-  <div class="usage-step">
-    <i class='bx bx-trending-up icon orange'></i>
-    <div>
-      <h4>Start Investing</h4>
-      <p>Use your balance to begin investing</p>
-    </div>
-  </div>
-
-  <div class="usage-step">
-    <i class='bx bx-dollar-circle icon green'></i>
-    <div>
-      <h4>Earn Income</h4>
-      <p>Generate daily proportional rewards</p>
-    </div>
+<div class="usage-step">
+  <i class='bx bx-link icon green'></i>
+  <div>
+    <h4>Connect Wallet <span class="tag">Coming</span></h4>
+    <p>Click the "Connect Wallet" button</p>
   </div>
 </div>
 
+<!-- 🅿️ Paytm Step Added -->
+<div class="usage-step">
+  <i class="paytm-icon"></i>
+  <div>
+    <h4>Deposit / Withdrawal  with Paytm</h4>
+    <p>Use your Paytm account to add balance securely</p>
+  </div>
+</div>
+
+<div class="usage-step">
+  <i class='bx bx-wallet icon blue'></i>
+  <div>
+    <h4>Deposit USDT</h4>
+    <p>Add funds securely into your wallet</p>
+  </div>
+</div>
+
+<div class="usage-step">
+  <i class='bx bx-trending-up icon orange'></i>
+  <div>
+    <h4>Start Investing</h4>
+    <p>Use your balance to begin investing</p>
+  </div>
+</div>
+
+<div class="usage-step">
+  <i class='bx bx-dollar-circle icon green'></i>
+  <div>
+    <h4>Earn Income</h4>
+    <p>Generate daily proportional rewards</p>
+  </div>
+</div>
+
+</div>
+</div>
 <!-- Stats Card -->
 <div class="card stats-card">
   <!-- Top Big Box -->
@@ -1178,7 +1191,7 @@ setInterval(updateParticipants, 50000);
 
 
 </script>
-  <script>
+<script>
   // 🚫 Disable right click, select, drag
   document.addEventListener("contextmenu", e => e.preventDefault());
   document.addEventListener("selectstart", e => e.preventDefault());
@@ -1225,8 +1238,5 @@ setInterval(updateParticipants, 50000);
   Object.freeze(console);
   Object.freeze(window.console);
 </script>
-
-
 </body>
 </html>
-
