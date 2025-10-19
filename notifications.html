@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Notifications — TrustDollar</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<style>
+:root {
+  --green: #00c853;
+  --bg: #f9fafb;
+  --muted: #757a80;
+  --red: #f44336;
+  --blue: #007bff;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg);
+  margin: 0;
+  color: #222;
+}
+
+/* HEADER */
+.header {
+  background: linear-gradient(145deg, #00c853, #00bfa5);
+  color: #fff;
+  padding: 15px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.header .back {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 6px;
+  font-weight: 600;
+}
+.header h1 {
+  font-size: 18px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 🔴 Notification red dot beside title */
+#notifyDot {
+  width: 10px;
+  height: 10px;
+  background: red;
+  border-radius: 50%;
+  display: none;
+  animation: blinkDot 1s infinite ease-in-out;
+}
+@keyframes blinkDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.2); }
+}
+
+/* MAIN CONTAINER */
+.container {
+  padding: 18px 14px 80px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* STATUS CARD */
+.status-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  border-left: 5px solid var(--green);
+}
+.status-card h3 {
+  color: var(--green);
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: var(--muted);
+}
+.status-row span.value {
+  color: #000;
+  font-weight: 600;
+}
+.online { color: var(--green); font-weight: 600; }
+.offline { color: var(--red); font-weight: 600; }
+
+/* NOTIFICATION LIST */
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.notification-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 1px solid #f0f0f0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  transition: all 0.25s ease;
+}
+.notification-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.notification-card h4 {
+  font-size: 15px;
+  color: var(--green);
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.notification-card p {
+  font-size: 14px;
+  color: #444;
+  margin: 0 0 6px;
+  line-height: 1.4;
+}
+.notification-card small {
+  font-size: 12px;
+  color: #999;
+}
+
+/* ALERT CENTER POPUP */
+.alert {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: var(--green);
+  color: #fff;
+  padding: 14px 26px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  font-size: 15px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 9999;
+  font-weight: 600;
+}
+.alert.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="back" onclick="window.location.href='account.html'">
+    <i class='bx bx-left-arrow-alt'></i> Back
+  </div>
+  <h1>Notifications <div id="notifyDot"></div></h1>
+</div>
+
+<div id="alertBox" class="alert">Welcome back 👋</div>
+
+<div class="container">
+  <!-- ✅ USER STATUS CARD -->
+  <div class="status-card" id="statusCard">
+    <h3><i class='bx bx-user-circle'></i> User Activity</h3>
+    <div class="status-row"><span>Current Status:</span> <span class="value" id="userStatus">Offline</span></div>
+    <div class="status-row"><span>Current IP:</span> <span class="value" id="userIP">Fetching...</span></div>
+    <div class="status-row"><span>Last Login:</span> <span class="value" id="lastLogin">—</span></div>
+    <div class="status-row"><span>Last Logout:</span> <span class="value" id="lastLogout">—</span></div>
+  </div>
+
+  <!-- ✅ NOTIFICATION CARDS -->
+  <div class="notification-list" id="notifContainer">
+    <div class="notification-card">
+      <h4><i class='bx bx-bell'></i> No Notifications</h4>
+      <p>Once admin sends updates, you'll see them here.</p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { 
+  getFirestore, doc, updateDoc, getDoc, serverTimestamp, collection, getDocs, orderBy, query 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25",
+  storageBucket: "btcinvest-c0e25.firebasestorage.app",
+  messagingSenderId: "204937458487",
+  appId: "1:204937458487:web:cc27ece1249999279f60b2"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+const userStatus = document.getElementById("userStatus");
+const userIP = document.getElementById("userIP");
+const lastLogin = document.getElementById("lastLogin");
+const lastLogout = document.getElementById("lastLogout");
+const container = document.getElementById("notifContainer");
+const alertBox = document.getElementById("alertBox");
+const notifyDot = document.getElementById("notifyDot");
+
+// ✅ Fetch IP
+async function getUserIP() {
+  try {
+    const res = await fetch("https://api.ipify.org?format=json");
+    const data = await res.json();
+    userIP.textContent = data.ip;
+    return data.ip;
+  } catch {
+    userIP.textContent = "Unavailable";
+    return null;
+  }
+}
+
+// ✅ Show alert
+function showAlert(msg, color = "#00c853") {
+  alertBox.style.background = color;
+  alertBox.textContent = msg;
+  alertBox.classList.add("show");
+  setTimeout(() => alertBox.classList.remove("show"), 2500);
+}
+
+// ✅ Create notification card
+function createCard(data) {
+  const card = document.createElement("div");
+  card.classList.add("notification-card");
+
+  const icon = data.type === "admin" ? "<i class='bx bx-user-voice'></i>" : "<i class='bx bx-bell'></i>";
+  const time = data.createdAt?.toDate ? data.createdAt.toDate().toLocaleString() : "Now";
+
+  card.innerHTML = `
+    <h4>${icon} ${data.type === "admin" ? "Admin Message" : "Notification"}</h4>
+    <p>${data.message}</p>
+    <small>${time}</small>
+  `;
+  return card;
+}
+
+// ✅ Login + Activity Tracker
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    showAlert("Please login first", "#f44336");
+    setTimeout(() => (window.location.href = "login.html"), 1200);
+    return;
+  }
+
+  const ip = await getUserIP();
+  const userRef = doc(db, "users", user.uid);
+
+  // Mark online
+  await updateDoc(userRef, { online: true, lastLogin: serverTimestamp(), lastIP: ip });
+
+  // Load user info
+  const snap = await getDoc(userRef);
+  const data = snap.data();
+  const loginTime = data?.lastLogin?.toDate ? data.lastLogin.toDate().toLocaleString() : "—";
+  const logoutTime = data?.lastLogout?.toDate ? data.lastLogout.toDate().toLocaleString() : "—";
+
+  userStatus.textContent = "Online ✅";
+  userStatus.classList.add("online");
+  lastLogin.textContent = loginTime;
+  lastLogout.textContent = logoutTime;
+
+// 🔍 Fetch notifications (newest first)
+const notifRef = collection(db, "users", user.uid, "notifications");
+const notifQuery = query(notifRef, orderBy("createdAt", "desc")); // 👈 newest first
+const notifSnap = await getDocs(notifQuery);
+
+container.innerHTML = "";
+
+if (notifSnap.empty) {
+  container.innerHTML = `
+    <div class="notification-card">
+      <h4><i class='bx bx-bell'></i> No Notifications</h4>
+      <p>Once admin sends updates, you'll see them here.</p>
+    </div>`;
+}
+
+  let unseen = 0;
+  notifSnap.forEach((n) => {
+    const data = n.data();
+    container.appendChild(createCard(data));
+    if (!data.seen) unseen++;
+  });
+
+  if (unseen > 0) {
+    notifyDot.style.display = "inline-block";
+    showAlert(`🔔 ${unseen} new notification${unseen > 1 ? "s" : ""}`, "#ff3b30");
+  } else {
+    notifyDot.style.display = "none";
+  }
+
+  // Mark all seen
+  notifSnap.forEach(async (n) => {
+    if (!n.data().seen) {
+      await updateDoc(doc(db, "users", user.uid, "notifications", n.id), { seen: true });
+    }
+  });
+
+  // When user leaves — mark offline
+  window.addEventListener("beforeunload", async () => {
+    await updateDoc(userRef, { online: false, lastLogout: serverTimestamp() });
+  });
+});
+</script>
+</body>
+</html>
