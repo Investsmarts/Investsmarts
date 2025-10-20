@@ -293,6 +293,12 @@ html, body {
   </div>
 </div>
 
+<div class="balance-box">
+  <p id="hashIncome">$0.00</p>
+  <h3>Hash Income</h3>
+</div>
+
+
     <!-- ✅ Active Plan Section -->
     <div id="planSection" style="margin-top:15px;">
       <p class="loader">Loading active plan...</p>
@@ -307,11 +313,11 @@ html, body {
       </div>
     </div>
 
-    <!-- ✅ Notification Sound -->
-    <audio id="bellSound"
-      src="https://cdn.pixabay.com/download/audio/2021/09/06/audio_3b25e82c2a.mp3?filename=notification-3-204024.mp3"
-      preload="auto"></audio>
-  </div>
+<!-- ✅ Notification Sound (Fixed, works everywhere) -->
+<audio id="bellSound"
+  src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+  preload="auto"></audio>
+</div>
 
 <div class="bottom-nav">
   <a href="Dashboard.html" class="nav-item active"><i class='bx bxs-dashboard'></i><span>Home</span></a>
@@ -599,6 +605,7 @@ async function distributeReferralIncome(user, totalProfit) {
   }
 }
 </script>
+
 <script>
   // 🚫 Disable right click, select, drag
   document.addEventListener("contextmenu", e => e.preventDefault());
@@ -646,7 +653,5 @@ async function distributeReferralIncome(user, totalProfit) {
   Object.freeze(console);
   Object.freeze(window.console);
 </script>
-
-
 </body>
 </html>
