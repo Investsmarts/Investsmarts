@@ -424,6 +424,7 @@ onAuthStateChanged(auth, async (user) => {
   document.getElementById("walletBalance").textContent = `$${(u.walletBalance || 0).toFixed(2)}`;
   document.getElementById("lockedBalance").textContent = `$${(u.lockedBalance || 0).toFixed(2)}`;
   document.getElementById("totalIncome").textContent = `$${(u.totalIncome || 0).toFixed(2)}`;
+  document.getElementById("hashIncome").textContent = `$${(u.hashIncome || 0).toFixed(2)}`;
 
   await calculateTotalReferralIncome(user);
   await loadReferralHistory(user);
@@ -515,7 +516,12 @@ async function collectProfit(plan, userRef, planId, btn, display) {
 
   const newWallet = (user.walletBalance || 0) + selfProfit;
   const newIncome = (user.totalIncome || 0) + selfProfit;
-  await updateDoc(userRef, { walletBalance: newWallet, totalIncome: newIncome });
+  await updateDoc(userRef, { 
+  walletBalance: newWallet, 
+  totalIncome: newIncome, 
+  hashIncome: newHashIncome 
+});
+
 
   await distributeReferralIncome(user, totalProfit);
 
