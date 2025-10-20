@@ -136,7 +136,7 @@
     }
 
     footer {
-      color: #a6ffb0;
+      color: #00a112;
       font-size: 0.8rem;
       text-align: center;
       margin-top: 30px;
@@ -238,7 +238,7 @@
     <div class="msg" id="msg"></div>
   
 
-  <footer>© 2025 TRUSTdollar V2 — All Rights Reserved.</footer>
+  <footer>If it doesn’t go live on 20th, it will be live by 21st,12 AM</footer>
 </div>
 
   <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
@@ -305,7 +305,12 @@
     window.shareLink = function(){
       const link = document.getElementById("refLink").value;
       if (navigator.share) {
-        navigator.share({title: "Join TRUSTdollar V2", text: "Use my referral link to register:", url: link});
+       navigator.share({
+  title: "Join TRUSTdollar V2",
+  text: "If it doesn’t go live on 20th, it will be live by 21st, 12 AM. Use my referral link to register:",
+  url: link
+});
+
       } else {
         window.open(link, "_blank");
       }
@@ -313,3 +318,4 @@
   </script>
 </body>
 </html>
+
