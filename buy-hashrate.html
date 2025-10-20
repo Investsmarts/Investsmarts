@@ -762,7 +762,7 @@ body {
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(18px);
     border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 16px;
+    border-radius: 5px;
     padding: 25px 30px;
     text-align: center;
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
@@ -793,7 +793,7 @@ body {
     color: white;
     font-weight: 500;
     padding: 8px 22px;
-    border-radius: 6px;
+    border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
     transition: all 0.3s ease;
@@ -840,6 +840,86 @@ body {
       transform: scale(0.9);
     }
   }
+
+  #planContainer {
+  animation: fadeSlide 0.4s ease-in-out;
+}
+@keyframes fadeSlide {
+  from {opacity: 0; transform: translateY(-5px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+
+.plan-img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease;
+}
+.plan:hover .plan-img {
+  transform: scale(1.05);
+}
+
+
+/* 🔹 Plan Title */
+.plan h3 {
+  color: #059669;                /* elegant green */
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.05);
+  transition: color 0.3s ease;
+}
+
+/* 🔹 Price & Duration */
+.plan p:first-of-type {
+  font-size: 15px;
+  color: #334155;                /* slate gray */
+  font-weight: 600;
+  margin: 4px 0;
+}
+
+/* 🔹 Profit Line */
+.plan p:last-of-type {
+  font-size: 14px;
+  font-weight: 600;
+  color: #16a34a;                /* rich green */
+  margin-bottom: 10px;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.3px;
+}
+
+/* 🪄 Subtle Hover Shine */
+.plan:hover h3 {
+  color: #10b981;
+  transform: scale(1.03);
+}
+
+/* 🧩 Better Layout Spacing */
+.plan {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  padding: 18px 14px;
+  transition: all 0.3s ease;
+}
+.plan:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(22,163,74,0.15);
+}
+
+/* 🌟 Button alignment consistency */
+.plan .btn {
+  margin-top: 8px;
+}
+
 </style>
 
 
@@ -950,103 +1030,153 @@ body {
   
 <!-- 🌐 Professional Button -->
 <div style="text-align:center; margin: 25px 0;">
-  <a href="hashratehistry.html" target="_blank" class="pro-btn">
+  <button id="openPlanBtn" class="pro-btn">
     Activate Plan
-  </a>
+  </button>
 </div>
 
+<!-- 🔹 Hidden Container to Load hashRateHistry.html -->
+<div id="planContainer" style="display:none; margin-top:25px;"></div>
+
+<script>
+document.getElementById("openPlanBtn").addEventListener("click", async () => {
+  const container = document.getElementById("planContainer");
+
+  // If already open, toggle back (close it)
+  if (container.style.display === "block") {
+    container.style.display = "none";
+    document.getElementById("openPlanBtn").textContent = "Activate Plan";
+    return;
+  }
+
+  // ✅ Load page content dynamically
+  try {
+    const res = await fetch("hashratehistry.html");
+    if (!res.ok) throw new Error("Failed to load content");
+    const html = await res.text();
+
+    container.innerHTML = html;
+    container.style.display = "block";
+    document.getElementById("openPlanBtn").textContent = "Hide Plan History";
+
+    // Optional: smooth scroll down to the content
+    container.scrollIntoView({ behavior: "smooth" });
+
+  } catch (err) {
+    console.error(err);
+    alert("⚠️ Failed to load the page. Please try again.");
+  }
+});
+</script>
+
 <div class="plans">
-  <div class="plan">
+
+  <div class="plan" data-name="Plan 1" data-cost="500" data-days="20" data-profit="1.7">
+    <img src="pln1.JPEG " class="plan-img" alt="Plan 1">
     <h3>Plan 1</h3>
     <p>$500 / 20 days</p>
     <p>1.7% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 1', 500, 20, 1.7)">Buy</button>
+    <button class="btn buy-btn" onclick="openModal('Plan 1', 500, 20, 1.7, 'images/plan1.png')">Buy</button>
   </div>
 
-  <div class="plan">
+  <div class="plan" data-name="Plan 2" data-cost="700" data-days="30" data-profit="1.8">
+    <img src="images/pln2.JPEG" class="plan-img" alt="Plan 2">
     <h3>Plan 2</h3>
     <p>$700 / 30 days</p>
     <p>1.8% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 2', 700, 30, 1.8)">Buy</button>
+    <button class="btn buy-btn" onclick="openModal('Plan 2', 700, 30, 1.8, 'images/plan2.png')">Buy</button>
   </div>
 
-  <div class="plan">
+  <div class="plan" data-name="Plan 3" data-cost="900" data-days="40" data-profit="1.9">
+    <img src="images/pln3.JPEG" class="plan-img" alt="Plan 3">
     <h3>Plan 3</h3>
     <p>$900 / 40 days</p>
     <p>1.9% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 3', 900, 40, 1.9)">Buy</button>
+    <button class="btn buy-btn" onclick="openModal('Plan 3', 900, 40, 1.9, 'images/plan3.png')">Buy</button>
   </div>
 
-  <div class="plan">
+  <div class="plan" data-name="Plan 4" data-cost="1100" data-days="50" data-profit="2.0">
+    <img src="images/pln4.JPEG" class="plan-img" alt="Plan 4">
     <h3>Plan 4</h3>
     <p>$1100 / 50 days</p>
     <p>2.0% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 4', 1100, 50, 2.0)">Buy</button>
+    <button class="btn buy-btn" onclick="openModal('Plan 4', 1100, 50, 2.0, 'images/plan4.png')">Buy</button>
   </div>
 
-  <div class="plan">
+  <div class="plan" data-name="Plan 5" data-cost="1300" data-days="60" data-profit="2.1">
+    <img src="images/pln5.JPEG" class="plan-img" alt="Plan 5">
     <h3>Plan 5</h3>
     <p>$1300 / 60 days</p>
     <p>2.1% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 5', 1300, 60, 2.1)">Buy</button>
+    <button class="btn buy-btn" onclick="openModal('Plan 5', 1300, 60, 2.1, 'images/plan5.png')">Buy</button>
   </div>
 
-  <div class="plan">
+  <div class="plan" data-name="Plan 6" data-cost="1500" data-days="70" data-profit="2.2">
+    <img src="images/pln6.JPEG" class="plan-img" alt="Plan 6">
     <h3>Plan 6</h3>
     <p>$1500 / 70 days</p>
     <p>2.2% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 6', 1500, 70, 2.2)">Buy</button>
+    <button class="btn buy-btn" onclick="openModal('Plan 6', 1500, 70, 2.2, 'images/plan6.png')">Buy</button>
   </div>
 
-  <div class="plan">
+  <div class="plan" data-name="Plan 7" data-cost="1700" data-days="80" data-profit="2.3">
+    <img src="images/pln7.JPEG" class="plan-img" alt="Plan 7">
     <h3>Plan 7</h3>
     <p>$1700 / 80 days</p>
     <p>2.3% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 7', 1700, 80, 2.3)">Buy</button>
+    <button class="btn buy-btn" onclick="openModal('Plan 7', 1700, 80, 2.3, 'images/plan7.png')">Buy</button>
   </div>
 
-  <div class="plan">
+  <div class="plan" data-name="Plan 8" data-cost="1900" data-days="90" data-profit="2.4">
+    <img src="images/pln8.JPEG" class="plan-img" alt="Plan 8">
     <h3>Plan 8</h3>
     <p>$1900 / 90 days</p>
     <p>2.4% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 8', 1900, 90, 2.4)">Buy</button>
+    <button class="btn buy-btn" onclick="openModal('Plan 8', 1900, 90, 2.4, 'images/plan8.png')">Buy</button>
   </div>
 
-  <div class="plan">
+  <div class="plan" data-name="Plan 9" data-cost="2100" data-days="100" data-profit="2.5">
+    <img src="images/pln9.JPEG" class="plan-img" alt="Plan 9">
     <h3>Plan 9</h3>
     <p>$2100 / 100 days</p>
     <p>2.5% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 9', 2100, 100, 2.5)">Buy</button>
+    <button class="btn buy-btn" onclick="openModal('Plan 9', 2100, 100, 2.5, 'images/plan9.png')">Buy</button>
   </div>
 
-  <div class="plan">
+  <div class="plan" data-name="Plan 10" data-cost="2300" data-days="110" data-profit="2.6">
+    <img src="images/pln10.JPEG" class="plan-img" alt="Plan 10">
     <h3>Plan 10</h3>
     <p>$2300 / 110 days</p>
     <p>2.6% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 10', 2300, 110, 2.6)">Buy</button>
+    <button class="btn buy-btn" onclick="openModal('Plan 10', 2300, 110, 2.6, 'images/plan10.png')">Buy</button>
   </div>
 
-  <div class="plan">
+  <div class="plan" data-name="Plan 11" data-cost="2500" data-days="120" data-profit="2.7">
+    <img src="images/pln11.JPEG" class="plan-img" alt="Plan 11">
     <h3>Plan 11</h3>
     <p>$2500 / 120 days</p>
     <p>2.7% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 11', 2500, 120, 2.7)">Buy</button>
+    <button class="btn buy-btn" onclick="openModal('Plan 11', 2500, 120, 2.7, 'images/plan11.png')">Buy</button>
   </div>
 
-  <div class="plan">
+  <div class="plan" data-name="Plan 12" data-cost="2700" data-days="130" data-profit="2.8">
+    <img src="images/pln12.JPEG" class="plan-img" alt="Plan 12">
     <h3>Plan 12</h3>
     <p>$2700 / 130 days</p>
     <p>2.8% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 12', 2700, 130, 2.8)">Buy</button>
+    <button class="btn buy-btn" onclick="openModal('Plan 12', 2700, 130, 2.8, 'images/plan12.png')">Buy</button>
   </div>
 
-  <div class="plan">
+  <div class="plan" data-name="Plan 13" data-cost="2900" data-days="140" data-profit="2.9">
+    <img src="images/pln13.JPEG" class="plan-img" alt="Plan 13">
     <h3>Plan 13</h3>
     <p>$2900 / 140 days</p>
     <p>2.9% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 13', 2900, 140, 2.9)">Buy</button>
+    <button class="btn buy-btn" onclick="openModal('Plan 13', 2900, 140, 2.9, 'images/plan13.png')">Buy</button>
   </div>
+
 </div>
+
 
 <div class="plan">
   <h3>💼 Custom Plan</h3>
@@ -1058,7 +1188,7 @@ body {
     id="customAmount" 
     min="3000" 
     placeholder="Enter Amount (Min $3000)" 
-    style="margin-top:10px; padding:8px; width:80%; border-radius:8px; border:1px solid #ccc; text-align:center;"
+    style="margin-top:10px; padding:8px; width:80%; border-radius:5px; border:1px solid #ccc; text-align:center;"
   />
 
   <button class="btn buy-btn" onclick="handleCustomPlan()">Buy</button>
@@ -1137,14 +1267,14 @@ body {
         </div>
 
         <div class="modal-actions">
-          <button class="confirm-btn" id="mConfirm">Confirm Purchase</button>
+          <button class="confirm-btn" id="mConfirm">Confirm </button>
           <button class="cancel-btn" onclick="closeModal()">Cancel</button>
         </div>
       </div>
     </div>
   </div>
 </div>
-</body>
+
 
 <div class="bottom-nav">
   <a href="Dashboard.html" class="nav-item active"><i class='bx bxs-dashboard'></i><span>Home</span></a>
@@ -1224,9 +1354,8 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// 🟢 OPEN MODAL
-window.openModal = function (name, cost, days, profit) {
-  // ✅ Safety check
+// 🟢 OPEN MODAL (Image Supported)
+window.openModal = function (name, cost, days, profit, imgSrc = "") {
   if (!name) {
     console.warn("openModal called without plan name!");
     return;
@@ -1234,7 +1363,6 @@ window.openModal = function (name, cost, days, profit) {
 
   const modal = document.getElementById("planModal");
 
-  // ✅ Reset previous animation or style
   modal.style.display = "flex";
   modal.style.opacity = "0";
   modal.classList.remove("show");
@@ -1247,7 +1375,15 @@ window.openModal = function (name, cost, days, profit) {
   document.getElementById("mWallet").textContent = `$${walletBalance.toFixed(2)}`;
   document.getElementById("mError").style.display = "none";
 
-  // ✅ Show with smooth transition
+  // ✅ Show Plan Image (new)
+  const modalImg = document.getElementById("planModalImg");
+  if (modalImg) {
+    modalImg.src = imgSrc || "images/default.png"; // fallback if missing
+    modalImg.alt = name;
+    modalImg.style.display = "block";
+  }
+
+  // ✅ Smooth show
   requestAnimationFrame(() => {
     modal.classList.add("show");
     modal.style.opacity = "1";
@@ -1255,8 +1391,6 @@ window.openModal = function (name, cost, days, profit) {
 
   // ✅ Confirm button click event
   const confirmBtn = document.getElementById("mConfirm");
-
-  // 🔄 Remove any previous event listener (so double click issue naa ho)
   confirmBtn.replaceWith(confirmBtn.cloneNode(true));
   const newConfirmBtn = document.getElementById("mConfirm");
 
@@ -1270,6 +1404,7 @@ window.openModal = function (name, cost, days, profit) {
     const user = auth.currentUser;
     if (!user) return showCenterAlert("Please login first!");
 
+    // Prevent multiple active plans
     const activeQuery = query(
       collection(db, "buyhashrate"),
       where("userId", "==", user.uid),
@@ -1282,32 +1417,35 @@ window.openModal = function (name, cost, days, profit) {
       return;
     }
 
+    // Plan timing
     const now = new Date();
     const next = new Date(now.getTime() + 86400000);
     const end = new Date(now.getTime() + days * 86400000);
 
     try {
-  await addDoc(collection(db, "buyhashrate"), {
-  userId: user.uid,
-  planName: name,
-  planCost: cost,
-  dailyProfitPercent: profit,
-  durationDays: days,
-  remainingDays: days,  // ✅ ye line fix hai
-  startTime: serverTimestamp(),
-  nextPayout: next,
-  endTime: end,
-  earnedProfit: 0,
-  status: "running",
-});
+      await addDoc(collection(db, "buyhashrate"), {
+        userId: user.uid,
+        planName: name,
+        planCost: cost,
+        dailyProfitPercent: profit,
+        durationDays: days,
+        remainingDays: days,
+        startTime: serverTimestamp(),
+        nextPayout: next,
+        endTime: end,
+        earnedProfit: 0,
+        status: "running",
+        planImage: imgSrc || "" // ✅ image stored in Firestore too
+      });
 
-
+      // Update wallet and locked balance
       walletBalance -= cost;
       lockedBalance += cost;
       await updateDoc(doc(db, "users", user.uid), { walletBalance, lockedBalance });
 
       document.getElementById("walletBalance").textContent = `$${walletBalance.toFixed(2)}`;
       document.getElementById("lockedBalance").textContent = `$${lockedBalance.toFixed(2)}`;
+
       showCenterAlert(`✅ ${name} purchased successfully!`);
       closeModal();
 
@@ -1318,14 +1456,14 @@ window.openModal = function (name, cost, days, profit) {
   };
 };
 
-
+// 🟠 Close Modal
 window.closeModal = function () {
   const modal = document.getElementById("planModal");
   modal.classList.remove("show");
   setTimeout(() => (modal.style.display = "none"), 300);
 };
 
-// Alert helpers
+// 🟢 Center Alert
 function showCenterAlert(message, duration = 3000) {
   const alertBox = document.getElementById("centerAlert");
   alertBox.textContent = message;
@@ -1339,6 +1477,7 @@ function showCenterAlert(message, duration = 3000) {
   }, duration);
 }
 
+// ⚠️ Balance Alert
 function showBalanceAlert() {
   const alertBox = document.getElementById("mError");
   alertBox.classList.add("show");
@@ -1347,21 +1486,20 @@ function showBalanceAlert() {
     setTimeout(() => (alertBox.style.display = "none"), 300);
   }, 3000);
 }
-</script>
-<script>
+
+// 🔄 Auto listener setup (kept for safety)
 document.addEventListener("DOMContentLoaded", () => {
-  // Har plan ke liye click listener auto add karega
   document.querySelectorAll(".plan").forEach(plan => {
     const name = plan.dataset.name;
     const cost = parseFloat(plan.dataset.cost);
     const days = parseInt(plan.dataset.days);
     const profit = parseFloat(plan.dataset.profit);
+    const img = plan.querySelector(".plan-img")?.src || "";
     const btn = plan.querySelector(".buy-btn");
-    btn.addEventListener("click", () => openModal(name, cost, days, profit));
+    if (btn) btn.addEventListener("click", () => openModal(name, cost, days, profit, img));
   });
 });
 </script>
-
 <script>
   // 🚫 Disable right click, select, drag
   document.addEventListener("contextmenu", e => e.preventDefault());
@@ -1409,7 +1547,5 @@ document.addEventListener("DOMContentLoaded", () => {
   Object.freeze(console);
   Object.freeze(window.console);
 </script>
-
-
 </body>
 </html>
