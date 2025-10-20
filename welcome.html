@@ -3,320 +3,148 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome | TRUSTdollar V2</title>
+  <title>TrustDollar Live Announcement</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
     }
 
+    /* ===== Smooth Gradient Background ===== */
     body {
-      min-height: 100vh;
-      width: 100%;
-      background: radial-gradient(circle at center, #00ff99, #004d1a, #001a0d);
-      background-size: 400% 400%;
-      animation: gradient 10s ease infinite;
+      height: 100vh;
+      width: 100vw;
       display: flex;
+      flex-direction: column;
       justify-content: center;
-      align-items: flex-start;
+      align-items: center;
+      background: linear-gradient(145deg, #eaffea, #b8f5b8, #91ee91);
+      background-size: 200% 200%;
+      animation: gradientMove 10s ease infinite;
+      font-family: "Poppins", sans-serif;
       text-align: center;
-      overflow-x: hidden;
-      overflow-y: auto; /* ✅ Scroll enable */
-      padding: 40px 0 100px; /* Top aur bottom space */
+      overflow: hidden;
+      color: #009900;
+      padding: 1rem;
     }
 
-    @keyframes gradient {
+    @keyframes gradientMove {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
-    .card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 30px;
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-     
-      color: #111;
-      animation: fadeIn 1s ease;
-      margin-bottom: 40px; /* ✅ Bottom space for scroll */
+    /* ===== Title ===== */
+    h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      color: #008000;
+      text-shadow: 0 0 10px rgba(0, 255, 0, 0.4);
+      margin-bottom: 0.6rem;
+    }
+
+    /* ===== Subtext ===== */
+    #status {
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: #044d04;
+      margin-bottom: 1.6rem;
+      font-weight: 500;
+    }
+
+    /* ===== Motivation Line ===== */
+    .motivation {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: #007700;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 5px #00ff00;
+      animation: fadeIn 2s ease-in-out infinite alternate;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
+      from { opacity: 0.7; }
+      to { opacity: 1; }
     }
 
-    /* ✅ New image styling */
-    .welcome-img {
-      width: 100%;
-      max-width: 300px;
-      border-radius: 12px;
-      margin-bottom: 18px;
-      box-shadow: 0 4px 20px rgba(0, 200, 100, 0.3);
+    /* ===== Attention Box ===== */
+    .attention-box {
+      background-color: #fff6f5;
+      border: 2px solid #d63031;
+      border-radius: 14px;
+      padding: 1.4rem 1.8rem;
+      max-width: 650px;
+      text-align: left;
+      color: #8b0000;
+      font-weight: 500;
+      font-size: clamp(1rem, 2.5vw, 1.1rem);
+      line-height: 1.6;
+      box-shadow: 0 4px 20px rgba(255, 0, 0, 0.15);
+      transition: all 0.3s ease;
     }
 
-    h1 {
-      color: #009933;
-      font-size: 1.8rem;
-      margin-bottom: 20px;
-      font-weight: 700;
+    .attention-box strong {
+      color: #b30000;
     }
 
-    h2 {
-      color: #004d1a;
+    .attention-box span {
+      display: inline-block;
+      margin-bottom: 0.5rem;
       font-size: 1.2rem;
-      margin-bottom: 15px;
-      font-weight: 600;
     }
 
-    p {
-      color: #444;
-      font-size: 0.9rem;
-      margin-bottom: 10px;
+    @media (max-width: 600px) {
+      .attention-box {
+        width: 90%;
+        padding: 1.2rem;
+        text-align: center;
+      }
     }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      border: 2px solid #00c070;
-      border-radius: 8px;
-      font-weight: 600;
-      text-align: center;
-      color: #004d1a;
-      margin-bottom: 10px;
+    /* ===== LIVE mode ===== */
+    .live {
+      color: #ff0000;
+      font-weight: 700;
+      text-shadow: 0 0 15px #ff0000;
+      animation: blink 1s infinite;
     }
 
-    .qr-box {
-      margin-top: 15px;
-      display: flex;
-      justify-content: center;
-    }
-
-    canvas {
-      border: 2px solid #00ff88;
-      border-radius: 8px;
-      padding: 6px;
-      width: 180px;
-      height: 180px;
-    }
-
-    .btns {
-      margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    button {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .copy-btn { background-color: #007bff; }
-    .share-btn { background-color: #ffb300; }
-
-    button:hover { transform: scale(1.05); }
-
-    .msg {
-      color: #008000;
-      font-size: 0.9rem;
-      margin-top: 8px;
-      font-weight: 600;
-    }
-
-    footer {
-      color: #00a112;
-      font-size: 0.8rem;
-      text-align: center;
-      margin-top: 30px;
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0.5; }
     }
   </style>
 </head>
-
 <body>
-  <div class="card">
-    <!-- 🖼️ Photo -->
-    <img src="myphoto/fgasjhgajgdajgajhgs.png" alt="TrustDollar Banner" class="welcome-img" />
+  <h1>🔥 TrustDollar Live Soon 🔥</h1>
+  <p id="status">TrustDollar will go LIVE at <strong>12:12 AM (IST)</strong></p>
+  <div class="motivation">Stay Focused • Stay Real • Stay TrustDollar 💪</div>
 
-
-<div class="welcome-container">
-  <div class="welcome-box">
-    <h1> 20 October<br>12:12 AM   Go Live 💎</h1>
-    <p class="TRUSTdollar V2”">
-   <p class="go-live">🌟 Official Launch Trust the Spark of Innovation 🌟</p>
-   
+  <!-- ⚠️ Attention Box -->
+  <div class="attention-box">
+    <span>⚠️ <strong>Attention:</strong></span><br>
+    Live होने के समय कृपया जल्दबाज़ी में <strong>Login</strong> करने का प्रयास न करें।  
+    बहुत अधिक यूज़र्स के एक साथ लॉगिन करने से सिस्टम की गति प्रभावित हो सकती है।  
+    कृपया धैर्य और संयम बनाए रखें — <strong>TrustDollar</strong> आपके लिए बहुत जल्द LIVE होगा! 💚
   </div>
-</div>
 
-<style>
-  /* ✅ Clean single container layout */
-  .welcome-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-top: 25px;
-  }
+  <script>
+    // 🎯 Target time: 21 Oct 2025, 12:12 AM IST
+    const targetTime = new Date("October 21, 2025 00:12:00 GMT+0530").getTime();
+    const statusText = document.getElementById("status");
 
-  .welcome-box {
-    background: linear-gradient(145deg, #1a1a1a, #000);
-    border-radius: 18px;
-    padding: 30px 60px;
-    text-align: center;
-    box-shadow: 0 0 25px rgba(255, 215, 0, 0.5),
-                inset 0 0 15px rgba(255, 255, 255, 0.1);
-    animation: boxGlow 2s infinite alternate;
-  }
-
-  /* Glowing animation around box */
-  @keyframes boxGlow {
-    from { box-shadow: 0 0 20px #ffd700; }
-    to { box-shadow: 0 0 40px #ffea00; }
-  }
-
-  /* ✨ 3D Gold Text Style ✨ */
-  .welcome-box h1 {
-    font-size: 2.2rem;
-    font-weight: 800;
-    background: linear-gradient(45deg, #b8860b, #ffd700, #fff5a3, #b8860b);
-    -webkit-background-clip: text;
-    background-size: 200% 200%;
-    color: transparent;
-    text-shadow:
-      2px 2px 3px #8b7500,
-      3px 3px 6px rgba(0, 0, 0, 0.5),
-      0 0 20px rgba(255, 215, 0, 0.7);
-    animation: goldShine 3s linear infinite;
-    letter-spacing: 1px;
-  }
-
-  /* Light reflection animation on text */
-  @keyframes goldShine {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
-  }
-
-  .welcome-box .go-live {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #fff8dc;
-    margin-top: 10px;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
-  }
-
-  @media (max-width: 600px) {
-    .welcome-box {
-      padding: 20px 25px;
-    }
-    .welcome-box h1 {
-      font-size: 1.6rem;
-    }
-  }
-</style>
-
-
-    <h2 id="userName">Loading user...</h2>
-    <p>Your personal referral link:</p>
-    <input type="text" id="refLink" readonly />
-    <div class="qr-box"><canvas id="qrCode"></canvas></div>
-
-    <div class="btns">
-      <button class="copy-btn" onclick="copyLink()">Copy Link</button>
-      <button class="share-btn" onclick="shareLink()">Share Link</button>
-    </div>
-
-    <div class="msg" id="msg"></div>
-  
-
-  <footer>If it doesn’t go live on 20th, it will be live by 21st,12:12 AM</footer>
-</div>
-
-  <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
-      authDomain: "btcinvest-c0e25.firebaseapp.com",
-      projectId: "btcinvest-c0e25",
-      storageBucket: "btcinvest-c0e25.firebasestorage.app",
-      messagingSenderId: "204937458487",
-      appId: "1:204937458487:web:cc27ece1249999279f60b2",
-      measurementId: "G-HG0QZHT6G"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const uid = user.uid;
-        const userRef = doc(db, "users", uid);
-        const docSnap = await getDoc(userRef);
-
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          const name = data.username || data.name || user.displayName || "Trust User";
-          const refLink = `https://smartfundad.com/index.html?ref=${data.referralCode}`;
-          showUser(name, refLink);
-        } else {
-          const name = user.displayName || "New User";
-          const refLink = `https://smartfundad.com/index.html?ref=UNKNOWN`;
-          showUser(name, refLink);
-        }
+    function checkTime() {
+      const now = new Date().getTime();
+      if (now >= targetTime) {
+        statusText.textContent = "🚀 WE ARE LIVE NOW!";
+        statusText.classList.add("live");
       } else {
-        document.getElementById("userName").innerText = "Please Login First";
+        statusText.innerHTML = 'TrustDollar will go LIVE at <strong>12:12 AM (IST)</strong>';
       }
-    });
-
-    function showUser(name, link) {
-      document.getElementById("userName").innerText = `Welcome, ${name}!`;
-      document.getElementById("refLink").value = link;
-      new QRious({
-        element: document.getElementById("qrCode"),
-        value: link,
-        size: 180,
-        background: "white",
-        foreground: "#004d1a"
-      });
     }
 
-    window.copyLink = function(){
-      const input = document.getElementById("refLink");
-      input.select();
-      document.execCommand("copy");
-      document.getElementById("msg").innerText = "✅ Link copied successfully!";
-      setTimeout(() => document.getElementById("msg").innerText = "", 2000);
-    };
-
-    window.shareLink = function(){
-      const link = document.getElementById("refLink").value;
-      if (navigator.share) {
-       navigator.share({
-  title: "Join TRUSTdollar V2",
-  text: "If it doesn’t go live on 20th, it will be live by 21st, 12 AM. Use my referral link to register:",
-  url: link
-});
-
-      } else {
-        window.open(link, "_blank");
-      }
-    };
+    checkTime();
+    setInterval(checkTime, 1000);
   </script>
 </body>
 </html>
-
-
