@@ -280,7 +280,7 @@ function renderWithdrawals(forceAll = false) {
     const amount = data.amount || 0;
     const dateStr = formatDate(data.date || data.createdAt);
     const order = data.orderId || data.orderNumber || data.id;
-    const method = data.method || "USDT-TRC20";
+    const method = data.method || "USDT-BEP20";
     const status = (data.status || "Pending").toLowerCase();
 
     let statusClass = "status-pending";
@@ -409,4 +409,3 @@ function showCopyAlert(message = "Copied!", color = "#00c853") {
 </script>
 </body>
 </html>
-
