@@ -1035,38 +1035,11 @@ body {
   </button>
 </div>
 
-<!-- 🔹 Hidden Container to Load hashRateHistry.html -->
-<div id="planContainer" style="display:none; margin-top:25px;"></div>
-
 <script>
-document.getElementById("openPlanBtn").addEventListener("click", async () => {
-  const container = document.getElementById("planContainer");
-
-  // If already open, toggle back (close it)
-  if (container.style.display === "block") {
-    container.style.display = "none";
-    document.getElementById("openPlanBtn").textContent = "Activate Plan";
-    return;
-  }
-
-  // ✅ Load page content dynamically
-  try {
-    const res = await fetch("hashratehistry.html");
-    if (!res.ok) throw new Error("Failed to load content");
-    const html = await res.text();
-
-    container.innerHTML = html;
-    container.style.display = "block";
-    document.getElementById("openPlanBtn").textContent = "Hide Plan History";
-
-    // Optional: smooth scroll down to the content
-    container.scrollIntoView({ behavior: "smooth" });
-
-  } catch (err) {
-    console.error(err);
-    alert("⚠️ Failed to load the page. Please try again.");
-  }
-});
+  // 🔹 Jab button dabaye to hashRateHistry.html same tab me open ho
+  document.getElementById("openPlanBtn").addEventListener("click", () => {
+    window.location.href = "hashRateHistry.html";  // 👈 same-tab redirect
+  });
 </script>
 
 <div class="plans">
@@ -1549,5 +1522,6 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
 
 
