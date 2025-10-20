@@ -762,7 +762,7 @@ body {
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(18px);
     border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 5px;
+    border-radius: 16px;
     padding: 25px 30px;
     text-align: center;
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
@@ -793,7 +793,7 @@ body {
     color: white;
     font-weight: 500;
     padding: 8px 22px;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
     transition: all 0.3s ease;
@@ -840,15 +840,6 @@ body {
       transform: scale(0.9);
     }
   }
-
-  #planContainer {
-  animation: fadeSlide 0.4s ease-in-out;
-}
-@keyframes fadeSlide {
-  from {opacity: 0; transform: translateY(-5px);}
-  to {opacity: 1; transform: translateY(0);}
-}
-
 </style>
 
 
@@ -959,44 +950,10 @@ body {
   
 <!-- 🌐 Professional Button -->
 <div style="text-align:center; margin: 25px 0;">
-  <button id="openPlanBtn" class="pro-btn">
+  <a href="hashratehistry.html" target="_blank" class="pro-btn">
     Activate Plan
-  </button>
+  </a>
 </div>
-
-<!-- 🔹 Hidden Container to Load hashRateHistry.html -->
-<div id="planContainer" style="display:none; margin-top:25px;"></div>
-
-<script>
-document.getElementById("openPlanBtn").addEventListener("click", async () => {
-  const container = document.getElementById("planContainer");
-
-  // If already open, toggle back (close it)
-  if (container.style.display === "block") {
-    container.style.display = "none";
-    document.getElementById("openPlanBtn").textContent = "Activate Plan";
-    return;
-  }
-
-  // ✅ Load page content dynamically
-  try {
-    const res = await fetch("hashratehistry.html");
-    if (!res.ok) throw new Error("Failed to load content");
-    const html = await res.text();
-
-    container.innerHTML = html;
-    container.style.display = "block";
-    document.getElementById("openPlanBtn").textContent = "Hide Plan History";
-
-    // Optional: smooth scroll down to the content
-    container.scrollIntoView({ behavior: "smooth" });
-
-  } catch (err) {
-    console.error(err);
-    alert("⚠️ Failed to load the page. Please try again.");
-  }
-});
-</script>
 
 <div class="plans">
   <div class="plan">
@@ -1091,7 +1048,6 @@ document.getElementById("openPlanBtn").addEventListener("click", async () => {
   </div>
 </div>
 
-
 <div class="plan">
   <h3>💼 Custom Plan</h3>
   <p>Enter your own amount (Min $3000)</p>
@@ -1102,7 +1058,7 @@ document.getElementById("openPlanBtn").addEventListener("click", async () => {
     id="customAmount" 
     min="3000" 
     placeholder="Enter Amount (Min $3000)" 
-    style="margin-top:10px; padding:8px; width:80%; border-radius:5px; border:1px solid #ccc; text-align:center;"
+    style="margin-top:10px; padding:8px; width:80%; border-radius:8px; border:1px solid #ccc; text-align:center;"
   />
 
   <button class="btn buy-btn" onclick="handleCustomPlan()">Buy</button>
@@ -1453,6 +1409,7 @@ document.addEventListener("DOMContentLoaded", () => {
   Object.freeze(console);
   Object.freeze(window.console);
 </script>
+
 
 </body>
 </html>
