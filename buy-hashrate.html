@@ -12,14 +12,26 @@
   --text-dark: #0f172a;
 }
 body {
-   
   font-family: "Poppins", sans-serif;
   background: var(--bg);
   color: var(--text-dark);
-  padding: 0px;
-  display: flex;
-  justify-content: center;
+  margin: 0;
+  padding-top: 70px;       /* Header ke liye space */
+  padding-bottom: 90px;    /* Bottom nav ke liye space */
+  overflow-y: auto;
+  min-height: 100vh;
+  -webkit-overflow-scrolling: touch;
+  display: block;          /* ❌ flex nahi */
 }
+
+.main-container {
+  width: 100%;
+  max-width: 900px;           /* page ka width limit */
+  margin: 0 auto;             /* horizontally center */
+  padding: 0 16px 100px;      /* left-right spacing + bottom nav space */
+  box-sizing: border-box;
+}
+
 .card {
   background: #fff;
   padding: 25px;
@@ -956,7 +968,7 @@ body {
   };
 </script>
 
-
+  <div class="main-container">
 <!-- 🔹 Header with Guide Button -->
 <div class="header">
   <span>Buy Hashrate</span>
@@ -1247,7 +1259,7 @@ body {
     </div>
   </div>
 </div>
-
+ </div>
 
 <div class="bottom-nav">
   <a href="Dashboard.html" class="nav-item active"><i class='bx bxs-dashboard'></i><span>Home</span></a>
