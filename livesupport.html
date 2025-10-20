@@ -14,31 +14,138 @@
   --card:#fff;
   --muted:#777;
 }
-body{font-family:'Poppins',sans-serif;background:var(--bg);display:flex;flex-direction:column;height:100vh;margin:0;}
-.header{background:linear-gradient(145deg,var(--green),var(--green-dark));color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;}
-.header h1{margin:0;font-size:18px;}
-.status{font-size:13px;opacity:0.8;}
-.chat-container{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;}
-.msg{max-width:70%;padding:10px 14px;border-radius:12px;margin-bottom:10px;font-size:14px;word-wrap:break-word;}
-.user-msg{background:var(--green);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}
-.admin-msg{background:var(--card);color:#222;align-self:flex-start;border-bottom-left-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
-.seen{font-size:11px;text-align:right;color:#fff;margin-top:4px;}
-.footer{display:flex;padding:10px;background:#fff;box-shadow:0 -2px 6px rgba(0,0,0,0.05);}
-.footer input{flex:1;padding:10px;border:1px solid #ddd;border-radius:10px;font-size:14px;}
-.footer button{margin-left:8px;background:var(--green);color:#fff;border:none;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:600;}
-.footer button:hover{opacity:0.9;}
-.typing{font-size:13px;color:#666;margin:6px auto;text-align:center;font-style:italic;}
-.chat-container::-webkit-scrollbar{width:6px;}
-.chat-container::-webkit-scrollbar-thumb{background:var(--green);border-radius:10px;}
+body {
+  font-family:'Poppins',sans-serif;
+  background:var(--bg);
+  margin:0;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+/* Sticky Header */
+.header {
+  background:linear-gradient(145deg,var(--green),var(--green-dark));
+  color:#fff;
+  padding:10px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:0 2px 5px rgba(0,0,0,0.15);
+}
+.header h1 {
+  margin:0;
+  font-size:16px;
+}
+.status {
+  font-size:13px;
+  opacity:0.9;
+}
+
+/* Chat Area */
+.chat-container {
+  flex:1;
+  overflow-y:auto;
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  scroll-behavior:smooth;
+  will-change:transform;
+}
+.msg {
+  max-width:75%;
+  padding:10px 14px;
+  border-radius:12px;
+  margin-bottom:8px;
+  font-size:14px;
+  word-wrap:break-word;
+  line-height:1.4;
+  transition:transform 0.2s ease, opacity 0.2s ease;
+}
+.user-msg {
+  background:var(--green);
+  color:#fff;
+  align-self:flex-end;
+  border-bottom-right-radius:4px;
+}
+.admin-msg {
+  background:var(--card);
+  color:#222;
+  align-self:flex-start;
+  border-bottom-left-radius:4px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.08);
+}
+.seen {
+  font-size:11px;
+  text-align:right;
+  color:#fff;
+  margin-top:2px;
+}
+.typing {
+  font-size:13px;
+  color:#555;
+  text-align:center;
+  font-style:italic;
+  margin:4px 0;
+}
+
+/* Footer */
+.footer {
+  background:#fff;
+  display:flex;
+  align-items:center;
+  padding:10px;
+  position:sticky;
+  bottom:0;
+  z-index:90;
+  box-shadow:0 -2px 6px rgba(0,0,0,0.08);
+}
+.footer input {
+  flex:1;
+  padding:10px 12px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  font-size:14px;
+  outline:none;
+  transition:0.2s;
+}
+.footer input:focus {
+  border-color:var(--green);
+}
+.footer button {
+  margin-left:8px;
+  background:linear-gradient(145deg,var(--green),var(--green-dark));
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  padding:10px 14px;
+  cursor:pointer;
+  font-weight:600;
+}
+.footer button:active { transform:scale(0.97); }
+
+/* Scrollbar */
+.chat-container::-webkit-scrollbar { width:5px; }
+.chat-container::-webkit-scrollbar-thumb {
+  background:var(--green);
+  border-radius:10px;
+}
+
+@media(max-width:600px){
+  .header h1 { font-size:15px; }
+  .msg { font-size:13px; }
+}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div>
-    <h1>Support</h1>
-    <div id="adminStatus" class="status">Checking admin...</div>
-  </div>
+  <h1>Support</h1>
+  <div id="adminStatus" class="status">Connecting...</div>
 </div>
 
 <div id="chatBox" class="chat-container"></div>
@@ -52,7 +159,8 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);display:flex;flex-dir
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getFirestore, collection, addDoc, doc, setDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp
+  getFirestore, collection, addDoc, doc, setDoc, updateDoc,
+  query, orderBy, onSnapshot, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
@@ -64,18 +172,17 @@ const firebaseConfig = {
   messagingSenderId:"204937458487",
   appId:"1:204937458487:web:cc27ece1249999279f60b2"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-const msgInput=document.getElementById("msgInput");
-const sendBtn=document.getElementById("sendBtn");
-const chatBox=document.getElementById("chatBox");
-const typingEl=document.getElementById("typing");
-const adminStatus=document.getElementById("adminStatus");
+const msgInput = document.getElementById("msgInput");
+const sendBtn = document.getElementById("sendBtn");
+const chatBox = document.getElementById("chatBox");
+const typingEl = document.getElementById("typing");
+const adminStatus = document.getElementById("adminStatus");
 
-let currentUser=null;
+let currentUser = null;
 let typingTimeout;
 
 onAuthStateChanged(auth, async (user)=>{
@@ -88,45 +195,51 @@ onAuthStateChanged(auth, async (user)=>{
     typing:false,
     lastActive:serverTimestamp()
   },{merge:true});
-  listenAdminStatus();
-  listenChat(user.uid);
+  fastAdminStatus();
+  fastChatLoad(user.uid);
 });
 
-function listenAdminStatus(){
-  onSnapshot(doc(db,"supportStatus","admin"),(snap)=>{
+function fastAdminStatus(){
+  const adminRef = doc(db,"supportStatus","admin");
+  onSnapshot(adminRef,(snap)=>{
     if(!snap.exists()) return;
-    const data=snap.data();
-    adminStatus.textContent=data.online?"Admin online":"Admin offline";
-    typingEl.style.display=data.typing?"block":"none";
+    const d = snap.data();
+    adminStatus.textContent = d.online ? "🟢 Admin online" : "🔴 Admin offline";
+    typingEl.style.display = d.typing ? "block" : "none";
   });
 }
 
-function listenChat(uid){
+function fastChatLoad(uid){
   const q=query(collection(db,"supportChats",uid,"messages"),orderBy("createdAt","asc"));
-  onSnapshot(q,(snapshot)=>{
-    chatBox.innerHTML="";
-    snapshot.forEach(docSnap=>{
-      const d=docSnap.data();
-      const msg=document.createElement("div");
-      msg.className="msg "+(d.from==="user"?"user-msg":"admin-msg");
-      msg.innerHTML=`${d.text}${d.from==="user"?`<div class="seen">${d.seen?" Seen":" Not Seen"}</div>`:""}`;
-      chatBox.appendChild(msg);
-      if(d.from==="admin"&&!d.seen){
-        updateDoc(docSnap.ref,{seen:true});
+  onSnapshot(q,(snap)=>{
+    snap.docChanges().forEach(change=>{
+      if(change.type === "added"){
+        const d=change.doc.data();
+        const msg=document.createElement("div");
+        msg.className="msg "+(d.from==="user"?"user-msg":"admin-msg");
+        msg.innerHTML=`${d.text}${d.from==="user"?`<div class="seen">${d.seen?"Seen":"Not Seen"}</div>`:""}`;
+        chatBox.appendChild(msg);
+        msg.style.opacity="0";
+        requestAnimationFrame(()=>{ msg.style.opacity="1"; });
+        if(d.from==="admin" && !d.seen) updateDoc(change.doc.ref,{seen:true});
+        chatBox.scrollTop=chatBox.scrollHeight;
       }
     });
-    chatBox.scrollTop=chatBox.scrollHeight;
   });
 }
 
+// Typing
 msgInput.addEventListener("input",()=>{
   updateDoc(doc(db,"supportChats",currentUser.uid),{typing:true});
   clearTimeout(typingTimeout);
   typingTimeout=setTimeout(()=>updateDoc(doc(db,"supportChats",currentUser.uid),{typing:false}),1000);
 });
 
+// Send
 sendBtn.addEventListener("click",sendMessage);
-msgInput.addEventListener("keypress",e=>{if(e.key==="Enter")sendMessage();});
+msgInput.addEventListener("keypress",e=>{
+  if(e.key==="Enter"){ e.preventDefault(); sendMessage(); }
+});
 
 async function sendMessage(){
   const text=msgInput.value.trim();
@@ -135,7 +248,56 @@ async function sendMessage(){
     text,from:"user",createdAt:serverTimestamp(),seen:false
   });
   msgInput.value="";
+  msgInput.focus(); // keep keyboard open
 }
+</script>
+
+<script>
+  // 🚫 Disable right click, select, drag
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
+
+  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
+  document.addEventListener("keydown", e => {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // 🔒 Silent DevTools detection (no popup)
+  (function() {
+    const devtools = /./;
+    devtools.toString = function() {
+      return ""; // no alert or console log
+    };
+    console.log("%c", devtools);
+  })();
+
+  // 🔐 Detect DevTools using resize trick (no popup)
+  setInterval(() => {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    if (widthDiff || heightDiff) {
+      // Optional: silently redirect or blank the page
+      document.body.innerHTML = "";
+    }
+  }, 1000);
+
+  // 🧱 Disable copy/paste/cut
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // 🔁 Freeze console methods silently
+  Object.freeze(console);
+  Object.freeze(window.console);
 </script>
 </body>
 </html>
