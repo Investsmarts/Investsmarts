@@ -1,646 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TrustDollar — Cloud Mining</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TrustDollar — Hashrate Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 <style>
 :root {
   --green: #16a34a;
-  --bg: #f8fafc;
-  --text-dark: #0f172a;
+  --green-dark: #15803d;
+  --text: #0f172a;
+  --light: #f9fafb;
 }
+
 body {
-   
   font-family: "Poppins", sans-serif;
-  background: var(--bg);
-  color: var(--text-dark);
-  padding: 0px;
-  display: flex;
-  justify-content: center;
-}
-.card {
-  background: #fff;
-  padding: 25px;
-  border-radius: 5px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 850px;
-  transition: all 0.3s ease;
-}
-.wallet {
-  display: flex;
-  justify-content: space-between;
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  border-radius: 12px;
-  padding: 12px 18px;
-  margin-bottom: 20px;
-  font-weight: 600;
-  color: #14532d;
-}
-.plans {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 16px;
-  margin-top: 25px;
-}
-.plan {
-  background: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: 5px;
-  text-align: center;
-  padding: 18px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.plan:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 6px 18px rgba(22,163,74,0.2);
-}
-.plan h3 {
-  color: var(--green);
-  margin-bottom: 8px;
-  font-weight: 700;
-}
-.plan p {
-  font-size: 14px;
-  color: #475569;
-  margin: 5px 0;
-}
-.btn {
-  background: linear-gradient(135deg,#ddc203,#22c55e);
-  color: #fff;
-  padding: 12px;
-  border: none;
-  border-radius: 5px;
-  font-weight: 600;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 12px;
-  transition: all 0.2s ease;
-}
-.btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(22,163,74,0.3);
-}
-.profit-box {
-  background: #ecfdf5;
-  border: 1px solid #bbf7d0;
-  border-radius: 5px;
-  padding: 14px;
-  margin: 16px 0;
-  font-size: 15px;
-  color: #166534;
-  line-height: 1.6;
-}
-
-/* ✅ Smooth Modal (no flicker, with fade + zoom animation) */
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(10px);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 5000;
-  opacity: 0;
-  transition: opacity 0.35s ease-in-out;
-}
-
-/* Show state — smooth fade in */
-.modal.show {
-  display: flex;
-  opacity: 1;
-}
-
-/* ✅ Centered Card with Depth */
-.modal-card {
-  width: 90%;
-  max-width: 420px;
-  border-radius: 5px;
-  overflow: hidden;
-  background: #fff;
-  box-shadow: 0 12px 50px rgba(0, 0, 0, 0.3);
-  transform: scale(0.9) translateY(20px);
-  opacity: 0;
-  transition: all 0.35s ease-in-out;
-}
-
-/* When modal is visible — card smoothly expands and fades in */
-.modal.show .modal-card {
-  transform: scale(1) translateY(0);
-  opacity: 1;
-}
-
-/* Header */
-.modal-head {
-  background: linear-gradient(135deg, #16a34a, #22c55e);
-  color: #fff;
-  padding: 18px;
-  text-align: center;
-  position: relative;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-.modal-head h2 {
+  background: var(--light);
+  color: var(--text);
   margin: 0;
-  font-size: 1.3rem;
-}
-.close-btn {
-  position: absolute;
-  top: 12px;
-  right: 16px;
-  border: none;
-  background: none;
-  font-size: 24px;
-  color: #fff;
-  cursor: pointer;
-  opacity: 0.9;
-  transition: 0.2s;
-}
-.close-btn:hover {
-  opacity: 1;
-  transform: scale(1.2);
+  padding: 20px;
+  overflow-y: auto;
+  min-height: 100vh;
+  display: flex;              /* ✅ Use flex for center alignment */
+  justify-content: center;    /* ✅ Horizontally center */
+  align-items: flex-start;    /* ✅ Keep content from top (not middle) */
 }
 
-/* Body */
-.modal-body {
+.card {
+  width: 100%;
+  max-width: 900px;
   background: #fff;
-  padding: 22px;
-  text-align: center;
-}
-.modal-body p {
-  margin: 8px 0;
-  color: #475569;
-  font-size: 15px;
-}
-.wallet-line {
-  margin-top: 10px;
-  font-weight: 600;
-  color: #0f172a;
-}
-.modal-error {
-  display: none;
-  color: #dc2626;
-  font-weight: 600;
-  margin: 8px 0;
+  border-radius: 18px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  padding: 10px;
+  margin-bottom: 100px;       /* ✅ Space for bottom-nav */
+  box-sizing: border-box;
 }
 
-/* Buttons */
-.modal-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 18px;
+
+/* ✅ Bottom nav ke upar space fix */
+
+html, body {
+  overflow-x: hidden; /* ✅ remove side scroll line */
 }
-.confirm-btn {
-  flex: 1;
-  background: linear-gradient(135deg, #16a34a, #22c55e);
+
+@media (max-width: 768px) {
+  body {
+    padding: 12px;
+  }
+}
+
+
+
+/* ✅ Responsive 2x2 Grid Layout (Even on Mobile) */
+.balance-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 25px;
+}
+
+/* ✅ Balance Box Design */
+.balance-box {
+    background: linear-gradient(135deg, #41b66c, #d86813);
+
   color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 12px;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.confirm-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 14px rgba(22, 163, 74, 0.4);
-}
-.cancel-btn {
-  flex: 1;
-  background: #f1f5f9;
-  color: #0f172a;
-  border: none;
-  border-radius: 5px;
-  padding: 12px;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.cancel-btn:hover {
-  background: #e2e8f0;
-}
-
-/* ✅ Responsive Fix */
-@media (max-width: 480px) {
-  .card { padding: 2px; }
-  .plan { padding: 14px; }
-  .modal-body { padding: 18px; }
-}
-/* allert sms pop up ke liye */
-.center-alert {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
-  background: rgba(22, 163, 74, 0.95);
-  color: #fff;
-  padding: 14px 28px;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: 600;
+  border-radius: 12px;
+  padding: 20px 12px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(22, 163, 74, 0.4);
-  opacity: 0;
-  z-index: 9999;
-  transition: all 0.4s ease;
-  pointer-events: none;
-}
-.center-alert.show {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-@keyframes fadeOut {
-  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  to { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
-}
-
-
-/* 💎 Plan Summary Box */
-.plan-summary {
-  border: 1.5px solid #d1fae5;
-  background: #f0fdf4;
-  border-radius: 5px;
-  padding: 16px 18px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 15px;
-  color: #064e3b;
-  font-weight: 500;
-  border-bottom: 1px dashed #bbf7d0;
-  padding-bottom: 6px;
-}
-
-.summary-row:last-child {
-  border-bottom: none;
-}
-
-.summary-row strong {
-  color: #065f46;
   font-weight: 600;
+  box-shadow: 0 4px 0 #0d7035;
+  transition: all 0.25s ease;
 }
 
-.wallet-info {
-  background: #dcfce7;
-  border-radius: 5px;
-  padding: 6px 10px;
-  box-shadow: inset 0 0 5px rgba(22,163,74,0.15);
+.balance-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 0 #0d7035;
 }
 
-/* ⚠️ Animated Pro Alert */
-.balance-alert {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: linear-gradient(90deg, #fef3c7, #fde68a);
-  border: 1.5px solid #facc15;
-  color: #92400e;
-  font-weight: 600;
-  padding: 10px 16px;
-  border-radius: 5px;
-  margin-top: 12px;
-  font-size: 15px;
-  box-shadow: 0 4px 14px rgba(250, 204, 21, 0.35);
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.4s ease-in-out;
-}
-
-.balance-alert.show {
-  display: flex;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.alert-icon {
-  font-size: 18px;
-  animation: pulseIcon 1.2s infinite;
-}
-
-@keyframes pulseIcon {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.2); opacity: 0.7; }
-}
-
-#activeCountdown {
+.balance-box p {
+  margin: 0;
+  font-size: 22px;
   font-weight: 700;
-  color: #16a34a;
-  letter-spacing: 0.5px;
-}
-/* 🌀 Circular Countdown Ring */
-.progress-ring {
-  position: relative;
-  width: 80px;
-  height: 80px;
-  margin: 10px auto;
 }
 
-.ring {
-  transform: rotate(-90deg);
-}
-
-.ring-bg,
-.ring-fill {
-  fill: none;
-  stroke-width: 6;
-  cx: 40;
-  cy: 40;
-  r: 35;
-}
-
-.ring-bg {
-  stroke: #d1fae5;
-}
-
-.ring-fill {
-  stroke: #16a34a;
-  stroke-linecap: round;
-  stroke-dasharray: 220;
-  stroke-dashoffset: 220; /* ✅ fixed default position */
-  transition: stroke-dashoffset 1s linear;
-}
-
-
-
-.ring-time {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.balance-box h3 {
+  margin: 6px 0 0;
   font-size: 14px;
   font-weight: 600;
-  color: #065f46;
-}
-@keyframes fadeSlide {
-  from {opacity: 0; transform: translateY(-3px);}
-  to {opacity: 1; transform: translateY(0);}
 }
 
-.plan .buy-btn:disabled {
-  background: linear-gradient(135deg, #9ca3af, #d1d5db);
-  color: #1f2937;
-  cursor: not-allowed;
-  box-shadow: none;
+/* ✅ Always 2 boxes per row — even on mobile */
+@media (max-width: 480px) {
+  .balance-section {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .balance-box p {
+    font-size: 18px;
+  }
+
+  .balance-box h3 {
+    font-size: 13px;
+  }
 }
 
-#activePlanBox {
-  display: grid;
-  gap: 12px;
+/* ✅ Plan Card (unchanged) */
+.plan-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 15px 18px;
+  margin-top: 25px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 }
-
-.status-badge {
-  display: inline-block;
-  background: #16a34a;
-  color: #fff;
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 5px;
-  margin-bottom: 6px;
+.plan-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  flex: 1;
 }
-.status-badge.completed {
-  background: #dc2626;
-}
-
-/* 🕒 Active Plan Countdown Box */
-.countdown-box {
+.plan-item {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(145deg, #ecfdf5, #ffffff);
-  border: 1.5px solid #bbf7d0;
-  border-radius: 5px;
-  padding: 18px;
-  margin-top: 10px;
-  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.15);
-  transition: all 0.4s ease;
+  font-size: 13px;
+  color: #475569;
 }
-
-.countdown-box h4 {
+.plan-item strong {
+  font-size: 15px;
   color: #065f46;
+}
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #065f46;
+  background: #bbf7d0;
+}
+.countdown {
+  text-align: center;
   font-weight: 700;
   font-size: 16px;
-  margin-bottom: 10px;
+  color: var(--green);
 }
-
-.countdown-timer {
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: #16a34a;
-  background: #dcfce7;
-  padding: 8px 20px;
-  border-radius: 5px;
-  box-shadow: inset 0 0 5px rgba(22,163,74,0.25);
-  transition: all 0.3s ease;
-}
-
-.countdown-timer.ready {
-  background: #fee2e2;
-  color: #dc2626;
-  box-shadow: inset 0 0 5px rgba(220,38,38,0.25);
-  animation: pulseReady 1.5s infinite;
-}
-
-@keyframes pulseReady {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.08); opacity: 0.8; }
-}
-
-.summary-row strong {
-  color: #065f46;
-  font-weight: 600;
-  text-shadow: 0 1px 1px rgba(0,0,0,0.05);
-}
-
-/* 🔹 Header layout fix for inline icon */
-.header {
-  display: flex;
-  align-items: center;        /* vertical centering */
-  justify-content: center;    /* center horizontally */
-  gap: 10px;                  /* space between text and icon */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: #ffffff00;
-   color: #21d82b; text-align: center;
-   padding: 10px; font-size: 18px; font-weight: bold;          /* was too thick, now balanced */
-  font-size: 18px;
-  font-weight: bold;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-}
-
-
-/* 🔴 Header Info Button */
-.guide-icon-btn {
-  background: rgb(212 29 29);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 5px;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  margin-top: 1px;            /* 👈 just to align perfectly */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-.guide-icon-btn i {
-  color: #ffffff;
-  font-size: 15px;
-}
-
-.guide-icon-btn:hover {
-  background: #fff;
-  border-color: #fff;
-}
-
-.guide-icon-btn:hover i {
-  color: #28a745;
-  transform: scale(1.1);
-}
-
-
-/* ===== MOBILE FIX ===== */
-@media (max-width: 480px) {
-  .guide-icon-btn {
-    width: 28px;
-    height: 28px;
-  }
-  .guide-icon-btn i {
-    font-size: 15px;
-  }
-}
-
-/* 🔹 Guide Popup Fullscreen Responsive */
-.guide-popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.55);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-}
-
-/* Show Popup */
-.guide-popup.show {
-  display: flex;
-  opacity: 1;
-}
-
-/* Popup Card */
-.guide-content {
-  position: relative;
-  background: #ffffff;
-  border-radius: 5px;
-  padding: 25px;
-  width: 90%;
-  max-width: 750px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
-  animation: popupZoom 0.35s ease;
-}
-
-/* Hide vertical scrollbar */
-.guide-content::-webkit-scrollbar {
-  display: none;
-}
-
-/* Animation */
-@keyframes popupZoom {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* Close Button */
-.close-btn {
-  position: absolute;
-  top: 12px;
-  right: 18px;
+.collect-btn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
   border: none;
-  background: none;
-  color: #333;
-  font-size: 24px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.3s;
 }
-.close-btn:hover {
-  color: #dc2626;
-  transform: scale(1.2);
+.collect-btn:disabled {
+  background: #d1d5db;
+  color: #6b7280;
+  cursor: not-allowed;
 }
-
-/* Responsive Fix */
-@media (max-width: 600px) {
-  .guide-content {
-    width: 80%;
-    padding: 18px;
-    font-size: 14px;
-  }
-  .close-btn { top: 10px; right: 15px; font-size: 22px; }
+.collect-btn:hover:enabled {
+  transform: scale(1.05);
 }
-/* Header fixed position ka compensation */
-body {
-  padding-top: 80px; /* jitna header ka height hai utna space */
-}
-
-/* Header ko thoda upar z-index de do taaki overlap sahi lage */
-.buy-hashrate {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 999;
+.loader {
+  text-align: center;
+  color: var(--green);
+  font-weight: 600;
+  margin-top: 20px;
 }
 
 
-/* plane histry butun */
-  .pro-btn {
-    background: linear-gradient(135deg, #3bff00, #00b4d8);
-    color: white;
-    padding: 14px 28px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 18px;
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-    transition: all 0.3s ease;
-    display: inline-block;
-  }
-
-  .pro-btn:hover {
-    background: linear-gradient(135deg, #0056b3, #0077b6);
-    box-shadow: 0 6px 18px rgba(0, 123, 255, 0.45);
-    transform: translateY(-3px);
-  }
 
 
-/* ✅ Ultra Clear Bottom Nav (No Blur, High Contrast) */
+
+    /* ✅ Ultra Clear Bottom Nav (No Blur, High Contrast) */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -650,7 +188,7 @@ body {
   max-width: 480px;
   background: #ffffff; /* solid white */
   border: 1px solid #e0e0e0;
-  border-radius: 5px;
+  border-radius: 18px;
   box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
   display: flex;
   justify-content: space-around;
@@ -712,7 +250,7 @@ body {
   width: 6px;
   height: 6px;
   background: #00c853;
-  border-radius: 5px;
+  border-radius: 50%;
   box-shadow: 0 0 8px rgba(0, 200, 83, 0.4);
 }
 
@@ -726,528 +264,60 @@ body {
     font-size: 20px;
   }
 }
+
 </style>
 </head>
 
 <body>
-  <!-- 🌟 3D Auto-Hide Alert Box -->
-<div id="customAlert" class="alert-box"></div>
+  <div class="card">
 
-<!-- 🌟 Glass 3D Alert Box -->
-<div id="glassAlert" class="glass-alert">
-  <div class="alert-content">
-    <span id="closeAlert" class="close-btn">×</span>
-    <h2 id="alertTitle">ERROR</h2>
-    <p id="alertMessage">Ready to Start</p>
-    <button id="alertOk">OK</button>
+<div class="balance-section">
+  <div class="balance-box">
+    <p id="walletBalance">$0.00</p>
+    <h3>Wallet</h3>
+  </div>
+
+  <div class="balance-box">
+    <p id="lockedBalance">$0.00</p>
+    <h3>Locked</h3>
+  </div>
+
+ <div class="balance-box">
+  <p id="totalIncome">$0.00</p>
+  <h3>Earned</h3>
+</div>
+
+  <div class="balance-box">
+    <p id="totalReferralIncome">$0.00</p>
+    <h3>Referral </h3>
   </div>
 </div>
 
-<style>
-  /* Background overlay */
-  .glass-alert {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.45);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 3000;
-    backdrop-filter: blur(6px);
-  }
-
-  /* Card style (Glassmorphism) */
-  .alert-content {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(18px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 5px;
-    padding: 25px 30px;
-    text-align: center;
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
-    animation: popIn 0.4s ease;
-    color: white;
-    width: 240px;
-    position: relative;
-  }
-
-  .alert-content h2 {
-    margin: 0;
-    font-size: 22px;
-    letter-spacing: 2px;
-    font-weight: 600;
-  }
-
-  .alert-content p {
-    margin: 12px 0 20px;
-    font-size: 14px;
-    color: #e0e0e0;
-    line-height: 1.4;
-  }
-
-  /* OK button */
-  #alertOk {
-    background: rgba(255, 255, 255, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    color: white;
-    font-weight: 500;
-    padding: 8px 22px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-  }
-
-  #alertOk:hover {
-    background: rgba(255, 255, 255, 0.45);
-    transform: scale(1.05);
-  }
-
-  /* Close X button */
-  .close-btn {
-    position: absolute;
-    top: 8px;
-    right: 12px;
-    font-size: 18px;
-    color: #ff4d4d;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-
-  .close-btn:hover {
-    transform: scale(1.2);
-  }
-
-  @keyframes popIn {
-    from {
-      transform: scale(0.85);
-      opacity: 0;
-    }
-    to {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  @keyframes fadeOut {
-    from {
-      opacity: 1;
-      transform: scale(1);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.9);
-    }
-  }
-
-  #planContainer {
-  animation: fadeSlide 0.4s ease-in-out;
-}
-@keyframes fadeSlide {
-  from {opacity: 0; transform: translateY(-5px);}
-  to {opacity: 1; transform: translateY(0);}
-}
-
-
-.plan-img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-  transition: transform 0.3s ease;
-}
-.plan:hover .plan-img {
-  transform: scale(1.05);
-}
-
-
-/* 🔹 Plan Title */
-.plan h3 {
-  color: #059669;                /* elegant green */
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  text-shadow: 0 1px 1px rgba(0,0,0,0.05);
-  transition: color 0.3s ease;
-}
-
-/* 🔹 Price & Duration */
-.plan p:first-of-type {
-  font-size: 15px;
-  color: #334155;                /* slate gray */
-  font-weight: 600;
-  margin: 4px 0;
-}
-
-/* 🔹 Profit Line */
-.plan p:last-of-type {
-  font-size: 14px;
-  font-weight: 600;
-  color: #16a34a;                /* rich green */
-  margin-bottom: 10px;
-  background: linear-gradient(90deg, #22c55e, #16a34a);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: 0.3px;
-}
-
-/* 🪄 Subtle Hover Shine */
-.plan:hover h3 {
-  color: #10b981;
-  transform: scale(1.03);
-}
-
-/* 🧩 Better Layout Spacing */
-.plan {
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  padding: 18px 14px;
-  transition: all 0.3s ease;
-}
-.plan:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(22,163,74,0.15);
-}
-
-/* 🌟 Button alignment consistency */
-.plan .btn {
-  margin-top: 8px;
-}
-
-</style>
-
-
-<script>
-  // 🔥 Function to show the smooth alert
-  function showGlassAlert(title = "ERROR", message = "Something went wrong!", autoHide = true, duration = 3000) {
-    const alertBox = document.getElementById("glassAlert");
-    const alertTitle = document.getElementById("alertTitle");
-    const alertMessage = document.getElementById("alertMessage");
-
-    alertTitle.textContent = title;
-    alertMessage.textContent = message;
-
-    alertBox.style.display = "flex";
-    alertBox.querySelector(".alert-content").style.animation = "popIn 0.4s ease";
-
-    // Auto hide after duration
-    if (autoHide) {
-      setTimeout(() => {
-        alertBox.querySelector(".alert-content").style.animation = "fadeOut 0.4s ease";
-        setTimeout(() => {
-          alertBox.style.display = "none";
-        }, 400);
-      }, duration);
-    }
-  }
-
-  // Close alert manually
-  document.getElementById("closeAlert").onclick = () => {
-    document.getElementById("glassAlert").style.display = "none";
-  };
-  document.getElementById("alertOk").onclick = () => {
-    document.getElementById("glassAlert").style.display = "none";
-  };
-</script>
-
-
-<!-- 🔹 Header with Guide Button -->
-<div class="header">
-  <span>Buy Hashrate</span>
-  <button class="guide-icon-btn" onclick="openMiningGuide()" title="Buy Hashrate Guide">
-    <i class="fa-solid fa-circle-info"></i>
-  </button>
+<div class="balance-box">
+  <p id="hashIncome">$0.00</p>
+  <h3>Hash Income</h3>
 </div>
 
-<!-- 🔹 Buy Hashrate Guide Popup -->
-<div id="miningGuidePopup" class="guide-popup">
-  <div class="guide-content">
-    <button class="close-btn" onclick="closeMiningGuide()">&times;</button>
-    <h2><i class="fa-solid fa-circle-info"></i> Buy Hashrate Guide</h2>
 
-    <p>
-      Welcome to <b>TrustDollar Cloud Mining</b> — here’s everything you need to know before purchasing a <b>Buy Hashrate</b> plan.
-    </p>
-
-    <div class="guide-section">
-      <h3>✅ How to Buy a Plan</h3>
-      <ul>
-        <li>Make sure you have enough balance in your <b>wallet</b>.</li>
-        <li>You can only buy up to your <b>lifetime deposit limit</b>.</li>
-        <li>Select your plan and click <b>Buy</b> to confirm.</li>
-        <li>Your plan becomes <b>Active</b> instantly and starts generating daily profit.</li>
-      </ul>
+    <!-- ✅ Active Plan Section -->
+    <div id="planSection" style="margin-top:15px;">
+      <p class="loader">Loading active plan...</p>
     </div>
 
-    <div class="guide-section">
-      <h3>💹 How Daily Profit Works</h3>
-      <ul>
-        <li>You’ll continue receiving <b>daily profit</b> and <b>commission</b> until your plan duration ends.</li>
-        <li>Every 24 hours, click the <b>“Collect Profit”</b> button to transfer profit to your wallet.</li>
-        <li>After completion, your <b>investment + total profit</b> automatically returns to your wallet.</li>
-      </ul>
-    </div>
-
-    <div class="guide-section">
-      <h3>💰 Referral Income System (3 Levels)</h3>
-      <ul>
-        <li><b>Level 1:</b> 17% of your direct partner’s profit.</li>
-        <li><b>Level 2:</b> 8% of your second-level partner’s profit.</li>
-        <li><b>Level 3:</b> 5% of your third-level partner’s profit.</li>
-        <li>Referral income continues daily while your plan is active.</li>
-      </ul>
-    </div>
-
-    <div class="guide-section">
-      <h3>⚠️ Important Notes</h3>
-      <ul>
-        <li>You cannot buy a new plan until your current one completes.</li>
-        <li>Profit percentage is based on your selected plan (2.1% – 5%).</li>
-        <li>Even if you close the app, your plan continues automatically.</li>
-      </ul>
-    </div>
-
-    <p class="guide-footer">
-      Need help? Our support is available 24/7.<br>
-      <a href="support.html" target="_blank">📩 Contact Support</a>
-    </p>
-  </div>
-</div>
-
-
-
-<div class="card">
-  <div class="wallet">
-    <div><strong>Wallet:</strong> <span id="walletBalance">$0.00</span></div>
-    <div><strong>Locked:</strong> <span id="lockedBalance">$0.00</span></div>
-  </div>
-  
-<!-- 🌐 Professional Button -->
-<div style="text-align:center; margin: 25px 0;">
-  <button id="openPlanBtn" class="pro-btn">
-    Activate Plan
-  </button>
-</div>
-
-<script>
-  // 🔹 Jab button dabaye to hashRateHistry.html same tab me open ho
-  document.getElementById("openPlanBtn").addEventListener("click", () => {
-    window.location.href = "hashratehistry.html";  // 👈 same-tab redirect
-  });
-</script>
-
-<div class="plans">
-
-  <div class="plan" data-name="Plan 1" data-cost="500" data-days="20" data-profit="1.7">
-    <img src="pln1.jpeg " class="plan-img" alt="Plan 1">
-    <h3>Plan 1</h3>
-    <p>$500 / 20 days</p>
-    <p>1.7% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 1', 500, 20, 1.7, 'images/plan1.png')">Buy</button>
-  </div>
-
-  <div class="plan" data-name="Plan 2" data-cost="700" data-days="30" data-profit="1.8">
-    <img src="images/pln2.jpeg" class="plan-img" alt="Plan 2">
-    <h3>Plan 2</h3>
-    <p>$700 / 30 days</p>
-    <p>1.8% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 2', 700, 30, 1.8, 'images/plan2.png')">Buy</button>
-  </div>
-
-  <div class="plan" data-name="Plan 3" data-cost="900" data-days="40" data-profit="1.9">
-    <img src="images/pln3.jpeg" class="plan-img" alt="Plan 3">
-    <h3>Plan 3</h3>
-    <p>$900 / 40 days</p>
-    <p>1.9% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 3', 900, 40, 1.9, 'images/plan3.png')">Buy</button>
-  </div>
-
-  <div class="plan" data-name="Plan 4" data-cost="1100" data-days="50" data-profit="2.0">
-    <img src="images/pln4.jpeg" class="plan-img" alt="Plan 4">
-    <h3>Plan 4</h3>
-    <p>$1100 / 50 days</p>
-    <p>2.0% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 4', 1100, 50, 2.0, 'images/plan4.png')">Buy</button>
-  </div>
-
-  <div class="plan" data-name="Plan 5" data-cost="1300" data-days="60" data-profit="2.1">
-    <img src="images/pln5.jpeg" class="plan-img" alt="Plan 5">
-    <h3>Plan 5</h3>
-    <p>$1300 / 60 days</p>
-    <p>2.1% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 5', 1300, 60, 2.1, 'images/plan5.png')">Buy</button>
-  </div>
-
-  <div class="plan" data-name="Plan 6" data-cost="1500" data-days="70" data-profit="2.2">
-    <img src="images/pln6.jpeg" class="plan-img" alt="Plan 6">
-    <h3>Plan 6</h3>
-    <p>$1500 / 70 days</p>
-    <p>2.2% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 6', 1500, 70, 2.2, 'images/plan6.png')">Buy</button>
-  </div>
-
-  <div class="plan" data-name="Plan 7" data-cost="1700" data-days="80" data-profit="2.3">
-    <img src="images/pln7.jpeg" class="plan-img" alt="Plan 7">
-    <h3>Plan 7</h3>
-    <p>$1700 / 80 days</p>
-    <p>2.3% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 7', 1700, 80, 2.3, 'images/plan7.png')">Buy</button>
-  </div>
-
-  <div class="plan" data-name="Plan 8" data-cost="1900" data-days="90" data-profit="2.4">
-    <img src="images/pln8.jpeg" class="plan-img" alt="Plan 8">
-    <h3>Plan 8</h3>
-    <p>$1900 / 90 days</p>
-    <p>2.4% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 8', 1900, 90, 2.4, 'images/plan8.png')">Buy</button>
-  </div>
-
-  <div class="plan" data-name="Plan 9" data-cost="2100" data-days="100" data-profit="2.5">
-    <img src="images/pln9.jpeg" class="plan-img" alt="Plan 9">
-    <h3>Plan 9</h3>
-    <p>$2100 / 100 days</p>
-    <p>2.5% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 9', 2100, 100, 2.5, 'images/plan9.png')">Buy</button>
-  </div>
-
-  <div class="plan" data-name="Plan 10" data-cost="2300" data-days="110" data-profit="2.6">
-    <img src="images/pln10.jpeg" class="plan-img" alt="Plan 10">
-    <h3>Plan 10</h3>
-    <p>$2300 / 110 days</p>
-    <p>2.6% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 10', 2300, 110, 2.6, 'images/plan10.png')">Buy</button>
-  </div>
-
-  <div class="plan" data-name="Plan 11" data-cost="2500" data-days="120" data-profit="2.7">
-    <img src="images/pln11.jpeg" class="plan-img" alt="Plan 11">
-    <h3>Plan 11</h3>
-    <p>$2500 / 120 days</p>
-    <p>2.7% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 11', 2500, 120, 2.7, 'images/plan11.png')">Buy</button>
-  </div>
-
-  <div class="plan" data-name="Plan 12" data-cost="2700" data-days="130" data-profit="2.8">
-    <img src="images/pln12.jpeg" class="plan-img" alt="Plan 12">
-    <h3>Plan 12</h3>
-    <p>$2700 / 130 days</p>
-    <p>2.8% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 12', 2700, 130, 2.8, 'images/plan12.png')">Buy</button>
-  </div>
-
-  <div class="plan" data-name="Plan 13" data-cost="2900" data-days="140" data-profit="2.9">
-    <img src="images/pln13.jpeg" class="plan-img" alt="Plan 13">
-    <h3>Plan 13</h3>
-    <p>$2900 / 140 days</p>
-    <p>2.9% Daily</p>
-    <button class="btn buy-btn" onclick="openModal('Plan 13', 2900, 140, 2.9, 'images/plan13.png')">Buy</button>
-  </div>
-
-</div>
-
-
-<div class="plan">
-  <h3>💼 Custom Plan</h3>
-  <p>Enter your own amount (Min $3000)</p>
-  <p>Dynamic Profit Based on Investment</p>
-
-  <input 
-    type="number" 
-    id="customAmount" 
-    min="3000" 
-    placeholder="Enter Amount (Min $3000)" 
-    style="margin-top:10px; padding:8px; width:80%; border-radius:5px; border:1px solid #ccc; text-align:center;"
-  />
-
-  <button class="btn buy-btn" onclick="handleCustomPlan()">Buy</button>
-</div>
-
-<script>
-  function handleCustomPlan() {
-    const amount = parseFloat(document.getElementById("customAmount").value);
-
-    if (isNaN(amount)) {
-      showGlassAlert(" Please enter a valid amount.");
-      return;
-    }
-
-    if (amount < 3000) {
-      showGlassAlert(" Minimum amount is $3000.");
-      return;
-    }
-
-    let days, percent;
-
-    if (amount >= 3000 && amount < 5000) {
-      percent = 3.0;
-      days = 120;
-    } else if (amount >= 5000 && amount < 10000) {
-      percent = 3.5;
-      days = 140;
-    } else if (amount >= 10000 && amount < 20000) {
-      percent = 4.0;
-      days = 160;
-    } else {
-      percent = 4.5;
-      days = 180;
-    }
-
-    // ✅ Opens your existing modal
-    openModal('Custom Plan', amount, days, percent);
-  }
-</script>
-
-
-  <!-- ⚡ Center Alert Message -->
-  <div id="centerAlert" class="center-alert"></div>
-
-  <!-- 💎 Centered Modal -->
-  <div class="modal" id="planModal">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h2 id="mTitle">BUY PLAN</h2>
-        <button class="close-btn" onclick="closeModal()">×</button>
-      </div>
-      <div class="modal-body">
-        <div class="plan-summary">
-          <div class="summary-row">
-            <span> Duration:</span>
-            <strong id="mDays">45 days</strong>
-          </div>
-          <div class="summary-row">
-            <span> Daily Profit:</span>
-            <strong id="mProfit">2.5%</strong>
-          </div>
-          <div class="summary-row">
-            <span> Plan Cost:</span>
-            <strong id="mCost">$500</strong>
-          </div>
-          <div class="summary-row wallet-info">
-            <span> Wallet:</span>
-            <strong id="mWallet">$0.00</strong>
-          </div>
-        </div>
-
-        <!-- ⚠️ Smart Animated Alert -->
-        <div id="mError" class="balance-alert">
-          <span class="alert-icon">⚠️</span>
-          <span class="alert-text">Insufficient Balance!</span>
-        </div>
-
-        <div class="modal-actions">
-          <button class="confirm-btn" id="mConfirm">Confirm </button>
-          <button class="cancel-btn" onclick="closeModal()">Cancel</button>
-        </div>
+    <!-- ✅ Referral History INSIDE the card -->
+    <div style="margin-top:25px;">
+      <h3 style="color:#065f46;">Referral History</h3>
+      <div id="referralHistoryBox"
+           style="background:#ecfdf5; border:1px solid #bbf7d0; border-radius:12px; padding:15px;">
+        <p style="text-align:center; color:#777;">Loading your referral history...</p>
       </div>
     </div>
-  </div>
-</div>
 
+<!-- ✅ Notification Sound (Fixed, works everywhere) -->
+<audio id="bellSound"
+  src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+  preload="auto"></audio>
+</div>
 
 <div class="bottom-nav">
   <a href="Dashboard.html" class="nav-item active"><i class='bx bxs-dashboard'></i><span>Home</span></a>
@@ -1257,27 +327,14 @@ body {
 </div>
 
 
-<script>
-function openMiningGuide() {
-  const popup = document.getElementById("miningGuidePopup");
-  popup.classList.add("show");
-}
-
-function closeMiningGuide() {
-  const popup = document.getElementById("miningGuidePopup");
-  popup.classList.remove("show");
-}
-</script>
-
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
 import {
-  getFirestore, doc, getDoc, updateDoc, addDoc,
-  collection, serverTimestamp, query, where, getDocs
+  getFirestore, doc, getDoc, updateDoc, collection, query, where, getDocs,
+  addDoc, serverTimestamp, orderBy
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
-
+// 🔥 Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
   authDomain: "btcinvest-c0e25.firebaseapp.com",
@@ -1290,239 +347,265 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+const bell = document.getElementById("bellSound");
 
-let walletBalance = 0, lockedBalance = 0;
-
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
-
-  const ref = doc(db, "users", user.uid);
-  const snap = await getDoc(ref);
-
-  if (snap.exists()) {
-    const d = snap.data();
-    walletBalance = d.walletBalance || 0;
-    lockedBalance = d.lockedBalance || 0;
-    document.getElementById("walletBalance").textContent = `$${walletBalance.toFixed(2)}`;
-    document.getElementById("lockedBalance").textContent = `$${lockedBalance.toFixed(2)}`;
-  }
-
-  // 🔍 Check active plan
+// 🧮 Calculate Total Referral Income (All Levels)
+async function calculateTotalReferralIncome(user) {
   const q = query(
-    collection(db, "buyhashrate"),
-    where("userId", "==", user.uid),
-    where("status", "==", "running")
+    collection(db, "users", user.uid, "buyhashrefarl"),
+    orderBy("timestamp", "desc")
   );
-
   const res = await getDocs(q);
 
-  if (!res.empty) {
-    const ringSafe = document.getElementById("progressRing");
-    const countSafe = document.getElementById("countdownBox");
-    if (ringSafe) ringSafe.style.display = "none";
-    if (countSafe) countSafe.style.display = "none";
-  }
-});
-
-// 🟢 OPEN MODAL (Image Supported)
-window.openModal = function (name, cost, days, profit, imgSrc = "") {
-  if (!name) {
-    console.warn("openModal called without plan name!");
+  if (res.empty) {
+    document.getElementById("totalReferralIncome").textContent = "$0.00";
     return;
   }
 
-  const modal = document.getElementById("planModal");
+  let total = 0;
+  res.forEach((doc) => {
+    const d = doc.data();
+    total += d.amount || 0;
+  });
 
-  modal.style.display = "flex";
-  modal.style.opacity = "0";
-  modal.classList.remove("show");
+  document.getElementById("totalReferralIncome").textContent = `$${total.toFixed(2)}`;
+}
 
-  // ✅ Fill modal details
-  document.getElementById("mTitle").textContent = `BUY ${String(name).toUpperCase()}`;
-  document.getElementById("mDays").textContent = `${days} days`;
-  document.getElementById("mProfit").textContent = `${profit}%`;
-  document.getElementById("mCost").textContent = `$${cost}`;
-  document.getElementById("mWallet").textContent = `$${walletBalance.toFixed(2)}`;
-  document.getElementById("mError").style.display = "none";
+// 🧾 Referral History Loader
+async function loadReferralHistory(user) {
+  const historyBox = document.getElementById("referralHistoryBox");
+  const q = query(
+    collection(db, "users", user.uid, "buyhashrefarl"),
+    orderBy("timestamp", "desc")
+  );
+  const res = await getDocs(q);
 
-  // ✅ Show Plan Image (new)
-  const modalImg = document.getElementById("planModalImg");
-  if (modalImg) {
-    modalImg.src = imgSrc || "images/default.png"; // fallback if missing
-    modalImg.alt = name;
-    modalImg.style.display = "block";
+  if (res.empty) {
+    historyBox.innerHTML = `<p style="text-align:center;color:#999;">No referral income yet.</p>`;
+    return;
   }
 
-  // ✅ Smooth show
-  requestAnimationFrame(() => {
-    modal.classList.add("show");
-    modal.style.opacity = "1";
+  let html = `
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr style="background:#d1fae5; color:#065f46;">
+          <th style="padding:6px;">From</th>
+          <th style="padding:6px;">Level</th>
+          <th style="padding:6px;">Amount</th>
+          <th style="padding:6px;">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  res.forEach(docSnap => {
+    const d = docSnap.data();
+    const date = d.timestamp?.toDate?.()?.toLocaleDateString() || "N/A";
+    html += `
+      <tr style="border-bottom:1px solid #bbf7d0;">
+        <td style="padding:6px;">${d.fromUser || "Unknown"}</td>
+        <td style="padding:6px; text-align:center;">${d.level}</td>
+        <td style="padding:6px; text-align:right;">$${(d.amount || 0).toFixed(2)}</td>
+        <td style="padding:6px; text-align:center;">${date}</td>
+      </tr>
+    `;
   });
 
-  // ✅ Confirm button click event
-  const confirmBtn = document.getElementById("mConfirm");
-  confirmBtn.replaceWith(confirmBtn.cloneNode(true));
-  const newConfirmBtn = document.getElementById("mConfirm");
+  html += "</tbody></table>";
+  historyBox.innerHTML = html;
+}
 
-  newConfirmBtn.onclick = async () => {
-    if (walletBalance < cost) {
-      document.getElementById("mError").style.display = "flex";
-      showBalanceAlert();
+// 🧠 User Login Listener
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    document.getElementById("planSection").innerHTML = `<p style="text-align:center;color:#888;">Please login first.</p>`;
+    return;
+  }
+
+  const userRef = doc(db, "users", user.uid);
+  const userSnap = await getDoc(userRef);
+  if (!userSnap.exists()) return;
+
+  const u = userSnap.data();
+  document.getElementById("walletBalance").textContent = `$${(u.walletBalance || 0).toFixed(2)}`;
+  document.getElementById("lockedBalance").textContent = `$${(u.lockedBalance || 0).toFixed(2)}`;
+  document.getElementById("totalIncome").textContent = `$${(u.totalIncome || 0).toFixed(2)}`;
+  document.getElementById("hashIncome").textContent = `$${(u.hashIncome || 0).toFixed(2)}`;
+
+  await calculateTotalReferralIncome(user);
+  await loadReferralHistory(user);
+
+  // 🔍 Load active plan
+  const q = query(collection(db, "buyhashrate"), where("userId", "==", user.uid));
+  const res = await getDocs(q);
+  if (res.empty) {
+    document.getElementById("planSection").innerHTML = `<p style="text-align:center;color:#888;">No active plans.</p>`;
+    return;
+  }
+
+  let plan;
+  res.forEach((doc) => { if (doc.data().status === "running") plan = { id: doc.id, ...doc.data() }; });
+  if (!plan) plan = { id: res.docs[0].id, ...res.docs[0].data() };
+
+  const start = plan.startTime?.toDate?.()?.toLocaleDateString() || "N/A";
+  const end = plan.endTime?.toDate?.()?.toLocaleDateString() || "N/A";
+  const next = plan.nextPayout?.toDate?.()?.getTime() || null;
+  const earned = (plan.earnedProfit || 0).toFixed(2);
+
+  document.getElementById("planSection").innerHTML = `
+    <div class="plan-card">
+      <div class="plan-info">
+        <div class="plan-item"><small>Plan</small><strong>${plan.planName}</strong></div>
+        <div class="plan-item"><small>Cost</small><strong>$${plan.planCost}</strong></div>
+        <div class="plan-item"><small>Daily</small><strong>${plan.dailyProfitPercent}%</strong></div>
+        <div class="plan-item"><small>Earned</small><strong id="earnedProfit">$${earned}</strong></div>
+        <div class="plan-item"><small>Remaining</small><strong id="remainingDays">${plan.remainingDays || plan.durationDays} days</strong></div>
+        <div class="plan-item"><small>Start</small><strong>${start}</strong></div>
+        <div class="plan-item"><small>End</small><strong>${end}</strong></div>
+        <div class="plan-item"><small>Status</small><span class="status-badge">${plan.status}</span></div>
+      </div>
+      <div style="text-align:center;">
+        <div class="countdown" id="countdown">--:--:--</div>
+        <button id="collectBtn" class="collect-btn" disabled>Collect</button>
+      </div>
+    </div>`;
+
+  const btn = document.getElementById("collectBtn");
+  const display = document.getElementById("countdown");
+  startCountdown(next, btn, display, plan, userRef, plan.id);
+});
+
+// ⏱ Countdown Timer with Live Earning
+function startCountdown(target, btn, display, plan, userRef, planId) {
+  const earnedEl = document.getElementById("earnedProfit");
+  let localEarned = plan.earnedProfit || 0;
+  const dailyProfit = (plan.planCost * plan.dailyProfitPercent) / 100;
+  const perMinuteProfit = dailyProfit / 1440;
+
+  const interval = setInterval(() => {
+    const now = Date.now();
+    const diff = target - now;
+
+    if (diff <= 0) {
+      display.textContent = "Ready!";
+      display.style.color = "#dc2626";
+      btn.disabled = false;
+      bell.play();
+      clearInterval(interval);
+      btn.onclick = () => collectProfit(plan, userRef, planId, btn, display);
       return;
     }
 
-    const user = auth.currentUser;
-    if (!user) return showCenterAlert("Please login first!");
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+    display.textContent = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 
-    // Prevent multiple active plans
-    const activeQuery = query(
-      collection(db, "buyhashrate"),
-      where("userId", "==", user.uid),
-      where("status", "==", "running")
-    );
-    const activeSnap = await getDocs(activeQuery);
-    if (!activeSnap.empty) {
-      showCenterAlert("Your plan is running, please wait until it’s closed!");
-      closeModal();
-      return;
-    }
+    const secondsPassed = Math.floor((86400000 - diff) / 1000);
+    const newEarned = localEarned + (secondsPassed / 60) * perMinuteProfit;
+    earnedEl.textContent = `$${newEarned.toFixed(4)}`;
+  }, 1000);
+}
 
-    // Plan timing
-    const now = new Date();
-    const next = new Date(now.getTime() + 86400000);
-    const end = new Date(now.getTime() + days * 86400000);
+// 💰 Profit Collection + Upline Distribution
+async function collectProfit(plan, userRef, planId, btn, display) {
+  btn.disabled = true;
+  bell.pause(); bell.currentTime = 0;
 
+  const totalProfit = (plan.planCost * plan.dailyProfitPercent) / 100;
+  const selfProfit = totalProfit * 0.7;
+  const next = new Date(Date.now() + 86400000);
+  const newDays = (plan.remainingDays || plan.durationDays) - 1;
+
+  const userSnap = await getDoc(userRef);
+  const user = userSnap.data();
+
+  const newWallet = (user.walletBalance || 0) + selfProfit;
+  const newIncome = (user.totalIncome || 0) + selfProfit;
+  await updateDoc(userRef, { 
+  walletBalance: newWallet, 
+  totalIncome: newIncome, 
+  hashIncome: newHashIncome 
+});
+
+
+  await distributeReferralIncome(user, totalProfit);
+
+  const planRef = doc(db, "buyhashrate", planId);
+  const planUpdate = {
+    earnedProfit: (plan.earnedProfit || 0) + totalProfit,
+    nextPayout: next,
+    remainingDays: newDays,
+    updatedAt: serverTimestamp(),
+  };
+
+  if (newDays <= 0) {
+    planUpdate.status = "completed";
+    await updateDoc(userRef, {
+      walletBalance: newWallet + plan.planCost,
+      lockedBalance: (user.lockedBalance || 0) - plan.planCost
+    });
+    alert("🎉 Plan Completed! Investment Returned.");
+  }
+
+  await updateDoc(planRef, planUpdate);
+
+  document.getElementById("walletBalance").textContent = `$${newWallet.toFixed(2)}`;
+  document.getElementById("totalIncome").textContent = `$${newIncome.toFixed(2)}`;
+  document.getElementById("earnedProfit").textContent = `$${((plan.earnedProfit || 0) + totalProfit).toFixed(2)}`;
+  document.getElementById("remainingDays").textContent = `${newDays} days`;
+
+  await calculateTotalReferralIncome(user);
+  await loadReferralHistory(user);
+
+  if (newDays > 0) startCountdown(next.getTime(), btn, display, { ...plan, remainingDays: newDays }, userRef, planId);
+
+  alert(`✅ Collected $${totalProfit.toFixed(2)} — You received $${selfProfit.toFixed(2)}`);
+}
+
+// 👥 Distribute Referral Income to Uplines
+async function distributeReferralIncome(user, totalProfit) {
+  const uplines = [
+    { id: user.upline1, percent: 0.17, level: 1 },
+    { id: user.upline2, percent: 0.08, level: 2 },
+    { id: user.upline3, percent: 0.05, level: 3 },
+  ];
+
+  for (const u of uplines) {
+    if (!u.id) continue;
     try {
-      await addDoc(collection(db, "buyhashrate"), {
-        userId: user.uid,
-        planName: name,
-        planCost: cost,
-        dailyProfitPercent: profit,
-        durationDays: days,
-        remainingDays: days,
-        startTime: serverTimestamp(),
-        nextPayout: next,
-        endTime: end,
-        earnedProfit: 0,
-        status: "running",
-        planImage: imgSrc || "" // ✅ image stored in Firestore too
+      const refRef = doc(db, "users", u.id);
+      const refSnap = await getDoc(refRef);
+      if (!refSnap.exists()) continue;
+
+      const refUser = refSnap.data();
+      const commission = totalProfit * u.percent;
+
+      const newWallet = (refUser.walletBalance || 0) + commission;
+      const newReferral = (refUser.lifetimeReferralIncome || 0) + commission;
+      const newTotal = (refUser.totalIncome || 0) + commission;
+
+      await updateDoc(refRef, {
+        walletBalance: newWallet,
+        lifetimeReferralIncome: newReferral,
+        totalIncome: newTotal,
       });
 
-      // Update wallet and locked balance
-      walletBalance -= cost;
-      lockedBalance += cost;
-      await updateDoc(doc(db, "users", user.uid), { walletBalance, lockedBalance });
-
-      document.getElementById("walletBalance").textContent = `$${walletBalance.toFixed(2)}`;
-      document.getElementById("lockedBalance").textContent = `$${lockedBalance.toFixed(2)}`;
-
-      showCenterAlert(`✅ ${name} purchased successfully!`);
-      closeModal();
+     await addDoc(collection(db, "users", u.id, "buyhashrefarl"), {
+    receiverId: u.id,
+    fromUser: user.username || "Unknown",
+    amount: commission,
+    level: u.level,
+   timestamp: serverTimestamp(),
+   });
 
     } catch (err) {
-      console.error(err);
-      showCenterAlert("Something went wrong!");
+      console.error(`Error paying level ${u.level}:`, err);
     }
-  };
-};
-
-// 🟠 Close Modal
-window.closeModal = function () {
-  const modal = document.getElementById("planModal");
-  modal.classList.remove("show");
-  setTimeout(() => (modal.style.display = "none"), 300);
-};
-
-// 🟢 Center Alert
-function showCenterAlert(message, duration = 3000) {
-  const alertBox = document.getElementById("centerAlert");
-  alertBox.textContent = message;
-  alertBox.classList.add("show");
-  setTimeout(() => {
-    alertBox.style.animation = "fadeOut 0.5s forwards";
-    setTimeout(() => {
-      alertBox.classList.remove("show");
-      alertBox.style.animation = "";
-    }, 500);
-  }, duration);
+  }
 }
-
-// ⚠️ Balance Alert
-function showBalanceAlert() {
-  const alertBox = document.getElementById("mError");
-  alertBox.classList.add("show");
-  setTimeout(() => {
-    alertBox.classList.remove("show");
-    setTimeout(() => (alertBox.style.display = "none"), 300);
-  }, 3000);
-}
-
-// 🔄 Auto listener setup (kept for safety)
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".plan").forEach(plan => {
-    const name = plan.dataset.name;
-    const cost = parseFloat(plan.dataset.cost);
-    const days = parseInt(plan.dataset.days);
-    const profit = parseFloat(plan.dataset.profit);
-    const img = plan.querySelector(".plan-img")?.src || "";
-    const btn = plan.querySelector(".buy-btn");
-    if (btn) btn.addEventListener("click", () => openModal(name, cost, days, profit, img));
-  });
-});
 </script>
-<script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  });
 
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
-
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
-
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
-</script>
 </body>
 </html>
-
-
-
-
