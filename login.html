@@ -39,7 +39,7 @@
   .card {
     background: #fff;
     padding: 25px 30px;
-    border-radius: 12px;
+    border-radius: 5px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     margin-bottom: 20px;
     text-align: center;
@@ -63,7 +63,7 @@
     padding: 14px 44px 14px 12px;
     font-size: 15px;
     border: 1.5px solid #ccc;
-    border-radius: 10px;
+    border-radius: 5px;
     outline: none;
     background: #fff;
     transition: 0.3s;
@@ -126,7 +126,7 @@
     height: 16px;
     border: 2px solid #ccc;
     border-top-color: #4CAF50;
-    border-radius: 50%;
+    border-radius: 5px;
     animation: spin 0.8s linear infinite;
     display: inline-block;
     position: absolute;
@@ -141,7 +141,7 @@
     padding: 12px;
     margin-top: 10px;
     border: none;
-    border-radius: 6px;
+    border-radius: 5px;
     background: linear-gradient(90deg,#4CAF50,#2c7);
     color: white;
     font-size: 16px;
@@ -165,7 +165,7 @@
     margin-top: 16px;
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 6px;
+    border-radius: 5px;
     background: #f9f9f9;
     font-size: 14px;
     color: #333;
@@ -192,7 +192,7 @@
   .popup {
     background: #fff;
     padding: 26px 34px;
-    border-radius: 16px;
+    border-radius: 5px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     text-align: center;
     font-size: 16px;
@@ -263,7 +263,7 @@ button.locked span {
 .gift-card {
   text-align: center;
   padding: 20px 18px 25px;
-  border-radius: 14px;
+  border-radius: 5px;
   background: #ffffff;
   box-shadow: 0 6px 20px rgba(0,0,0,0.08);
   margin-top: 20px;
@@ -296,7 +296,7 @@ button.locked span {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 12px;
+  border-radius: 5px;
   overflow: hidden;
   background: linear-gradient(180deg, #f6fff9, #eef5ff);
   padding: 8px;
@@ -312,7 +312,7 @@ button.locked span {
 .gift-image {
   width: 100%;
   max-width: 300px;
-  border-radius: 10px;
+  border-radius: 5px;
   transform: scale(1);
   transition: all 0.6s ease;
 }
@@ -514,7 +514,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
     await signInWithEmailAndPassword(auth, email, password);
     await updateDoc(userRef, { failedAttempts: 0, lockUntil: 0 });
     showPopup("✅ Login successful!", "success");
-    setTimeout(() => window.location.href = "welcome.html", 1500);              	
+    setTimeout(() => window.location.href = "welcome.html", 1500);                
 
 
   } catch (error) {
@@ -589,8 +589,54 @@ document.getElementById("forgot-btn").addEventListener("click", async () => {
   }
 });
 </script>
+<script>
+  // 🚫 Disable right click, select, drag
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
+
+  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
+  document.addEventListener("keydown", e => {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // 🔒 Silent DevTools detection (no popup)
+  (function() {
+    const devtools = /./;
+    devtools.toString = function() {
+      return ""; // no alert or console log
+    };
+    console.log("%c", devtools);
+  })();
+
+  // 🔐 Detect DevTools using resize trick (no popup)
+  setInterval(() => {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    if (widthDiff || heightDiff) {
+      // Optional: silently redirect or blank the page
+      document.body.innerHTML = "";
+    }
+  }, 1000);
+
+  // 🧱 Disable copy/paste/cut
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // 🔁 Freeze console methods silently
+  Object.freeze(console);
+  Object.freeze(window.console);
+</script>
 </body>
 </html>
-
 
 
