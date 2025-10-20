@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guide — TrustDollar</title>
+
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+<style>
+:root {
+  --green: #00c853;
+  --green-dark: #00bfa5;
+  --bg: #f4f7fa;
+  --card: #fff;
+  --muted: #666;
+}
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg);
+  color: #222;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== Header ===== */
+.header {
+  background: linear-gradient(145deg, var(--green), var(--green-dark));
+  color: #fff;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.header h1 {
+  margin: 0;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ===== Container ===== */
+.container {
+  max-width: 800px;
+  margin: 25px auto;
+  padding: 16px;
+}
+
+/* ===== Guide Card ===== */
+.guide-card {
+  background: var(--card);
+  border-radius: 5px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+  padding: 18px;
+  margin-bottom: 25px;
+  transition: 0.3s ease;
+}
+.guide-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+.guide-card h2 {
+  font-size: 18px;
+  color: var(--green-dark);
+  margin-top: 0;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.guide-card p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+.guide-card hr {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 14px 0;
+}
+
+/* Highlighted text */
+.highlight {
+  color: var(--green-dark);
+  font-weight: 600;
+}
+
+/* Divider Line */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, var(--green), var(--green-dark));
+  margin: 25px 0;
+  border-radius: 2px;
+}
+
+/* Info badge */
+.info-badge {
+  display: inline-block;
+  background: var(--green);
+  color: #fff;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 5px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* Responsive */
+@media (max-width:600px) {
+  .guide-card {
+    padding: 14px;
+  }
+  .guide-card h2 {
+    font-size: 16px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1><i class='bx bx-book-open'></i> User Guide</h1>
+  <div><i class='bx bx-info-circle'></i></div>
+</div>
+
+<!-- Body -->
+<div class="container">
+
+  <div class="guide-card">
+    <span class="info-badge">Step 1</span>
+    <h2><i class='bx bx-user-circle'></i> Create Your Account</h2>
+    <p>
+      To get started with <span class="highlight">TrustDollar</span>, click on the 
+      <b>Register</b> button on the homepage and fill out your details carefully.
+      Make sure your <span class="highlight">email address</span> is correct — 
+      you’ll need it for verification and wallet access.
+    </p>
+    <hr>
+    <p><b>Tip:</b> Always use a <span class="highlight">strong password</span> and keep it private.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="guide-card">
+    <span class="info-badge">Step 2</span>
+    <h2><i class='bx bx-wallet'></i> Add Funds to Your Wallet</h2>
+    <p>
+      Once your account is active, go to the <b>Wallet</b> section. 
+      Here you can <span class="highlight">add funds</span> using your preferred payment method.
+      The balance will update instantly after confirmation.
+    </p>
+    <hr>
+    <p><b>Note:</b> Minimum deposit amount is <span class="highlight">₮200.00</span>.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="guide-card">
+    <span class="info-badge">Step 3</span>
+    <h2><i class='bx bx-gift'></i> Receive & Claim Gifts</h2>
+    <p>
+      Gifts sent by the admin appear in the <b>My Gifts</b> section.
+      Click <span class="highlight">Claim</span> to instantly add them to your wallet balance.
+    </p>
+    <hr>
+    <p><b>Remember:</b> Claimed gifts will show as <span class="highlight">"Claimed"</span> 
+      in your transaction history.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="guide-card">
+    <span class="info-badge">Step 4</span>
+    <h2><i class='bx bx-support'></i> Contact Support</h2>
+    <p>
+      Need help? Use our <span class="highlight">Support Chat</span> to talk directly with an admin.
+      Messages are real-time — so you’ll get instant replies.
+    </p>
+    <hr>
+    <p><b>Hint:</b> You can also view your past chats anytime in the <b>Support</b> tab.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="guide-card">
+    <span class="info-badge">Step 5</span>
+    <h2><i class='bx bx-cog'></i> Manage Your Settings</h2>
+    <p>
+      Go to the <b>Settings</b> section to change your <span class="highlight">name</span> or 
+      update your <span class="highlight">password</span>.  
+      It’s recommended to change your password every few months for better security.
+    </p>
+    <hr>
+    <p><b>Pro Tip:</b> Always <span class="highlight">log out</span> when using a public device.</p>
+  </div>
+
+</div>
+
+</body>
+</html>
