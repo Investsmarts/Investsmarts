@@ -125,6 +125,11 @@ body {
   padding-bottom: calc(8px + env(safe-area-inset-bottom));
 }
 
+.chat-container {
+  transition: padding-bottom 0.25s ease;
+}
+
+
 </style>
 </head>
 <body>
@@ -325,21 +330,13 @@ async function sendMessage(){
 </style>
 
 <script>
-// 📱 Advanced mobile keyboard fix
 if (/Mobi|Android/i.test(navigator.userAgent)) {
   const msgInput = document.getElementById('msgInput');
   const chatBox = document.getElementById('chatBox');
-  const footer = document.querySelector('.footer');
 
   // जब keyboard खुले
   msgInput.addEventListener('focus', () => {
-    // footer को ऊपर shift कर दो
-    footer.style.position = 'absolute';
-    footer.style.bottom = 'auto';
-    footer.style.top = (window.innerHeight - footer.offsetHeight - 5) + 'px';
-    footer.style.transition = 'top 0.2s ease';
-
-    // scroll हमेशा bottom पर
+    chatBox.style.paddingBottom = '180px'; // WhatsApp जैसा gap
     setTimeout(() => {
       chatBox.scrollTop = chatBox.scrollHeight;
     }, 300);
@@ -347,12 +344,10 @@ if (/Mobi|Android/i.test(navigator.userAgent)) {
 
   // जब keyboard बंद हो
   msgInput.addEventListener('blur', () => {
-    footer.style.position = 'fixed';
-    footer.style.bottom = '0';
-    footer.style.top = 'auto';
+    chatBox.style.paddingBottom = '100px'; // Normal state
   });
 
-  // जब orientation बदले (जैसे rotate करे)
+  // Orientation बदले
   window.addEventListener('resize', () => {
     setTimeout(() => {
       chatBox.scrollTop = chatBox.scrollHeight;
@@ -360,6 +355,7 @@ if (/Mobi|Android/i.test(navigator.userAgent)) {
   });
 }
 </script>
+
 
 <script>
   // 🚫 Disable right click, select, drag
