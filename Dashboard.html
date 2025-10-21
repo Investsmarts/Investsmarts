@@ -798,6 +798,7 @@ document.querySelector(".btn-add").addEventListener("click", () => {
   <div class="income-row"><span>Commission Income</span><span id="commissionIncome">0.00</span></div>
   <div class="income-row"><span>Staking Income</span><span id="stakingIncome">0.00</span></div>
   <div class="income-row"><span>Hash Income</span><span id="hashIncome">0.00</span></div>
+  <div class="income-row"><span>Release Income</span><span id="releaseIncome">0.00</span></div>
   <div class="income-row"><span>Total Income</span><span id="totalIncome">0.00</span></div></div>
 
   <!-- Project Features Card -->
@@ -957,10 +958,7 @@ document.querySelector(".btn-add").addEventListener("click", () => {
   © 2025 TrustDollar V2 | All Rights Reserved
 </div>
 </footer>
-
-
-
-<!-- Firebase Logic -->
+  
 <!-- Firebase Logic -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -1032,56 +1030,50 @@ document.querySelector(".btn-add").addEventListener("click", () => {
               ${levelIcon} ${level}
             </span>
           `;
+              // 🟢 Mining income (from totalMined)
+const miningIncome = parseFloat(data.totalMined || 0);
+document.getElementById("miningIncome").textContent = miningIncome.toFixed(2);
 
-          // 🟢 Mining income (from totalMined)
-          const miningIncome = parseFloat(data.totalMined || 0);
-          document.getElementById("miningIncome").textContent = miningIncome.toFixed(2);
+// 🟢 Referral income (from referral_income collection)
+let teamIncome = 0;
+const referralRef = collection(db, "referral_income");
+const q = query(referralRef, where("toUpline", "==", user.uid));
+const querySnap = await getDocs(q);
+querySnap.forEach((docSnap) => {
+  const rData = docSnap.data();
+  teamIncome += parseFloat(rData.amount || 0);
+});
+document.getElementById("teamIncome").textContent = teamIncome.toFixed(2);
 
-          // 🟢 Referral income (from referral_income collection)
-          let teamIncome = 0;
-          const referralRef = collection(db, "referral_income");
-          const q = query(referralRef, where("toUpline", "==", user.uid));
-          const querySnap = await getDocs(q);
-          querySnap.forEach((docSnap) => {
-            const rData = docSnap.data();
-            teamIncome += parseFloat(rData.amount || 0);
-          });
-          document.getElementById("teamIncome").textContent = teamIncome.toFixed(2);
+// 🟢 Commission (from subcollection users/{uid}/commissions)
+let commissionIncome = 0;
+const commissionRef = collection(db, "users", user.uid, "commissions");
+const commissionSnap = await getDocs(commissionRef);
+commissionSnap.forEach((docSnap) => {
+  const cData = docSnap.data();
+  commissionIncome += parseFloat(cData.amount || 0);
+});
+document.getElementById("commissionIncome").textContent = commissionIncome.toFixed(2);
 
-          // 🟢 Commission (from subcollection users/{uid}/commissions)
-          let commissionIncome = 0;
-          const commissionRef = collection(db, "users", user.uid, "commissions");
-          const commissionSnap = await getDocs(commissionRef);
-          commissionSnap.forEach((docSnap) => {
-            const cData = docSnap.data();
-            commissionIncome += parseFloat(cData.amount || 0);
-          });
-          document.getElementById("commissionIncome").textContent = commissionIncome.toFixed(2);
+// 🟢 Staking income (from users doc)
+const stakingIncome = parseFloat(data.stakingIncome || 0);
+document.getElementById("stakingIncome").textContent = stakingIncome.toFixed(2);
 
-          // 🟢 Staking income (from users doc)
-          const stakingIncome = parseFloat(data.stakingIncome || 0);
-          document.getElementById("stakingIncome").textContent = stakingIncome.toFixed(2);
+// 🟢 Hash income (from users doc)
+const hashIncome = parseFloat(data.hashIncome || 0);
+document.getElementById("hashIncome").textContent = hashIncome.toFixed(2);
 
-          // 🟢 Hash income (from users/{uid}/hashincome collection)
-         // 🟢 Hash income (from users/{uid}/hashincome collection)
-         let hashIncome = 0;
-         const hashIncomeRef = collection(db, "users", user.uid, "hashincome");
-         const hashSnap = await getDocs(hashIncomeRef);
+// 🟢 Release income (from users doc)
+const releaseIncome = parseFloat(data.releaseIncome || 0);
+document.getElementById("releaseIncome").textContent = releaseIncome.toFixed(2);
 
-         hashSnap.forEach((docSnap) => {
-         const hData = docSnap.data();
-         hashIncome += parseFloat(hData.amount || 0);
-         });
+// 🟢 Total income = sum of all incomes
+const total = miningIncome + teamIncome + commissionIncome + stakingIncome + hashIncome + releaseIncome;
+document.getElementById("totalIncome").textContent = total.toFixed(2);
 
-         document.getElementById("hashIncome").textContent = hashIncome.toFixed(2);
-
-
-        // 🟢 Total income = sum of all incomes
-        const total = miningIncome + teamIncome + commissionIncome + stakingIncome + hashIncome;
-        document.getElementById("totalIncome").textContent = total.toFixed(2);
+console.log("✅ Dashboard Auto Updated for:", data.name || user.email);
 
 
-          console.log("✅ Dashboard Auto Updated for:", data.name || user.email);
         } else {
           console.warn("⚠️ User document not found in Firestore.");
         }
@@ -1096,8 +1088,7 @@ document.querySelector(".btn-add").addEventListener("click", () => {
   }
 });
 
-
-// ✅ Subscribe form logic
+  // ✅ Subscribe form logic
   document.getElementById("subscribeForm").addEventListener("submit", function(e){
     e.preventDefault();
 
@@ -1195,9 +1186,9 @@ function updateParticipants() {
 yesterdayOutputEl.textContent = "$" + yesterdayOutput.toLocaleString();
 participantsEl.textContent = participants.toLocaleString();
 
-// Timer (for demo purpose)
+// Timer (for )
 // 👉 Real case: yesterday output should run every 24hr
-// Here: 10s = 1 day demo
+// Here: 10s = 1 day
 setInterval(updateYesterdayOutput, 86400000); // 24h = 86400000 ms
 //setInterval(updateParticipants, 86400000); // daily increment
 
@@ -1256,3 +1247,4 @@ setInterval(updateParticipants, 50000);
 </script>
 </body>
 </html>
+
