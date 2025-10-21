@@ -542,7 +542,7 @@ onAuthStateChanged(auth, async (user) => {
     const notifSnap = await getDocs(notifRef);
     if (notifSnap.empty) {
       await addDoc(notifRef, {
-        message: "👋 Welcome to TrustDollar! Your account is active.",
+        message: "⚡Welcome to something powerful — together, we move towards success!",
         seen: false,
         createdAt: serverTimestamp(),
         type: "info"
@@ -684,6 +684,7 @@ window.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
 
 
 
