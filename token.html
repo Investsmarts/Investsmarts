@@ -204,7 +204,28 @@ to { opacity: 1; transform: scale(1); }
 </table>
 </div>
 
+
+
+<!-- 🟢 My Profit History -->
+<div class="trade-history" id="profitHistoryBox">
+  <h3>My Profit History</h3>
+  <table id="profitHistoryTable">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Token</th>
+        <th>Staked</th>
+        <th>Profit</th>
+        <th>Total Return</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+
 <button id="logoutBtn" class="logout">Logout</button>
+
 </div>
 
 <div id="alertBox"></div>
@@ -235,7 +256,6 @@ to { opacity: 1; transform: scale(1); }
 </div>
 </div>
 </div>
-
 
 <!-- ✅ Modern Professional Loader -->
 <div id="loadingScreen">
@@ -286,7 +306,13 @@ onAuthStateChanged(auth, async (u) => {
   currentUser = u;
   document.getElementById("loadingScreen").style.display = "none";
   document.getElementById("mainCard").style.display = "block";
+
   await loadUser();
+
+  // ✅ FIX: wait a bit to ensure user & Firestore ready
+  setTimeout(() => {
+    loadProfitHistory();
+  }, 1000);
 });
 
 async function loadUser() {
@@ -302,17 +328,15 @@ async function loadUser() {
   if (!stored) return;
 
   token = JSON.parse(stored);
-  window.token = token; // 👈 for console debugging
+  window.token = token;
   document.getElementById("symbol").textContent = token.name.slice(0, 4);
   document.getElementById("t_name").textContent = token.name;
 
-  // 🩵 ADD THIS NEW FALLBACK:
   if (token.price) {
     currentPrice = parseFloat(token.price);
     document.getElementById("t_price").textContent = `$${currentPrice.toFixed(2)}`;
   }
 
-  // Firebase live update (if available)
   const priceRef = doc(db, "prices", token.name);
   onSnapshot(priceRef, (snap) => {
     if (snap.exists()) {
@@ -326,28 +350,20 @@ async function loadUser() {
   loadTradeHistory();
 }
 
-
 function updateMaxBuyInfo() {
   const info = document.getElementById("maxBuyInfo");
   if (!info) return;
-
-  // 🛑 Check wallet
   if (walletBalance <= 0) {
     info.textContent = "Insufficient balance to buy tokens";
     return;
   }
-
-  // 🛑 Check price
   if (currentPrice <= 0 || isNaN(currentPrice)) {
     info.textContent = "Price not available yet";
     return;
   }
-
-  // ✅ Calculate maximum tokens
   const maxTokens = (walletBalance / currentPrice).toFixed(2);
   info.textContent = `You can buy ${maxTokens} tokens max`;
 }
-
 
 // 🔹 Token-specific data
 async function loadTokenData() {
@@ -374,27 +390,15 @@ async function loadTokenData() {
 // 🔹 Profit auto engine
 function startProfitEngine(ref, staked, profit) {
   clearInterval(window.profitTimer);
-
-  // 🟢 Chart ko start me update kar do
   updateEarningChart(profit);
-
   let counter = 0;
-
   window.profitTimer = setInterval(async () => {
     if (staked > 0) {
       profit += staked * perMinuteRate;
       counter++;
-
-      // 🔹 Har minute UI me profit dikhaye
       const stakeInfo = document.getElementById("stakeInfo");
-      if (stakeInfo) {
-        stakeInfo.innerHTML = `Live Profit: $${profit.toFixed(4)}`;
-      }
-
-      // 🔹 Chart update karo
+      if (stakeInfo) stakeInfo.innerHTML = `Live Profit: $${profit.toFixed(4)}`;
       updateEarningChart(profit);
-
-      // 🔹 Har 5 minute me Firestore me save karo
       if (counter % 5 === 0) {
         try {
           await updateDoc(ref, { totalProfit: profit });
@@ -403,9 +407,8 @@ function startProfitEngine(ref, staked, profit) {
         }
       }
     }
-  }, 60000); // 60000 = 1 minute
+  }, 60000);
 }
-
 
 // 🔹 Release with 3-level referral
 async function releaseStake(ref) {
@@ -414,19 +417,13 @@ async function releaseStake(ref) {
   if (!data || data.totalStaked <= 0) return showAlert("Nothing to release!", "error");
 
   showAlert("Processing release...", "info");
-
   const profit = data.totalProfit;
   const staked = data.totalStaked;
   const totalReturn = staked * currentPrice + profit * 0.70;
-
-  // user balance update
   walletBalance += totalReturn;
   await updateDoc(doc(db, "users", currentUser.uid), { walletBalance });
-
-  // reset token fields
   await updateDoc(ref, { totalStaked: 0, totalProfit: 0 });
 
-  // credit 3 upline levels
   const userSnap = await getDoc(doc(db, "users", currentUser.uid));
   const upline1 = userSnap.data()?.upline1 || null;
   const upline2 = userSnap.data()?.upline2 || null;
@@ -454,245 +451,48 @@ async function releaseStake(ref) {
   await creditUpline(upline2, 0.08);
   await creditUpline(upline3, 0.05);
 
-  // add trade record
-  await addDoc(collection(ref, "trades"), {
-    action: "RELEASE",
-    qty: staked,
-    price: currentPrice,
-    profit: profit,
+  // 🟢 Profit History Entry
+  await addDoc(collection(db, "users", currentUser.uid, "profitHistory"), {
+    token: token.name,
+    staked: staked,
+    profit: profit * 0.70,
+    totalReturn: staked * currentPrice + profit * 0.70,
     timestamp: serverTimestamp()
   });
 
   document.getElementById("walletTotal").textContent = `$${walletBalance.toFixed(2)}`;
   document.getElementById("userStaked").textContent = "0.00";
   showAlert("Released successfully!", "success");
-  updateMaxBuyInfo(); // <== add yahan
+  updateMaxBuyInfo();
 }
 
-// 🔹 Modal + Trade Actions
-const modal = document.getElementById("tradeModal");
-const header = document.getElementById("modalHeader");
-const qtyInput = document.getElementById("modalQty");
-const total = document.getElementById("modalTotal");
-const err = document.getElementById("modalError");
-let tradeType = null;
+// 🔹 Profit History
+function loadProfitHistory() {
+  const historyRef = collection(db, "users", currentUser.uid, "profitHistory");
+  const q = query(historyRef, orderBy("timestamp", "desc"));
+  const tb = document.querySelector("#profitHistoryTable tbody");
 
-document.getElementById("btnBuy").onclick = () => openModal("BUY");
-document.getElementById("btnSell").onclick = () => openModal("SELL");
-document.querySelector(".stake").onclick = () => openModal("STAKE");
-document.getElementById("cancelTrade").onclick = () => modal.style.display = "none";
-
-//editing 
-async function openModal(type) {
-  tradeType = type;
-  const ref = doc(db, "byTokens", currentUser.uid, "tokens", token.name);
-  const snap = await getDoc(ref);
-  const d = snap.data() || { totalOwned: 0 };
-  if (type === "BUY" && walletBalance <= 0) return showAlert("No wallet balance", "error");
-  if ((type === "SELL" || type === "STAKE") && d.totalOwned <= 0)
-    return showAlert("No tokens available", "error");
-  modal.style.display = "flex";
-  header.textContent = `${type} ${token.name}`;
-  qtyInput.value = "";
-  total.textContent = "$0.00";
-  
-  // ✅ ensures "You can buy X tokens max" updates immediately (only for BUY)
-if (type === "BUY") updateMaxBuyInfo();
-
-// 💡 Dynamic color theme for modal based on action
-const modalHeader = document.querySelector(".modal-header");
-const confirmBtn = document.querySelector(".confirm");
-
-if (type === "BUY") {
-  modalHeader.style.background = "linear-gradient(135deg, #16a34a, #22c55e)";
-  confirmBtn.style.background = "#16a34a";
-} 
-else if (type === "SELL") {
-  modalHeader.style.background = "linear-gradient(135deg, #dc2626, #ef4444)";
-  confirmBtn.style.background = "#dc2626";
-} 
-else if (type === "STAKE") {
-  modalHeader.style.background = "linear-gradient(135deg, #0ea5a4, #06b6d4)";
-  confirmBtn.style.background = "#0ea5a4";
-}
-
-
- // ✅ NEW PART: Update current price + available balance
-  document.getElementById("modalPrice").textContent = `$${currentPrice.toFixed(2)}`;
-
-  if (type === "BUY") {
-    document.getElementById("modalWallet").textContent = `$${walletBalance.toFixed(2)}`;
-  } else {
-    document.getElementById("modalWallet").textContent = `${d.totalOwned.toFixed(2)} Tokens`;
-  }
-}
-qtyInput.oninput = () => {
-  const q = parseFloat(qtyInput.value) || 0;
-  total.textContent = `$${(q * currentPrice).toFixed(2)}`;
-};
-
-  document.getElementById("confirmTrade").onclick = async () => {
-  const qty = parseFloat(qtyInput.value);
-  if (!qty || qty <= 0) return (err.textContent = "Enter valid qty");
-  const sum = qty * currentPrice;
-  const userRef = doc(db, "users", currentUser.uid);
-  const tokenRef = doc(db, "byTokens", currentUser.uid, "tokens", token.name);
-  const tSnap = await getDoc(tokenRef);
-  const tData = tSnap.data() || { totalOwned: 0, totalStaked: 0, totalProfit: 0 };
-
-  try {
-    if (tradeType === "BUY") {
-      if (sum > walletBalance) return showAlert("Not enough balance", "error");
-      walletBalance -= sum;
-      tData.totalOwned += qty;
-    }
-    if (tradeType === "SELL") {
-      if (qty > tData.totalOwned) return showAlert("Not enough tokens", "error");
-      tData.totalOwned -= qty;
-      walletBalance += sum;
-    }
-    if (tradeType === "STAKE") {
-      if (qty > tData.totalOwned) return showAlert("Not enough tokens", "error");
-      tData.totalOwned -= qty;
-      tData.totalStaked += qty;
-      tData.totalProfit = 0;
-    }
-
-    await updateDoc(userRef, { walletBalance });
-    await setDoc(tokenRef, tData);
-    await addDoc(collection(tokenRef, "trades"), {
-      action: tradeType,
-      qty,
-      price: currentPrice,
-      timestamp: serverTimestamp()
-    });
-
-    document.getElementById("walletTotal").textContent = `$${walletBalance.toFixed(2)}`;
-    document.getElementById("userBalance").textContent = tData.totalOwned.toFixed(2);
-    document.getElementById("userStaked").textContent = tData.totalStaked.toFixed(2);
-    modal.style.display = "none";
-    showAlert(`${tradeType} successful`, "success");
-  } catch (e) {
-    console.error(e);
-    showAlert("Transaction failed", "error");
-  }
-};
-
-// 🔹 Trade history
-function loadTradeHistory() {
-  const tradesRef = collection(db, "byTokens", currentUser.uid, "tokens", token.name, "trades");
-  const q = query(tradesRef, orderBy("timestamp", "desc"));
-  const tb = document.querySelector("#tradeTable tbody");
-  onSnapshot(q, (s) => {
+  onSnapshot(q, (snapshot) => {
     tb.innerHTML = "";
-    s.forEach(x => {
-      const d = x.data();
-      const t = d.timestamp?.toDate().toLocaleTimeString() || "--";
+    if (snapshot.empty) {
+      tb.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#64748b;">No profit history yet</td></tr>`;
+      return;
+    }
+    snapshot.forEach(docSnap => {
+      const d = docSnap.data();
+      const date = d.timestamp?.toDate().toLocaleString() || "--";
       tb.innerHTML += `
-      <tr>
-        <td>${t}</td>
-        <td>${token.name}</td>
-        <td style='color:${d.action=="BUY"?"#16a34a":d.action=="SELL"?"#dc2626":"#0ea5a4"};font-weight:700'>
-          ${d.action}
-        </td>
-        <td>${d.qty}</td>
-        <td>$${d.price.toFixed(2)}</td>
-      </tr>`;
+        <tr>
+          <td>${date}</td>
+          <td>${d.token}</td>
+          <td>${d.staked?.toFixed(2) ?? 0}</td>
+          <td>$${d.profit?.toFixed(2) ?? 0}</td>
+          <td>$${d.totalReturn?.toFixed(2) ?? 0}</td>
+        </tr>
+      `;
     });
   });
 }
-
-// 🔹 Chart Update
-function updateEarningChart(profit) {
-  const chart = window.earningChart;
-  if (!chart) return;
-  const time = new Date().toLocaleTimeString();
-  chart.data.labels.push(time);
-  chart.data.datasets[0].data.push(profit.toFixed(4));
-  if (chart.data.labels.length > 10) {
-    chart.data.labels.shift();
-    chart.data.datasets[0].data.shift();
-  }
-  chart.update();
-}
-
-// 🔹 Logout
-document.getElementById("logoutBtn").onclick = () => {
-  signOut(auth).then(() => {
-    localStorage.clear();
-    window.location.href = "login.html";
-  });
-};
-
-// 🔒 Disable right-click & inspect
-document.addEventListener("contextmenu", e => e.preventDefault());
-document.addEventListener("keydown", e => {
-  if ((e.ctrlKey && ["c","x","v","u"].includes(e.key.toLowerCase())) || e.key === "F12")
-    e.preventDefault();
-});
-
-
-
-// ❌ Disable text selection
-document.addEventListener("selectstart", e => e.preventDefault());
-
-
-// 🧹 Stop profit timer on reload or exit
-window.addEventListener("beforeunload", () => clearInterval(window.profitTimer));
-
-// 📱 Adjust modal when keyboard opens (mobile fix)
-const modalInput = document.getElementById("modalQty");
-
-// when input focused — popup goes up
-modalInput.addEventListener("focus", () => {
-  const modalContent = document.querySelector(".modal-content");
-  modalContent.style.transition = "transform 0.3s ease";
-  modalContent.style.transform = "translateY(-80px)";
-});
-
-// when input unfocused — popup comes back to center
-modalInput.addEventListener("blur", () => {
-  const modalContent = document.querySelector(".modal-content");
-  modalContent.style.transform = "translateY(0)";
-});
-
-
-// 🔹 Initialize Chart.js
-const ctx = document.getElementById("earningChart").getContext("2d");
-window.earningChart = new Chart(ctx, {
-  type: "line",
-  data: {
-    labels: [],
-    datasets: [{
-      label: "Live Profit ($)",
-      data: [],
-      borderWidth: 2,
-      borderColor: "#0ea5a4",
-      tension: 0.3,
-      fill: true,
-      backgroundColor: "rgba(14,165,164,0.08)",
-      pointRadius: 0
-    }]
-  },
-  options: {
-    responsive: true,
-    scales: {
-      x: { display: false },
-      y: { ticks: { color: "#64748b" }, beginAtZero: true }
-    },
-    plugins: { legend: { display: false } }
-  }
-});
-
-// 🟢 Chart pre-fill data (last 5 mins zero profit)
-for (let i = 0; i < 5; i++) {
-  const time = new Date(Date.now() - (5 - i) * 60000).toLocaleTimeString();
-  window.earningChart.data.labels.push(time);
-  window.earningChart.data.datasets[0].data.push(0);
-}
-window.earningChart.update();
-
-
 </script>
 </body>
 </html>
