@@ -30,7 +30,7 @@ body {
   width: 100%;
   max-width: 900px;
   background: #fff;
-  border-radius: 18px;
+  border-radius: 5px;
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
   padding: 10px;
   margin-bottom: 100px;       /* ✅ Space for bottom-nav */
@@ -65,11 +65,11 @@ html, body {
     background: linear-gradient(135deg, #41b66c, #d86813);
 
   color: #fff;
-  border-radius: 12px;
+  border-radius: 5px;
   padding: 20px 12px;
   text-align: center;
   font-weight: 600;
-  box-shadow: 0 4px 0 #0d7035;
+ 
   transition: all 0.25s ease;
 }
 
@@ -106,75 +106,139 @@ html, body {
   }
 }
 
-/* ✅ Plan Card (unchanged) */
+
+
+/* 🌟 Soft Premium Card Design (Final Version with Dates) */
 .plan-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
   background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  padding: 15px 18px;
-  margin-top: 25px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-}
-.plan-info {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  flex: 1;
-}
-.plan-item {
-  display: flex;
-  flex-direction: column;
-  font-size: 13px;
-  color: #475569;
-}
-.plan-item strong {
-  font-size: 15px;
-  color: #065f46;
-}
-.status-badge {
-  padding: 4px 10px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #065f46;
-  background: #bbf7d0;
-}
-.countdown {
+  border-radius: 5px;
+  padding: 24px;
+  margin-top: 22px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f1f5f9;
   text-align: center;
-  font-weight: 700;
-  font-size: 16px;
-  color: var(--green);
+  transition: all 0.3s ease;
 }
+
+.plan-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* 🪙 Image / Animation Section */
+.plan-animation {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 16px;
+  border-radius: 5px;
+  overflow: hidden;
+  background: #f9fafb;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.plan-animation img,
+.plan-animation video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 🔸 Plan Title */
+.plan-title {
+  font-weight: 700;
+  font-size: 18px;
+  color: #0f172a;
+  margin-bottom: 10px;
+}
+
+/* 🟢 Status Badge */
+.status-badge {
+  display: inline-block;
+  background: #e0edff;
+  color: #2563eb;
+  padding: 6px 14px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* 🔹 Data Table Style */
+.plan-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.plan-table tr {
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.plan-table td {
+  padding: 10px 0;
+  color: #475569;
+  text-align: left;
+  font-weight: 500;
+}
+
+.plan-table td:last-child {
+  text-align: right;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* ⏳ Countdown */
+.countdown {
+  font-size: 18px;
+  font-weight: 700;
+  color: #dc2626;
+  margin-top: 10px;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+/* 💰 Collect Button */
 .collect-btn {
   background: linear-gradient(135deg, #22c55e, #16a34a);
   color: white;
   border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
+  border-radius: 5px;
+  padding: 12px 0;
+  width: 100%;
   font-weight: 600;
+  font-size: 15px;
+  margin-top: 14px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.25s ease;
 }
+
+.collect-btn:hover:enabled {
+  transform: scale(1.03);
+  background: #15803d;
+}
+
 .collect-btn:disabled {
   background: #d1d5db;
   color: #6b7280;
   cursor: not-allowed;
 }
-.collect-btn:hover:enabled {
-  transform: scale(1.05);
-}
-.loader {
-  text-align: center;
-  color: var(--green);
-  font-weight: 600;
-  margin-top: 20px;
-}
 
+/* 📱 Responsive */
+@media (max-width: 768px) {
+  .plan-card {
+    padding: 18px;
+  }
 
+  .plan-animation {
+    width: 100px;
+    height: 100px;
+  }
+
+  .plan-table td {
+    font-size: 14px;
+  }
+}
 
 
 
@@ -188,7 +252,7 @@ html, body {
   max-width: 480px;
   background: #ffffff; /* solid white */
   border: 1px solid #e0e0e0;
-  border-radius: 18px;
+  border-radius: 5px;
   box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
   display: flex;
   justify-content: space-around;
@@ -250,20 +314,75 @@ html, body {
   width: 6px;
   height: 6px;
   background: #00c853;
-  border-radius: 50%;
+  border-radius: 5px;
   box-shadow: 0 0 8px rgba(0, 200, 83, 0.4);
 }
 
 /* Responsive fix */
 @media(max-width:600px){
   .bottom-nav {
-    border-radius: 22px;
+    border-radius: 5px;
     padding: 8px 0;
   }
   .nav-item i {
     font-size: 20px;
   }
 }
+
+
+/* 💰 Live Mining Animation Effect */
+@keyframes pulseGlow {
+  0% { text-shadow: 0 0 2px #22c55e, 0 0 4px #22c55e; }
+  50% { text-shadow: 0 0 10px #22c55e, 0 0 20px #16a34a; }
+  100% { text-shadow: 0 0 2px #22c55e, 0 0 4px #22c55e; }
+}
+
+#earnedProfit {
+  color: #065f46;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  animation: pulseGlow 2s infinite ease-in-out;
+}
+
+/* 🌟 Animation / Video Section — Premium Style */
+.plan-animation {
+  width: 220px;                     /* 🔸 Size of video box */
+  height: 220px;
+  margin: 10px auto 20px;           /* Centered with spacing */
+  border-radius: 5px;              /* Rounded corners */
+  overflow: hidden;                 /* Hide overflow edges */
+  border: 2px solid #e5e7eb;        /* Light border for white theme */
+ 
+  background: #f9fafb;              /* Light gray background */
+  position: relative;               /* For optional glow animation */
+  transition: all 0.3s ease;        /* Smooth hover animation */
+}
+
+.plan-animation:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+}
+
+/* 🎞️ Video inside the animation box */
+.plan-animation video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;                /* Video perfectly fits inside */
+  border-radius: 5px;
+  display: block;
+}
+
+/* ✨ Optional: Glow pulse effect (premium feel) */
+@keyframes videoGlow {
+  0% { box-shadow: 0 0 8px rgba(34, 197, 94, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(34, 197, 94, 0.7); }
+  100% { box-shadow: 0 0 8px rgba(34, 197, 94, 0.4); }
+}
+
+.plan-animation.glow {
+  animation: videoGlow 2.5s infinite ease-in-out;
+}
+
 
 </style>
 </head>
@@ -334,6 +453,7 @@ import {
   addDoc, serverTimestamp, orderBy
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+
 // 🔥 Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
@@ -452,60 +572,102 @@ onAuthStateChanged(auth, async (user) => {
   const next = plan.nextPayout?.toDate?.()?.getTime() || null;
   const earned = (plan.earnedProfit || 0).toFixed(2);
 
-  document.getElementById("planSection").innerHTML = `
-    <div class="plan-card">
-      <div class="plan-info">
-        <div class="plan-item"><small>Plan</small><strong>${plan.planName}</strong></div>
-        <div class="plan-item"><small>Cost</small><strong>$${plan.planCost}</strong></div>
-        <div class="plan-item"><small>Daily</small><strong>${plan.dailyProfitPercent}%</strong></div>
-        <div class="plan-item"><small>Earned</small><strong id="earnedProfit">$${earned}</strong></div>
-        <div class="plan-item"><small>Remaining</small><strong id="remainingDays">${plan.remainingDays || plan.durationDays} days</strong></div>
-        <div class="plan-item"><small>Start</small><strong>${start}</strong></div>
-        <div class="plan-item"><small>End</small><strong>${end}</strong></div>
-        <div class="plan-item"><small>Status</small><span class="status-badge">${plan.status}</span></div>
-      </div>
-      <div style="text-align:center;">
-        <div class="countdown" id="countdown">--:--:--</div>
-        <button id="collectBtn" class="collect-btn" disabled>Collect</button>
-      </div>
-    </div>`;
+// ✅ Render Active Plan Card
+document.getElementById("planSection").innerHTML = `
+  <div class="plan-card">
+    
+<!-- ✅ Animation / Video Section -->
+<div class="plan-animation">
+  <video autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;border-radius:5px;">
+    <source src="./images/trust.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+</div>
 
-  const btn = document.getElementById("collectBtn");
-  const display = document.getElementById("countdown");
-  startCountdown(next, btn, display, plan, userRef, plan.id);
+
+    <!-- ✅ Dynamic Plan Title -->
+    <div class="plan-title">${plan.planName || 'Mining Plan'}</div>
+
+    <!-- ✅ Status Badge -->
+    <span class="status-badge">${plan.status}</span>
+
+    <!-- ✅ Plan Details Table -->
+    <table class="plan-table">
+      <tr>
+        <td>Investment Amount</td>
+        <td>$${plan.planCost}</td>
+      </tr>
+      <tr>
+        <td>Accrued Income</td>
+        <td id="earnedProfit">$${earned}</td>
+      </tr>
+      <tr>
+        <td>Possible Income</td>
+        <td>$${(plan.dailyProfitPercent * plan.planCost / 100).toFixed(2)}</td>
+      </tr>
+      <tr>
+        <td>Remaining Days</td>
+        <td>${plan.remainingDays || plan.durationDays}</td>
+      </tr>
+      <tr>
+        <td>Start Date</td>
+        <td>${start}</td>
+      </tr>
+      <tr>
+        <td>End Date</td>
+        <td>${end}</td>
+      </tr>
+    </table>
+
+    <!-- ✅ Countdown + Button -->
+    <div class="countdown" id="countdown">--:--:--</div>
+    <button id="collectBtn" class="collect-btn" disabled>Collect</button>
+  </div>
+`;
+
+
+
+// ✅ Attach countdown + button functionality
+const btn = document.getElementById("collectBtn");
+const display = document.getElementById("countdown");
+startCountdown(next, btn, display, plan, userRef, plan.id);
+
 });
 
-// ⏱ Countdown Timer with Live Earning
+// ⏱ Countdown Timer with Live Earning + Smooth Increment Animation
 function startCountdown(target, btn, display, plan, userRef, planId) {
   const earnedEl = document.getElementById("earnedProfit");
   let localEarned = plan.earnedProfit || 0;
   const dailyProfit = (plan.planCost * plan.dailyProfitPercent) / 100;
-  const perMinuteProfit = dailyProfit / 1440;
+  const perSecondProfit = dailyProfit / 86400; // daily profit divided by seconds in a day
 
   const interval = setInterval(() => {
     const now = Date.now();
     const diff = target - now;
 
+    // countdown timer
     if (diff <= 0) {
       display.textContent = "Ready!";
       display.style.color = "#dc2626";
       btn.disabled = false;
-      bell.play();
       clearInterval(interval);
+      bell.play().catch(() => {});
       btn.onclick = () => collectProfit(plan, userRef, planId, btn, display);
       return;
     }
 
+    // time left
     const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
     const m = Math.floor((diff / (1000 * 60)) % 60);
     const s = Math.floor((diff / 1000) % 60);
     display.textContent = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 
-    const secondsPassed = Math.floor((86400000 - diff) / 1000);
-    const newEarned = localEarned + (secondsPassed / 60) * perMinuteProfit;
-    earnedEl.textContent = `$${newEarned.toFixed(4)}`;
+    // live earning (visual only)
+    localEarned += perSecondProfit; 
+    earnedEl.textContent = `$${localEarned.toFixed(4)}`;
   }, 1000);
 }
+
 
 // 💰 Profit Collection + Upline Distribution
 async function collectProfit(plan, userRef, planId, btn, display) {
@@ -522,14 +684,15 @@ async function collectProfit(plan, userRef, planId, btn, display) {
 
   const newWallet = (user.walletBalance || 0) + selfProfit;
   const newIncome = (user.totalIncome || 0) + selfProfit;
+  const newHashIncome = (user.hashIncome || 0) + selfProfit;
+
   await updateDoc(userRef, { 
-  walletBalance: newWallet, 
-  totalIncome: newIncome, 
-  hashIncome: newHashIncome 
-});
+    walletBalance: newWallet, 
+    totalIncome: newIncome, 
+    hashIncome: newHashIncome 
+  });
 
-
-  await distributeReferralIncome(user, totalProfit);
+  await distributeReferralIncome(user, totalProfit, plan.planCost); // ✅ pass planCost
 
   const planRef = doc(db, "buyhashrate", planId);
   const planUpdate = {
@@ -555,16 +718,16 @@ async function collectProfit(plan, userRef, planId, btn, display) {
   document.getElementById("earnedProfit").textContent = `$${((plan.earnedProfit || 0) + totalProfit).toFixed(2)}`;
   document.getElementById("remainingDays").textContent = `${newDays} days`;
 
-  await calculateTotalReferralIncome(user);
-  await loadReferralHistory(user);
+  await calculateTotalReferralIncome({ uid: userRef.id });
+  await loadReferralHistory({ uid: userRef.id });
 
   if (newDays > 0) startCountdown(next.getTime(), btn, display, { ...plan, remainingDays: newDays }, userRef, planId);
 
   alert(`✅ Collected $${totalProfit.toFixed(2)} — You received $${selfProfit.toFixed(2)}`);
 }
 
-// 👥 Distribute Referral Income to Uplines
-async function distributeReferralIncome(user, totalProfit) {
+// 👥 Distribute Referral Income to Uplines (with lifetimeDeposit check + console logs)
+async function distributeReferralIncome(user, totalProfit, planCost) {
   const uplines = [
     { id: user.upline1, percent: 0.17, level: 1 },
     { id: user.upline2, percent: 0.08, level: 2 },
@@ -579,8 +742,14 @@ async function distributeReferralIncome(user, totalProfit) {
       if (!refSnap.exists()) continue;
 
       const refUser = refSnap.data();
-      const commission = totalProfit * u.percent;
 
+      // 🧩 Condition: Upline must have lifetimeDeposit >= planCost
+      if ((refUser.lifetimeDeposit || 0) < planCost) {
+        console.log(`⛔ Level ${u.level} (${u.id}) skipped — lifetimeDeposit $${refUser.lifetimeDeposit || 0} < planCost $${planCost}`);
+        continue;
+      }
+
+      const commission = totalProfit * u.percent;
       const newWallet = (refUser.walletBalance || 0) + commission;
       const newReferral = (refUser.lifetimeReferralIncome || 0) + commission;
       const newTotal = (refUser.totalIncome || 0) + commission;
@@ -591,21 +760,22 @@ async function distributeReferralIncome(user, totalProfit) {
         totalIncome: newTotal,
       });
 
-     await addDoc(collection(db, "users", u.id, "buyhashrefarl"), {
-    receiverId: u.id,
-    fromUser: user.username || "Unknown",
-    amount: commission,
-    level: u.level,
-   timestamp: serverTimestamp(),
-   });
+      await addDoc(collection(db, "users", u.id, "buyhashrefarl"), {
+        receiverId: u.id,
+        fromUser: user.username || "Unknown",
+        amount: commission,
+        level: u.level,
+        timestamp: serverTimestamp(),
+      });
+
+      console.log(`✅ Paid Level ${u.level} (${u.id}): $${commission.toFixed(2)} — lifetimeDeposit $${refUser.lifetimeDeposit || 0}`);
 
     } catch (err) {
-      console.error(`Error paying level ${u.level}:`, err);
+      console.error(`❌ Error paying level ${u.level}:`, err);
     }
   }
 }
 </script>
-
 <script>
   // 🚫 Disable right click, select, drag
   document.addEventListener("contextmenu", e => e.preventDefault());
