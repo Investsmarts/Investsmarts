@@ -119,6 +119,12 @@ body {
 @media(max-width:600px){
   .msg { font-size:12px; max-width:80%; }
 }
+
+.footer {
+  padding: 8px;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom));
+}
+
 </style>
 </head>
 <body>
@@ -317,6 +323,43 @@ async function sendMessage(){
   opacity:0;
 }
 </style>
+
+<script>
+// 📱 Advanced mobile keyboard fix
+if (/Mobi|Android/i.test(navigator.userAgent)) {
+  const msgInput = document.getElementById('msgInput');
+  const chatBox = document.getElementById('chatBox');
+  const footer = document.querySelector('.footer');
+
+  // जब keyboard खुले
+  msgInput.addEventListener('focus', () => {
+    // footer को ऊपर shift कर दो
+    footer.style.position = 'absolute';
+    footer.style.bottom = 'auto';
+    footer.style.top = (window.innerHeight - footer.offsetHeight - 5) + 'px';
+    footer.style.transition = 'top 0.2s ease';
+
+    // scroll हमेशा bottom पर
+    setTimeout(() => {
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }, 300);
+  });
+
+  // जब keyboard बंद हो
+  msgInput.addEventListener('blur', () => {
+    footer.style.position = 'fixed';
+    footer.style.bottom = '0';
+    footer.style.top = 'auto';
+  });
+
+  // जब orientation बदले (जैसे rotate करे)
+  window.addEventListener('resize', () => {
+    setTimeout(() => {
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }, 200);
+  });
+}
+</script>
 
 <script>
   // 🚫 Disable right click, select, drag
