@@ -500,61 +500,71 @@ window.closeModal = function(){
 
 
   // ✅ Confirm Stake (possibleIncome add kiya)
-window.confirmStake = async function(){
-  if(!currentUserId){ 
-    showPopup("User not authenticated"); 
-    return; 
+// ✅ Confirm Stake (with 0.5% fee + no upline income)
+window.confirmStake = async function() {
+  if (!currentUserId) {
+    showPopup("User not authenticated");
+    return;
   }
 
-  // ✅ Safe check for plan object
-  if(!currentPlanObj || !currentPlanObj.planName || !currentPlanObj.dailyRate){ 
-    showPopup("Plan not selected properly ❌"); 
-    return; 
+  if (!currentPlanObj || !currentPlanObj.planName || !currentPlanObj.dailyRate) {
+    showPopup("Plan not selected properly ❌");
+    return;
   }
 
   const amount = parseFloat(stakeInput.value);
-  if(isNaN(amount) || amount <= 0){ 
-    showPopup("Enter valid amount"); 
-    return; 
-  }
-  if(amount < currentPlanObj.minAmount || amount > currentPlanObj.maxAmount){
-    showPopup(`Amount must be between ${currentPlanObj.minAmount} and ${currentPlanObj.maxAmount}`);
+  if (isNaN(amount) || amount <= 0) {
+    showPopup("Enter valid amount");
     return;
   }
+
+  if (amount < currentPlanObj.minAmount || amount > currentPlanObj.maxAmount) {
+    showPopup(
+      `Amount must be between ${currentPlanObj.minAmount} and ${currentPlanObj.maxAmount}`
+    );
+    return;
+  }
+
+  // ✅ 0.5% cut calculation
+  const feePercent = 0.5;
+  const feeAmount = +(amount * (feePercent / 100)).toFixed(2);
+  const stakeAmount = +(amount - feeAmount).toFixed(2);
 
   closeModal();
 
   const userRef = doc(db, "users", currentUserId);
-  try{
+
+  try {
     await runTransaction(db, async (tx) => {
       const uSnap = await tx.get(userRef);
-      if(!uSnap.exists()) throw "User data missing";
-      const balance = uSnap.data().walletBalance || 0;
-      if(balance < amount) throw "Insufficient balance";
+      if (!uSnap.exists()) throw "User data missing";
 
-      tx.update(userRef, { 
+      const balance = uSnap.data().walletBalance || 0;
+      if (balance < amount) throw "Insufficient balance";
+
+      // ✅ Cut total amount (including fee)
+      tx.update(userRef, {
         walletBalance: balance - amount,
-        totalStack: (uSnap.data().totalStack || 0) + amount
+        totalStack: (uSnap.data().totalStack || 0) + stakeAmount
       });
 
-      // ✅ Ab safe dailyRate use karo
+      // ✅ Plan duration
       const dailyRate = Number(currentPlanObj.dailyRate) || 0;
-
-      let days = 1; 
+      let days = 1;
       const planName = (currentPlanObj.planName || "").toLowerCase();
-      if(planName.includes("15")) days = 15;
-      else if(planName.includes("30")) days = 30;
+      if (planName.includes("15")) days = 15;
+      else if (planName.includes("30")) days = 30;
 
-      const expiryMs = Date.now() + days*24*60*60*1000;
-      const expiryDate = new Date(expiryMs);
+      const expiryDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
 
-      // ✅ possibleIncome calculate
-      const dailyProfit = amount * (dailyRate / 100);
-      const userDailyShare = dailyProfit * 0.70;  
-      const possibleIncome = +(userDailyShare * days).toFixed(2);
+      // ✅ possible income calc (user gets 100%)
+      const dailyProfit = stakeAmount * (dailyRate / 100);
+      const possibleIncome = +(dailyProfit * days).toFixed(2);
 
       const stakeDoc = {
-        amount,
+        amount: stakeAmount,         // ✅ after 0.5% cut
+        feeDeducted: feeAmount,
+        feePercent: feePercent,
         startTime: serverTimestamp(),
         endTime: Timestamp.fromDate(expiryDate),
         status: "Active",
@@ -564,17 +574,27 @@ window.confirmStake = async function(){
         possibleIncome: possibleIncome,
         accruedIncome: 0,
         lastAccrual: serverTimestamp(),
-        userPercent: 0.70,
-        upline1Percent: 0.17,
-        upline2Percent: 0.08,
-        upline3Percent: 0.05
+        userPercent: 1.0,            // ✅ 100% user ko hi milega
+        upline1Percent: 0.0,
+        upline2Percent: 0.0,
+        upline3Percent: 0.0
       };
 
       const invCol = collection(db, "users", currentUserId, "investments");
       await addDoc(invCol, stakeDoc);
+
+      // ✅ Optional: agar chaahe fee admin UID me jaye
+      // const adminRef = doc(db, "users", "ADMIN_UID_YAHAN_DAL");
+      // const adminSnap = await tx.get(adminRef);
+      // if (adminSnap.exists()) {
+      //   tx.update(adminRef, {
+      //     walletBalance: (adminSnap.data().walletBalance || 0) + feeAmount
+      //   });
+      // }
     });
-    showPopup("Stake created successfully ✅");
-  }catch(err){
+
+    showPopup(`0.5% fee (${feeAmount} USDT) deducted. Stake created ✅`);
+  } catch (err) {
     console.error(err);
     showPopup(typeof err === "string" ? err : "Error creating stake");
   }
@@ -719,34 +739,54 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 </script>
-
 <script>
-// ❌ Right-click disable
-  document.addEventListener("contextmenu", function(e) {
-    e.preventDefault();
-    
-  });
+  // 🚫 Disable right click, select, drag
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
 
-// ❌ Disable text selection
-  document.addEventListener("selectstart", function(e) {
-    e.preventDefault();
-  });
-
-// ❌ Disable copy (Ctrl+C), cut (Ctrl+X), paste (Ctrl+V), view-source (Ctrl+U)
-  document.addEventListener("keydown", function(e) {
+  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
+  document.addEventListener("keydown", e => {
     if (
-      (e.ctrlKey && (e.key === "c" || e.key === "C")) || 
-      (e.ctrlKey && (e.key === "x" || e.key === "X")) || 
-      (e.ctrlKey && (e.key === "v" || e.key === "V")) || 
-      (e.ctrlKey && (e.key === "u" || e.key === "U")) || 
-    (e.key === "F12") // DevTools
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
     ) {
       e.preventDefault();
-    
-  }
-});
+      return false;
+    }
+  });
+
+  // 🔒 Silent DevTools detection (no popup)
+  (function() {
+    const devtools = /./;
+    devtools.toString = function() {
+      return ""; // no alert or console log
+    };
+    console.log("%c", devtools);
+  })();
+
+  // 🔐 Detect DevTools using resize trick (no popup)
+  setInterval(() => {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    if (widthDiff || heightDiff) {
+      // Optional: silently redirect or blank the page
+      document.body.innerHTML = "";
+    }
+  }, 1000);
+
+  // 🧱 Disable copy/paste/cut
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // 🔁 Freeze console methods silently
+  Object.freeze(console);
+  Object.freeze(window.console);
 </script>
+
 </body>
 </html>
-
 
