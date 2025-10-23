@@ -1412,61 +1412,52 @@ window.manualRefresh = function () {
     }
   });
 
-  async function loadWithdrawCard(uid) {
-    try {
-      let totalFunds = 0;
+async function loadWithdrawCard(uid) {
+  try {
+    // 🔹 User document se lifetimeDeposit, walletBalance wagairah fetch karo
+    const ref = doc(db, "users", uid);
+    const snap = await getDoc(ref);
 
-      // 🔹 User wallet balance
-      const ref = doc(db, "users", uid);
-      const snap = await getDoc(ref);
-      if (snap.exists()) {
-        const data = snap.data();
-        totalFunds += parseFloat(data.walletBalance || 0);
-      }
+    if (!snap.exists()) return;
 
-      // 🔹 Investments
-      const investSnap = await getDocs(collection(db, "users", uid, "investments"));
-      investSnap.forEach(docSnap => {
-        const inv = docSnap.data();
-        if (inv.amount) totalFunds += parseFloat(inv.amount);
-      });
+    const data = snap.data();
+    const lifetimeDeposit = parseFloat(data.lifetimeDeposit || 0);
+    const walletBalance = parseFloat(data.walletBalance || 0);
+    const lifetimeWithdrawal = parseFloat(data.lifetimeWithdrawal || 0);
 
-      // 🔹 Staking
-      const stakingSnap = await getDocs(collection(db, "users", uid, "staking"));
-      stakingSnap.forEach(docSnap => {
-        const stk = docSnap.data();
-        if (stk.amount) totalFunds += parseFloat(stk.amount);
-      });
+    // ✅ Timing rules (based on lifetimeDeposit)
+    let timing = "Not Ready";
 
-      // 🔹 Timing rules
-      let timing = "Not Ready";
-      if (totalFunds >= 50000) timing = "Same Day";
-      else if (totalFunds >= 10000) timing = "1 Day";
-      else if (totalFunds >= 5000) timing = "2 Days";
-      else if (totalFunds >= 500) timing = "10 Days";
-      else if (totalFunds >= 200) timing = "20 Days";
+    if (lifetimeDeposit >= 100000) timing = "Same Day";
+    else if (lifetimeDeposit >= 50000) timing = "5 Days";
+    else if (lifetimeDeposit >= 10000) timing = "10 Days";
+    else if (lifetimeDeposit >= 5000) timing = "15 Days";
+    else if (lifetimeDeposit >= 500) timing = "25 Days";
+    else if (lifetimeDeposit >= 200) timing = "30 Days";
 
-      document.getElementById("withdrawLevel").textContent =
+    // ✅ Show timing text
+    document.getElementById("withdrawLevel").textContent =
       "Release In " + timing;
 
+    // ✅ Show total withdraw (completed only)
+    const q = query(collection(db, "users", uid, "withdrawals"));
+    const querySnapshot = await getDocs(q);
 
-      // 🔹 Total completed withdrawals
-      const q = query(collection(db, "users", uid, "withdrawals"));
-      const querySnapshot = await getDocs(q);
+    let totalWithdraw = 0;
+    querySnapshot.forEach(docSnap => {
+      const wd = docSnap.data();
+      if ((wd.status || "").toLowerCase() === "completed" && wd.amount) {
+        totalWithdraw += parseFloat(wd.amount);
+      }
+    });
 
-      let totalWithdraw = 0;
-      querySnapshot.forEach(docSnap => {
-        const wd = docSnap.data();
-        if ((wd.status || "").toLowerCase() === "completed" && wd.amount) {
-          totalWithdraw += parseFloat(wd.amount);
-        }
-      });
+    // ✅ Update both cards
+    document.getElementById("totalWithdraw").textContent = totalWithdraw.toFixed(2);
 
-      document.getElementById("totalWithdraw").textContent = totalWithdraw.toFixed(2);
-    } catch (err) {
-      console.error("Error loading withdraw card:", err);
-    }
+  } catch (err) {
+    console.error("❌ Error loading withdraw card:", err);
   }
+}
 
 // ✅ Load external pages aur scroll fix
 window.loadPage = function (page) {
@@ -1559,8 +1550,52 @@ window.addEventListener("touchend", () => {
 
 
 </script>
+<script>
+  // 🚫 Disable right click, select, drag
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
+
+  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
+  document.addEventListener("keydown", e => {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // 🔒 Silent DevTools detection (no popup)
+  (function() {
+    const devtools = /./;
+    devtools.toString = function() {
+      return ""; // no alert or console log
+    };
+    console.log("%c", devtools);
+  })();
+
+  // 🔐 Detect DevTools using resize trick (no popup)
+  setInterval(() => {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    if (widthDiff || heightDiff) {
+      // Optional: silently redirect or blank the page
+      document.body.innerHTML = "";
+    }
+  }, 1000);
+
+  // 🧱 Disable copy/paste/cut
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // 🔁 Freeze console methods silently
+  Object.freeze(console);
+  Object.freeze(window.console);
+</script>
 </body>
 </html>
-
-
-
