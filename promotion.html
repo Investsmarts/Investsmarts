@@ -490,19 +490,21 @@ onAuthStateChanged(auth, async user => {
   const currentUser = { ...snap.data(), uid: user.uid };
 
   // ✅ Generate Referral Link + QR Code (add this)
-  const finalRefLink = `https://smartfundad.com/index.html?ref=${currentUser.referralCode || user.uid}`;
-  const shortLink = finalRefLink.length > 35 ? finalRefLink.slice(0, 35) + "..." : finalRefLink;
-  document.getElementById("refLink").innerHTML = `<span style="color:#2563eb">${shortLink}</span>`;
+const refCode = currentUser.referralCode || user.uid;
+const finalRefLink = `https://smartfundad.com/index.html?ref=${refCode}`;
+document.getElementById("refLink").textContent = finalRefLink;
 
-  document.getElementById("qrcode").innerHTML = ""; // clear old QR if any
-  new QRCode(document.getElementById("qrcode"), {
-    text: finalRefLink,
-    width: 120,
-    height: 120,
-    colorDark: "#000000",
-    colorLight: "#ffffff",
-    correctLevel: QRCode.CorrectLevel.H
-  });
+// QR code
+document.getElementById("qrcode").innerHTML = "";
+new QRCode(document.getElementById("qrcode"), {
+  text: finalRefLink,
+  width: 120,
+  height: 120,
+  colorDark: "#000000",
+  colorLight: "#ffffff",
+  correctLevel: QRCode.CorrectLevel.H
+});
+
 
   // ✅ team query and level system continue as before
   const ref1 = query(collection(db, "users"), where("referredBy", "==", currentUser.referralCode));
@@ -608,7 +610,6 @@ function showPopup(message, color = "#00c853") {
   // 🔁 Freeze console methods silently
   Object.freeze(console);
   Object.freeze(window.console);
-  
 </script>
 </body>
-</html>
+</html>s
