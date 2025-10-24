@@ -557,7 +557,7 @@ function scanFeature() {
 </div>
 
 
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
   <!-- ✅ Firebase + Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -857,10 +857,9 @@ onAuthStateChanged(auth, (user) => {
   } else {
     currentUserId = user.uid;
     loadDepositHistory(user.uid);
-    watchTotalDeposit(user.uid); // ✅ live updates (no refresh needed)
+    watchTotalDeposit(user.uid); // ✅ ye naya realtime listener hai
   }
 });
-
 
 window.copyOrderId = function(orderId) {
   navigator.clipboard.writeText(orderId);
