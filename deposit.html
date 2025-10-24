@@ -1,6 +1,4 @@
-
-
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -730,17 +728,26 @@ async function giveReferralCommission(userId, depositAmount) {
 
     const userData = userSnap.data();
 
-    // ✅ Upline chain (UIDs)
-    const uplines = [userData.upline1, userData.upline2, userData.upline3].filter(Boolean);
+    // ✅ Check uplines properly
+    const uplines = [
+      userData.upline1 || null,
+      userData.upline2 || null,
+      userData.upline3 || null,
+    ].filter(Boolean);
 
-    // ✅ Step 1: Check if this is user's FIRST successful deposit
+    console.log("🧩 Uplines found for", userId, "→", uplines);
+
+    // ✅ Step 1: Check if this is FIRST successful deposit
     const depositsSnap = await getDocs(collection(db, "users", userId, "deposits"));
-    const successful = depositsSnap.docs.filter(d => {
+    const successful = depositsSnap.docs.filter((d) => {
       const s = (d.data().status || "").toLowerCase();
-      return s === "completed" || s === "success";
+      return s === "completed" || s === "success" || s === "approved";
     });
 
-    if (successful.length > 1) return; // ❌ Not first deposit
+    if (successful.length > 1) {
+      console.log("⚠️ Not first deposit — no referral given.");
+      return;
+    }
 
     // ✅ Step 2: 3-Level Commission
     const commissionRates = [0.03, 0.02, 0.01]; // 3%, 2%, 1%
@@ -751,26 +758,30 @@ async function giveReferralCommission(userId, depositAmount) {
 
       const refUserRef = doc(db, "users", refUID);
       const refUserSnap = await getDoc(refUserRef);
-      if (!refUserSnap.exists()) continue;
+      if (!refUserSnap.exists()) {
+        console.log(`⚠️ Level ${level + 1}: Referrer ${refUID} not found.`);
+        continue;
+      }
 
       const refData = refUserSnap.data();
       const commission = depositAmount * commissionRates[level];
+      const commissionFixed = parseFloat(commission.toFixed(2));
 
-      // ✅ Add record in referrer's commission history
+      // ✅ Add commission record only once per deposit
       await addDoc(collection(db, "users", refUID, "commissions"), {
         fromUser: userId,
         level: level + 1,
-        amount: commission.toFixed(2),
+        amount: commissionFixed,
         date: serverTimestamp(),
         note: `Level ${level + 1} reward from ${userId}'s first deposit`,
       });
 
-      // ✅ Add reward to referrer's wallet and total lifetime income
+      // ✅ Update wallet + lifetimeReferralIncome
       const currentWallet = parseFloat(refData.walletBalance || 0);
-      const newWallet = currentWallet + commission;
+      const newWallet = currentWallet + commissionFixed;
 
       const totalReferral = parseFloat(refData.lifetimeReferralIncome || 0);
-      const newTotalReferral = totalReferral + commission;
+      const newTotalReferral = totalReferral + commissionFixed;
 
       await updateDoc(refUserRef, {
         walletBalance: newWallet,
@@ -778,13 +789,11 @@ async function giveReferralCommission(userId, depositAmount) {
       });
 
       console.log(
-        `✅ Level ${level + 1} Reward: $${commission.toFixed(
-          2
-        )} added to ${refUID}'s wallet`
+        `✅ Level ${level + 1}: $${commissionFixed} added to ${refUID} (Wallet=$${newWallet.toFixed(2)})`
       );
     }
-  } catch (e) {
-    console.error("Commission reward error:", e);
+  } catch (err) {
+    console.error("❌ Error in giveReferralCommission:", err);
   }
 }
 
