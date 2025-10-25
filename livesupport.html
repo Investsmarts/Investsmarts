@@ -142,6 +142,10 @@ body {
   40% { transform: scale(1); opacity: 1; }
 }
 
+.chat-container {
+  transition: padding-bottom 0.25s ease;
+}
+
 </style>
 </head>
 <body>
@@ -388,6 +392,38 @@ function showTopNotification(title, msg) {
   }, 4000);
 }
 </script>
+<script>
+/* ✅ Mobile keyboard auto-scroll fix */
+if (/Mobi|Android/i.test(navigator.userAgent)) {
+  const msgInput = document.getElementById('msgInput');
+  const chatBox = document.getElementById('chatBox');
+
+  // Jab keyboard khule
+  msgInput.addEventListener('focus', () => {
+    // Bottom padding thoda zyada karte hain so keyboard se overlap na ho
+    chatBox.style.paddingBottom = '220px';
+    setTimeout(() => {
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }, 300);
+  });
+
+  // Jab keyboard band ho
+  msgInput.addEventListener('blur', () => {
+    chatBox.style.paddingBottom = '100px';
+    setTimeout(() => {
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }, 200);
+  });
+
+  // Screen resize hone par (orientation ya keyboard open/close)
+  window.addEventListener('resize', () => {
+    setTimeout(() => {
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }, 200);
+  });
+}
+</script>
+
 <script>
   // 🚫 Disable right click, select, drag
   document.addEventListener("contextmenu", e => e.preventDefault());
