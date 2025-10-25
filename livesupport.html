@@ -18,7 +18,7 @@ body {
   font-family:'Poppins',sans-serif;
   background:var(--bg);
   margin:0;
-  height:100vh;
+  height: calc(var(--vh, 1vh) * 100);
   display:flex;
   flex-direction:column;
   overflow:hidden;
@@ -393,36 +393,42 @@ function showTopNotification(title, msg) {
 }
 </script>
 <script>
-/* ✅ Mobile keyboard auto-scroll fix */
-if (/Mobi|Android/i.test(navigator.userAgent)) {
-  const msgInput = document.getElementById('msgInput');
-  const chatBox = document.getElementById('chatBox');
+/* ✅ Mobile keyboard fix for chat input overlap */
+const chatBox = document.getElementById('chatBox');
+const msgInput = document.getElementById('msgInput');
 
-  // Jab keyboard khule
-  msgInput.addEventListener('focus', () => {
-    // Bottom padding thoda zyada karte hain so keyboard se overlap na ho
-    chatBox.style.paddingBottom = '220px';
-    setTimeout(() => {
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }, 300);
-  });
-
-  // Jab keyboard band ho
-  msgInput.addEventListener('blur', () => {
-    chatBox.style.paddingBottom = '100px';
-    setTimeout(() => {
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }, 200);
-  });
-
-  // Screen resize hone par (orientation ya keyboard open/close)
-  window.addEventListener('resize', () => {
-    setTimeout(() => {
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }, 200);
-  });
+// Recalculate height dynamically
+function adjustChatHeight() {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+  chatBox.scrollTop = chatBox.scrollHeight;
 }
+
+// Call initially and whenever window resizes (keyboard opens)
+window.addEventListener('resize', adjustChatHeight);
+window.addEventListener('orientationchange', adjustChatHeight);
+window.addEventListener('load', adjustChatHeight);
+
+// Handle input focus/blur properly
+msgInput.addEventListener('focus', () => {
+  setTimeout(() => {
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }, 400);
+});
+
+msgInput.addEventListener('blur', () => {
+  setTimeout(() => {
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }, 400);
+});
+
+// Auto scroll when new message is added
+const observer = new MutationObserver(() => {
+  chatBox.scrollTop = chatBox.scrollHeight;
+});
+observer.observe(chatBox, { childList: true });
 </script>
+
 
 <script>
   // 🚫 Disable right click, select, drag
