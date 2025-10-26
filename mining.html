@@ -1021,7 +1021,7 @@ function showProPopup(title, msg, img) {
   if (title.toLowerCase().includes("missed") || title.toLowerCase().includes("error")) {
     // ❌ Red theme for missed/error
     card.style.background = "linear-gradient(145deg, #3b0000, #600000)";
-    card.style.boxShadow = "0 15px 35px rgba(255, 0, 0, 0.3), inset 0 2px 8px rgba(255, 255, 255, 0.08)";
+    card.style.boxShadow = "0 15px 35px rgba(255, 0, 0, 0.35), inset 0 2px 8px rgba(255, 255, 255, 0.08)";
   } 
   else if (title.toLowerCase().includes("earned") || title.toLowerCase().includes("completed")) {
     // 💸 Green theme for success
@@ -1034,18 +1034,24 @@ function showProPopup(title, msg, img) {
     card.style.boxShadow = "0 15px 35px rgba(0, 0, 0, 0.6), inset 0 2px 8px rgba(255, 255, 255, 0.08)";
   }
 
-  // 🔹 Check if red popup
-  const isRedPopup = title.toLowerCase().includes("missed") || title.toLowerCase().includes("error");
-
-  // 🔹 Show immediately
+  // 🔹 Show popup
   popup.classList.add("show");
+  popup.style.transition = "opacity 0.5s ease";
 
-  // 🔹 Hide timing (red = longer duration)
-  const hideDelay = isRedPopup ? 5500 : 3500;
-  setTimeout(() => popup.classList.remove("show"), hideDelay);
+  // 🔹 Hide timing — red popup = slow fade & longest delay
+  const isRedPopup = title.toLowerCase().includes("missed") || title.toLowerCase().includes("error");
+  const hideDelay = isRedPopup ? 8000 : 3500; // ⏳ Red = 8s visible
+
+  setTimeout(() => {
+    popup.style.opacity = "0"; // smooth fade
+    setTimeout(() => {
+      popup.classList.remove("show");
+      popup.style.opacity = "1"; // reset opacity for next popup
+    }, 600);
+  }, hideDelay);
 }
-
 </script>
+
 <script type="module">
 /* =====================================
    ✅ BTCInvest Full Smart Mining Script
