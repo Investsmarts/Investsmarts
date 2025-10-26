@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Withdrawal Notification</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .popup {
+      background: #ffffff;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 16px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+      text-align: center;
+      overflow: hidden;
+      animation: fadeIn 0.4s ease-in-out;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #ff4d4d;
+      border: none;
+      color: white;
+      font-size: 20px;
+      font-weight: 600;
+      width: 26px;
+      height: 26px;
+      border-radius: 5px;
+      cursor: pointer;
+      line-height: 20px;
+      padding: 0;
+      transition: all 0.2s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-btn:hover {
+      background: #ff1a1a;
+      transform: scale(1.08);
+    }
+
+    .popup-header {
+      background: linear-gradient(180deg, #2ecc71, #27ae60);
+      color: #fff;
+      padding: 14px 0;
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+    }
+
+    .popup-body {
+      padding: 18px 20px;
+      color: #333;
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-y: auto;
+      flex-grow: 1;
+      scrollbar-width: none;
+    }
+
+    .popup-body::-webkit-scrollbar {
+      display: none;
+    }
+
+    .popup-body p {
+      margin: 0 0 10px 0;
+    }
+
+    .popup-body b {
+      color: #2ecc71;
+    }
+
+    .popup-footer {
+      background: linear-gradient(180deg, #2ecc71, #27ae60);
+      padding: 12px 0;
+      flex-shrink: 0;
+    }
+
+    .popup-footer button {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      transition: transform 0.15s ease-in-out;
+    }
+
+    .popup-footer button:hover {
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: scale(0.9);}
+      to {opacity: 1; transform: scale(1);}
+    }
+
+    @media (max-width: 480px) {
+      .popup {
+        width: 92%;
+        border-radius: 14px;
+      }
+      .popup-header {
+        font-size: 17px;
+      }
+      .popup-body {
+        font-size: 14px;
+        padding: 15px;
+      }
+      .close-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="popup" id="withdrawalPopup">
+    <button class="close-btn" onclick="goToDashboard()">×</button>
+    <div class="popup-header">Withdrawal Processing Notice</div>
+
+    <div class="popup-body">
+      <p>We are pleased to inform you that withdrawal processing will <b>commence on 27th October 2025</b>.</p>
+
+      <p><b>1️⃣ Important:</b> Please note that <b>withdrawal requests should not be made on Saturdays or Sundays</b>. These two days are reserved for internal system updates and maintenance.</p>
+
+      <p><b>2️⃣ All withdrawal timings have already been predefined</b> for every member, organized <b>level by level</b> to ensure smooth and systematic processing. These schedules have been carefully decided and issued directly by the <b>Trust Dollar Management Team</b>.</p>
+
+      <p>All eligible withdrawal requests will be credited directly to your respective wallets in accordance with the scheduled process.</p>
+
+      <p>We appreciate your patience and continued trust in <b>Trust Dollar</b>.</p>
+
+      <p>For any assistance or clarification, please contact our support team via the official communication channels provided within the application.</p>
+
+      <p>Kindly ensure that all your wallet details are updated and accurate to prevent any transaction delays or rejections during processing.</p>
+
+      <p>Thank you for your cooperation and support.</p>
+    </div>
+
+    <div class="popup-footer">
+      <button onclick="goToDashboard()">Confirm</button>
+    </div>
+  </div>
+
+  <script>
+    // ✅ Directly go to dashboard.html when user clicks X or Confirm
+    function goToDashboard() {
+      window.location.href = "dashboard.html";
+    }
+  </script>
+
+</body>
+</html>
