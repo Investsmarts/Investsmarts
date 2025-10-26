@@ -676,37 +676,38 @@ button:active {
   flex-direction: column;
   align-items: center;
   background: linear-gradient(145deg, #1f1f1f, #292929);
-  border-radius: 5px; /* ✅ Rounded corners reduced */
-  padding: 25px 22px 20px;
-  width: 290px;
+  border-radius: 8px;
+  padding: 18px 16px;
+  width: 230px; /* 👈 Popup chhota ho gaya */
   box-shadow:
-    0 15px 35px rgba(0, 0, 0, 0.6),
+    0 10px 25px rgba(0, 0, 0, 0.6),
     inset 2px 2px 6px rgba(255, 255, 255, 0.08),
     inset -2px -2px 6px rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: none; /* ✅ Blur removed */
+  backdrop-filter: none;
   animation: bounceIn 0.5s ease forwards;
 }
 
 
 /* 🟢 Icon Top (Glow Circle) */
 .popup-icon-top {
-  width: 80px;
-  height: 80px;
+  width: 65px;   /* 👈 pehle 80px tha */
+  height: 65px;  /* 👈 chhota aur balanced */
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, #00ffcc, #0077ff);
   display: flex;
   justify-content: center;
   align-items: center;
   box-shadow:
-    0 0 25px rgba(0, 255, 200, 0.5),
-    inset 0 2px 8px rgba(255, 255, 255, 0.3);
-  margin-bottom: 16px;
+    0 0 20px rgba(0, 255, 200, 0.4),
+    inset 0 2px 6px rgba(255, 255, 255, 0.25);
+  margin-bottom: 12px;  /* 👈 thoda spacing kam */
   animation: glowPulse 2s infinite ease-in-out;
 }
+
 .popup-icon-top img {
-  width: 45px;
-  height: 45px;
+  width: 36px;   /* 👈 pehle 45px tha */
+  height: 36px;
   object-fit: contain;
   filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.5));
 }
@@ -820,10 +821,20 @@ button:active {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 9999;
-  transition: all 0.4s ease;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 99999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
+
+/* Jab popup show ho */
+#proPopup.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
 
 </style>
 </head>
@@ -1022,7 +1033,7 @@ function showProPopup(title, msg, img) {
   const popupData = { title, msg, img };
   const isRed = title.toLowerCase().includes("missed") || title.toLowerCase().includes("error");
 
-  // 🔹 Red popups get priority
+  // 🔹 Red popup gets higher priority
   if (isRed) popupQueue.unshift(popupData);
   else popupQueue.push(popupData);
 
@@ -1044,7 +1055,7 @@ function processPopupQueue() {
   const imgEl = document.getElementById("proPopupImg");
   const card = popup.querySelector(".popup-3d-card");
 
-  // 🔹 Set content
+  // 🔹 Set popup content
   titleEl.innerText = title;
   msgEl.innerText = msg;
   imgEl.src = img || "https://cdn-icons-png.flaticon.com/512/190/190411.png";
@@ -1052,43 +1063,29 @@ function processPopupQueue() {
   // 🔹 Apply theme color
   if (title.toLowerCase().includes("missed") || title.toLowerCase().includes("error")) {
     card.style.background = "linear-gradient(145deg, #3b0000, #600000)";
-    card.style.boxShadow = "0 15px 35px rgba(255, 0, 0, 0.35), inset 0 2px 8px rgba(255,255,255,0.08)";
+    card.style.boxShadow = "0 15px 35px rgba(255, 0, 0, 0.35)";
   } 
   else if (title.toLowerCase().includes("earned") || title.toLowerCase().includes("completed")) {
     card.style.background = "linear-gradient(145deg, #004d1a, #00994c)";
-    card.style.boxShadow = "0 15px 35px rgba(0,255,0,0.25), inset 0 2px 8px rgba(255,255,255,0.08)";
+    card.style.boxShadow = "0 15px 35px rgba(0, 255, 0, 0.25)";
   } 
   else {
     card.style.background = "linear-gradient(145deg, #1f1f1f, #292929)";
-    card.style.boxShadow = "0 15px 35px rgba(0,0,0,0.6), inset 0 2px 8px rgba(255,255,255,0.08)";
+    card.style.boxShadow = "0 15px 35px rgba(0, 0, 0, 0.6)";
   }
 
-  // 🔹 Initial hidden position
-  popup.style.opacity = "0";
-  popup.style.transform = "translateY(-20px)";
-  popup.style.transition = "all 0.5s ease";
+  // ✅ Show popup (center + smooth)
   popup.classList.add("show");
 
-  // 🔹 Animate IN (slide + fade)
-  setTimeout(() => {
-    popup.style.opacity = "1";
-    popup.style.transform = "translateY(0)";
-  }, 50);
-
-  // 🔹 Hide after delay
   const isRed = title.toLowerCase().includes("missed") || title.toLowerCase().includes("error");
   const hideDelay = isRed ? 8000 : 3500;
 
+  // ✅ Auto-hide with fade-out
   setTimeout(() => {
-    // 🔹 Animate OUT (slide down + fade)
-    popup.style.opacity = "0";
-    popup.style.transform = "translateY(20px)";
+    popup.classList.remove("show");
     setTimeout(() => {
-      popup.classList.remove("show");
-      popup.style.opacity = "1";
-      popup.style.transform = "translateY(0)";
       processPopupQueue(); // next popup
-    }, 600);
+    }, 500);
   }, hideDelay);
 }
 </script>
@@ -1565,57 +1562,37 @@ function listenIncomeBoxes() {
     animateCounter("refIncomeBox", refTotal);
 
     // ✅ detect newly added income in real-time
-// ✅ detect newly added income in real-time
-snap.docChanges().forEach(async change => {
-  if (change.type === "added") {
-    const newDoc = change.doc.data();
+    snap.docChanges().forEach(async change => {
+      if (change.type === "added") {
+        const newDoc = change.doc.data();
 
-    // 🕓 Check if this record is from today only
-    const today = new Date();
-    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
-    const todayEnd = todayStart + 86400000;
+        // 🕓 Check if this record is from today only
+        if (newDoc.time < todayStart || newDoc.time >= todayEnd) return;
 
-    if (newDoc.time < todayStart || newDoc.time >= todayEnd) {
-      // ⛔ Skip old popups (not from today)
-      return;
-    }
+        // 🟢 Get downline name
+        let fromName = "Your Downline";
+        try {
+          const downRef = doc(db, "users", newDoc.fromUser);
+          const downSnap = await getDoc(downRef);
+          if (downSnap.exists()) {
+            const dData = downSnap.data();
+            fromName = dData.name || dData.username || "Unnamed";
+          }
+        } catch (err) {
+          console.warn("⚠️ Downline fetch failed:", err);
+        }
 
-    // 🟢 Get downline name
-    let fromName = "Your Downline";
-    try {
-      const downRef = doc(db, "users", newDoc.fromUser);
-      const downSnap = await getDoc(downRef);
-      if (downSnap.exists()) {
-        const dData = downSnap.data();
-        fromName = dData.name || dData.username || "Unnamed";
-      }
-    } catch (err) {
-      console.warn("⚠️ Downline fetch failed:", err);
-    }
-
-    // 🟢 Earned popup (if amount > 0)
-    if (newDoc.amount > 0 && !newDoc.skipped) {
-      setTimeout(() => {
-        showProPopup(
-          "Referral Earned 💸",
-          `You received $${newDoc.amount.toFixed(2)} from ${fromName} (Level ${newDoc.level}).`,
-          "https://cdn-icons-png.flaticon.com/512/190/190411.png"
-        );
-      }, 300);
-    }
-
-    // 🔴 Missed popup (if 0 or skipped)
-    else if (newDoc.skipped || Number(newDoc.amount || 0) === 0) {
-      showProPopup(
-        "Referral Missed ❌",
-        `You missed income from ${fromName} because your balance was too low.`,
-        "https://cdn-icons-png.flaticon.com/512/463/463612.png"
-      );
-    }
-  }
-});
-
-        // 🔴 Missed popup (if 0 or skipped)
+        // 🟢 Earned popup
+        if (newDoc.amount > 0 && !newDoc.skipped) {
+          setTimeout(() => {
+            showProPopup(
+              "Referral Earned 💸",
+              `You received $${newDoc.amount.toFixed(2)} from ${fromName} (Level ${newDoc.level}).`,
+              "https://cdn-icons-png.flaticon.com/512/190/190411.png"
+            );
+          }, 300);
+        }
+        // 🔴 Missed popup
         else if (newDoc.skipped || Number(newDoc.amount || 0) === 0) {
           showProPopup(
             "Referral Missed ❌",
@@ -1625,8 +1602,8 @@ snap.docChanges().forEach(async change => {
         }
       }
     });
-  });
-}
+  }); // ✅ close onSnapshot
+} // ✅ close listenIncomeBoxes()
 
 /* 🔹 Smooth animated counter (same mast version) */
 function animateCounter(elementId, targetValue) {
@@ -1644,53 +1621,6 @@ function animateCounter(elementId, targetValue) {
 }
 
 </script>
-<script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
-
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  });
-
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
-
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
-
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
-</script>
 
 </body>
-</html>s
+</html>
