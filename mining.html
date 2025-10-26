@@ -815,7 +815,7 @@ button:active {
   }
 }
 
-  </style>
+</style>
 </head>
 <body>
 <div id="popupMsg" class="popup"></div>
@@ -1478,6 +1478,7 @@ async function updateIncomeBoxes() {
 
 
 /* 🔥 REALTIME Income Boxes — with animation */
+/* 🔥 REALTIME Income Boxes — with animation (Daily Reset Support) */
 function listenIncomeBoxes() {
   if (!currentUser) return;
 
@@ -1493,16 +1494,64 @@ function listenIncomeBoxes() {
     animateCounter("selfIncomeBox", selfTotal); // 🔥 animation stays
   });
 
-  // --- Referral Income realtime listener ---
+  // --- Referral Income realtime listener (Only today's income) ---
   const refQuery = query(collection(db, "referral_income"), where("toUpline", "==", uid));
-  onSnapshot(refQuery, (snap) => {
+  let lastDocCount = 0;
+
+  onSnapshot(refQuery, async (snap) => {
     let refTotal = 0;
+    const today = new Date();
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+    const todayEnd = todayStart + 86400000; // +24 hours
+
     snap.forEach(docSnap => {
-      refTotal += Number(docSnap.data().amount || 0);
+      const data = docSnap.data();
+      if (data.time >= todayStart && data.time < todayEnd) {
+        refTotal += Number(data.amount || 0);
+      }
     });
-    animateCounter("refIncomeBox", refTotal); // 🔥 animation stays
+
+    animateCounter("refIncomeBox", refTotal);
+
+    // 🔹 Detect new record (means new income just added)
+    if (snap.docs.length > lastDocCount && snap.docs.length > 0) {
+      const newDoc = snap.docs[0].data();
+
+      // 🟢 Fetch downline name for popup
+      let fromName = "Your Downline";
+      try {
+        const downRef = doc(db, "users", newDoc.fromUser);
+        const downSnap = await getDoc(downRef);
+        if (downSnap.exists()) {
+          const dData = downSnap.data();
+          fromName = dData.name || dData.username || "Unnamed";
+        }
+      } catch (err) {
+        console.warn("⚠️ Could not fetch downline name:", err);
+      }
+
+      // 🟩 Earned popup
+      if (newDoc.amount > 0 && !newDoc.skipped) {
+        showProPopup(
+          "Referral Earned 💸",
+          `You received $${newDoc.amount.toFixed(2)} from ${fromName} (Level ${newDoc.level}).`,
+          "https://cdn-icons-png.flaticon.com/512/190/190411.png"
+        );
+      } 
+      // 🔴 Missed popup
+      else if (newDoc.skipped) {
+        showProPopup(
+          "Referral Missed ❌",
+          `You missed income from ${fromName} because your balance was too low.`,
+          "https://cdn-icons-png.flaticon.com/512/463/463612.png"
+        );
+      }
+    }
+
+    lastDocCount = snap.docs.length;
   });
 }
+
 
 /* 🔹 Smooth animated counter (same mast version) */
 function animateCounter(elementId, targetValue) {
