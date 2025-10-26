@@ -28,97 +28,109 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* HEADER PROFILE CARD */
+
+/* === PROFILE CARD FIXED FIT VERSION === */
 .profile-header {
-  background: linear-gradient(145deg, #00c853, #00bfa5);
-  color: #fff;
-  border-radius: 5px
-  padding: 25px 20px 60px;
-  text-align: center;
- 
   position: relative;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 5px;
+  padding: 25px 25px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+  max-width: 640px;
+  margin: 15px auto;
+  font-family: 'Poppins', sans-serif;
+  color: #222;
+  border: 1px solid #e9e9e9;
 }
 
+/* 🔹 Top Gradient Strip */
+.profile-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background: linear-gradient(90deg, #00c853, #00bfa5, #00e676);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+/* PROFILE IMAGE LEFT */
 .profile-pic {
-  width: 90px;
-  height: 90px;
+  flex-shrink: 0;
+  width: 140px;
+  height: 140px;
   border-radius: 5px;
-  border: 3px solid #fff;
   overflow: hidden;
-  margin: 0 auto 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  border: 3px solid #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  background: #f0f0f0;
 }
 .profile-pic img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 5px;
 }
 
+/* RIGHT SIDE INFO (no internal boxes) */
 .profile-info {
-  font-size: 18px;
-}
-.profile-name {
-  font-size: 18px;
-  font-weight: 600;
-  word-break: break-word;
-}
-
-/* UID + LAST LOGIN */
-.uid {
-  font-size: 13px;
-  opacity: 0.9;
-  word-break: break-all;
-}
-.last-login {
-  font-size: 12px;
-  color: #e0f2f1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding-left: 10px;
 }
 
-/* BALANCE CARD */
-.balance-card {
-  background: #ffffff;
-  border-radius: 5px;
-  width: 92%;
-  max-width: 450px;
-  margin: 20px auto 20px; /* added top margin instead of overlap */
-  box-shadow: 0 4px 14px rgba(0,0,0,0.05);
-  text-align: center;
-  padding: 20px 10px 25px;
-  position: relative;
-  z-index: 1;
-}
-
-.balance-amount {
-  font-size: 22px;
-  font-weight: 700;
-  color: #00c853;
-  margin-bottom: 10px;
-}
-
-.enter-wallet {
-  background: #00c853;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 14px;
+/* Each Info Line (Simple Row - No Box) */
+.info-box {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  color: #333;
+  line-height: 1.4;
+  background: transparent;
   border: none;
-  cursor: pointer;
-  margin-top: 6px;
-  transition: all 0.2s ease;
-}
-.enter-wallet:hover {
-  background: #00b34a;
+  padding: 0;
+  box-shadow: none;
 }
 
-/* Responsive fine-tuning */
-@media (max-width: 480px) {
-  .balance-card {
-    width: 94%;
-    margin: 16px auto 18px; /* reduced for small screens */
-    padding: 18px 8px 22px;
+/* ✅ Tick before text */
+.info-box::before {
+  content: "✔";
+  color: #00c853;
+  font-size: 14px;
+  margin-right: 8px;
+  animation: tickBlink 1.5s infinite ease-in-out;
+}
+
+/* Tick Animation */
+@keyframes tickBlink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.15); }
+}
+
+/* Responsive — image stays left */
+@media (max-width: 600px) {
+  .profile-header {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px 15px;
+  }
+  .profile-pic {
+    width: 110px;
+    height: 110px;
+  }
+  .info-box {
+    font-size: 13px;
   }
 }
+
 
 /* ACTION GRID */
 .action-grid {
@@ -397,6 +409,78 @@ body {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
 }
+/* 🔸 Thin Gradient Header Bar */
+.profile-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10px;  /* ✅ strip height */
+  background: linear-gradient(90deg, #00c853, #00bfa5, #00e676);
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+}
+
+
+/* 🟢 LIVE STATUS INDICATOR */
+.live-status {
+  position: absolute;
+  bottom: 15px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 200, 83, 0.1);
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 200, 83, 0.25);
+  font-size: 13px;
+  font-weight: 500;
+  color: #00c853;
+  box-shadow: 0 2px 8px rgba(0, 200, 83, 0.2);
+  animation: fadeSlideIn 0.6s ease;
+}
+
+.live-dot {
+  width: 10px;
+  height: 10px;
+  background-color: #00c853;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 200, 83, 0.8);
+  animation: pulseLive 1.4s infinite ease-in-out;
+}
+
+/* ✨ Soft Blink Animation */
+@keyframes pulseLive {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.5; }
+}
+
+/* ✨ Slide-in entry animation */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 📱 Adjust on small screens */
+@media (max-width: 600px) {
+  .live-status {
+    bottom: 10px;
+    right: 10px;
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+}
+.live-dot {
+  width: 10px;
+  height: 10px;
+  background-color: #00ff55;
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(0, 255, 55, 0.8);
+  animation: pulseLive 0.9s infinite ease-in-out;
+}
+
 
 </style>
 
@@ -405,24 +489,25 @@ body {
 
 <div id="newNotifAlert" class="center-alert">🔔 You have a new notification!</div>
 
-
 <div class="profile-header">
   <div class="profile-pic">
     <img id="profileImage" alt="User">
   </div>
-  <div class="profile-info">
-    <div class="profile-name" id="userName">Loading...</div>
-    <div class="join-date" id="joinDate">Joined: --</div>
 
-    <div class="uid" id="userUID">Email: Loading...</div>
-    <div class="last-login" id="lastLogin">Last login: --</div>
+  <div class="profile-info">
+    <div class="info-box" id="userName">Loading...</div>
+    <div class="info-box" id="joinDate">Joined: --</div>
+    <div class="info-box" id="userUID">Email: Loading...</div>
+    <div class="info-box" id="lastLogin">Last login: --</div>
+  </div>
+
+  <!-- ✅ Sahi jagah -->
+  <div class="live-status">
+    <span class="live-dot"></span>
+    <span class="live-text">Your account is live</span>
   </div>
 </div>
 
-<div class="balance-card">
-  <div class="balance-amount" id="userBalance"><div>₮</div>0.00</div>
-  <button class="enter-wallet">Enter Wallet</button>
-</div>
 
 <div class="action-grid">
   <div class="action-item"><i class='bx bx-wallet'></i><span>Paytm</span></div>
@@ -531,10 +616,16 @@ const newNotifAlert = document.getElementById("newNotifAlert");
 profileImage.src = `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70) + 1}`;
 
 onAuthStateChanged(auth, async (user) => {
-  if (!user) {
+  // ✅ Live indicator logic yahan hona chahiye
+  const liveStatus = document.querySelector(".live-status");
+  if (user) {
+    liveStatus.style.display = "flex";
+  } else {
+    liveStatus.style.display = "none";
     location.href = "login.html";
     return;
   }
+
 
   // ✅ Create Notifications Subcollection Automatically
   try {
@@ -565,7 +656,7 @@ onAuthStateChanged(auth, async (user) => {
       userUIDEl.textContent = `Email: ${user.email}`;
       lastLoginEl.textContent = "Last login: " + new Date().toLocaleString();
       const balanceValue = data.walletBalance ?? data.balance ?? data.wallet ?? data.amount ?? 0;
-      userBalanceEl.textContent = parseFloat(balanceValue).toFixed(2);
+      
       profileImage.src = user.photoURL || profileImage.src;
     }
   } catch (error) {
@@ -680,13 +771,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // 🔁 Freeze console methods silently
   Object.freeze(console);
   Object.freeze(window.console);
-  
 </script>
+
 </body>
 </html>
-
-
-
-
-
-
