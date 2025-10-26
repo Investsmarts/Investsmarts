@@ -1094,7 +1094,7 @@ let mining = false;
 let timerInterval = null;
 
 // profit rate
-const DAILY_RATE = 0.01; // 1% per day
+const DAILY_RATE = 0.009; // 1% per day
 
 /* 🔹 Helper: Popup Message */
 function showPopup(msg) {
@@ -1161,11 +1161,22 @@ async function distributeCommission(fromUID, upline1, upline2, upline3, profitAm
   ];
 
   // 🔹 Get downline's mining info
-  const downRef = doc(db, "users", fromUID);
-  const downSnap = await getDoc(downRef);
-  const downData = downSnap.exists() ? downSnap.data() : {};
-  const downMining = Number(downData.miningAmount || 0);
-  const downName = downData.name || downData.username || "Your Downline";
+const downRef = doc(db, "users", fromUID);
+const downSnap = await getDoc(downRef);
+const downData = downSnap.exists() ? downSnap.data() : {};
+const downName = downData.name || downData.username || "Your Downline";
+
+// ✅ New method: get latest mining release record
+let downMining = 0;
+const releaseQuery = query(
+  collection(db, "mining_releases"),
+  where("user", "==", fromUID),
+  orderBy("time", "desc")
+);
+const releaseSnap = await getDocs(releaseQuery);
+if (!releaseSnap.empty) {
+  downMining = Number(releaseSnap.docs[0].data().amount || 0);
+}
 
   // 🔹 Loop through each upline
   for (let i = 0; i < levels.length; i++) {
