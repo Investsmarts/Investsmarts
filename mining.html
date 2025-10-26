@@ -815,6 +815,16 @@ button:active {
   }
 }
 
+
+#proPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  transition: all 0.4s ease;
+}
+
 </style>
 </head>
 <body>
@@ -1005,7 +1015,29 @@ function closeMiningGuide() {
 </script>
 
 <script>
+let popupQueue = [];
+let isShowing = false;
+
 function showProPopup(title, msg, img) {
+  const popupData = { title, msg, img };
+  const isRed = title.toLowerCase().includes("missed") || title.toLowerCase().includes("error");
+
+  // 🔹 Red popups get priority
+  if (isRed) popupQueue.unshift(popupData);
+  else popupQueue.push(popupData);
+
+  if (!isShowing) processPopupQueue();
+}
+
+function processPopupQueue() {
+  if (popupQueue.length === 0) {
+    isShowing = false;
+    return;
+  }
+
+  isShowing = true;
+  const { title, msg, img } = popupQueue.shift();
+
   const popup = document.getElementById("proPopup");
   const titleEl = document.getElementById("proPopupTitle");
   const msgEl = document.getElementById("proPopupMsg");
@@ -1017,36 +1049,45 @@ function showProPopup(title, msg, img) {
   msgEl.innerText = msg;
   imgEl.src = img || "https://cdn-icons-png.flaticon.com/512/190/190411.png";
 
-  // 🔹 Auto theme (color logic)
+  // 🔹 Apply theme color
   if (title.toLowerCase().includes("missed") || title.toLowerCase().includes("error")) {
-    // ❌ Red theme for missed/error
     card.style.background = "linear-gradient(145deg, #3b0000, #600000)";
-    card.style.boxShadow = "0 15px 35px rgba(255, 0, 0, 0.35), inset 0 2px 8px rgba(255, 255, 255, 0.08)";
+    card.style.boxShadow = "0 15px 35px rgba(255, 0, 0, 0.35), inset 0 2px 8px rgba(255,255,255,0.08)";
   } 
   else if (title.toLowerCase().includes("earned") || title.toLowerCase().includes("completed")) {
-    // 💸 Green theme for success
     card.style.background = "linear-gradient(145deg, #004d1a, #00994c)";
-    card.style.boxShadow = "0 15px 35px rgba(0, 255, 0, 0.25), inset 0 2px 8px rgba(255, 255, 255, 0.08)";
+    card.style.boxShadow = "0 15px 35px rgba(0,255,0,0.25), inset 0 2px 8px rgba(255,255,255,0.08)";
   } 
   else {
-    // ⚡ Default dark
     card.style.background = "linear-gradient(145deg, #1f1f1f, #292929)";
-    card.style.boxShadow = "0 15px 35px rgba(0, 0, 0, 0.6), inset 0 2px 8px rgba(255, 255, 255, 0.08)";
+    card.style.boxShadow = "0 15px 35px rgba(0,0,0,0.6), inset 0 2px 8px rgba(255,255,255,0.08)";
   }
 
-  // 🔹 Show popup
+  // 🔹 Initial hidden position
+  popup.style.opacity = "0";
+  popup.style.transform = "translateY(-20px)";
+  popup.style.transition = "all 0.5s ease";
   popup.classList.add("show");
-  popup.style.transition = "opacity 0.5s ease";
 
-  // 🔹 Hide timing — red popup = slow fade & longest delay
-  const isRedPopup = title.toLowerCase().includes("missed") || title.toLowerCase().includes("error");
-  const hideDelay = isRedPopup ? 8000 : 3500; // ⏳ Red = 8s visible
+  // 🔹 Animate IN (slide + fade)
+  setTimeout(() => {
+    popup.style.opacity = "1";
+    popup.style.transform = "translateY(0)";
+  }, 50);
+
+  // 🔹 Hide after delay
+  const isRed = title.toLowerCase().includes("missed") || title.toLowerCase().includes("error");
+  const hideDelay = isRed ? 8000 : 3500;
 
   setTimeout(() => {
-    popup.style.opacity = "0"; // smooth fade
+    // 🔹 Animate OUT (slide down + fade)
+    popup.style.opacity = "0";
+    popup.style.transform = "translateY(20px)";
     setTimeout(() => {
       popup.classList.remove("show");
-      popup.style.opacity = "1"; // reset opacity for next popup
+      popup.style.opacity = "1";
+      popup.style.transform = "translateY(0)";
+      processPopupQueue(); // next popup
     }, 600);
   }, hideDelay);
 }
@@ -1524,33 +1565,55 @@ function listenIncomeBoxes() {
     animateCounter("refIncomeBox", refTotal);
 
     // ✅ detect newly added income in real-time
-    snap.docChanges().forEach(async change => {
-      if (change.type === "added") {
-        const newDoc = change.doc.data();
+// ✅ detect newly added income in real-time
+snap.docChanges().forEach(async change => {
+  if (change.type === "added") {
+    const newDoc = change.doc.data();
 
-        // 🟢 Get downline name
-        let fromName = "Your Downline";
-        try {
-          const downRef = doc(db, "users", newDoc.fromUser);
-          const downSnap = await getDoc(downRef);
-          if (downSnap.exists()) {
-            const dData = downSnap.data();
-            fromName = dData.name || dData.username || "Unnamed";
-          }
-        } catch (err) {
-          console.warn("⚠️ Downline fetch failed:", err);
-        }
+    // 🕓 Check if this record is from today only
+    const today = new Date();
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+    const todayEnd = todayStart + 86400000;
 
-   // 🟢 Earned popup (if amount > 0)
+    if (newDoc.time < todayStart || newDoc.time >= todayEnd) {
+      // ⛔ Skip old popups (not from today)
+      return;
+    }
+
+    // 🟢 Get downline name
+    let fromName = "Your Downline";
+    try {
+      const downRef = doc(db, "users", newDoc.fromUser);
+      const downSnap = await getDoc(downRef);
+      if (downSnap.exists()) {
+        const dData = downSnap.data();
+        fromName = dData.name || dData.username || "Unnamed";
+      }
+    } catch (err) {
+      console.warn("⚠️ Downline fetch failed:", err);
+    }
+
+    // 🟢 Earned popup (if amount > 0)
     if (newDoc.amount > 0 && !newDoc.skipped) {
-    setTimeout(() => {
-    showProPopup(
-      "Referral Earned 💸",
-      `You received $${newDoc.amount.toFixed(2)} from ${fromName} (Level ${newDoc.level}).`,
-      "https://cdn-icons-png.flaticon.com/512/190/190411.png"
-     );
-  }, 300); // ⏳ Smooth delay (300ms)
-}
+      setTimeout(() => {
+        showProPopup(
+          "Referral Earned 💸",
+          `You received $${newDoc.amount.toFixed(2)} from ${fromName} (Level ${newDoc.level}).`,
+          "https://cdn-icons-png.flaticon.com/512/190/190411.png"
+        );
+      }, 300);
+    }
+
+    // 🔴 Missed popup (if 0 or skipped)
+    else if (newDoc.skipped || Number(newDoc.amount || 0) === 0) {
+      showProPopup(
+        "Referral Missed ❌",
+        `You missed income from ${fromName} because your balance was too low.`,
+        "https://cdn-icons-png.flaticon.com/512/463/463612.png"
+      );
+    }
+  }
+});
 
         // 🔴 Missed popup (if 0 or skipped)
         else if (newDoc.skipped || Number(newDoc.amount || 0) === 0) {
@@ -1630,4 +1693,4 @@ function animateCounter(elementId, targetValue) {
 </script>
 
 </body>
-</html>
+</html>s
