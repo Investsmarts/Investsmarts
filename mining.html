@@ -1003,6 +1003,7 @@ function closeMiningGuide() {
 
 
 </script>
+
 <script>
 function showProPopup(title, msg, img) {
   const popup = document.getElementById("proPopup");
@@ -1033,14 +1034,18 @@ function showProPopup(title, msg, img) {
     card.style.boxShadow = "0 15px 35px rgba(0, 0, 0, 0.6), inset 0 2px 8px rgba(255, 255, 255, 0.08)";
   }
 
-  // 🔹 Show popup animation
+  // 🔹 Check if red popup
+  const isRedPopup = title.toLowerCase().includes("missed") || title.toLowerCase().includes("error");
+
+  // 🔹 Show immediately
   popup.classList.add("show");
 
-  // 🔹 Hide automatically after 3.5s
-  setTimeout(() => popup.classList.remove("show"), 3500);
+  // 🔹 Hide timing (red = longer duration)
+  const hideDelay = isRedPopup ? 5500 : 3500;
+  setTimeout(() => popup.classList.remove("show"), hideDelay);
 }
-</script>
 
+</script>
 <script type="module">
 /* =====================================
    ✅ BTCInvest Full Smart Mining Script
