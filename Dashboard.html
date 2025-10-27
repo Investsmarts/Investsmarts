@@ -829,6 +829,114 @@ document.querySelector(".btn-add").addEventListener("click", () => {
   </div>
 </div>
 
+<!-- Floating Movable Chat Button with Speech Bubble -->
+<style>
+#chatContainer {
+  position: fixed;
+  bottom: 50%;
+  right: 50%;
+  transform: translate(50%, 50%);
+  z-index: 9999;
+  cursor: grab;
+  user-select: none;
+}
+
+#draggableChat {
+  background-color: #00c853;
+  color: white;
+  border-radius: 50%;
+  width: 75px;
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  animation: wave 1.8s infinite ease-in-out;
+  transition: transform 0.2s ease, background-color 0.3s;
+}
+
+#draggableChat:hover {
+  background-color: #00b248;
+  transform: scale(1.1);
+}
+
+/* waving hand animation */
+@keyframes wave {
+  0% { transform: rotate(0deg); }
+  10% { transform: rotate(14deg); }
+  20% { transform: rotate(-8deg); }
+  30% { transform: rotate(14deg); }
+  40% { transform: rotate(-4deg); }
+  50% { transform: rotate(10deg); }
+  60% { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* speech bubble */
+#chatBubble {
+  position: absolute;
+  top: -45px;
+  right: 50%;
+  transform: translateX(50%);
+  background-color: #333;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 15px;
+  opacity: 0;
+  animation: fadeInOut 4s ease-in-out infinite;
+  white-space: nowrap;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; transform: translateX(50%) translateY(5px); }
+  20%, 80% { opacity: 1; transform: translateX(50%) translateY(0); }
+}
+</style>
+
+<div id="chatContainer">
+  <div id="chatBubble">💬 Hi, Need Help?</div>
+  <div id="draggableChat" title="Hi 👋 I'm here!">👋</div>
+</div>
+
+<script>
+// 👇 Apna Tawk.to link yah daalein
+const tawkLink = "https://tawk.to/chat/68ff08d946288f19552eb908/1j8i3l4ro";
+
+
+const chatBtn = document.getElementById("chatContainer");
+const icon = document.getElementById("draggableChat");
+
+let offsetX, offsetY, isDragging = false, moved = false;
+
+// Drag logic
+chatBtn.addEventListener("mousedown", (e) => {
+  isDragging = true;
+  moved = false;
+  offsetX = e.clientX - chatBtn.getBoundingClientRect().left;
+  offsetY = e.clientY - chatBtn.getBoundingClientRect().top;
+  chatBtn.style.cursor = "grabbing";
+});
+
+document.addEventListener("mouseup", (e) => {
+  if (!moved) {
+    window.open(tawkLink, "_blank");
+  }
+  isDragging = false;
+  chatBtn.style.cursor = "grab";
+});
+
+document.addEventListener("mousemove", (e) => {
+  if (!isDragging) return;
+  moved = true;
+  chatBtn.style.left = e.clientX - offsetX + "px";
+  chatBtn.style.top = e.clientY - offsetY + "px";
+  chatBtn.style.right = "auto";
+  chatBtn.style.bottom = "auto";
+  chatBtn.style.transform = "none";
+});
+</script>
 
 
 
@@ -1247,6 +1355,7 @@ setInterval(updateParticipants, 50000);
 </script>
 </body>
 </html>
+
 
 
 
