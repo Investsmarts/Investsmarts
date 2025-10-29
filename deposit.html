@@ -176,9 +176,97 @@
 
 /* Popup alerts */
 .thankyou-popup,.error-popup {position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);padding:12px 20px;border-radius:10px;font-weight:bold;box-shadow:0 6px 20px rgba(0,0,0,0.3);z-index:3000;display:none;animation:fadeInOut 1.5s ease forwards;}
-.thankyou-popup {background:#28a745;color:#fff;}
-.error-popup {background:#dc3545;color:#fff;}
-@keyframes fadeInOut {0%{opacity:0;transform:translate(-50%,-50%) scale(0.9);}20%{opacity:1;transform:translate(-50%,-50%) scale(1);}80%{opacity:1;}100%{opacity:0;transform:translate(-50%,-50%) scale(0.9);}}
+
+
+/* 🔄 3D Verifying Payment Popup */
+.verify-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: linear-gradient(135deg, #1b5e20, #2ecc71);
+  color: #fff;
+  padding: 30px 45px;
+  border-radius: 18px;
+  border: 3px solid #0f3d14;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4),
+              inset 0 3px 8px rgba(255,255,255,0.15),
+              inset 0 -4px 10px rgba(0,0,0,0.25);
+  text-align: center;
+  display: none;
+  z-index: 3000;
+  perspective: 1000px;
+  animation: popupIn 0.4s ease forwards;
+}
+
+/* Title Text */
+.verify-popup p {
+  margin-top: 14px;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ✅ 3D Rotating Progress Ring */
+.verify-ring {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 6px solid rgba(255,255,255,0.2);
+  border-top-color: #fff;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px;
+  box-shadow: 0 0 15px rgba(255,255,255,0.3),
+              inset 0 0 10px rgba(255,255,255,0.1);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes popupIn {
+  0% {opacity: 0; transform: translate(-50%, -50%) scale(0.6) rotateX(40deg);}
+  60% {opacity: 1; transform: translate(-50%, -50%) scale(1.05) rotateX(0);}
+  100% {transform: translate(-50%, -50%) scale(1) rotateX(0);}
+}
+
+/* 💫 Outer glow effect */
+.verify-popup::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 20px;
+  border: 2px solid rgba(255,255,255,0.25);
+  box-shadow: 0 0 12px rgba(255,255,255,0.25),
+              0 0 30px rgba(40,167,69,0.6);
+  animation: borderGlow 2s infinite alternate ease-in-out;
+}
+
+@keyframes borderGlow {
+  0% { box-shadow: 0 0 15px rgba(40,167,69,0.4), 0 0 25px rgba(32,201,151,0.3); }
+  100% { box-shadow: 0 0 25px rgba(40,167,69,0.8), 0 0 50px rgba(32,201,151,0.6); }
+}
+
+/* ✅ Verified Message Transition */
+.verify-popup.done .verify-ring {
+  border-color: #fff;
+  border-top-color: #fff;
+  animation: none;
+  position: relative;
+}
+.verify-popup.done .verify-ring::after {
+  content: "✔";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -52%);
+  font-size: 32px;
+  font-weight: bold;
+  color: #fff;
+}
+
+
 
 /* Refresh Button */
 
@@ -445,7 +533,8 @@
   margin: 12px 0 18px 0;         /* Gap top & bottom */
   text-align: center;            /* Center align */
   line-height: 1.5;
-}
+
+  }
 </style>
 </head>
 <body>
@@ -509,10 +598,8 @@ function scanFeature() {
   <button class="btn-deposit" onclick="openPopup()">
     <i class='bx bx-qr'></i> Get Deposit Address
   </button>
-</div>
+  </div>
 
-
-<!-- History -->
 <!-- History -->
 <div class="history-section">
   <div class="history-header-box">
@@ -522,12 +609,12 @@ function scanFeature() {
   <div id="historyList">
     <p style="text-align:center; color:#666;">Loading...</p>
   </div>
-</div>
+ </div>
 
   </div>
 
   <!-- ✅ Popup -->
-  <div class="popup-overlay" id="popupOverlay">
+   <div class="popup-overlay" id="popupOverlay">
     <div class="popup">
       <h2>Deposit Funds</h2>
       <input type="number" id="depositAmount" class="amount-input" placeholder="Enter amount to deposit">
@@ -540,22 +627,26 @@ function scanFeature() {
         <button class="paid-btn" onclick="markPaid()">I Have Paid</button>
       </div>
     </div>
-  </div>
+   </div>
 
-  <div class="thankyou-popup" id="thankyouPopup">Thank you for paying</div>
-  <div class="error-popup" id="errorPopup">Enter valid amount</div>
+<div class="verify-popup" id="verifyPopup">
+  <div class="verify-ring"></div>
+  <p id="verifyText">Verifying your payment<br>Please wait patiently...</p>
+</div>
+
+   <div class="error-popup" id="errorPopup">Enter valid amount</div>
 
 
-<!-- Bottom Navigation -->
-<div class="bottom-nav">
+ <!-- Bottom Navigation -->
+  <div class="bottom-nav">
   <a href="Dashboard.html" class="nav-item active"><i class='bx bxs-dashboard'></i><span>Home</span></a>
   <a href="mining.html" class="nav-item"><i class='bx bxs-coin-stack'></i><span>Invest</span></a>
   <a href="promotion.html" class="nav-item"><i class='bx bxs-user-plus'></i><span>Refer</span></a>
   <a href="account.html" class="nav-item"><i class='bx bxs-user-circle'></i><span>Account</span></a>
-</div>
+  </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
   <!-- ✅ Firebase + Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -607,7 +698,7 @@ function scanFeature() {
       setTimeout(() => { errorPopup.style.display = "none"; }, 1500);
     }
 
-// ✅ QR Code ko update karne ka function
+    // ✅ QR Code ko update karne ka function
     function updateQRCode() {
       const amountInput = document.getElementById("depositAmount");
       const amount = parseFloat(amountInput.value) || 0;
@@ -683,6 +774,8 @@ window.markPaid = async function () {
     amountInput.style.border = "2px solid red";
     return;
   }
+    // ✅ Instead of thankyouPopup, call verifying popup
+  showVerificationPopup();
 
   amountInput.disabled = true;
   instructionEl.style.display = "block";
@@ -694,7 +787,6 @@ window.markPaid = async function () {
   if (currentUserId) {
     const orderId = generateOrderId();
 
-    // ✅ Ab entry yahin create hogi jab user "I Have Paid" click kare
     const ref = await addDoc(collection(db, "users", currentUserId, "deposits"), {
       amount: amount,
       address: currentDepositAddress,
@@ -704,32 +796,49 @@ window.markPaid = async function () {
     });
 
     currentDepositId = ref.id;
-
-    // ✅ Status watcher chalao (admin complete kare to reward mile)
     watchDepositStatus(currentUserId, currentDepositId);
-
-    // ✅ History reload
     loadDepositHistory(currentUserId);
   }
+} // ← ye closing bracket zaroor lagani hai yahaan
 
-  // ✅ Thank you popup show karo
-  thankyouPopup.style.display = "block";
+// 👇 iske baad likh showVerificationPopup() function
+function showVerificationPopup() {
+  const popup = document.getElementById("verifyPopup");
+  const text = document.getElementById("verifyText");
+
+  popup.style.display = "block";
+  popup.classList.remove("done");
+  text.innerHTML = "Verifying your payment<br>Please wait patiently...";
+
   setTimeout(() => {
-    thankyouPopup.style.display = "none";
-  }, 2000);
-};
+    popup.classList.add("done");
+    text.textContent = "Payment Verified Successfully!";
+  }, 4000);
 
+  setTimeout(() => {
+    popup.style.display = "none";
+  }, 8000);
+}
 
-// ✅ Referral Commission + Wallet Reward Logic (UID Based)
-async function giveReferralCommission(userId, depositAmount) {
+    // ✅ Referral Commission + Wallet Reward Logic (Fixed Double Reward Issue)
+   const rewardLock = {}; // global lock to stop duplicate triggers
+
+   async function giveReferralCommission(userId, depositAmount, depositId) {
   try {
+    // 🧠 Lock check - agar ye depositId already process ho raha hai, skip karo
+    if (rewardLock[depositId]) {
+      console.log(`⚠️ Skipping duplicate trigger for ${depositId}`);
+      return;
+    }
+    rewardLock[depositId] = true; // lock set
+
     const userRef = doc(db, "users", userId);
     const userSnap = await getDoc(userRef);
     if (!userSnap.exists()) return;
 
     const userData = userSnap.data();
 
-    // ✅ Check uplines properly
+    // ✅ Uplines fetch
     const uplines = [
       userData.upline1 || null,
       userData.upline2 || null,
@@ -738,20 +847,8 @@ async function giveReferralCommission(userId, depositAmount) {
 
     console.log("🧩 Uplines found for", userId, "→", uplines);
 
-    // ✅ Step 1: Check if this is FIRST successful deposit
-    const depositsSnap = await getDocs(collection(db, "users", userId, "deposits"));
-    const successful = depositsSnap.docs.filter((d) => {
-      const s = (d.data().status || "").toLowerCase();
-      return s === "completed" || s === "success" || s === "approved";
-    });
-
-     if (successful.length >= 1) {
-      console.log("⚠️ Already rewarded before — skipping referral");
-      return;
-      }
-
-    // ✅ Step 2: 3-Level Commission
-    const commissionRates = [0.03, 0.02, 0.01]; // 3%, 2%, 1%
+    // ✅ Commission percentage (3%, 2%, 1%)
+    const commissionRates = [0.03, 0.02, 0.01];
 
     for (let level = 0; level < uplines.length; level++) {
       const refUID = uplines[level];
@@ -759,65 +856,133 @@ async function giveReferralCommission(userId, depositAmount) {
 
       const refUserRef = doc(db, "users", refUID);
       const refUserSnap = await getDoc(refUserRef);
-      if (!refUserSnap.exists()) {
-        console.log(`⚠️ Level ${level + 1}: Referrer ${refUID} not found.`);
-        continue;
-      }
+      if (!refUserSnap.exists()) continue;
 
       const refData = refUserSnap.data();
+      const refLifetime = parseFloat(refData.lifetimeDeposit || 0);
+
+      // 🧠 Qualification check: upline must have lifetime >= user deposit
+      if (refLifetime < depositAmount) {
+    console.log(
+    `⚠️ Level ${level + 1}: Upline ${refUID} not qualified (lifetimeDeposit=${refLifetime}, required=${depositAmount})`
+   );
+
+   // 🧩 Get depositor's name for better message
+const depositorRef = doc(db, "users", userId);
+const depositorSnap = await getDoc(depositorRef);
+const depositorName = depositorSnap.exists() && depositorSnap.data().name
+  ? depositorSnap.data().name
+  : userId; // fallback to UID if no name
+
+// 📨 Create notification with actual name
+await addDoc(collection(db, "users", refUID, "rewardNotifications"), {
+  fromUser: userId,
+  fromName: depositorName, // ✅ Added
+  depositAmount: depositAmount,
+  requiredDeposit: depositAmount,
+  currentDeposit: refLifetime,
+  message: `You missed a referral reward from ${depositorName} because your lifetime deposit ($${refLifetime}) is lower than their deposit ($${depositAmount}).`,
+  level: level + 1,
+  date: serverTimestamp(),
+  status: "pending"
+});
+
+   continue; // skip reward
+  }
+
+
       const commission = depositAmount * commissionRates[level];
       const commissionFixed = parseFloat(commission.toFixed(2));
 
-      // ✅ Add commission record only once per deposit
+      // ✅ Check agar ye depositId se reward already diya gaya hai
+      const commSnap = await getDocs(collection(db, "users", refUID, "commissions"));
+      const alreadyGiven = commSnap.docs.some(
+        (d) => d.data().fromUser === userId && d.data().depositId === depositId
+      );
+      if (alreadyGiven) {
+        console.log(`⚠️ Level ${level + 1}: Commission already given for ${depositId}`);
+        continue;
+      }
+
+      // ✅ Add commission record (proof)
       await addDoc(collection(db, "users", refUID, "commissions"), {
         fromUser: userId,
+        depositId: depositId,
         level: level + 1,
         amount: commissionFixed,
         date: serverTimestamp(),
-        note: `Level ${level + 1} reward from ${userId}'s first deposit`,
+        note: `Level ${level + 1} reward from ${userId}'s first deposit (qualified)`,
       });
 
-      // ✅ Update wallet + lifetimeReferralIncome
-      const currentWallet = parseFloat(refData.walletBalance || 0);
-      const newWallet = currentWallet + commissionFixed;
-
-      const totalReferral = parseFloat(refData.lifetimeReferralIncome || 0);
-      const newTotalReferral = totalReferral + commissionFixed;
+      // ✅ Wallet update
+      const newWallet = parseFloat(refData.walletBalance || 0) + commissionFixed;
+      const newLifetime = parseFloat(refData.lifetimeReferralIncome || 0) + commissionFixed;
 
       await updateDoc(refUserRef, {
         walletBalance: newWallet,
-        lifetimeReferralIncome: newTotalReferral,
+        lifetimeReferralIncome: newLifetime,
       });
 
-      console.log(
-        `✅ Level ${level + 1}: $${commissionFixed} added to ${refUID} (Wallet=$${newWallet.toFixed(2)})`
-      );
+      console.log(`✅ Level ${level + 1}: $${commissionFixed} given to ${refUID}`);
     }
+
+    console.log(`🎯 Referral reward successfully processed for ${depositId}`);
+
   } catch (err) {
     console.error("❌ Error in giveReferralCommission:", err);
+  } finally {
+    delete rewardLock[depositId]; // unlock after done
   }
-}
+ }
 
-// ✅ Listen for status change to "completed"
-function watchDepositStatus(userId, depositId) {
+
+
+
+   // ✅ Watch deposit status and give commission only on first approved deposit
+   function watchDepositStatus(userId, depositId) {
   const depositRef = doc(db, "users", userId, "deposits", depositId);
 
-  // ✅ Listen for status change to "completed" OR "approved"
   onSnapshot(depositRef, async (snap) => {
     const data = snap.data();
     if (!data) return;
 
     const status = (data.status || "").toLowerCase();
 
-    // ✅ Trigger referral if deposit is completed OR approved
+    // ✅ Trigger only when deposit is approved/completed
     if (["completed", "approved", "success", "done"].includes(status) && !data.rewardGiven) {
-      console.log("✅ Deposit approved/completed! Giving referral reward...");
+      console.log(`✅ Deposit ${depositId} approved for user ${userId}, checking first deposit...`);
 
-      await updateDoc(depositRef, { rewardGiven: true }); // lock reward
-      await giveReferralCommission(userId, data.amount);
+      try {
+        // 🧠 Fetch all deposits of this user
+        const depositsRef = collection(db, "users", userId, "deposits");
+        const allDeposits = await getDocs(depositsRef);
+
+        // 🔍 Check if user has any previous completed deposits
+        const completedBefore = allDeposits.docs.some(
+          (d) =>
+            ["completed", "approved", "done", "success"].includes(
+              (d.data().status || "").toLowerCase()
+            ) && d.id !== depositId
+        );
+
+        const amount = parseFloat(data.amount || 0);
+
+        if (!completedBefore && amount >= 200) {
+          console.log("🎯 First deposit detected — giving referral commission...");
+          await updateDoc(depositRef, { rewardGiven: true }); // prevent double reward
+          await giveReferralCommission(userId, amount, depositId);
+        } else if (!completedBefore && amount < 200) {
+          console.log("⚠️ First deposit below $200 — skipping reward.");
+        } else {
+          console.log("⚠️ Not first deposit. No referral commission.");
+        }
+      } catch (err) {
+        console.error("❌ Error checking first deposit:", err);
+      }
     }
   });
 }
+
 
 // ✅ Prevent duplicate listeners in same session
 const activeWatchers = {};
@@ -828,7 +993,8 @@ async function watchAllDeposits(userId) {
   onSnapshot(depositsRef, (snapshot) => {
     snapshot.docs.forEach(docSnap => {
       const depositId = docSnap.id;
-      if (!activeWatchers[depositId]) {
+      if (!activeWatchers[depositId])  {
+
         activeWatchers[depositId] = true;
         watchDepositStatus(userId, depositId);
       }
@@ -837,19 +1003,19 @@ async function watchAllDeposits(userId) {
 }
 
 
-window.manualRefresh = function() {
+  window.manualRefresh = function() {
   if (currentUserId) loadDepositHistory(currentUserId);
-};
+  };
 
-// ✅ Real-time Deposit History Loader
-function loadDepositHistory(userId) {
+  // ✅ Real-time Deposit History Loader
+  function loadDepositHistory(userId) {
   const depositsRef = collection(db, "users", userId, "deposits");
   const q = query(depositsRef, orderBy("date", "desc"));
 
-  historyList.innerHTML = "<p style='text-align:center; color:#666;'>Loading...</p>";
+   historyList.innerHTML = "<p style='text-align:center; color:#666;'>Loading...</p>";
 
-  // Real-time listener for history updates
-  onSnapshot(q, (querySnapshot) => {
+   // Real-time listener for history updates
+    onSnapshot(q, (querySnapshot) => {
     if (querySnapshot.empty) {
       historyList.innerHTML = "<p style='text-align:center; color:#666;'>No deposits yet.</p>";
       return;
@@ -882,8 +1048,7 @@ function loadDepositHistory(userId) {
     console.error("❌ Error loading history:", error);
     historyList.innerHTML = "<p style='text-align:center; color:red;'>Error loading history</p>";
   });
-}
-
+ }
 
 
 onAuthStateChanged(auth, (user) => {
@@ -909,8 +1074,6 @@ document.querySelectorAll(".wave-nav a").forEach(link => {
     link.classList.remove("active");
   }
 });
-
-
 
 // ✅ Real-time Total + Lifetime Deposit + Level Updater
 function watchTotalDeposit(userId) {
@@ -970,7 +1133,8 @@ function watchTotalDeposit(userId) {
   });
 }
 
-
+</script>
+<script>
   // 🚫 Disable right click, select, drag
   document.addEventListener("contextmenu", e => e.preventDefault());
   document.addEventListener("selectstart", e => e.preventDefault());
@@ -1016,10 +1180,6 @@ function watchTotalDeposit(userId) {
   // 🔁 Freeze console methods silently
   Object.freeze(console);
   Object.freeze(window.console);
-
-
-
-
 </script>
 </body>
 </html>
