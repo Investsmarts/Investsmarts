@@ -26,6 +26,27 @@
     "logo": "https://www.smartfundad.com/myphoto/trustlogo.png"
   }
   </script>
+<!-- ✅ PWA / App Install Setup -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#00c853" />
+
+<!-- iOS ke liye (Apple Support) -->
+<link rel="apple-touch-icon" href="https://smartfundad.com/myphoto/trustlogo.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="TrustDollar">
+
+<!-- ✅ Service Worker Registration -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
+        .register('/service-worker.js')
+        .then(reg => console.log('✅ Service Worker Registered:', reg.scope))
+        .catch(err => console.log('❌ SW Registration Failed:', err));
+    });
+  }
+</script>
 
 
   <style>
@@ -783,4 +804,3 @@ menuOverlay.addEventListener("click", () => {
 
 </body>
 </html>
-
