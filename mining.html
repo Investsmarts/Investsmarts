@@ -836,6 +836,119 @@ button:active {
 }
 
 
+/* 🎯 Mining Fund - clean & minimal style */
+#miningFund {
+  font-size: 1.3rem;          /* smaller, subtle size */
+  font-weight: 400;           /* no bold */
+  color: #00c853;             /* calm green tone */
+  transition: transform 0.25s ease-out, color 0.25s ease-out;
+  letter-spacing: 0.3px;      /* balanced spacing */
+}
+
+/* 🔁 Smooth bounce effect on value update */
+#miningFund.updated {
+  animation: bounceUpdate 0.35s cubic-bezier(0.25, 1.25, 0.5, 1);
+}
+
+@keyframes bounceUpdate {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.97);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 🕐 Optional smooth fade when page loads */
+#miningFund.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* 🟢 Input wrapper for "ALL" text */
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 12px 50px 12px 14px;  /* right padding for ALL text */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.25s ease;
+}
+
+.input-wrapper input:focus {
+  border-color: #00c853;
+}
+
+/* ✅ "ALL" text (no box, no shadow, perfectly centered vertically) */
+#fillAllBtn {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-46%);
+  color: #00c853;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  user-select: none;
+  line-height: 1;
+  transition: all 0.35s cubic-bezier(0.25, 1, 0.3, 1);
+  opacity: 1;
+}
+
+/* Hover zoom */
+#fillAllBtn:hover {
+  color: #00e676;
+  transform: translateY(-46%) scale(1.05);
+}
+
+/* Fade out during text swap */
+#fillAllBtn.fade {
+  opacity: 0;
+  transform: translateY(-30%) scale(0.9);
+}
+
+/* When arrow mode is active */
+#fillAllBtn.active {
+  font-size: 30px;
+  font-weight: 700;
+  color: #b30000;
+  animation: arrowBounce 0.6s cubic-bezier(0.25, 1.5, 0.5, 1);
+}
+
+/* 🪩 Smooth bounce motion for the arrow */
+@keyframes arrowBounce {
+  0%   { transform: translateY(-60%) scale(0.8); opacity: 0; }
+  50%  { transform: translateY(-42%) scale(1.2); opacity: 1; }
+  70%  { transform: translateY(-48%) scale(1.05); }
+  100% { transform: translateY(-46%) scale(1); }
+}
+
+
 </style>
 </head>
 <body>
@@ -939,11 +1052,16 @@ button:active {
     <div class="box"><div class="label">Mining Fund</div><div class="value" id="miningFund">$0.00</div></div>
   </div>
 
-  <div class="input-box" id="inputSection">
-    <div class="label">Enter Amount to Mine (min $200)</div>
-    <input type="number" id="amount" min="1" placeholder="Enter amount...">
+<div class="input-box" id="inputSection">
+  <div class="label">Enter Amount to Mine (min $200)</div>
+
+  <div class="input-wrapper">
+    <input type="number" id="amount" min="1" placeholder="Enter amount..." />
+    <span id="fillAllBtn">ALL</span>
   </div>
-  
+</div>
+
+
   <div id="timerBox">
     <div id="miningTimer">--:--:--</div>
     <div class="mining-waves">
@@ -1176,7 +1294,47 @@ function stopMiningTimer() {
   miningTimer.innerText = "--:--:--";
 }
 
-/* 🔹 Load User Data */
+
+
+/* 🔹 Live Mining Growth Display — YouTube-style smooth animation + refresh stability */
+/* 🔹 Live Mining Growth Display — fixed for refresh stability */
+let miningGrowthInterval = null;
+
+function startLiveMiningGrowth(baseAmount, startedAt) {
+  clearInterval(miningGrowthInterval);
+
+  function calculateProfit() {
+    const elapsed = Date.now() - startedAt; // total time since mining start
+    return baseAmount * DAILY_RATE * (elapsed / 86400000);
+  }
+
+  function updateGrowth() {
+    const profit = calculateProfit();
+    const total = baseAmount + profit;
+
+    const current = Number(fundEl.innerText.replace(/[^0-9.-]+/g, "")) || baseAmount;
+    const diff = total - current;
+
+    // smooth animation
+    fundEl.innerText = `$${(current + diff * 0.25).toFixed(4)}`;
+  }
+
+  // ✅ First update should show exact real-time value
+  const initialProfit = calculateProfit();
+  fundEl.innerText = `$${(baseAmount + initialProfit).toFixed(4)}`;
+  fundEl.style.color = "#00c853";
+
+  // ✅ Start continuous updates (every second)
+  miningGrowthInterval = setInterval(updateGrowth, 1000);
+}
+
+function stopLiveMiningGrowth() {
+  clearInterval(miningGrowthInterval);
+  miningGrowthInterval = null;
+}
+
+
+/* 🔹 Load User Data + Live Mining Growth */
 async function loadUserData() {
   if (!currentUser) return;
   const ref = doc(db, "users", currentUser.uid);
@@ -1194,8 +1352,15 @@ async function loadUserData() {
   btn.innerText = mining ? "Stop Mining" : "Start Mining";
   toggleMiningSections(mining);
 
-  if (mining) startMiningTimer(startedAt);
-  else stopMiningTimer();
+  if (mining) {
+    startMiningTimer(startedAt);
+    startLiveMiningGrowth(miningAmt, startedAt);  // ✅ new line
+    fundEl.style.color = "#00c853"; // green color active mining
+  } else {
+    stopMiningTimer();
+    stopLiveMiningGrowth(); // ✅ stop live calc if mining stopped
+    fundEl.style.color = ""; // reset color
+  }
 }
 
 
@@ -1292,16 +1457,31 @@ if (!releaseSnap.empty) {
   }
 }
 
-/* 🔹 Load Real-time Mining History */
+/* 🔹 Load Real-time Mining History — only today */
 async function loadMiningHistory(user) {
-  const q = query(collection(db, "users", user.uid, "miningHistory"), orderBy("time", "desc"));
+  const today = new Date();
+  const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+  const endOfDay = startOfDay + 86400000;
+
+  const q = query(
+    collection(db, "users", user.uid, "miningHistory"),
+    orderBy("time", "desc")
+  );
+
   onSnapshot(q, (snap) => {
     miningHistoryEl.innerHTML = "";
-    if (snap.empty) {
-      miningHistoryEl.innerHTML = `<li style="opacity:0.7;">No mining history yet</li>`;
+
+    const todayDocs = snap.docs.filter((d) => {
+      const t = d.data().time;
+      return t >= startOfDay && t < endOfDay;
+    });
+
+    if (todayDocs.length === 0) {
+      miningHistoryEl.innerHTML = `<li style="opacity:0.7;">No mining income today</li>`;
       return;
     }
-    snap.forEach((docSnap) => {
+
+    todayDocs.forEach((docSnap) => {
       const d = docSnap.data();
       const durMin = (d.duration / 60000).toFixed(1);
       const date = new Date(d.time).toLocaleString();
@@ -1317,20 +1497,37 @@ async function loadMiningHistory(user) {
   });
 }
 
-/* 🔹 Load Real-time Referral Income */
+
+/* 🔹 Load Real-time Referral Income — only today */
 async function loadReferralIncome(user) {
-  const q = query(collection(db, "referral_income"), where("toUpline", "==", user.uid), orderBy("time", "desc"));
+  const today = new Date();
+  const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+  const endOfDay = startOfDay + 86400000;
+
+  const q = query(
+    collection(db, "referral_income"),
+    where("toUpline", "==", user.uid),
+    orderBy("time", "desc")
+  );
+
   onSnapshot(q, async (snap) => {
     miningHistoryEl.innerHTML = "";
-    if (snap.empty) {
-      miningHistoryEl.innerHTML = `<li style="opacity:0.7;">No referral income yet</li>`;
+
+    const todayDocs = snap.docs.filter((d) => {
+      const t = d.data().time;
+      return t >= startOfDay && t < endOfDay;
+    });
+
+    if (todayDocs.length === 0) {
+      miningHistoryEl.innerHTML = `<li style="opacity:0.7;">No referral income today</li>`;
       return;
     }
 
-    for (const docSnap of snap.docs) {
+    for (const docSnap of todayDocs) {
       const d = docSnap.data();
       const date = new Date(d.time).toLocaleString();
       let fromName = "Unknown";
+
       try {
         const userRef = doc(db, "users", d.fromUser);
         const userSnap = await getDoc(userRef);
@@ -1351,6 +1548,7 @@ async function loadReferralIncome(user) {
     }
   });
 }
+
 
 /* 🔹 Auth State Listener */
 onAuthStateChanged(auth, async (user) => {
@@ -1396,41 +1594,50 @@ btn.onclick = async () => {
     const miningAmount = Number(data.miningAmount || 0);
     const startedAt = data.miningStartedAt || 0;
 
+
     // === START MINING ===
-    if (!mining) {
-      const amt = parseFloat(amountInput.value);
-      if (isNaN(amt) || amt <= 0) return showPopup("Enter valid amount");
-      if (amt > wallet) return showPopup("Insufficient Balance");
-      if (amt < 200) return showPopup("Minimum $200 required");
+if (!mining) {
+  const amt = parseFloat(amountInput.value);
+  if (isNaN(amt) || amt <= 0) return showPopup("Enter valid amount");
+  if (amt > wallet) return showPopup("Insufficient Balance");
+  if (amt < 200) return showPopup("Minimum $200 required");
 
-      const lifetimeDeposit = Number(data.lifetimeDeposit || 0);
-      if (amt > lifetimeDeposit) {
-        return showPopup(`Only you can mine ($${lifetimeDeposit.toFixed(2)}).`);
-      }
+  const lifetimeDeposit = Number(data.lifetimeDeposit || 0);
+  if (amt > lifetimeDeposit) {
+    return showPopup(`Only you can mine ($${lifetimeDeposit.toFixed(2)}).`);
+  }
 
-      await updateDoc(userRef, {
-        walletBalance: wallet - amt,
-        miningAmount: amt,
-        miningStartedAt: Date.now()
-      });
+  const startedNow = Date.now();
 
-     // ✅ When mining starts
+  await updateDoc(userRef, {
+    walletBalance: wallet - amt,
+    miningAmount: amt,
+    miningStartedAt: startedNow
+  });
+
+  // ✅ When mining starts
   showProPopup(
-  "Mining Started ⚡",
-  "Your mining process has begun successfully!",
-  "https://cdn-icons-png.flaticon.com/512/727/727399.png"
-   );
+    "Mining Started ⚡",
+    "Your mining process has begun successfully!",
+    "https://cdn-icons-png.flaticon.com/512/727/727399.png"
+  );
 
-      mining = true;
-      btn.innerText = "Stop Mining";
-      btn.classList.add("stop-active");
+  mining = true;
+  btn.innerText = "Stop Mining";
+  btn.classList.add("stop-active");
 
-      toggleMiningSections(true);
-      fundEl.innerText = `$${amt.toFixed(2)}`;
-      walletEl.innerText = `$${(wallet - amt).toFixed(2)}`;
-      startMiningTimer(Date.now());
-      return;
-    }
+  toggleMiningSections(true);
+  fundEl.innerText = `$${amt.toFixed(2)}`;
+  walletEl.innerText = `$${(wallet - amt).toFixed(2)}`;
+
+  // ✅ NEW: Start live growth instantly (no refresh needed)
+  startMiningTimer(startedNow);
+  startLiveMiningGrowth(amt, startedNow);
+  fundEl.style.color = "#00c853"; // make it green right away
+
+  return;
+}
+
 
     // === STOP MINING ===
     const diff = Date.now() - startedAt;
@@ -1620,6 +1827,45 @@ function animateCounter(elementId, targetValue) {
   }, 40);
 }
 
+// dawon arow ka code hai 
+
+const fillAllBtn = document.getElementById("fillAllBtn");
+
+fillAllBtn.addEventListener("click", async () => {
+  if (!currentUser) return showPopup("Not logged in");
+
+  const ref = doc(db, "users", currentUser.uid);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return showPopup("User data not found!");
+
+  const data = snap.data();
+  const lifetimeDeposit = Number(data.lifetimeDeposit || 0);
+
+  const isAll = fillAllBtn.innerText.trim().toUpperCase() === "ALL";
+
+  // fade out old text
+  fillAllBtn.classList.add("fade");
+
+  setTimeout(() => {
+    if (isAll) {
+      if (lifetimeDeposit <= 0) return showPopup("No lifetime deposit found!");
+      amountInput.value = lifetimeDeposit.toFixed(2);
+      fillAllBtn.innerText = "↓";
+      fillAllBtn.classList.add("active");
+    } else {
+      amountInput.value = "";
+      fillAllBtn.innerText = "ALL";
+      fillAllBtn.classList.remove("active");
+    }
+
+    // fade back in
+    setTimeout(() => {
+      fillAllBtn.classList.remove("fade");
+    }, 50);
+  }, 200);
+});
+
+
 </script>
 <script>
   // 🚫 Disable right click, select, drag
@@ -1671,4 +1917,3 @@ function animateCounter(elementId, targetValue) {
 
 </body>
 </html>
-
