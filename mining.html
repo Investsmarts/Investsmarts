@@ -1828,7 +1828,6 @@ function animateCounter(elementId, targetValue) {
 }
 
 // dawon arow ka code hai 
-
 const fillAllBtn = document.getElementById("fillAllBtn");
 
 fillAllBtn.addEventListener("click", async () => {
@@ -1840,29 +1839,60 @@ fillAllBtn.addEventListener("click", async () => {
 
   const data = snap.data();
   const lifetimeDeposit = Number(data.lifetimeDeposit || 0);
+  const walletBalance = Number(data.walletBalance || 0);
 
   const isAll = fillAllBtn.innerText.trim().toUpperCase() === "ALL";
 
-  // fade out old text
+  // Fade animation
   fillAllBtn.classList.add("fade");
 
   setTimeout(() => {
     if (isAll) {
-      if (lifetimeDeposit <= 0) return showPopup("No lifetime deposit found!");
-      amountInput.value = lifetimeDeposit.toFixed(2);
+      if (walletBalance <= 0) {
+        showPopup("No wallet balance available!");
+        return;
+      }
+
+      // 🧠 Fill amount = smaller of (wallet, lifetimeDeposit)
+      const targetValue = Math.min(walletBalance, lifetimeDeposit);
+      let currentValue = 0;
+      const duration = 400; // ms
+      const steps = 25;
+      const increment = targetValue / steps;
+      const interval = duration / steps;
+
+      const counter = setInterval(() => {
+        currentValue += increment;
+        if (currentValue >= targetValue) {
+          currentValue = targetValue;
+          clearInterval(counter);
+        }
+        amountInput.value = currentValue.toFixed(2);
+      }, interval);
+
+      // change text to ↓
       fillAllBtn.innerText = "↓";
       fillAllBtn.classList.add("active");
     } else {
+      // Reset to ALL
       amountInput.value = "";
       fillAllBtn.innerText = "ALL";
       fillAllBtn.classList.remove("active");
     }
 
-    // fade back in
+    // fade-in back
     setTimeout(() => {
       fillAllBtn.classList.remove("fade");
     }, 50);
   }, 200);
+});
+
+// 🧩 Auto-reset arrow if user manually edits input
+amountInput.addEventListener("input", () => {
+  if (fillAllBtn.innerText === "↓") {
+    fillAllBtn.innerText = "ALL";
+    fillAllBtn.classList.remove("active");
+  }
 });
 
 
