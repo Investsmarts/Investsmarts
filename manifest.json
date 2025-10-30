@@ -1,0 +1,25 @@
+{
+  "name": "TrustDollar",
+  "short_name": "TrustDollar",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#00c853",
+  "orientation": "portrait",
+  "description": "Mine and grow your digital fund with TrustDollar Smart Mining System.",
+  "icons": [
+    {
+      "src": "https://smartfundad.com/myphoto/trustlogo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://smartfundad.com/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
