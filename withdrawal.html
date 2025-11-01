@@ -1403,7 +1403,7 @@ window.manualRefresh = function () {
   };
 
   onAuthStateChanged(auth, (user) => {
-    if (!user) window.location.href = "auth.html";
+    if (!user) window.location.href = "login.html";
     else {
       currentUserId = user.uid;
       loadUserProfile(user.uid);
@@ -1428,12 +1428,20 @@ async function loadWithdrawCard(uid) {
     // ✅ Timing rules (based on lifetimeDeposit)
     let timing = "Not Ready";
 
-    if (lifetimeDeposit >= 100000) timing = "Same Day";
-    else if (lifetimeDeposit >= 50000) timing = "5 Days";
-    else if (lifetimeDeposit >= 10000) timing = "10 Days";
-    else if (lifetimeDeposit >= 5000) timing = "15 Days";
-    else if (lifetimeDeposit >= 500) timing = "25 Days";
-    else if (lifetimeDeposit >= 200) timing = "30 Days";
+if (lifetimeDeposit >= 90000) timing = "15m";
+else if (lifetimeDeposit >= 80000) timing = "30m";
+else if (lifetimeDeposit >= 70000) timing = "1h";
+else if (lifetimeDeposit >= 60000) timing = "1.5h";
+else if (lifetimeDeposit >= 50000) timing = "3h";
+else if (lifetimeDeposit >= 40000) timing = "6h";
+else if (lifetimeDeposit >= 30000) timing = "1 Day";
+else if (lifetimeDeposit >= 20000) timing = "1.5 Days";
+else if (lifetimeDeposit >= 10000) timing = "3 Days";
+else if (lifetimeDeposit >= 5000) timing = "5 Days";
+else if (lifetimeDeposit >= 2000) timing = "10 Days";
+else if (lifetimeDeposit >= 1000) timing = "15 Days";
+else if (lifetimeDeposit >= 500) timing = "25 Days";
+else if (lifetimeDeposit >= 200) timing = "30 Days";
 
     // ✅ Show timing text
     document.getElementById("withdrawLevel").textContent =
@@ -1599,3 +1607,4 @@ window.addEventListener("touchend", () => {
 </script>
 </body>
 </html>
+
