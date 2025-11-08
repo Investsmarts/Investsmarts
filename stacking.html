@@ -320,6 +320,180 @@
   <div id="historyList"></div>
 </div>
 
+<!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+:root {
+  --nav-bg: #fff;
+  --nav-text: #444;
+  --nav-border: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] {
+  --nav-bg: #0f0f0f;
+  --nav-text: #ccc;
+  --nav-border: rgba(255, 255, 255, 0.1);
+}
+
+/* 🔹 Navbar Base (height reduced) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--nav-bg);
+  border-top: 1px solid var(--nav-border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0; /* 👈 thinner padding */
+  z-index: 9999;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* 🔹 Nav items (slimmer text + less spacing) */
+.bottom-nav .nav-item {
+  flex: 1;
+  text-align: center;
+  color: var(--nav-text);
+  text-decoration: none;
+  font-size: 10px; /* 👈 smaller text */
+  position: relative;
+  padding: 4px 0; /* 👈 less padding */
+  transition: all 0.3s ease;
+}
+
+/* 🔹 Icon (reduced size + gap) */
+.bottom-nav .nav-item i {
+  font-size: 18px; /* 👈 smaller icons (was 22px) */
+  display: block;
+  opacity: 0.75;
+  margin-bottom: 2px; /* 👈 smaller gap */
+  transition: all 0.3s ease;
+}
+
+/* 🔹 Text */
+.bottom-nav .nav-item span {
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+/* 🔹 Divider lines */
+.bottom-nav .nav-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 25%;
+  width: 1px;
+  height: 50%;
+  background: var(--nav-border);
+}
+
+/* 🔹 Active State (icons glow thoda soft) */
+.bottom-nav .nav-item.active i {
+  transform: scale(1.1);
+  opacity: 1;
+  animation: bulbGlow 1.6s ease-in-out infinite alternate;
+}
+.bottom-nav .nav-item.active span {
+  opacity: 1;
+  font-weight: 600;
+}
+
+/* Active colors */
+.bottom-nav .nav-item:nth-child(1).active i { color: #00c853; }
+.bottom-nav .nav-item:nth-child(2).active i { color: #ffc107; }
+.bottom-nav .nav-item:nth-child(3).active i { color: #ff3b30; }
+.bottom-nav .nav-item:nth-child(4).active i { color: #00bcd4; }
+
+@keyframes bulbGlow {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.6); }
+}
+
+/* 🔹 Ripple (same) */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  background: rgba(0, 200, 83, 0.15);
+}
+@keyframes ripple {
+  to { transform: scale(3); opacity: 0; }
+}
+
+/* 🔹 Responsive tuning */
+@media (max-width: 480px) {
+  .bottom-nav .nav-item i {
+    font-size: 17px;
+  }
+  .bottom-nav .nav-item span {
+    font-size: 9.5px;
+  }
+}
+</style>
+
+<!-- ✅ HTML Navbar -->
+<div class="bottom-nav" id="mainNav">
+  <a href="Dashboard.html" class="nav-item">
+    <i class="ri-home-5-fill"></i>
+    <span>Home</span>
+  </a>
+
+  <a href="mining.html" class="nav-item">
+    <i class="ri-bar-chart-2-fill"></i>
+    <span>Mining</span>
+  </a>
+
+  <a href="promotion.html" class="nav-item">
+    <i class="ri-gift-fill"></i>
+    <span>Promotion</span>
+  </a>
+
+  <a href="account.html" class="nav-item">
+    <i class="ri-user-3-fill"></i>
+    <span>Account</span>
+  </a>
+</div>
+
+<script>
+/* 🌗 Auto theme detect */
+function detectTheme() {
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.setAttribute("data-theme", prefersDark ? "dark" : "light");
+}
+detectTheme();
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", detectTheme);
+
+/* 💡 Auto highlight based on page URL */
+const currentPage = window.location.pathname.split("/").pop().toLowerCase();
+document.querySelectorAll(".bottom-nav .nav-item").forEach(item => {
+  const href = item.getAttribute("href")?.toLowerCase();
+  if (currentPage === href) item.classList.add("active");
+});
+
+/* 🌊 Ripple effect + manual highlight */
+document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
+  item.addEventListener("click", (e) => {
+    // highlight
+    document.querySelector(".bottom-nav .nav-item.active")?.classList.remove("active");
+    item.classList.add("active");
+
+    // ripple
+    const ripple = document.createElement("span");
+    ripple.classList.add("ripple");
+    const rect = item.getBoundingClientRect();
+    ripple.style.left = `${e.clientX - rect.left}px`;
+    ripple.style.top = `${e.clientY - rect.top}px`;
+    item.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 500);
+  });
+});
+</script>
+
+
 
 <!-- small popup -->
 <div id="popup"><div class="pbox" id="popupMessage"></div></div>
@@ -789,4 +963,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
-
