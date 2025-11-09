@@ -2201,6 +2201,9 @@ historyList.addEventListener("touchstart", (e) => {
   }
 });
 
+// ✅ Speak only once per 10 seconds (prevent repetition)
+let lastSpeakTime = 0;  // 👈 move this OUTSIDE event listener (global scope)
+
 historyList.addEventListener("touchmove", (e) => {
   if (!pulling) return;
   const distance = e.touches[0].clientY - startY;
@@ -2219,14 +2222,18 @@ historyList.addEventListener("touchend", async (e) => {
   if (distance > pullThreshold) {
     refreshIndicator.classList.add("active");
 
-    // 🔁 Reload data (call your real function)
+    // 🔁 Reload data
     if (typeof loadMiningHistory === "function" && currentUser) {
       await loadMiningHistory(currentUser);
     }
 
-    // ✅ optional voice feedback
+    // ✅ Speak only once per 10 seconds (debounced)
     if (typeof speakMessage === "function") {
-      speakMessage("Mining history updated successfully.");
+      const now = Date.now();
+      if (now - lastSpeakTime > 10000) { // 10 sec gap
+        speakMessage("Mining history updated successfully.");
+        lastSpeakTime = now;
+      }
     }
 
     // hide indicator
@@ -2240,7 +2247,6 @@ historyList.addEventListener("touchend", async (e) => {
     refreshIndicator.style.opacity = "0";
   }
 });
-
 
 </script>
 <script>
