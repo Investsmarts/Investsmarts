@@ -249,7 +249,7 @@ button:hover {
     margin: 0 10px;
   }
   .tab {
-    font-size: 13px;
+    font-size: 15px;
     padding: 12px 0;
   }
   .phone-row select {
@@ -649,22 +649,22 @@ h2 {
 
 <!-- ✅ HTML Navbar -->
 <div class="bottom-nav" id="mainNav">
-  <a href="Dashboard.html" class="nav-item">
+  <a href="login.html" class="nav-item">
     <i class="ri-home-5-fill"></i>
     <span>Home</span>
   </a>
 
-  <a href="mining.html" class="nav-item">
+  <a href="login.html" class="nav-item">
     <i class="ri-bar-chart-2-fill"></i>
     <span>Mining</span>
   </a>
 
-  <a href="promotion.html" class="nav-item">
+  <a href="login.html" class="nav-item">
     <i class="ri-gift-fill"></i>
     <span>Promotion</span>
   </a>
 
-  <a href="account.html" class="nav-item">
+  <a href="login.html" class="nav-item">
     <i class="ri-user-3-fill"></i>
     <span>Account</span>
   </a>
@@ -731,6 +731,8 @@ tabs.forEach(tab => {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import { getFirestore, doc, getDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
@@ -1092,25 +1094,48 @@ async function universalLogin(identifier, password, loginBtn) {
       return;
     }
 
- 
 // ✅ Try Login
 await signInWithEmailAndPassword(auth, email, password);
 
 // ✅ Get current user IP
 const userIP = await getUserIP();
 
-// ✅ Agar user ke paas IP nahi hai to abhi set kar do
-if (!userData.ipAddress || userData.ipAddress === "Unknown") {
-  await updateDoc(userRef, { ipAddress: userIP });
-  console.log("✅ User IP updated:", userIP);
-}
+// ✅ Find the user's Firestore document using email
 
-// ✅ Reset failed attempts (normal login flow)
-await setDoc(userRef, { failedAttempts: 0, lockUntil: 0 }, { merge: true });
+const usersRef = collection(db, "users");
+const q = query(usersRef, where("email", "==", email));
+const snap = await getDocs(q);
+
+if (!snap.empty) {
+  const userDoc = snap.docs[0];
+  const userData = userDoc.data();
+
+  // ✅ Prepare update object
+  const updates = {
+    failedAttempts: 0,
+    lockUntil: 0,
+    lastLogin: new Date().toISOString()
+  };
+
+  // ✅ Agar IP missing hai ya Unknown hai, to add karo
+  if (!userData.ipAddress || userData.ipAddress === "Unknown") {
+    updates.ipAddress = userIP;
+    console.log("✅ IP updated successfully:", userIP);
+  } else {
+    console.log("ℹ️ IP already exists:", userData.ipAddress);
+  }
+
+  // ✅ Firestore me ek hi updateDoc call se sab update
+  await updateDoc(userDoc.ref, updates);
+
+} else {
+  console.warn("⚠️ No user found with email:", email);
+}
 
 // ✅ Success popup aur redirect
 showPopup("✅ Login successful!", "success");
 setTimeout(() => (window.location.href = "popup.html"), 1500);
+
 
 
   } catch (error) {
@@ -1191,6 +1216,7 @@ document.querySelectorAll('.register-btn').forEach(btn => {
 });
 
 </script>
+
 <script>
   // 🚫 Disable right click, select, drag
   document.addEventListener("contextmenu", e => e.preventDefault());
@@ -1238,6 +1264,5 @@ document.querySelectorAll('.register-btn').forEach(btn => {
   Object.freeze(console);
   Object.freeze(window.console);
 </script>
-
 </body>
 </html>
