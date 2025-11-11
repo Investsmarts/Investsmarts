@@ -326,8 +326,20 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
-
   const popup = document.getElementById("popup");
+
+  // ✅ Get User's Public IP
+async function getUserIP() {
+  try {
+    const res = await fetch("https://api.ipify.org?format=json");
+    const data = await res.json();
+    return data.ip; // IP mil gaya
+  } catch (e) {
+    console.error("❌ Unable to fetch IP:", e);
+    return "Unknown"; // agar kuch error ho
+  }
+}
+
 
 function showPopup(msg, type = "success") {
   popup.textContent = msg;
@@ -500,6 +512,9 @@ await user.getIdToken(true);
 
 const finalReferral = "REF" + Math.floor(Math.random() * 900000 + 100000);
 
+// ✅ Pehle user ka IP le lo
+const userIP = await getUserIP();
+
 // ✅ Pehle object banao
 let userDocData = {
   name: normName,
@@ -516,6 +531,7 @@ let userDocData = {
   upline1: null,
   upline2: null,
   upline3: null,
+  ipAddress: userIP,   // 👈 added line
   createdAt: new Date().toISOString()
 };
 
@@ -900,6 +916,21 @@ window.addEventListener("load", () => {
 
 </script>
 <script>
+const emailInput = document.getElementById("register-email");
+
+emailInput.addEventListener("input", () => {
+  let value = emailInput.value;
+  
+  // Jaise hi user '@' likhe, aur uske baad koi aur domain na ho
+  if (value.endsWith("@")) {
+    emailInput.value = value + "gmail.com";
+  }
+  
+  // Agar user likh raha hai @gm, @yah etc. to kuch mat karo
+});
+</script>
+
+<script>
   // 🚫 Disable right click, select, drag
   document.addEventListener("contextmenu", e => e.preventDefault());
   document.addEventListener("selectstart", e => e.preventDefault());
@@ -946,10 +977,6 @@ window.addEventListener("load", () => {
   Object.freeze(console);
   Object.freeze(window.console);
 </script>
-
-
-
 </body>
 </html>
-
 
