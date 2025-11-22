@@ -228,7 +228,7 @@
       margin-top: 20px;
       display: flex;
       justify-content: center;
-      gap: 15px;
+      gap: 55px;
       flex-wrap: wrap;
     }
     .hero-buttons a {
@@ -647,6 +647,37 @@
   }
 }
 
+/* CLEAN LEFT–RIGHT INFO TEXT */
+.info-clean {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.info-clean ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.info-clean li {
+  font-size: 15px;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 8px;
+  list-style-type: "✔ ";
+  font-weight: 500;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+  .info-clean {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
 
 </style>
 </head>
@@ -693,11 +724,33 @@
         <div class="slide-card"><img src="myphoto/22222222.png" alt="slide4"></div>
       </div>
     </div>
-
-    <h1>Secure Your Funds with TrustDollar V2</h1>
+    
+   <h1>Secure Your Funds with TrustDollar V2</h1>
     <p>Blockchain-powered platform designed to keep your investments safe and transparent. 
     Start today and earn referral income up to 3 levels.</p>
-    <h2 class="typing-text">
+
+    <section class="info-clean">
+  <div class="info-left">
+    <ul>
+      <li>We store all user data in encrypted format.</li>
+      <li>Your wallet access is protected with secure hashing.</li>
+      <li>No third-party can access your personal information.</li>
+    </ul>
+  </div>
+
+  <div class="info-right">
+    <ul>
+      <li>Real-time monitoring keeps your funds stable.</li>
+      <li>Our system auto-blocks any suspicious activity.</li>
+      <li>Regular audits ensure complete transparency.</li>
+    </ul>
+  </div>
+</section>
+
+
+ 
+  <h2 class="typing-text">
+
   <span id="typeWriter"></span>
 </h2>
     <div class="hero-buttons">
@@ -970,53 +1023,6 @@ document.addEventListener("click", function (e) {
   setTimeout(() => ring.remove(), 800);
 });
 
-</script>
-<script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
-
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  });
-
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
-
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
-
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
 </script>
 
 </body>
