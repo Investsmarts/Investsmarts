@@ -244,52 +244,57 @@
       color: #fff;
     }
     .hero-buttons a.register:hover { background: #e68900; }
+    
+    /* 100% Working Responsive Features Grid */
+.features {
+  display: grid;
+  gap: 20px;
+  padding: 40px 20px;
+  
+  /* Desktop: 3 items per row */
+  grid-template-columns: repeat(3, 1fr);
+}
 
-    /* FEATURES */
-    .features {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 25px;
-      padding: 50px 20px;
-    }
-    .feature {
-      background: #fff;
-      border-radius: 16px;
-      padding: 28px 22px;
-      width: 280px;
-      text-align: center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    .feature::before {
-      content: "";
-      position: absolute;
-      top: -2px; left: -2px; right: -2px; bottom: -2px;
-      border-radius: 18px;
-      background: linear-gradient(135deg,#4CAF50,#2c7,#66bb6a);
-      z-index: -1;
-      opacity: 0.4;
-      transition: opacity 0.4s;
-    }
-    .feature:hover::before { opacity: 1; }
-    .feature h3 {
-      color: #2c7;
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-    .feature p {
-      font-size: 14px;
-      line-height: 1.6;
-      color: #555;
-    }
-    .feature:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 12px 28px rgba(76,175,80,0.25);
-    }
+/* For tablet – 2 per row */
+@media (max-width: 900px) {
+  .features {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* For small mobile – also 2 per row */
+@media (max-width: 480px) {
+  .features {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Individual feature box */
+.feature {
+  background: #fff;
+  padding: 24px 12px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  transition: 0.3s;
+}
+
+.feature h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #00c853;
+  margin-bottom: 8px;
+}
+
+.feature p {
+  font-size: 13px;
+  color: #555;
+}
+
+.feature:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 26px rgba(0,0,0,0.15);
+}
 
     /* BLOCKCHAIN */
     .blockchain-section {
@@ -540,13 +545,116 @@
 }
 
 
+.wave-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.wave-bg::before,
+.wave-bg::after {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 50% 50%, rgba(0,255,150,0.3), transparent 60%);
+  animation: waveMove 8s linear infinite;
+}
+
+.wave-bg::after {
+  background: radial-gradient(circle at 20% 80%, rgba(0,255,200,0.25), transparent 70%);
+  animation-duration: 12s;
+}
+
+@keyframes waveMove {
+  0% { transform: translate(-30%, -30%) rotate(0deg); }
+  100% { transform: translate(-30%, -30%) rotate(360deg); }
+}
+
+
+
+
+.typing-text {
+  font-size: 26px;
+  font-weight: 600;
+  color: #ffd700;   /* Gold premium color */
+  text-align: center;
+  margin-top: 20px;
+}
+
+#typeWriter {
+  border-right: 3px solid #ffd700;
+  padding-right: 8px;
+  animation: blinkCursor 0.7s infinite;
+}
+
+@keyframes blinkCursor {
+  0% { border-color: transparent; }
+  50% { border-color: #ffd700; }
+  100% { border-color: transparent; }
+}
+
+
+/* ULTRA-SMOOTH CLICK RING */
+#click-ring {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.ring {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+
+  /* MIX COLORS – smoother GPU blending */
+  border-top-color: gold;
+  border-right-color: #ff4444;
+  border-left-color: #00e676;
+
+  transform: translate(-50%, -50%) scale(0.2);
+  opacity: 0.8;
+
+  /* smoother animation */
+  animation: smoothRing 0.7s cubic-bezier(.22,.61,.36,1) forwards;
+}
+
+@keyframes smoothRing {
+  0% {
+    transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+    opacity: 0.8;
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1.1) rotate(180deg);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.6) rotate(260deg);
+    opacity: 0;
+  }
+}
+
+
 </style>
 </head>
 <body>
+
+
 <!-- ✅ Referral Popup -->
 <div id="referralPopup" class="popup">
   Referral detected. Please sign up.
 </div>
+
+<div id="click-ring"></div>
+
+<div class="wave-bg"></div>
 
   <!-- HEADER -->
 <header class="header">
@@ -583,7 +691,9 @@
     <h1>Secure Your Funds with TrustDollar V2</h1>
     <p>Blockchain-powered platform designed to keep your investments safe and transparent. 
     Start today and earn referral income up to 3 levels.</p>
-
+    <h2 class="typing-text">
+  <span id="typeWriter"></span>
+</h2>
     <div class="hero-buttons">
       <a href="login.html" class="login">Login</a>
       <a href="register.html" class="register">Register</a>
@@ -592,6 +702,11 @@
 
   <!-- FEATURES -->
   <div class="features">
+   <div class="feature">
+    <h3>Fast Transactions</h3>
+    <p>Experience lightning-speed deposits and withdrawals anytime.</p>
+    </div>
+
     <div class="feature">
       <h3>Blockchain Security</h3>
       <p>Your funds are protected with cutting-edge blockchain technology.</p>
@@ -604,7 +719,19 @@
       <h3>Safe Wallet</h3>
       <p>Wallet balances stored safely in USDT with full transparency.</p>
     </div>
-  </div>
+    <div class="feature">
+  <h3>Auto Earnings</h3>
+  <p>Your income is generated automatically without any manual work.</p>
+</div>
+
+    <div class="feature">
+  <h3>24/7 Support</h3>
+  <p>Get round-the-clock assistance with instant help whenever needed.</p>
+</div>
+</div>
+
+
+
 
   <!-- BLOCKCHAIN -->
   <div class="blockchain-section">
@@ -776,33 +903,115 @@ menuOverlay.addEventListener("click", () => {
 });
 
 </script>
+
+
+
 <script>
-// ❌ Right-click disable
-  document.addEventListener("contextmenu", function(e) {
-    e.preventDefault();
-    
-  });
+const messages = [
+  "Secure Your Earnings...",
+  "Daily Income With Trust...",
+  "Blockchain Based Platform...",
+  "Instant Withdrawal Available...",
+  "Earn 3 Level Income..."
+];
 
-// ❌ Disable text selection
-  document.addEventListener("selectstart", function(e) {
-    e.preventDefault();
-  });
+let messageIndex = 0;
+let charIndex = 0;
+let currentText = "";
+let isDeleting = false;
 
-// ❌ Disable copy (Ctrl+C), cut (Ctrl+X), paste (Ctrl+V), view-source (Ctrl+U)
-  document.addEventListener("keydown", function(e) {
+function typeEffect() {
+  currentText = messages[messageIndex];
+
+  if (!isDeleting) {
+    document.getElementById("typeWriter").textContent =
+      currentText.substring(0, charIndex + 1);
+    charIndex++;
+
+    if (charIndex === currentText.length) {
+      isDeleting = true;
+      setTimeout(typeEffect, 1000);
+      return;
+    }
+  } 
+  else {
+    document.getElementById("typeWriter").textContent =
+      currentText.substring(0, charIndex - 1);
+    charIndex--;
+
+    if (charIndex === 0) {
+      isDeleting = false;
+      messageIndex = (messageIndex + 1) % messages.length;
+    }
+  }
+
+  setTimeout(typeEffect, isDeleting ? 60 : 100);
+}
+
+typeEffect();
+
+
+document.addEventListener("click", function (e) {
+  const container = document.getElementById("click-ring");
+
+  const ring = document.createElement("span");
+  ring.classList.add("ring");
+  ring.style.left = e.clientX + "px";
+  ring.style.top = e.clientY + "px";
+
+  container.appendChild(ring);
+
+  setTimeout(() => ring.remove(), 800);
+});
+
+</script>
+<script>
+  // 🚫 Disable right click, select, drag
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
+
+  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
+  document.addEventListener("keydown", e => {
     if (
-      (e.ctrlKey && (e.key === "c" || e.key === "C")) || 
-      (e.ctrlKey && (e.key === "x" || e.key === "X")) || 
-      (e.ctrlKey && (e.key === "v" || e.key === "V")) || 
-      (e.ctrlKey && (e.key === "u" || e.key === "U")) || 
-    (e.key === "F12") // DevTools
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
     ) {
       e.preventDefault();
-    
-  }
-});
+      return false;
+    }
+  });
+
+  // 🔒 Silent DevTools detection (no popup)
+  (function() {
+    const devtools = /./;
+    devtools.toString = function() {
+      return ""; // no alert or console log
+    };
+    console.log("%c", devtools);
+  })();
+
+  // 🔐 Detect DevTools using resize trick (no popup)
+  setInterval(() => {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    if (widthDiff || heightDiff) {
+      // Optional: silently redirect or blank the page
+      document.body.innerHTML = "";
+    }
+  }, 1000);
+
+  // 🧱 Disable copy/paste/cut
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // 🔁 Freeze console methods silently
+  Object.freeze(console);
+  Object.freeze(window.console);
 </script>
 
 </body>
 </html>
-
