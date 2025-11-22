@@ -781,10 +781,34 @@ document.querySelectorAll(".team-box").forEach(box => {
 });
 </script>
 
+<script>
+// ⏳ Auto Logout After 5 Hours Inactivity
+
+const AUTO_LOGOUT_TIME = 5 * 60 * 60 * 1000; // 5 hours
+
+let lastActivity = Date.now();
+
+// User activity detect
+function updateActivity() {
+  lastActivity = Date.now();
+}
+document.addEventListener("click", updateActivity);
+document.addEventListener("mousemove", updateActivity);
+document.addEventListener("keydown", updateActivity);
+
+// Check inactivity every 20 seconds
+setInterval(() => {
+  if (Date.now() - lastActivity > AUTO_LOGOUT_TIME) {
+    localStorage.setItem("logoutReason", "expired");
+    window.location.href = "index.html"; // redirect
+  }
+}, 20000);
+</script>
 
 
 </body>
 </html>
+
 
 
 
