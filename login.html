@@ -393,7 +393,7 @@ div[style*="Security Notice"] {
 
 /* ✅ Add body top padding for fixed header space */
 body {
-  padding-top: 60px; /* add below your other body styles */
+  padding-top: 40px; /* add below your other body styles */
 }
 
 
@@ -437,14 +437,15 @@ h2 {
 
 <div class="login-box">
   <div class="tab-header">
-    <div class="tab" id="emailTab"><i class="fas fa-envelope"></i> Email</div>
-        <div class="tab active" id="phoneTab"><i class="fas fa-phone"></i> Phone</div>
-       <div class="tab" id="userTab"><i class="fas fa-user"></i> Username</div>
+    <div class="tab active" id="emailTab"><i class="fas fa-envelope"></i> Email</div>
+       <div class="tab" id="phoneTab"><i class="fas fa-phone"></i> Phone</div>
+        <div class="tab" id="userTab"><i class="fas fa-user"></i> Username</div>
   </div>
 
   <div class="form">
     <!-- 📞 Phone -->
-    <div class="form-section active" id="phoneForm">
+    <div class="form-section" id="phoneForm">
+
       <div class="input-group">
         <label><i class="fas fa-phone"></i> Phone Number</label>
         <div class="phone-row">
@@ -471,7 +472,8 @@ h2 {
     </div>
 
    <!-- 📧 Email -->
-<div class="form-section" id="emailForm">
+<div class="form-section active" id="emailForm">
+
   <div class="input-group">
     <label><i class="fas fa-envelope"></i> Email</label>
     <input type="email" id="email-login" placeholder="Please enter email address" />
@@ -1216,7 +1218,6 @@ document.querySelectorAll('.register-btn').forEach(btn => {
 });
 
 </script>
-
 <script>
   // 🚫 Disable right click, select, drag
   document.addEventListener("contextmenu", e => e.preventDefault());
@@ -1266,5 +1267,4 @@ document.querySelectorAll('.register-btn').forEach(btn => {
 </script>
 </body>
 </html>
-
 
