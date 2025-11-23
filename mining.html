@@ -1815,13 +1815,15 @@ if (!mining) {
   }
 
   btn.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> ${messages[index]}`;
-  speakLine(messages[index]);
+  speakOnce(messages[index]);
+
 
   const speakNext = () => {
     index++;
     if (index < messages.length) {
       btn.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> ${messages[index]}`;
-      speakLine(messages[index]);
+      speakOnce(messages[index]);
+
       setTimeout(speakNext, 3500);
     } else {
       // ✅ After last line, start actual mining
@@ -1865,7 +1867,8 @@ if (!mining) {
 // === STOP MINING ===
 
 // 🧠 Step 1: Start animated disconnect message
-speakMessage("Hash rate disconnecting, please wait.");
+speakOnce("Hash rate disconnecting, please wait.");
+
 const statusTexts = [
   "Hash rate disconnecting...",
   "Syncing data with server...",
@@ -1940,7 +1943,7 @@ showProPopup(
   `You earned $${profit.toFixed(4)} profit. Returned $${totalReturnToUser.toFixed(2)} to wallet.`,
   "https://cdn-icons-png.flaticon.com/512/190/190411.png"
 );
-speakMessage("Mining completed successfully.");
+speakOnce("Mining completed successfully.");
 
 // Reset button UI
 btn.disabled = false;
@@ -2159,35 +2162,6 @@ amountInput.addEventListener("input", () => {
   }
 });
 
-function speakMessage(text) {
-const beep = new Audio("https://assets.mixkit.co/sfx/preview/mixkit-single-notification-bell-590.mp3");
-beep.play();
-setTimeout(() => {
-  speechSynthesis.speak(msg);
-}, 300);
-
-
-const msg = new SpeechSynthesisUtterance(text);
-msg.lang = "en-US";
-msg.rate = 0.8; // 👈 thoda slow bolega (0.5 = slow, 1.0 = normal)
-msg.pitch = 1.0; // natural pitch
-msg.volume = 1.0;
-
-let voices = speechSynthesis.getVoices();
-if (!voices.length) {
-  // Wait for voices to load before speaking
-  speechSynthesis.onvoiceschanged = () => {
-    voices = speechSynthesis.getVoices();
-    const femaleVoice = voices.find(v => /female|woman|Google US English/i.test(v.name));
-    if (femaleVoice) msg.voice = femaleVoice;
-    speechSynthesis.speak(msg);
-  };
-} else {
-  const femaleVoice = voices.find(v => /female|woman|Google US English/i.test(v.name));
-  if (femaleVoice) msg.voice = femaleVoice;
-  speechSynthesis.speak(msg);
-}
-} 
 
 /* === Pull to Refresh for Income History Box === */
 const historyList = document.getElementById("incomeHistoryList");
@@ -2233,8 +2207,9 @@ historyList.addEventListener("touchend", async (e) => {
     if (typeof speakMessage === "function") {
       const now = Date.now();
       if (now - lastSpeakTime > 10000) { // 10 sec gap
-        speakMessage("Mining history updated successfully.");
-        lastSpeakTime = now;
+        speakOnce("Mining history updated successfully.");
+
+           lastSpeakTime = now;
       }
     }
 
@@ -2339,6 +2314,41 @@ setInterval(() => {
     window.location.href = "index.html"; // redirect
   }
 }, 20000);
+
+
+
+// 🔒 GLOBAL SPEAK LOCK (prevents duplicate speaking)
+let voiceLock = false;
+let lastSpeakTime = 0;
+
+function speakOnce(text) {
+  const now = Date.now();
+
+  // ❌ if last voice < 10 sec → skip
+  if (voiceLock || now - lastSpeakTime < 10000) {
+    return;
+  }
+
+  voiceLock = true;
+  lastSpeakTime = now;
+
+  const msg = new SpeechSynthesisUtterance(text);
+  msg.lang = "en-US";
+  msg.rate = 0.85;
+
+  const voices = speechSynthesis.getVoices();
+  const femaleVoice = voices.find(v => /female|woman|Google US English/i.test(v.name));
+  if (femaleVoice) msg.voice = femaleVoice;
+
+  speechSynthesis.speak(msg);
+
+  msg.onend = () => {
+    setTimeout(() => {
+      voiceLock = false; // unlock
+    }, 500);
+  };
+}
+
 </script>
 <script>
   // Disable double-tap zoom
@@ -2361,5 +2371,4 @@ setInterval(() => {
 
 </body>
 </html>
-
 
