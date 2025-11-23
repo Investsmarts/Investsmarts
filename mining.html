@@ -2,9 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" 
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
@@ -1815,15 +1813,13 @@ if (!mining) {
   }
 
   btn.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> ${messages[index]}`;
-  speakOnce(messages[index]);
-
+  speakLine(messages[index]);
 
   const speakNext = () => {
     index++;
     if (index < messages.length) {
       btn.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> ${messages[index]}`;
-      speakOnce(messages[index]);
-
+      speakLine(messages[index]);
       setTimeout(speakNext, 3500);
     } else {
       // ✅ After last line, start actual mining
@@ -1867,8 +1863,7 @@ if (!mining) {
 // === STOP MINING ===
 
 // 🧠 Step 1: Start animated disconnect message
-speakOnce("Hash rate disconnecting, please wait.");
-
+speakMessage("Hash rate disconnecting, please wait.");
 const statusTexts = [
   "Hash rate disconnecting...",
   "Syncing data with server...",
@@ -1943,7 +1938,7 @@ showProPopup(
   `You earned $${profit.toFixed(4)} profit. Returned $${totalReturnToUser.toFixed(2)} to wallet.`,
   "https://cdn-icons-png.flaticon.com/512/190/190411.png"
 );
-speakOnce("Mining completed successfully.");
+speakMessage("Mining completed successfully.");
 
 // Reset button UI
 btn.disabled = false;
@@ -2162,6 +2157,35 @@ amountInput.addEventListener("input", () => {
   }
 });
 
+function speakMessage(text) {
+const beep = new Audio("https://assets.mixkit.co/sfx/preview/mixkit-single-notification-bell-590.mp3");
+beep.play();
+setTimeout(() => {
+  speechSynthesis.speak(msg);
+}, 300);
+
+
+const msg = new SpeechSynthesisUtterance(text);
+msg.lang = "en-US";
+msg.rate = 0.8; // 👈 thoda slow bolega (0.5 = slow, 1.0 = normal)
+msg.pitch = 1.0; // natural pitch
+msg.volume = 1.0;
+
+let voices = speechSynthesis.getVoices();
+if (!voices.length) {
+  // Wait for voices to load before speaking
+  speechSynthesis.onvoiceschanged = () => {
+    voices = speechSynthesis.getVoices();
+    const femaleVoice = voices.find(v => /female|woman|Google US English/i.test(v.name));
+    if (femaleVoice) msg.voice = femaleVoice;
+    speechSynthesis.speak(msg);
+  };
+} else {
+  const femaleVoice = voices.find(v => /female|woman|Google US English/i.test(v.name));
+  if (femaleVoice) msg.voice = femaleVoice;
+  speechSynthesis.speak(msg);
+}
+} 
 
 /* === Pull to Refresh for Income History Box === */
 const historyList = document.getElementById("incomeHistoryList");
@@ -2207,9 +2231,8 @@ historyList.addEventListener("touchend", async (e) => {
     if (typeof speakMessage === "function") {
       const now = Date.now();
       if (now - lastSpeakTime > 10000) { // 10 sec gap
-        speakOnce("Mining history updated successfully.");
-
-           lastSpeakTime = now;
+        speakMessage("Mining history updated successfully.");
+        lastSpeakTime = now;
       }
     }
 
@@ -2292,83 +2315,5 @@ window.addEventListener("scroll", () => {
   Object.freeze(console);
   Object.freeze(window.console);
 </script>
-  <script>
-// ⏳ Auto Logout After 5 Hours Inactivity
-
-const AUTO_LOGOUT_TIME = 5 * 60 * 60 * 1000; // 5 hours
-
-let lastActivity = Date.now();
-
-// User activity detect
-function updateActivity() {
-  lastActivity = Date.now();
-}
-document.addEventListener("click", updateActivity);
-document.addEventListener("mousemove", updateActivity);
-document.addEventListener("keydown", updateActivity);
-
-// Check inactivity every 20 seconds
-setInterval(() => {
-  if (Date.now() - lastActivity > AUTO_LOGOUT_TIME) {
-    localStorage.setItem("logoutReason", "expired");
-    window.location.href = "index.html"; // redirect
-  }
-}, 20000);
-
-
-
-// 🔒 GLOBAL SPEAK LOCK (prevents duplicate speaking)
-let voiceLock = false;
-let lastSpeakTime = 0;
-
-function speakOnce(text) {
-  const now = Date.now();
-
-  // ❌ if last voice < 10 sec → skip
-  if (voiceLock || now - lastSpeakTime < 10000) {
-    return;
-  }
-
-  voiceLock = true;
-  lastSpeakTime = now;
-
-  const msg = new SpeechSynthesisUtterance(text);
-  msg.lang = "en-US";
-  msg.rate = 0.85;
-
-  const voices = speechSynthesis.getVoices();
-  const femaleVoice = voices.find(v => /female|woman|Google US English/i.test(v.name));
-  if (femaleVoice) msg.voice = femaleVoice;
-
-  speechSynthesis.speak(msg);
-
-  msg.onend = () => {
-    setTimeout(() => {
-      voiceLock = false; // unlock
-    }, 500);
-  };
-}
-
-</script>
-<script>
-  // Disable double-tap zoom
-  let lastTouchEnd = 0;
-  document.addEventListener('touchend', function(event) {
-    const now = Date.now();
-    if (now - lastTouchEnd <= 300) {
-      event.preventDefault();
-    }
-    lastTouchEnd = now;
-  }, false);
-
-  // Disable pinch zoom
-  document.addEventListener('touchmove', function(event) {
-    if (event.scale !== undefined && event.scale !== 1) {
-      event.preventDefault();
-    }
-  }, { passive: false });
-</script>
-
 </body>
 </html>
-
