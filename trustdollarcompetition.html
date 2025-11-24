@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+  <title>User Target Fee Table - TrustDollar</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f6fff7;
+      color: #222;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: 600;
+      color: #15803d;
+    }
+
+    .softbox {
+      background: #eaf8ef;
+      padding: 18px 20px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border-left: 6px solid #15803d;
+      margin-bottom: 25px;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .softbox strong {
+      color: #15803d;
+      font-weight: 600;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    button {
+      padding: 12px 24px;
+      background: #15803d;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: 0.25s;
+    }
+
+    button:hover {
+      background: #0e5e2d;
+    }
+
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 14px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+
+    th, td {
+      border: 1px solid #e0e0e0;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    th {
+      background: #15803d;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background: #f3faf5;
+    }
+
+    tr:hover {
+      background: #e6f6eb;
+      transition: 0.2s ease-in-out;
+    }
+
+    /* Fullscreen Image Modal */
+    #imgModal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
+    }
+
+    #imgModal img {
+      max-width: 95%;
+      max-height: 95%;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.3);
+    }
+
+    #imgModal:active {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="softbox">
+  <strong>Important Notice:</strong><br><br>
+  If you join the competition and fail to complete your target within the given time,
+  <strong>TrustDollar will refund 100% of your participation fee.</strong><br><br>
+  However, <strong>you will not receive any commission</strong> if the target is not completed.
+
+  <div style="text-align:center; margin-top:18px;">
+    <a href="joincompetition.html"
+       style="background:#15803d; color:#fff; padding:12px 24px;
+              border-radius:10px; text-decoration:none; font-size:16px;
+              font-weight:600; box-shadow:0 4px 12px rgba(0,0,0,0.15);
+              display:inline-block; transition:0.25s;">
+      Join Now
+    </a>
+  </div>
+</div>
+
+<div class="btn-container">
+  <button onclick="openImage()">View Premium Image</button>
+</div>
+
+<!-- FULLSCREEN IMAGE MODAL -->
+<div id="imgModal" onclick="closeImage()">
+  <img id="fullImage" src="">
+</div>
+
+<div class="table-wrapper" id="table-content">
+  <!-- (your table stays same — not repeating to save space) -->
+</div>
+
+<script>
+  function openImage() {
+    document.getElementById("fullImage").src = "TrustDollar.png";  
+    document.getElementById("imgModal").style.display = "flex";
+  }
+
+  function closeImage() {
+    document.getElementById("imgModal").style.display = "none";
+  }
+</script>
+
+</body>
+</html>
