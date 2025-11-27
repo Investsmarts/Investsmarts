@@ -118,27 +118,16 @@
 <script>
 /* -----------------------
      AUTO LOGIN CHECK
-/* -----------------------
-   /* -----------------------
-     SAFE AUTO LOGIN CHECK
 ------------------------- */
 document.addEventListener("DOMContentLoaded", function(){
 
     let loggedEmail = localStorage.getItem("userEmail");
-    let loggedName  = localStorage.getItem("userName");
 
-    // If user data not found → redirect to login
-    if (!loggedEmail || !loggedName || loggedEmail === "" || loggedName === "") {
+    if (!loggedEmail) {
         window.location.href = "login.html";
-        return;
+    } else {
+        document.getElementById("email").value = loggedEmail;
     }
-
-    // Check if input fields exist before filling values
-    let emailField = document.getElementById("email");
-    let nameField  = document.getElementById("name");
-
-    if (emailField)  emailField.value = loggedEmail;
-    if (nameField)   nameField.value  = loggedName;
 
 });
 
