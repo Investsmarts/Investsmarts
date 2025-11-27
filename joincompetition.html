@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TrustDollar Competition Form</title>
+
+<!-- FIREBASE COMPAT SDK (WORKS IN NORMAL HTML) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+<style>
+  body { font-family: Poppins, sans-serif; background:#f6fff7; padding:20px; }
+
+  .form-box {
+    background:#ffffff; padding:20px; border-radius:14px;
+    max-width:480px; margin:auto; box-shadow:0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  h2 { text-align:center; color:#15803d; margin-bottom:20px; }
+
+  label { font-weight:600; margin-top:14px; display:block; }
+
+  input, select {
+    width:100%; padding:12px; margin-top:6px; border-radius:10px;
+    border:1px solid #ccc; font-size:15px;
+  }
+
+  button {
+    width:100%; padding:12px; margin-top:18px; background:#15803d;
+    color:white; border:none; border-radius:10px; font-weight:600; cursor:pointer;
+  }
+
+  .popup {
+    position:fixed; top:20px; left:50%; transform:translateX(-50%);
+    background:#15803d; color:#fff; padding:12px 20px; border-radius:8px;
+    display:none; font-weight:600; z-index:9999;
+  }
+
+  .info-box {
+    background:#fffbe6; padding:12px; margin-top:15px; border-left:4px solid #ffcc00;
+    border-radius:10px; font-weight:600; display:none; text-align:center;
+  }
+
+  #qr img { width:200px; margin-top:10px; }
+</style>
+</head>
+
+<body>
+
+<!-- POPUPS -->
+<div class="popup" id="popupMsg">Thank you for joining</div>
+<div class="info-box" id="pendingMsg">Your details pending. Please wait. We will notify you by email.</div>
+
+<div class="form-box">
+  <h2>Join Competition</h2>
+
+  <!-- FORM SUBMIT.CO -->
+  <form id="mainForm" action="https://formsubmit.co/YOUR_EMAIL" method="POST">
+
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_template" value="table">
+
+    <label>Your Name</label>
+    <input type="text" id="name" name="Name" required>
+
+    <label>Your Email</label>
+    <input type="email" id="email" name="Email" readonly required>
+
+    <label>Select User</label>
+    <select id="userSelect" name="User Package" onchange="fillData()" required>
+      <option value="">Select User</option>
+      <option value="10">10 Users</option>
+      <option value="20">20 Users</option>
+      <option value="30">30 Users</option>
+      <option value="40">40 Users</option>
+      <option value="50">50 Users</option>
+      <option value="60">60 Users</option>
+      <option value="70">70 Users</option>
+      <option value="80">80 Users</option>
+      <option value="90">90 Users</option>
+      <option value="100">100 Users</option>
+    </select>
+
+    <label>Fee</label>
+    <input type="text" id="fee" name="Fee" readonly>
+
+    <label>Commission %</label>
+    <input type="text" id="commission" name="Commission" readonly>
+
+    <label>Income</label>
+    <input type="text" id="income" name="Income" readonly>
+
+    <label>Day</label>
+    <input type="text" id="day" name="Day" readonly>
+
+    <label>Payment Amount (USD)</label>
+    <input type="text" id="payAmount" name="Payment Amount" readonly>
+
+    <label>BEP20 Wallet</label>
+    <input type="text" id="walletField" name="Wallet Address" readonly>
+
+    <div class="warning" style="
+      background:#fff3cd; padding:10px; margin-top:10px; border-radius:10px;
+      border-left:4px solid #d39e00; font-weight:600; text-align:center;">
+      ⚠ ONLY SEND BEP20 (USDT)
+    </div>
+
+    <div id="qr" style="text-align:center; margin-top:15px;"></div>
+
+    <button type="submit">Submit</button>
+
+  </form>
+</div>
+
+
+<!-- FULL SCRIPT -->
+<script>
+/* -----------------------
+     AUTO LOGIN CHECK
+/* -----------------------
+   /* -----------------------
+     SAFE AUTO LOGIN CHECK
+------------------------- */
+document.addEventListener("DOMContentLoaded", function(){
+
+    let loggedEmail = localStorage.getItem("userEmail");
+    let loggedName  = localStorage.getItem("userName");
+
+    // If user data not found → redirect to login
+    if (!loggedEmail || !loggedName || loggedEmail === "" || loggedName === "") {
+        window.location.href = "login.html";
+        return;
+    }
+
+    // Check if input fields exist before filling values
+    let emailField = document.getElementById("email");
+    let nameField  = document.getElementById("name");
+
+    if (emailField)  emailField.value = loggedEmail;
+    if (nameField)   nameField.value  = loggedName;
+
+});
+
+/* -----------------------
+     FIREBASE SETUP
+------------------------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25",
+  storageBucket: "btcinvest-c0e25.firebasestorage.app",
+  messagingSenderId: "204937458487",
+  appId: "1:204937458487:web:cc27ece1249999279f60b2"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+/* PRICE TABLE */
+const data = {
+  10:{fee:140,com:"20%",income:"$400",day:"5"},
+  20:{fee:240,com:"25%",income:"$1000",day:"10"},
+  30:{fee:360,com:"30%",income:"$1800",day:"15"},
+  40:{fee:480,com:"31%",income:"$2480",day:"20"},
+  50:{fee:600,com:"33%",income:"$3300",day:"21"},
+  60:{fee:720,com:"35%",income:"$4200",day:"22"},
+  70:{fee:840,com:"37%",income:"$5180",day:"23"},
+  80:{fee:960,com:"39%",income:"$6240",day:"24"},
+  90:{fee:1080,com:"41%",income:"$7380",day:"25"},
+  100:{fee:1200,com:"42%",income:"$8400",day:"30"}
+};
+
+/* WALLET ADDRESS */
+const walletAddress = "0xABCDEF1234567890YOURADDRESS";
+document.getElementById("walletField").value = walletAddress;
+
+/* AUTO FILL */
+function fillData() {
+  let user = document.getElementById("userSelect").value;
+
+  if(data[user]){
+    document.getElementById("fee").value = "$" + data[user].fee;
+    document.getElementById("commission").value = data[user].com;
+    document.getElementById("income").value = data[user].income;
+    document.getElementById("day").value = data[user].day;
+    document.getElementById("payAmount").value = data[user].fee;
+
+    document.getElementById("qr").innerHTML =
+    `<img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${walletAddress}">`;
+  }
+}
+
+/* SUBMIT → SAVE TO FIRESTORE SUBCOLLECTION + EMAIL + POPUP + REDIRECT */
+document.getElementById("mainForm").addEventListener("submit", async function(e){
+    e.preventDefault();
+
+    let email = document.getElementById("email").value;
+
+    let dataToSave = {
+      name : document.getElementById("name").value,
+      email: email,
+      user : document.getElementById("userSelect").value,
+      fee  : document.getElementById("fee").value,
+      com  : document.getElementById("commission").value,
+      income: document.getElementById("income").value,
+      day  : document.getElementById("day").value,
+      pay  : document.getElementById("payAmount").value,
+      wallet: walletAddress,
+      timestamp: new Date()
+    };
+
+    // SAVE IN SUBCOLLECTION → Users/{email}/RewardCompetition
+    await db
+      .collection("Users")
+      .doc(email)
+      .collection("RewardCompetition")
+      .add(dataToSave);
+
+    // SEND EMAIL USING FORMSUBMIT
+    this.submit();
+
+    // POPUP
+    let pop = document.getElementById("popupMsg");
+    pop.style.display = "block";
+
+    setTimeout(()=>{
+        pop.style.display = "none";
+        document.getElementById("pendingMsg").style.display = "block";
+
+        setTimeout(()=>{
+            window.location.href = "dashboard.html";
+        }, 2000);
+
+    },1000);
+});
+</script>
+
+</body>
+</html>
