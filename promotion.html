@@ -8,7 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
-
+<!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
 <style>
 body {
   font-family: "Poppins", sans-serif;
@@ -18,7 +19,7 @@ body {
   padding-bottom: 100px;
   color: #333;
 }
-.container { max-width: 950px; margin: auto; padding: 20px; }
+.container { max-width: 950px; margin: auto; padding: 10px; }
 .card {
   background: #fff; padding: 20px; border-radius: 5px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.08); margin-bottom: 20px;
@@ -194,7 +195,7 @@ body {
 
 /* ✅ Adjust padding so content doesn't hide under top nav */
 body {
-  padding-top: 120px !important;
+  padding-top: 100px !important;
 }
 
 
@@ -337,75 +338,6 @@ body {
 
 
 
-</style>
-</head>
-<body>
-<div class="header">My Referrals</div>
-
-
-<div class="container">
-  <div class="card">
-    
-    <div class="team-grid">
-      <div class="team-box"><span class="label">Level 1</span><span id="teamLv1" class="value">0</span></div>
-      <div class="team-box"><span class="label">Level 2</span><span id="teamLv2" class="value">0</span></div>
-      <div class="team-box"><span class="label">Level 3</span><span id="teamLv3" class="value">0</span></div>
-      <div class="team-box total"><span class="label">Total</span><span id="teamTotal" class="value">0</span></div>
-    </div>
-  </div>
-<!-- ✅ Popup Notification -->
-<div id="tdPopup" class="td-popup"></div>
-
-  <div class="card referral-card">
-    <b>Your link:</b>
-    <div id="refLink" class="referral-link">Loading referral link...</div>
-    <div id="qrcode-wrapper"><div id="qrcode"></div></div>
-    <div class="btn-row">
-      <button class="btn btn-copy" onclick="copyReferral()">Copy Link</button>
-      <button class="btn btn-share" onclick="shareReferral()">Share Link</button>
-    </div>
-  </div>
-
-<!-- 🌟 Top Level Navigation -->
-<div class="top-level-nav">
-  <button class="level-tab active" onclick="showLevel(1)">Level 1</button>
-  <button class="level-tab" onclick="showLevel(2)">Level 2</button>
-  <button class="level-tab" onclick="showLevel(3)">Level 3</button>
-</div>
-
-  <div id="level1" class="level-content active">
-    <h3>Earning: <b id="level1Earning">$0</b></h3>
-    <div class="search-bar">
-      <input type="text" id="searchLv1" placeholder="Search member by name...">
-      <button onclick="searchLevel(1)">Search</button>
-    </div>
-    <div id="level1List" class="scrollable-list"></div>
-  </div>
-
-  <div id="level2" class="level-content">
-    <h3>Earning: <b id="level2Earning">$0</b></h3>
-    <div class="search-bar">
-      <input type="text" id="searchLv2" placeholder="Search member by name...">
-      <button onclick="searchLevel(2)">Search</button>
-    </div>
-    <div id="level2List" class="scrollable-list"></div>
-  </div>
-
-  <div id="level3" class="level-content">
-    <h3>Earning: <b id="level3Earning">$0</b></h3>
-    <div class="search-bar">
-      <input type="text" id="searchLv3" placeholder="Search member by name...">
-      <button onclick="searchLevel(3)">Search</button>
-    </div>
-    <div id="level3List" class="scrollable-list"></div>
-  </div>
-</div>
-
-
-<!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
-<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
-
-<style>
 :root {
   --nav-bg: #fff;
   --nav-text: #444;
@@ -515,7 +447,75 @@ body {
     font-size: 9.5px;
   }
 }
+
 </style>
+</head>
+<body>
+<div class="header">My Referrals</div>
+
+
+<div class="container">
+  <div class="card">
+    
+    <div class="team-grid">
+      <div class="team-box"><span class="label">Level 1</span><span id="teamLv1" class="value">0</span></div>
+      <div class="team-box"><span class="label">Level 2</span><span id="teamLv2" class="value">0</span></div>
+      <div class="team-box"><span class="label">Level 3</span><span id="teamLv3" class="value">0</span></div>
+      <div class="team-box total"><span class="label">Total</span><span id="teamTotal" class="value">0</span></div>
+    </div>
+  </div>
+<!-- ✅ Popup Notification -->
+<div id="tdPopup" class="td-popup"></div>
+
+  <div class="card referral-card">
+    <b>Your link:</b>
+    <div id="refLink" class="referral-link">Loading referral link...</div>
+    <div id="qrcode-wrapper"><div id="qrcode"></div></div>
+    <div class="btn-row">
+      <button class="btn btn-copy" onclick="copyReferral()">Copy Link</button>
+      <button class="btn btn-share" onclick="shareReferral()">Share Link</button>
+    </div>
+  </div>
+
+<!-- 🌟 Top Level Navigation -->
+<div class="top-level-nav">
+  <button class="level-tab active" onclick="showLevel(1)">Level 1</button>
+  <button class="level-tab" onclick="showLevel(2)">Level 2</button>
+  <button class="level-tab" onclick="showLevel(3)">Level 3</button>
+</div>
+
+  <div id="level1" class="level-content active">
+    <h3>Earning: <b id="level1Earning">$0</b></h3>
+    <div class="search-bar">
+      <input type="text" id="searchLv1" placeholder="Search member by name...">
+      <button onclick="searchLevel(1)">Search</button>
+    </div>
+    <div id="level1List" class="scrollable-list"></div>
+  </div>
+
+  <div id="level2" class="level-content">
+    <h3>Earning: <b id="level2Earning">$0</b></h3>
+    <div class="search-bar">
+      <input type="text" id="searchLv2" placeholder="Search member by name...">
+      <button onclick="searchLevel(2)">Search</button>
+    </div>
+    <div id="level2List" class="scrollable-list"></div>
+  </div>
+
+  <div id="level3" class="level-content">
+    <h3>Earning: <b id="level3Earning">$0</b></h3>
+    <div class="search-bar">
+      <input type="text" id="searchLv3" placeholder="Search member by name...">
+      <button onclick="searchLevel(3)">Search</button>
+    </div>
+    <div id="level3List" class="scrollable-list"></div>
+  </div>
+</div>
+
+
+
+
+
 
 <!-- ✅ HTML Navbar -->
 <div class="bottom-nav" id="mainNav">
@@ -540,41 +540,6 @@ body {
   </a>
 </div>
 
-<script>
-/* 🌗 Auto theme detect */
-function detectTheme() {
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  document.documentElement.setAttribute("data-theme", prefersDark ? "dark" : "light");
-}
-detectTheme();
-window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", detectTheme);
-
-/* 💡 Auto highlight based on page URL */
-const currentPage = window.location.pathname.split("/").pop().toLowerCase();
-document.querySelectorAll(".bottom-nav .nav-item").forEach(item => {
-  const href = item.getAttribute("href")?.toLowerCase();
-  if (currentPage === href) item.classList.add("active");
-});
-
-/* 🌊 Ripple effect + manual highlight */
-document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
-  item.addEventListener("click", (e) => {
-    // highlight
-    document.querySelector(".bottom-nav .nav-item.active")?.classList.remove("active");
-    item.classList.add("active");
-
-    // ripple
-    const ripple = document.createElement("span");
-    ripple.classList.add("ripple");
-    const rect = item.getBoundingClientRect();
-    ripple.style.left = `${e.clientX - rect.left}px`;
-    ripple.style.top = `${e.clientY - rect.top}px`;
-    item.appendChild(ripple);
-    setTimeout(() => ripple.remove(), 500);
-  });
-});
-</script>
-
 
 
 
@@ -582,8 +547,34 @@ document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, query, where, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { 
+  getFirestore, collection, query, where, onSnapshot, 
+  doc, getDoc, getDocs 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import { 
+  getAuth, onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+// ⚡ SMART CACHE SYSTEM
+function saveCache(key, data) {
+  localStorage.setItem(key, JSON.stringify({
+    data,
+    time: Date.now()
+  }));
+}
+
+function loadCache(key, expiryMinutes = 10) {
+  let cached = localStorage.getItem(key);
+  if (!cached) return null;
+
+  cached = JSON.parse(cached);
+  const age = (Date.now() - cached.time) / (1000 * 60);
+
+  if (age > expiryMinutes) return null;
+
+  return cached.data;
+}
 
 const firebaseConfig = {
   apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
@@ -667,46 +658,49 @@ function renderHybrid(level,map){
 
 
 // QR CODE KA HAI YE 
-
+// ⚡ FAST + CACHED AUTH SYSTEM
 onAuthStateChanged(auth, async user => {
   if (!user) return (window.location.href = "login.html");
+
+  // STEP 1 → Cache Try
+  let cachedUser = loadCache("USER_" + user.uid);
+  if (cachedUser) {
+    loadUserUI(cachedUser, user.uid);  // UI instantly load
+  }
+
+  // STEP 2 → Fresh DB Fetch
   const snap = await getDoc(doc(db, "users", user.uid));
   if (!snap.exists()) return;
+
   const currentUser = { ...snap.data(), uid: user.uid };
 
-  // ✅ Generate Referral Link + QR Code (add this)
-const refCode = currentUser.referralCode || user.uid;
-const finalRefLink = `https://smartfundad.com/index.html?ref=${refCode}`;
-document.getElementById("refLink").textContent = finalRefLink;
+  // STEP 3 → Save Cache
+  saveCache("USER_" + user.uid, currentUser);
 
-// QR code
-document.getElementById("qrcode").innerHTML = "";
-new QRCode(document.getElementById("qrcode"), {
-  text: finalRefLink,
-  width: 120,
-  height: 120,
-  colorDark: "#000000",
-  colorLight: "#ffffff",
-  correctLevel: QRCode.CorrectLevel.H
-});
+  // STEP 4 → Update UI
+  loadUserUI(currentUser, user.uid);
 
+  // ⬇️⬇️⬇️ MOVE YOUR TEAM REFERRAL CODE **INSIDE HERE** ⬇️⬇️⬇️
 
-  // ✅ team query and level system continue as before
   const ref1 = query(collection(db, "users"), where("referredBy", "==", currentUser.referralCode));
   const ref2 = query(collection(db, "users"), where("upline2", "==", user.uid));
   const ref3 = query(collection(db, "users"), where("upline3", "==", user.uid));
+
   let lv1 = 0, lv2 = 0, lv3 = 0;
+
   const updateCounts = () => {
     document.getElementById("teamLv1").textContent = lv1;
     document.getElementById("teamLv2").textContent = lv2;
     document.getElementById("teamLv3").textContent = lv3;
     document.getElementById("teamTotal").textContent = lv1 + lv2 + lv3;
   };
+
   onSnapshot(ref1, s => { lv1 = s.size; updateCounts(); });
   onSnapshot(ref2, s => { lv2 = s.size; updateCounts(); });
   onSnapshot(ref3, s => { lv3 = s.size; updateCounts(); });
 
   ["1", "2", "3"].forEach(lv => hybridLevelSystem(currentUser, parseInt(lv)));
+
 });
 
 // ✅ Copy & Share Referral Functions
@@ -806,13 +800,207 @@ setInterval(() => {
 }, 20000);
 </script>
 
+<script>
+/* 🌗 Auto theme detect */
+function detectTheme() {
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.setAttribute("data-theme", prefersDark ? "dark" : "light");
+}
+detectTheme();
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", detectTheme);
+
+/* 💡 Auto highlight based on page URL */
+const currentPage = window.location.pathname.split("/").pop().toLowerCase();
+document.querySelectorAll(".bottom-nav .nav-item").forEach(item => {
+  const href = item.getAttribute("href")?.toLowerCase();
+  if (currentPage === href) item.classList.add("active");
+});
+
+/* 🌊 Ripple effect + manual highlight */
+document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
+  item.addEventListener("click", (e) => {
+    // highlight
+    document.querySelector(".bottom-nav .nav-item.active")?.classList.remove("active");
+    item.classList.add("active");
+
+    // ripple
+    const ripple = document.createElement("span");
+    ripple.classList.add("ripple");
+    const rect = item.getBoundingClientRect();
+    ripple.style.left = `${e.clientX - rect.left}px`;
+    ripple.style.top = `${e.clientY - rect.top}px`;
+    item.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 500);
+  });
+});
+
+
+
+// -------------------------------
+// 🔥 REWARD COMPETITION BOX SYSTEM
+// -------------------------------
+async function loadRewardCompetitions(userUID) {
+const rewardRef = collection(db, "users", userUID, "RewardCompetition");
+
+    const rewardSnap = await getDocs(rewardRef);
+
+    if (rewardSnap.empty) {
+        console.log("No reward competitions.");
+        return;
+    }
+
+    rewardSnap.forEach(async (pkg) => {
+        const data = pkg.data();
+
+        let packageSize = parseInt(data.package);
+        let income = parseFloat(data.income.replace("$", ""));
+        let totalDays = parseInt(data.day);
+        let createdAt = new Date(data.createdAt);
+        let today = new Date();
+
+        let daysPassed = Math.floor((today - createdAt) / (1000 * 60 * 60 * 24));
+        if (daysPassed < 0) daysPassed = 0;
+
+        let daysRemaining = totalDays - daysPassed;
+        if (daysRemaining < 0) daysRemaining = 0;
+
+        // 🔢 FORMULAS
+        let perMember = income / packageSize;
+        let activeCredit = perMember * 0.66; // 66% like your example
+
+        // MEMBERS JO CREATED DATE KE BAAD AAYE
+        const membersRef = query(
+            collection(db, "users"),
+            where("referredBy", "==", data.email)
+        );
+
+        const membersSnap = await getDocs(membersRef);
+
+        let memberList = [];
+        let activeMembers = 0;
+
+        membersSnap.forEach((m) => {
+            const md = m.data();
+            let joinedDate = new Date(md.createdAt || md.joinedAt || today);
+
+            if (joinedDate >= createdAt) {
+                let isActive = (md.totalInvested || 0) > 0;
+
+                if (isActive) activeMembers++;
+
+                memberList.push({
+                    name: md.name,
+                    active: isActive,
+                    credit: isActive ? activeCredit : 0
+                });
+            }
+        });
+
+        let earned = activeMembers * activeCredit;
+        let pending = income - earned;
+        if (pending < 0) pending = 0;
+
+        let progressPercent = (daysPassed / totalDays) * 100;
+        if (progressPercent > 100) progressPercent = 100;
+
+        // -------------------------------
+        // 🔥 UI BOX CREATE
+        // -------------------------------
+        const container = document.querySelector(".container");
+
+        let box = document.createElement("div");
+        box.className = "card";
+        box.style.padding = "15px";
+        box.style.marginTop = "15px";
+
+        box.innerHTML = `
+            <div style="font-weight:700;font-size:18px;margin-bottom:6px;">
+                ${packageSize} Users Package 
+                <span style="color:${activeMembers > 0 ? 'green':'red'};font-size:14px;">
+                    ${activeMembers > 0 ? "Active" : "Inactive"}
+                </span>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                <div>Fee: ${data.fee}</div>
+                <div>Commission: ${data.commission}</div>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                <div>Income: ${data.income}</div>
+                <div>Days: ${data.day}</div>
+            </div>
+
+            <hr style="margin:8px 0;">
+
+            <div><b>Members joined after (${createdAt.toDateString()}):</b></div>
+
+            <div style="margin-top:6px;">
+                ${memberList.length === 0 ? "<i>No members yet</i>":""}
+                ${memberList.map(m=>`
+                    <div style="margin:3px 0;">
+                        - ${m.name} → 
+                        <span style="color:${m.active?'green':'red'}">
+                            ${m.active ? 'Active' : 'Inactive'}
+                        </span>
+                        ${m.active ? `→ $${m.credit.toFixed(2)}` : ""}
+                    </div>
+                `).join("")}
+            </div>
+
+            <hr style="margin:8px 0;">
+
+            <div style="font-size:15px;">
+                Earned: <b>$${earned.toFixed(2)}</b> <br>
+                Pending: <b>$${pending.toFixed(2)}</b>
+            </div>
+
+            <div style="margin-top:10px;">${daysRemaining} days remaining</div>
+
+            <div style="
+                width:100%; 
+                height:10px; 
+                background:#ddd; 
+                border-radius:5px;
+                margin-top:5px;
+            ">
+                <div style="
+                    width:${progressPercent}%; 
+                    height:100%; 
+                    background:#22c55e; 
+                    border-radius:5px;
+                "></div>
+            </div>
+
+            <hr style="margin-top:10px;">
+        `;
+
+        container.appendChild(box);
+    });
+}
+
+
+function loadUserUI(data, uid) {
+  const refCode = data.referralCode || uid;
+  const finalRefLink = `https://smartfundad.com/index.html?ref=${refCode}`;
+
+  document.getElementById("refLink").textContent = finalRefLink;
+
+  // QR reset
+  document.getElementById("qrcode").innerHTML = "";
+  new QRCode(document.getElementById("qrcode"), {
+      text: finalRefLink,
+      width: 120,
+      height: 120,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+  });
+}
+
+
+</script>
+
 
 </body>
 </html>
-
-
-
-
-
-
-
