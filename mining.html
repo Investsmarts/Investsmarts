@@ -795,7 +795,7 @@ button:active {
   font-weight: 600;
   text-align: center;
   padding: 14px 0;
-  border-radius: 8px;
+  border-radius: 5px;
   border: 1.5px solid #e5e5e5;     /* subtle gray border */
   box-shadow: none;                /* remove old shadow */
   transition: all 0.25s ease;
@@ -959,16 +959,20 @@ button:active {
   opacity: 1;
   top: 5px;
 }
-.header {
-  transition: transform 0.18s ease;
+
+.history-animate {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeCard 0.35s ease forwards;
 }
 
-.bottom-nav {
-  transition: transform 0.18s ease;
+@keyframes fadeCard {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-.top-nav {
-  transition: transform 0.18s ease;
-}
+
 
 </style>
 </head>
@@ -1702,7 +1706,12 @@ async function loadMiningHistory(user) {
         <div class="profit"><i class="fa-solid fa-arrow-trend-up"></i> +$${Number(d.earned).toFixed(4)}</div>
         <span class="time"><i class="fa-regular fa-calendar"></i> ${date}</span>
       `;
-      miningHistoryEl.appendChild(li);
+     miningHistoryEl.appendChild(li);
+
+setTimeout(() => {
+  li.classList.add("history-animate");
+}, 10); // small delay to allow DOM render
+
     });
   });
 }
@@ -1761,7 +1770,12 @@ async function loadReferralIncome(user) {
         <div class="profit"><i class="fa-solid fa-arrow-trend-up"></i> +$${Number(d.amount).toFixed(4)}</div>
         <span class="time"><i class="fa-regular fa-calendar"></i> ${date}</span>
       `;
-      miningHistoryEl.appendChild(li);
+     miningHistoryEl.appendChild(li);
+
+setTimeout(() => {
+  li.classList.add("history-animate");
+}, 10); // small delay to allow DOM render
+
     }
   });
 }
@@ -2349,7 +2363,7 @@ window.addEventListener("scroll", () => {
     // Scroll down → hide header + top-nav, lift bottom-nav
     header.style.transform = "translateY(-100%)";
     topNav.style.transform = "translateY(-100%)";
-    bottomNav.style.bottom = "20px";
+    
   } else {
     // Scroll up → show everything
     header.style.transform = "translateY(0)";
