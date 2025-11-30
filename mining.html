@@ -419,7 +419,7 @@ button:active {
 /* ✅ INCOME HISTORY CLEAN STATIC + SCROLLABLE CARDS */
 #incomeHistoryList {
   list-style: none;
-  margin: 18px 0 100px;
+    margin: 18px 0 20px; /* gap kam kar diya */
   padding: 0 5px 0 0; /* Right padding so content doesn't cut off */
   max-height: 380px; /* 🔹 Height control */
   overflow-y: auto;
@@ -944,6 +944,31 @@ button:active {
   100% { transform: translateY(-46%) scale(1); }
 }
 
+#refreshIndicator {
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: 0.3s ease;
+  opacity: 0;
+  font-size: 14px;
+  color: #00c853;
+}
+
+#refreshIndicator.active {
+  opacity: 1;
+  top: 5px;
+}
+.header {
+  transition: transform 0.18s ease;
+}
+
+.bottom-nav {
+  transition: transform 0.18s ease;
+}
+.top-nav {
+  transition: transform 0.18s ease;
+}
 
 </style>
 </head>
@@ -1084,14 +1109,16 @@ button:active {
 </div>
 
 
-<div id="incomeHistoryContainer">
-  <div id="refreshIndicator">
-    <i class="fa-solid fa-rotate"></i> Refreshing...
-  </div>
+<div id="refreshIndicator">⟳ Refreshing…</div>
 
   <ul id="incomeHistoryList">
     <!-- Mining / Referral history items appear here -->
   </ul>
+</div>
+
+<div class="full-history-buttons" style="display:flex; gap:10px; margin:15px 0;">
+  <a href="full-mining-history.html" class="referral-btn" style="flex:1; text-align:center;">Mining Statement</a>
+  <a href="full-referral-history.html" class="referral-btn" style="flex:1; text-align:center;">Referral Statement</a>
 </div>
 
 
@@ -1351,6 +1378,11 @@ function processPopupQueue() {
   }, hideDelay);
 }
 </script>
+<script>
+  let miningHistoryListener = null;
+  let referralHistoryListener = null;
+  let lastSpeakTime = 0;
+</script>
 
 <script type="module">
 
@@ -1457,7 +1489,6 @@ function stopMiningTimer() {
 
 
 
-/* 🔹 Live Mining Growth Display — YouTube-style smooth animation + refresh stability */
 /* 🔹 Live Mining Growth Display — fixed for refresh stability */
 let miningGrowthInterval = null;
 
@@ -1632,6 +1663,11 @@ if (!releaseSnap.empty) {
 
 /* 🔹 Load Real-time Mining History — only today */
 async function loadMiningHistory(user) {
+  if (miningHistoryListener) {
+    miningHistoryListener();
+    miningHistoryListener = null;
+  }
+
   const today = new Date();
   const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
   const endOfDay = startOfDay + 86400000;
@@ -1641,7 +1677,7 @@ async function loadMiningHistory(user) {
     orderBy("time", "desc")
   );
 
-  onSnapshot(q, (snap) => {
+  miningHistoryListener = onSnapshot(q, (snap) => {
     miningHistoryEl.innerHTML = "";
 
     const todayDocs = snap.docs.filter((d) => {
@@ -1658,6 +1694,7 @@ async function loadMiningHistory(user) {
       const d = docSnap.data();
       const durMin = (d.duration / 60000).toFixed(1);
       const date = new Date(d.time).toLocaleString();
+
       const li = document.createElement("li");
       li.innerHTML = `
         <div class="amount"><i class="fa-solid fa-coins"></i> $${Number(d.amount).toFixed(2)} mined</div>
@@ -1673,6 +1710,13 @@ async function loadMiningHistory(user) {
 
 /* 🔹 Load Real-time Referral Income — only today */
 async function loadReferralIncome(user) {
+
+  // stop old listener
+  if (referralHistoryListener) {
+    referralHistoryListener();
+    referralHistoryListener = null;
+  }
+
   const today = new Date();
   const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
   const endOfDay = startOfDay + 86400000;
@@ -1683,12 +1727,12 @@ async function loadReferralIncome(user) {
     orderBy("time", "desc")
   );
 
-  onSnapshot(q, async (snap) => {
+  referralHistoryListener = onSnapshot(q, async (snap) => {
     miningHistoryEl.innerHTML = "";
 
     const todayDocs = snap.docs.filter((d) => {
       const t = d.data().time;
-      return t >= startOfDay && t < endOfDay;
+      return t >= startOfDay && t < endOfDay;   // ⬅ FILTER FOR TODAY ONLY
     });
 
     if (todayDocs.length === 0) {
@@ -1699,14 +1743,14 @@ async function loadReferralIncome(user) {
     for (const docSnap of todayDocs) {
       const d = docSnap.data();
       const date = new Date(d.time).toLocaleString();
-      let fromName = "Unknown";
 
+      let fromName = "Unnamed";
       try {
-        const userRef = doc(db, "users", d.fromUser);
-        const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-          const data = userSnap.data();
-          fromName = data.name || data.username || "Unnamed";
+        const ref = doc(db, "users", d.fromUser);
+        const refSnap = await getDoc(ref);
+        if (refSnap.exists()) {
+          const u = refSnap.data();
+          fromName = u.name || u.username || "Unnamed";
         }
       } catch {}
 
@@ -1714,7 +1758,7 @@ async function loadReferralIncome(user) {
       li.innerHTML = `
         <div class="amount"><i class="fa-solid fa-user-group"></i> ${fromName}</div>
         <div class="duration">Level ${d.level}</div>
-        <div class="profit"><i class="fa-solid fa-arrow-trend-up"></i> +$${Number(d.amount).toFixed(4)} received</div>
+        <div class="profit"><i class="fa-solid fa-arrow-trend-up"></i> +$${Number(d.amount).toFixed(4)}</div>
         <span class="time"><i class="fa-regular fa-calendar"></i> ${date}</span>
       `;
       miningHistoryEl.appendChild(li);
@@ -1861,34 +1905,85 @@ if (!mining) {
 }
 
 // === STOP MINING ===
+// === STOP MINING (COMBO MODE) ===
 
-// 🧠 Step 1: Start animated disconnect message
-speakMessage("Hash rate disconnecting, please wait.");
+// 🔊 Voice + UI Combo (next line waits for previous voice)
+function speakCombo(text, rate = 0.9) {
+  return new Promise((resolve) => {
+
+    speechSynthesis.cancel(); // clear old queue
+
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = "en-US";
+    msg.rate = rate;
+    msg.pitch = 1.0;
+
+    function applyMaleVoice() {
+      const voices = speechSynthesis.getVoices();
+
+      const maleVoice =
+        voices.find(v => /male|man/i.test(v.name)) ||
+        voices.find(v => /Google US English/i.test(v.name)) ||
+        voices.find(v => /english/i.test(v.name)) ||
+        voices[0];
+
+      msg.voice = maleVoice;
+      speechSynthesis.speak(msg);
+    }
+
+    msg.onend = () => resolve(); // ← voice finished → allow next
+
+    if (speechSynthesis.getVoices().length === 0) {
+      speechSynthesis.onvoiceschanged = applyMaleVoice;
+    } else {
+      applyMaleVoice();
+    }
+  });
+}
+
+
+// 🔽 Stop-Mining Lines
 const statusTexts = [
-  "Hash rate disconnecting...",
-  "Syncing data with server...",
-  "Finalizing mining results...",
-  "Stopping miner..."
+  "Disconnecting compute nodes...",
+  "Stabilizing blockchain feed...",
+  "Verifying mining output...",
+  "Shutting down engine..."
 ];
 
-let step = 0;
-btn.innerHTML = `<span class="disconnect-status"><i class='bx bx-loader-alt'></i> ${statusTexts[step]}</span>`;
-btn.classList.remove("stop-active");
-btn.disabled = true;
-btn.style.opacity = "0.9";
-btn.style.pointerEvents = "none";
 
-// 🌀 Step 2: Animate text changes every 1.2s
-const statusInterval = setInterval(() => {
-  step++;
-  if (step < statusTexts.length) {
-    btn.innerHTML = `<span class="disconnect-status"><i class='bx bx-loader-alt'></i> ${statusTexts[step]}</span>`;
+// 🔥 Main sequence runner
+async function runStopMiningSequence() {
+
+  btn.disabled = true;
+  btn.style.opacity = "0.9";
+  btn.style.pointerEvents = "none";
+  btn.classList.remove("stop-active");
+
+  // sequential UI + voice
+  for (let i = 0; i < statusTexts.length; i++) {
+
+    btn.innerHTML = `
+      <span class="disconnect-status">
+        <i class='bx bx-loader-alt bx-spin'></i> ${statusTexts[i]}
+      </span>
+    `;
+
+    await speakCombo(statusTexts[i]);  
+    // 👆 Wait until voice finishes completely
   }
-}, 1200);
+}
 
-// Wait total 5s before actual stop logic
-await new Promise(resolve => setTimeout(resolve, 5000));
-clearInterval(statusInterval);
+// ===============================
+// 👇 STOP MINING YAHAN SE START KARO
+// ===============================
+
+// Run combo sequence
+await runStopMiningSequence(); 
+
+// ↓↓↓ Yaha se tumhara original stop-mining logic chalega ↓↓↓
+// (profit calculate, updateDoc, mining history, referral, etc.)
+// BAS iske niche ka code kuch mat chhedna
+
 
 // 🧮 Step 3: Now actual stop logic runs
 const diff = Date.now() - startedAt;
@@ -1921,7 +2016,7 @@ await addDoc(collection(db, "mining_releases"), {
   time: Date.now()
 });
 
-// 🔹 Referral commission logic (unchanged)
+// 🔹 Referral commission logic
 if (data.upline1 || data.upline2 || data.upline3) {
   await distributeCommission(
     currentUser.uid,
@@ -1932,15 +2027,16 @@ if (data.upline1 || data.upline2 || data.upline3) {
   );
 }
 
-// ✅ Step 4: Final confirmation popup
+// ✅ Final confirmation
 showProPopup(
   "Mining Completed 💰",
   `You earned $${profit.toFixed(4)} profit. Returned $${totalReturnToUser.toFixed(2)} to wallet.`,
   "https://cdn-icons-png.flaticon.com/512/190/190411.png"
 );
+
 speakMessage("Mining completed successfully.");
 
-// Reset button UI
+// Reset UI
 btn.disabled = false;
 btn.style.opacity = "1";
 btn.style.pointerEvents = "auto";
@@ -1950,13 +2046,9 @@ toggleMiningSections(false);
 stopMiningTimer();
 setTimeout(loadUserData, 800);
 
+mining = false;
 
-    mining = false;
-    btn.innerText = "Start Mining";
-    btn.classList.remove("stop-active");
-    toggleMiningSections(false);
-    stopMiningTimer();
-    setTimeout(loadUserData, 800);
+
   } catch (err) {
     console.error(err);
     showPopup("Error, please try again.");
@@ -2158,41 +2250,44 @@ amountInput.addEventListener("input", () => {
 });
 
 function speakMessage(text) {
-const beep = new Audio("https://assets.mixkit.co/sfx/preview/mixkit-single-notification-bell-590.mp3");
-beep.play();
-setTimeout(() => {
-  speechSynthesis.speak(msg);
-}, 300);
+  // 🔔 notification beep
+  const beep = new Audio("https://assets.mixkit.co/sfx/preview/mixkit-single-notification-bell-590.mp3");
+  beep.play();
 
+  const msg = new SpeechSynthesisUtterance(text);
+  msg.lang = "en-US";
+  msg.rate = 0.85; // thoda slow
+  msg.pitch = 1.0;
 
-const msg = new SpeechSynthesisUtterance(text);
-msg.lang = "en-US";
-msg.rate = 0.8; // 👈 thoda slow bolega (0.5 = slow, 1.0 = normal)
-msg.pitch = 1.0; // natural pitch
-msg.volume = 1.0;
+  function applyVoiceAndSpeak() {
+    let voices = speechSynthesis.getVoices();
 
-let voices = speechSynthesis.getVoices();
-if (!voices.length) {
-  // Wait for voices to load before speaking
-  speechSynthesis.onvoiceschanged = () => {
-    voices = speechSynthesis.getVoices();
-    const femaleVoice = voices.find(v => /female|woman|Google US English/i.test(v.name));
-    if (femaleVoice) msg.voice = femaleVoice;
+    // 🔥 Male voice priority
+    const maleVoice =
+      voices.find(v => /male|man|google us english/i.test(v.name)) ||
+      voices.find(v => v.name.toLowerCase().includes("en-us") && v.name.toLowerCase().includes("male")) ||
+      voices.find(v => v.name.toLowerCase().includes("english")) ||
+      voices[0]; // fallback
+
+    msg.voice = maleVoice;
     speechSynthesis.speak(msg);
-  };
-} else {
-  const femaleVoice = voices.find(v => /female|woman|Google US English/i.test(v.name));
-  if (femaleVoice) msg.voice = femaleVoice;
-  speechSynthesis.speak(msg);
-}
-} 
+  }
 
+  if (speechSynthesis.getVoices().length === 0) {
+    speechSynthesis.onvoiceschanged = applyVoiceAndSpeak;
+  } else {
+    applyVoiceAndSpeak();
+  }
+}
+
+/* === Pull to Refresh for Income History Box === */
 /* === Pull to Refresh for Income History Box === */
 const historyList = document.getElementById("incomeHistoryList");
 const refreshIndicator = document.getElementById("refreshIndicator");
+
 let startY = 0;
 let pulling = false;
-const pullThreshold = 60; // pixels to trigger refresh
+const pullThreshold = 65;
 
 historyList.addEventListener("touchstart", (e) => {
   if (historyList.scrollTop === 0) {
@@ -2201,72 +2296,71 @@ historyList.addEventListener("touchstart", (e) => {
   }
 });
 
-// ✅ Speak only once per 10 seconds (prevent repetition)
-let lastSpeakTime = 0;  // 👈 move this OUTSIDE event listener (global scope)
-
 historyList.addEventListener("touchmove", (e) => {
   if (!pulling) return;
+
   const distance = e.touches[0].clientY - startY;
   if (distance > 0) {
     e.preventDefault();
-    refreshIndicator.style.top = Math.min(distance - 40, 15) + "px";
+    historyList.style.transform = `translateY(${Math.min(distance, 80)}px)`;
+    refreshIndicator.style.top = Math.min(distance - 40, 25) + "px";
     refreshIndicator.style.opacity = Math.min(distance / pullThreshold, 1);
   }
 });
 
-historyList.addEventListener("touchend", async (e) => {
+historyList.addEventListener("touchend", async () => {
   if (!pulling) return;
   pulling = false;
 
-  const distance = e.changedTouches[0].clientY - startY;
-  if (distance > pullThreshold) {
-    refreshIndicator.classList.add("active");
+  historyList.style.transition = "0.25s";
+  historyList.style.transform = "translateY(0px)";
+  setTimeout(() => (historyList.style.transition = ""), 250);
 
-    // 🔁 Reload data
-    if (typeof loadMiningHistory === "function" && currentUser) {
-      await loadMiningHistory(currentUser);
-    }
+  if (historyList.scrollTop !== 0) return;
 
-    // ✅ Speak only once per 10 seconds (debounced)
-    if (typeof speakMessage === "function") {
-      const now = Date.now();
-      if (now - lastSpeakTime > 10000) { // 10 sec gap
-        speakMessage("Mining history updated successfully.");
-        lastSpeakTime = now;
-      }
-    }
+  refreshIndicator.classList.add("active");
 
-    // hide indicator
-    setTimeout(() => {
-      refreshIndicator.classList.remove("active");
-      refreshIndicator.style.top = "-35px";
-      refreshIndicator.style.opacity = "0";
-    }, 1200);
-  } else {
+  await refreshActiveHistory();
+
+  const now = Date.now();
+  if (now - lastSpeakTime > 10000) {
+    speakMessage("List refreshed successfully.");
+    lastSpeakTime = now;
+  }
+
+  setTimeout(() => {
+    refreshIndicator.classList.remove("active");
     refreshIndicator.style.top = "-35px";
     refreshIndicator.style.opacity = "0";
-  }
+  }, 900);
 });
 
 </script>
 <script>
-let lastScrollTop = 0;
 const header = document.querySelector(".header");
+const topNav = document.querySelector(".top-nav");
+const bottomNav = document.querySelector(".bottom-nav");
+let lastY = 0;
 
 window.addEventListener("scroll", () => {
-  const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+  let y = window.scrollY;
 
-  // Scroll down → hide header, move nav up
-  if (currentScroll > lastScrollTop && currentScroll > 60) {
-    header.classList.add("hidden");
-  }
-  // Scroll up → show header, move nav down
-  else if (currentScroll < lastScrollTop) {
-    header.classList.remove("hidden");
+  if (y > lastY) {
+    // Scroll down → hide header + top-nav, lift bottom-nav
+    header.style.transform = "translateY(-100%)";
+    topNav.style.transform = "translateY(-100%)";
+    bottomNav.style.bottom = "20px";
+  } else {
+    // Scroll up → show everything
+    header.style.transform = "translateY(0)";
+    topNav.style.transform = "translateY(0)";
+    bottomNav.style.bottom = "0px";
   }
 
-  lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+  lastY = y <= 0 ? 0 : y;
 });
+
+
 </script>
 <script>
   // 🚫 Disable right click, select, drag
@@ -2317,4 +2411,3 @@ window.addEventListener("scroll", () => {
 </script>
 </body>
 </html>
-
