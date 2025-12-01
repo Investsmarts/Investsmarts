@@ -45,6 +45,15 @@
   opacity: 0;
 }
 
+.header {
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+}
+
+.guide-icon-btn {
+  box-shadow: none !important;
+}
+
 /* 🔹 TOP NAV STYLE */
 .top-nav {
   position: fixed;
@@ -2508,6 +2517,35 @@ function centerError(msg) {
     box.classList.remove("show");
   }, 1800);
 }
+
+
+// hgasjsdahddsiudsyhsdisudyhsd   
+
+(function () {
+    const seenRules = new Set();
+
+    for (const sheet of document.styleSheets) {
+        let rules;
+        try {
+            rules = sheet.cssRules;
+        } catch (e) {
+            continue; // cross-origin CSS को skip करेगा
+        }
+
+        if (!rules) continue;
+
+        for (let i = rules.length - 1; i >= 0; i--) {
+            const rule = rules[i];
+            const text = rule.cssText.trim();
+
+            if (seenRules.has(text)) {
+                sheet.deleteRule(i);  // duplicate remove
+            } else {
+                seenRules.add(text); // unique rule store
+            }
+        }
+    }
+})();
 
 </script>
 <script>
