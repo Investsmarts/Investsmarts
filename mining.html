@@ -303,7 +303,7 @@ button:active {
   margin-top: 3px;
 }
 
-/* === Stylish Flip Animation for Timer === */
+
 /* === Bitcoin particle sparkle + light vibration === */
 #miningTimer {
   position: relative;
@@ -311,10 +311,6 @@ button:active {
   animation: timerShake 1.2s infinite ease-in-out;
 }
 
-/* ✅ Softer, slower vibration (real mining engine feel) */
-#miningTimer {
-  animation: timerShake 3s infinite ease-in-out; /* was 1.2s, now slower */
-}
 
 /* smooth vibration motion */
 @keyframes timerShake {
@@ -944,21 +940,7 @@ button:active {
   100% { transform: translateY(-46%) scale(1); }
 }
 
-#refreshIndicator {
-  position: absolute;
-  top: -35px;
-  left: 50%;
-  transform: translateX(-50%);
-  transition: 0.3s ease;
-  opacity: 0;
-  font-size: 14px;
-  color: #00c853;
-}
 
-#refreshIndicator.active {
-  opacity: 1;
-  top: 5px;
-}
 
 .history-animate {
   opacity: 0;
@@ -2577,3 +2559,4 @@ function centerError(msg) {
 </script>
 </body>
 </html>
+
