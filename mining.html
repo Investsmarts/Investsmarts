@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
@@ -95,23 +97,6 @@
   background: #28a745;
   color: #fff;
   transform: translateY(-2px);
-}
-
-.top-nav {
-  position: fixed;
-  top: 54px;
-  z-index: 1 !important;
-}
-
-.header {
-  z-index: 9999 !important;
-}
-.header {
-   background: #ffffff !important;
-   opacity: 1 !important;
-}
-.header {
-  backdrop-filter: none !important;
 }
 
 /* ===== VISIBLE GUIDE BUTTON ===== */
@@ -531,9 +516,9 @@ button:active {
 
 #refreshIndicator {
   position: absolute;
-  top: -35px;
+  top: -25px;
   left: 50%;
-  transform: translateX(-50%) scale(0.9);
+  transform: translateX(-50%);
   background: #00c853;
   color: #fff;
   font-size: 13px;
@@ -543,12 +528,14 @@ button:active {
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
   opacity: 0;
   transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
   pointer-events: none;
   z-index: 10;
 }
+#refreshIndicator.active {
+  top: 10px;
+  opacity: 1;
+}
+
 
 #refreshIndicator.active {
   top: 8px;
@@ -1068,9 +1055,116 @@ button:active {
   75% { transform: translate(-50%, -50%) translateX(-4px); }
   100% { transform: translate(-50%, -50%) translateX(0); }
 }
-.header.hidden {
-    top: 0 !important;
-    opacity: 1 !important;
+
+
+:root {
+  --nav-bg: #fff;
+  --nav-text: #444;
+  --nav-border: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] {
+  --nav-bg: #0f0f0f;
+  --nav-text: #ccc;
+  --nav-border: rgba(255, 255, 255, 0.1);
+}
+
+/* 🔹 Navbar Base (height reduced) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--nav-bg);
+  border-top: 1px solid var(--nav-border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0; /* 👈 thinner padding */
+  z-index: 9999;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* 🔹 Nav items (slimmer text + less spacing) */
+.bottom-nav .nav-item {
+  flex: 1;
+  text-align: center;
+  color: var(--nav-text);
+  text-decoration: none;
+  font-size: 10px; /* 👈 smaller text */
+  position: relative;
+  padding: 4px 0; /* 👈 less padding */
+  transition: all 0.3s ease;
+}
+
+/* 🔹 Icon (reduced size + gap) */
+.bottom-nav .nav-item i {
+  font-size: 18px; /* 👈 smaller icons (was 22px) */
+  display: block;
+  opacity: 0.75;
+  margin-bottom: 2px; /* 👈 smaller gap */
+  transition: all 0.3s ease;
+}
+
+/* 🔹 Text */
+.bottom-nav .nav-item span {
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+/* 🔹 Divider lines */
+.bottom-nav .nav-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 25%;
+  width: 1px;
+  height: 50%;
+  background: var(--nav-border);
+}
+
+/* 🔹 Active State (icons glow thoda soft) */
+.bottom-nav .nav-item.active i {
+  transform: scale(1.1);
+  opacity: 1;
+  animation: bulbGlow 1.6s ease-in-out infinite alternate;
+}
+.bottom-nav .nav-item.active span {
+  opacity: 1;
+  font-weight: 600;
+}
+
+/* Active colors */
+.bottom-nav .nav-item:nth-child(1).active i { color: #00c853; }
+.bottom-nav .nav-item:nth-child(2).active i { color: #ffc107; }
+.bottom-nav .nav-item:nth-child(3).active i { color: #ff3b30; }
+.bottom-nav .nav-item:nth-child(4).active i { color: #00bcd4; }
+
+@keyframes bulbGlow {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.6); }
+}
+
+/* 🔹 Ripple (same) */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  background: rgba(0, 200, 83, 0.15);
+}
+@keyframes ripple {
+  to { transform: scale(3); opacity: 0; }
+}
+
+/* 🔹 Responsive tuning */
+@media (max-width: 480px) {
+  .bottom-nav .nav-item i {
+    font-size: 17px;
+  }
+  .bottom-nav .nav-item span {
+    font-size: 9.5px;
+  }
 }
 
 </style>
@@ -1209,24 +1303,27 @@ button:active {
 
 <div class="history-header">
 
-<!-- 💰 Compact Income Summary Boxes -->
 <div class="income-summary-compact">
   <div class="income-box-compact" id="selfIncomeBox">$0.00</div>
   <div class="income-box-compact" id="refIncomeBox">$0.00</div>
 </div>
 
-  <div class="income-type-buttons">
+<div class="income-type-buttons">
   <button id="miningIncomeBtn" class="active">Mining Income</button>
   <button id="referralIncomeBtn">Referral Income</button>
 </div>
 
+<!-- 🟢 FIXED: THIS WRAPPER IS REQUIRED -->
+<div id="incomeHistoryContainer">
+    <div id="refreshIndicator">⟳ Refreshing…</div>
 
-<div id="refreshIndicator">⟳ Refreshing…</div>
-
-  <ul id="incomeHistoryList">
-    <!-- Mining / Referral history items appear here -->
-  </ul>
+    <ul id="incomeHistoryList">
+      <!-- items appear here -->
+    </ul>
 </div>
+
+</div>
+
 
 <div class="full-history-buttons" style="display:flex; gap:10px; margin:15px 0;">
   <a href="full-mining-history.html" class="referral-btn" style="flex:1; text-align:center;">Mining Statement</a>
@@ -1235,120 +1332,8 @@ button:active {
 
 
 </div>
-<!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
-<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
 
-<style>
-:root {
-  --nav-bg: #fff;
-  --nav-text: #444;
-  --nav-border: rgba(0, 0, 0, 0.08);
-}
 
-[data-theme="dark"] {
-  --nav-bg: #0f0f0f;
-  --nav-text: #ccc;
-  --nav-border: rgba(255, 255, 255, 0.1);
-}
-
-/* 🔹 Navbar Base (height reduced) */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: var(--nav-bg);
-  border-top: 1px solid var(--nav-border);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 10px 0; /* 👈 thinner padding */
-  z-index: 9999;
-  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
-}
-
-/* 🔹 Nav items (slimmer text + less spacing) */
-.bottom-nav .nav-item {
-  flex: 1;
-  text-align: center;
-  color: var(--nav-text);
-  text-decoration: none;
-  font-size: 10px; /* 👈 smaller text */
-  position: relative;
-  padding: 4px 0; /* 👈 less padding */
-  transition: all 0.3s ease;
-}
-
-/* 🔹 Icon (reduced size + gap) */
-.bottom-nav .nav-item i {
-  font-size: 18px; /* 👈 smaller icons (was 22px) */
-  display: block;
-  opacity: 0.75;
-  margin-bottom: 2px; /* 👈 smaller gap */
-  transition: all 0.3s ease;
-}
-
-/* 🔹 Text */
-.bottom-nav .nav-item span {
-  opacity: 0.7;
-  transition: all 0.3s ease;
-}
-
-/* 🔹 Divider lines */
-.bottom-nav .nav-item:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 25%;
-  width: 1px;
-  height: 50%;
-  background: var(--nav-border);
-}
-
-/* 🔹 Active State (icons glow thoda soft) */
-.bottom-nav .nav-item.active i {
-  transform: scale(1.1);
-  opacity: 1;
-  animation: bulbGlow 1.6s ease-in-out infinite alternate;
-}
-.bottom-nav .nav-item.active span {
-  opacity: 1;
-  font-weight: 600;
-}
-
-/* Active colors */
-.bottom-nav .nav-item:nth-child(1).active i { color: #00c853; }
-.bottom-nav .nav-item:nth-child(2).active i { color: #ffc107; }
-.bottom-nav .nav-item:nth-child(3).active i { color: #ff3b30; }
-.bottom-nav .nav-item:nth-child(4).active i { color: #00bcd4; }
-
-@keyframes bulbGlow {
-  from { filter: brightness(1); }
-  to { filter: brightness(1.6); }
-}
-
-/* 🔹 Ripple (same) */
-.ripple {
-  position: absolute;
-  border-radius: 50%;
-  transform: scale(0);
-  animation: ripple 0.6s linear;
-  background: rgba(0, 200, 83, 0.15);
-}
-@keyframes ripple {
-  to { transform: scale(3); opacity: 0; }
-}
-
-/* 🔹 Responsive tuning */
-@media (max-width: 480px) {
-  .bottom-nav .nav-item i {
-    font-size: 17px;
-  }
-  .bottom-nav .nav-item span {
-    font-size: 9.5px;
-  }
-}
-</style>
 
 <!-- ✅ HTML Navbar -->
 <div class="bottom-nav" id="mainNav">
@@ -2434,21 +2419,26 @@ historyList.addEventListener("touchend", async () => {
 
   if (historyList.scrollTop !== 0) return;
 
-  refreshIndicator.classList.add("active");
+// Show indicator
+refreshIndicator.classList.add("active");
 
-  await refreshActiveHistory();
+// Hide history for 1 second
+historyList.style.opacity = "0";
+historyList.style.transition = "opacity 0.4s ease";
 
-  const now = Date.now();
-  if (now - lastSpeakTime > 10000) {
-    speakMessage("List refreshed successfully.");
-    lastSpeakTime = now;
-  }
+// Wait for refresh
+await refreshActiveHistory();
 
-  setTimeout(() => {
-    refreshIndicator.classList.remove("active");
-    refreshIndicator.style.top = "-35px";
-    refreshIndicator.style.opacity = "0";
-  }, 900);
+// After 1 sec, show history again
+setTimeout(() => {
+  historyList.style.opacity = "1";  // show again
+}, 1000);
+
+// Hide indicator slowly
+setTimeout(() => {
+  refreshIndicator.classList.remove("active");
+}, 900);
+
 });
 
 </script>
