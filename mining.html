@@ -97,6 +97,23 @@
   transform: translateY(-2px);
 }
 
+.top-nav {
+  position: fixed;
+  top: 54px;
+  z-index: 1 !important;
+}
+
+.header {
+  z-index: 9999 !important;
+}
+.header {
+   background: #ffffff !important;
+   opacity: 1 !important;
+}
+.header {
+  backdrop-filter: none !important;
+}
+
 /* ===== VISIBLE GUIDE BUTTON ===== */
 .guide-icon-btn {
   background: rgb(212 29 29);
@@ -973,7 +990,7 @@ button:active {
   background: #ff3b30;
   color: white;
   padding: 8px 16px;
-  border-radius: 20px;
+  border-radius: 5px;
   font-size: 14px;
   font-weight: 600;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
@@ -1050,6 +1067,10 @@ button:active {
   50% { transform: translate(-50%, -50%) translateX(6px); }
   75% { transform: translate(-50%, -50%) translateX(-4px); }
   100% { transform: translate(-50%, -50%) translateX(0); }
+}
+.header.hidden {
+    top: 0 !important;
+    opacity: 1 !important;
 }
 
 </style>
