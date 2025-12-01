@@ -810,7 +810,7 @@ button:active {
 }
 
 
-}
+
 
 
 #proPopup {
@@ -973,10 +973,100 @@ button:active {
   }
 }
 
+/* 🔥 Network Status Toast */
+#networkStatus {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  background: #ff3b30;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  opacity: 0;
+  z-index: 999999;
+  transition: all 0.35s ease;
+  pointer-events: none;
+}
+
+#networkStatus.good {
+  background: #00c853;
+}
+#networkStatus.show {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+
+/* ======================
+      CENTER ERROR BOX
+   ====================== */
+.center-error {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: #ffffff;
+  padding: 18px 24px;
+  border-radius: 5px;
+  border: 2px solid #ff3b30;
+  
+  color: #e53935;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 99999;
+  transition: all 0.35s cubic-bezier(0.25, 1.2, 0.5, 1);
+}
+
+/* Show animation */
+.center-error.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+  animation: shakeError 0.45s ease;
+}
+
+/* ❌ Icon */
+.center-error .error-icon {
+  font-size: 38px;
+  margin-bottom: 8px;
+}
+
+/* ↓ Arrow bounce */
+.center-error .error-arrow {
+  font-size: 28px;
+  margin-top: 6px;
+  animation: arrowBounce 0.7s infinite ease-in-out;
+}
+
+/* Arrow animation */
+@keyframes arrowBounce {
+  0% { transform: translateY(0); opacity: 0.7; }
+  50% { transform: translateY(6px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 0.7; }
+}
+
+/* Shake vibration */
+@keyframes shakeError {
+  0% { transform: translate(-50%, -50%) translateX(0); }
+  25% { transform: translate(-50%, -50%) translateX(-6px); }
+  50% { transform: translate(-50%, -50%) translateX(6px); }
+  75% { transform: translate(-50%, -50%) translateX(-4px); }
+  100% { transform: translate(-50%, -50%) translateX(0); }
+}
 
 </style>
 </head>
 <body>
+
+  <div id="networkStatus"></div>
+
 <div id="popupMsg" class="popup"></div>
 
 
@@ -1065,6 +1155,12 @@ button:active {
   </div>
 </div>
 
+    
+    <div id="centerErrorBox" class="center-error">
+  <div class="error-icon">❌</div>
+  <div class="error-msg"></div>
+  <div class="error-arrow">↓</div>
+</div>
 
   <div class="top-nav">
     <a href="stacking.html">1.4%</a>
@@ -1826,99 +1922,93 @@ btn.onclick = async () => {
     const startedAt = data.miningStartedAt || 0;
 
 
-// === START MINING ===
+
+// === START MINING (COMBO MODE) ===
+// === START MINING (COMBO MODE) ===
 if (!mining) {
   const amt = parseFloat(amountInput.value);
-  if (isNaN(amt) || amt <= 0) return showPopup("Enter valid amount");
-  if (amt > wallet) return showPopup("Insufficient Balance");
-  if (amt < 200) return showPopup("Minimum $200 required");
+  const lifetimeDeposit = Number(data.lifetimeDeposit || 0); // 👈 sabse pehle declare
 
-  const lifetimeDeposit = Number(data.lifetimeDeposit || 0);
-  if (amt > lifetimeDeposit) {
-    return showPopup(`You can mine only up to $${lifetimeDeposit.toFixed(2)}.`);
-  }
+  if (isNaN(amt) || amt <= 0) 
+    return centerError("Enter valid amount");
 
-  // 🛑 Lock UI (prevent auto reset)
+  if (amt > wallet) 
+    return centerError("Insufficient Balance");
+
+  if (amt < 200) 
+    return centerError("Minimum $200 required");
+
+  if (amt > lifetimeDeposit)
+    return centerError(`Max allowed: $${lifetimeDeposit.toFixed(2)}`);
+
+
+  // Lock UI
   window.miningStarting = true;
   btn.disabled = true;
   btn.style.opacity = "0.9";
   btn.style.pointerEvents = "none";
   btn.classList.remove("stop-active");
 
-  // 🧠 Step 1: startup sound
+  // Engine Start Sound
   const startSound = new Audio("https://assets.mixkit.co/sfx/preview/mixkit-industry-engine-start-1746.mp3");
   startSound.play();
 
-  // 🧠 Step 2: voice sequence
-  const messages = [
-    "The machine has just been turned on.",
-    "Your machine is now online.",
-    "Mining started successfully."
-  ];
+  // 🔥 Professional mining startup lines (combo mode)
+const startTexts = [
+  "Initializing mining engine...",
+  "Connecting blockchain nodes...",
+  "Your machine is now online.",
+  "Activating mining core...",
+  "Mining started successfully."
+];
 
-  // 🧠 Step 3: speak and show sequentially
-  let index = 0;
-
-  function speakLine(text) {
-    const msg = new SpeechSynthesisUtterance(text);
-    msg.lang = "en-US";
-    msg.rate = 0.85;
-    msg.pitch = 1.0;
-    const voices = speechSynthesis.getVoices();
-    const femaleVoice = voices.find(v => /female|woman|Google US English/i.test(v.name));
-    if (femaleVoice) msg.voice = femaleVoice;
-    speechSynthesis.speak(msg);
+  // Run combo sequence — wait until speaking ends
+  for (let i = 0; i < startTexts.length; i++) {
+    btn.innerHTML =
+      `<i class='bx bx-loader-alt bx-spin'></i> ${startTexts[i]}`;
+    await speakCombo(startTexts[i], 0.85);
   }
 
-  btn.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> ${messages[index]}`;
-  speakLine(messages[index]);
+  // ==========================
+  // REAL MINING NOW STARTS
+  // ==========================
+  const startedNow = Date.now();
 
-  const speakNext = () => {
-    index++;
-    if (index < messages.length) {
-      btn.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> ${messages[index]}`;
-      speakLine(messages[index]);
-      setTimeout(speakNext, 3500);
-    } else {
-      // ✅ After last line, start actual mining
-      const startedNow = Date.now();
+  await updateDoc(userRef, {
+    walletBalance: wallet - amt,
+    miningAmount: amt,
+    miningStartedAt: startedNow
+  });
 
-      updateDoc(userRef, {
-        walletBalance: wallet - amt,
-        miningAmount: amt,
-        miningStartedAt: startedNow
-      }).then(() => {
-        mining = true;
-        window.miningStarting = false;
+  mining = true;
+  window.miningStarting = false;
 
-        showProPopup(
-          "Mining Started ⚡",
-          "Your mining process has begun successfully!",
-          "https://cdn-icons-png.flaticon.com/512/727/727399.png"
-        );
+  showProPopup(
+    "Mining Started ⚡",
+    "Your mining process has begun successfully!",
+    "https://cdn-icons-png.flaticon.com/512/727/727399.png"
+  );
 
-        btn.innerHTML = "<i class='bx bx-power-off'></i> Stop Mining";
-        btn.classList.add("stop-active");
-        btn.disabled = false;
-        btn.style.opacity = "1";
-        btn.style.pointerEvents = "auto";
+  btn.innerHTML = "<i class='bx bx-power-off'></i> Stop Mining";
+  btn.classList.add("stop-active");
 
-        toggleMiningSections(true);
-        fundEl.innerText = `$${amt.toFixed(2)}`;
-        walletEl.innerText = `$${(wallet - amt).toFixed(2)}`;
+  btn.disabled = false;
+  btn.style.opacity = "1";
+  btn.style.pointerEvents = "auto";
 
-        startMiningTimer(startedNow);
-        startLiveMiningGrowth(amt, startedNow);
-        fundEl.style.color = "#00c853";
-      });
-    }
-  };
+  toggleMiningSections(true);
+  fundEl.innerText = `$${amt.toFixed(2)}`;
+  walletEl.innerText = `$${(wallet - amt).toFixed(2)}`;
 
-  setTimeout(speakNext, 3500);
+  startMiningTimer(startedNow);
+  startLiveMiningGrowth(amt, startedNow);
+  fundEl.style.color = "#00c853";
+
   return;
 }
 
-// === STOP MINING ===
+
+
 // === STOP MINING (COMBO MODE) ===
 
 // 🔊 Voice + UI Combo (next line waits for previous voice)
@@ -2374,6 +2464,68 @@ window.addEventListener("scroll", () => {
   lastY = y <= 0 ? 0 : y;
 });
 
+
+//netwark poor indicator 
+
+const networkBox = document.getElementById("networkStatus");
+let lastNetMessage = "";
+
+/* 🔥 Show network message */
+function showNetStatus(msg, good = false) {
+  networkBox.innerText = msg;
+  networkBox.classList.add("show");
+
+  if (good) networkBox.classList.add("good");
+  else networkBox.classList.remove("good");
+
+  setTimeout(() => {
+    networkBox.classList.remove("show");
+  }, 2500);
+}
+
+/* 📶 Internet Offline */
+window.addEventListener("offline", () => {
+  showNetStatus("No Internet Connection ❌");
+});
+
+/* 📶 Internet Online */
+window.addEventListener("online", () => {
+  showNetStatus("Connection Restored ✔️", true);
+});
+
+/* 🟡 Slow / Poor Network Checker */
+setInterval(() => {
+  if (!navigator.onLine) return;  // already offline event fire ho chuka hoga
+
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+  if (connection) {
+    const speed = connection.downlink;   // Mbps
+    const type = connection.effectiveType; // 2g/3g/4g
+
+    if (speed < 1 || type === "2g" || type === "slow-2g" || type === "3g") {
+      if (lastNetMessage !== "poor") {
+        lastNetMessage = "poor";
+        showNetStatus("Network Poor ⚠️");
+      }
+    } else {
+      lastNetMessage = "good";
+    }
+  }
+}, 3000);  // har 3 sec me test
+
+function centerError(msg) {
+  const box = document.getElementById("centerErrorBox");
+  const text = box.querySelector(".error-msg");
+
+  text.innerText = msg;
+
+  box.classList.add("show");
+
+  setTimeout(() => {
+    box.classList.remove("show");
+  }, 1800);
+}
 
 </script>
 <script>
