@@ -2,25 +2,36 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <title>Mining History Statement</title>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
+/* ======= MOBILE FIX: NO ZOOM ON INPUT ======= */
+input, button {
+  font-size: 16px !important;
+}
+
 body {
   background:#f5f7fa;
   font-family: 'Segoe UI', sans-serif;
   padding:0;
   margin:0;
-  max-width:520px;
-  margin:auto;
+  width:100%;
+  overflow-x:hidden;
 }
 
 /* ======================================
-   CLEAN HEADER
+   CLEAN HEADER (STICKY)
 ====================================== */
 .header {
   background:#ffffff;
-  padding:16px 20px;
+  padding:14px 16px;
   border-bottom:1px solid #e3e3e3;
   display:flex;
   justify-content:space-between;
@@ -31,7 +42,7 @@ body {
 }
 
 .header-title {
-  font-size:18px;
+  font-size:17px;
   font-weight:700;
   color:#28a745;
 }
@@ -42,50 +53,48 @@ body {
 }
 
 /* ======================================
-   STICKY CALENDAR NAV BAR
+   STICKY CALENDAR NAV BAR (MOBILE SAFE)
 ====================================== */
 .date-bar {
   background:#28a745;
-  padding:12px 16px;
+  padding:10px 12px;
   color:#fff;
   border-bottom-left-radius:15px;
   border-bottom-right-radius:15px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.2);
-
   position:sticky;
-  top:58px;      /* Header height */
+  top:56px;
   z-index:15;
 }
 
 .date-row {
   display:flex;
-  gap:8px;
+  gap:6px;
+  width:100%;
 }
 
 .date-box {
   flex:1;
   background:#fff;
-  padding:6px;
+  padding:8px;
   border-radius:8px;
   display:flex;
   align-items:center;
   gap:6px;
-  color:#333;
-  font-size:13px;
+  font-size:14px;
 }
 
 .date-box input {
   border:none;
   outline:none;
   width:100%;
-  font-size:13px;
+  font-size:16px !important;
 }
 
 /* ======================================
-   MAIN CONTENT
+   BODY CONTENT
 ====================================== */
 .container {
-  padding:15px;
+  padding:12px;
 }
 
 button {
@@ -94,9 +103,9 @@ button {
   background:#007bff;
   color:#fff;
   border:none;
-  padding:10px;
+  padding:12px;
   border-radius:8px;
-  font-size:15px;
+  font-size:16px !important;
   cursor:pointer;
 }
 
@@ -110,22 +119,20 @@ button.filter-btn {
   padding:14px;
   border-radius:10px;
   margin-bottom:12px;
+  font-size:14px;
   box-shadow:0 2px 8px rgba(0,0,0,0.08);
 }
 
-.amount { font-size:15px; font-weight:600; }
-.profit { color:#28a745; margin-top:6px; font-weight:600; }
-.time { font-size:12px; color:#666; margin-top:4px; }
-
 /* ======================================
-   PREMIUM POPUP (NO LAG)
+   PREMIUM POPUP (MOBILE CENTER FIX)
 ====================================== */
 .errBox {
   position: fixed;
   top:50%;
   left:50%;
   transform:translate(-50%, -50%) scale(0.8);
-  width:270px;
+  width:80%;
+  max-width:280px;
   background:#ffffff;
   border:2px solid #ff6b6b;
   padding:25px 20px;
@@ -207,10 +214,12 @@ button.filter-btn {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
 <script type="module">
+/* FIREBASE IMPORT */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
+/* FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
   authDomain: "btcinvest-c0e25.firebaseapp.com",
@@ -225,15 +234,12 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const list = document.getElementById("fullMiningList");
-
 let fullData = [];
 let filteredData = [];
 
-/* ======================================
-   FETCH FIREBASE MINING HISTORY
-====================================== */
+/* FETCH HISTORY */
 onAuthStateChanged(auth, (user) => {
-  if (!user) return location.href = "auth.html";
+  if (!user) return location.href="auth.html";
 
   const q = query(
     collection(db, "users", user.uid, "miningHistory"),
@@ -247,9 +253,7 @@ onAuthStateChanged(auth, (user) => {
   });
 });
 
-/* ======================================
-   RENDER HISTORY LIST
-====================================== */
+/* DISPLAY DATA */
 function render(data) {
   list.innerHTML = "";
   if (data.length === 0) {
@@ -269,9 +273,7 @@ function render(data) {
   });
 }
 
-/* ======================================
-   PREMIUM POPUP FUNCTION
-====================================== */
+/* POPUP */
 window.showError = function(msg) {
   const box = document.getElementById("errorPopup");
   const txt = document.getElementById("errMessage");
@@ -284,9 +286,7 @@ window.showError = function(msg) {
   }, 2000);
 };
 
-/* ======================================
-   FILTER BUTTON
-====================================== */
+/* FILTER BUTTON */
 document.getElementById("filterBtn").onclick = () => {
   let from = document.getElementById("fromDate").value;
   let to = document.getElementById("toDate").value;
@@ -303,9 +303,7 @@ document.getElementById("filterBtn").onclick = () => {
   render(filteredData);
 };
 
-/* ======================================
-   PDF DOWNLOAD
-====================================== */
+/* PDF DOWNLOAD */
 document.getElementById("downloadBtn").onclick = () => {
   if (filteredData.length === 0) {
     showError("No data to download");
@@ -333,52 +331,6 @@ document.getElementById("downloadBtn").onclick = () => {
   doc.save("Mining_Statement.pdf");
 };
 </script>
-<script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  });
-
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
-
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
-
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
-</script>
 </body>
 </html>
