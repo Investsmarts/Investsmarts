@@ -1102,93 +1102,6 @@ button:active {
   to { filter: brightness(1.6); }
 }
 
-/* 🔹 Ripple (same) */
-.ripple {
-  position: absolute;
-  border-radius: 50%;
-  transform: scale(0);
-  animation: ripple 0.6s linear;
-  background: rgba(0, 200, 83, 0.15);
-}
-@keyframes ripple {
-  to { transform: scale(3); opacity: 0; }
-}
-
-/* 🔹 Responsive tuning */
-@media (max-width: 480px) {
-  .bottom-nav .nav-item i {
-    font-size: 17px;
-  }
-  .bottom-nav .nav-item span {
-    font-size: 9.5px;
-  }
-}
-
-/* ✅ FIXED – NO MORE CARD SHIFT */
-#pullRefreshIndicator {
-  position: relative;
-  width: 100%;
-  text-align: center;
-
-  /* ❌ Old — causing issue */
-  /* margin-top: -40px; */
-  /* height: 0px; */
-
-  /* ✅ New Safe Values */
-  padding-top: 0px;
-  padding-bottom: 0px;
-  margin: 0px auto;
-  opacity: 0;
-
-  transition: all 0.35s ease;
-  overflow: visible;
-  min-height: 0px;   /* prevent collapse */
-}
-
-#pullRefreshIndicator.show {
-  margin-top: 6px;       /* small clean gap */
-  opacity: 1;
-}
-
-/* Spinner */
-.spinner {
-  width: 26px;
-  height: 26px;
-  border: 3px solid #ddd;
-  border-top-color: #00c853;
-  border-radius: 50%;
-  margin: 0 auto;
-  animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-/* History fade-out + fade-in */
-#incomeHistoryList.fade-out {
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-#incomeHistoryList.fade-in {
-  opacity: 1;
-  transition: opacity 0.35s ease;
-}
-
-/* Text */
-.refresh-text {
-  font-size: 13px;
-  font-weight: 600;
-  color: #00c853;
-  opacity: 0;
-  margin-top: 6px;
-  transition: opacity 0.25s ease;
-}
-
-#pullRefreshIndicator.show .refresh-text {
-  opacity: 1;
-}
 
 </style>
 </head>
@@ -1337,10 +1250,7 @@ button:active {
 </div>
 
 
-   <div id="pullRefreshIndicator">
-  <div class="spinner"></div>
-  <div class="refresh-text">Refreshing…</div>
-</div>
+ 
 
     <ul id="incomeHistoryList">
       <!-- items appear here -->
@@ -1575,6 +1485,7 @@ const referralBtn = document.getElementById("referralIncomeBtn");
 let currentUser = null;
 let mining = false;
 let timerInterval = null;
+let currentUserName = "User";
 
 // profit rate
 const DAILY_RATE = 0.009; // 1% per day
@@ -1796,6 +1707,10 @@ if (!releaseSnap.empty) {
 let miningCache = [];
 let miningHistoryListener = null;
 
+
+
+
+
 /* 🚀 Load Mining History (With Instant Cache + Smooth Realtime) */
 async function loadMiningHistory(user) {
   if (!user) return;
@@ -1869,9 +1784,15 @@ function renderMiningList(list) {
 
 
 /* 🔹 Load Real-time Referral Income — only today */
-async function loadReferralIncome(user) {
+/* 🚀 Ultra-Fast Referral Income Loader WITHOUT BLINK */
+let referralCache = [];
+let referralRendered = false;
+let referralHistoryListener = null;
 
-  // stop old listener
+async function loadReferralIncome(user) {
+  if (!user) return;
+
+  // ❌ stop old listener
   if (referralHistoryListener) {
     referralHistoryListener();
     referralHistoryListener = null;
@@ -1881,6 +1802,18 @@ async function loadReferralIncome(user) {
   const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
   const endOfDay = startOfDay + 86400000;
 
+  /* ⚡ Instant CACHE load without clearing screen */
+  if (referralCache.length > 0) {
+    renderReferralList(referralCache, false); // NO CLEAR
+  } else {
+    // FIRST TIME ONLY
+    miningHistoryEl.innerHTML = `
+      <li style="opacity:0.6;text-align:center;padding:16px;">
+        Loading referral income...
+      </li>`;
+  }
+
+  /* ⚡ Realtime fast listener */
   const q = query(
     collection(db, "referral_income"),
     where("toUpline", "==", user.uid),
@@ -1888,47 +1821,59 @@ async function loadReferralIncome(user) {
   );
 
   referralHistoryListener = onSnapshot(q, async (snap) => {
-    miningHistoryEl.innerHTML = "";
+    const todayDocs = snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .filter(d => d.time >= startOfDay && d.time < endOfDay);
 
-    const todayDocs = snap.docs.filter((d) => {
-      const t = d.data().time;
-      return t >= startOfDay && t < endOfDay;   // ⬅ FILTER FOR TODAY ONLY
-    });
+    referralCache = todayDocs;
+    renderReferralList(todayDocs, true); // fresh update
+  });
+}
 
-    if (todayDocs.length === 0) {
-      miningHistoryEl.innerHTML = `<li style="opacity:0.7;">No referral income today</li>`;
-      return;
-    }
+/* 🎨 Render Referral Cards — NO MORE BLINK */
+async function renderReferralList(list, clear = true) {
+  // ❌ CLEAR only when real-time fresh load
+  if (clear) miningHistoryEl.innerHTML = "";
 
-    for (const docSnap of todayDocs) {
-      const d = docSnap.data();
-      const date = new Date(d.time).toLocaleString();
+  if (!list || list.length === 0) {
+    miningHistoryEl.innerHTML = `<li style="opacity:0.7;">No referral income today</li>`;
+    return;
+  }
 
-      let fromName = "Unnamed";
+  const fragment = document.createDocumentFragment();
+
+  for (const d of list) {
+    const date = new Date(d.time).toLocaleString();
+
+    let fromName = d.cachedName || "User";
+
+    // Cache name only once
+    if (!d.cachedName) {
       try {
         const ref = doc(db, "users", d.fromUser);
-        const refSnap = await getDoc(ref);
-        if (refSnap.exists()) {
-          const u = refSnap.data();
-          fromName = u.name || u.username || "Unnamed";
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+          const u = snap.data();
+          fromName = u.name || u.username || "User";
+          d.cachedName = fromName;
         }
       } catch {}
-
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <div class="amount"><i class="fa-solid fa-user-group"></i> ${fromName}</div>
-        <div class="duration">Level ${d.level}</div>
-        <div class="profit"><i class="fa-solid fa-arrow-trend-up"></i> +$${Number(d.amount).toFixed(4)}</div>
-        <span class="time"><i class="fa-regular fa-calendar"></i> ${date}</span>
-      `;
-     miningHistoryEl.appendChild(li);
-
-setTimeout(() => {
-  li.classList.add("history-animate");
-}, 10); // small delay to allow DOM render
-
     }
-  });
+
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <div class="amount"><i class="fa-solid fa-user-group"></i> ${fromName}</div>
+      <div class="duration">Level ${d.level}</div>
+      <div class="profit"><i class="fa-solid fa-arrow-trend-up"></i> +$${Number(d.amount).toFixed(4)}</div>
+      <span class="time"><i class="fa-regular fa-calendar"></i> ${date}</span>
+    `;
+
+    fragment.appendChild(li);
+
+    setTimeout(() => li.classList.add("history-animate"), 10);
+  }
+
+  miningHistoryEl.appendChild(fragment);
 }
 
 
@@ -1943,6 +1888,13 @@ onAuthStateChanged(auth, async (user) => {
   await loadMiningHistory(user); // default show mining history
   listenIncomeBoxes(); // realtime updates enable
 
+  const uref = doc(db, "users", user.uid);
+const usnap = await getDoc(uref);
+if (usnap.exists()) {
+  currentUserName = usnap.data().name || "User";
+}
+
+
 });
 
 
@@ -1953,6 +1905,48 @@ if (miningBtn.classList.contains("active") && miningCache) {
 if (referralBtn.classList.contains("active") && referralCache) {
   miningHistoryEl.innerHTML = referralCache;
 }
+
+
+// 🌸 Soft teenage-girl realistic voice
+async function speakUser(text) {
+  return new Promise((resolve) => {
+    speechSynthesis.cancel();
+
+    const msg = new SpeechSynthesisUtterance(text);
+
+    // 🇮🇳 Indian English accent
+    msg.lang = "en-IN";
+
+    // 🔊 LOUD + CLEAR settings
+    msg.rate = 1.05;     // thoda fast → louder feel
+    msg.pitch = 1.10;    // clear female voice
+    msg.volume = 1.0;    // MAX volume
+
+    function pickVoice() {
+      const voices = speechSynthesis.getVoices();
+
+      msg.voice =
+        voices.find(v =>
+          /India|en-IN|Google.*English.*India/i.test(v.name)
+        ) ||
+        voices.find(v =>
+          /female|girl|Google US English/i.test(v.name)
+        ) ||
+        voices[0];
+
+      speechSynthesis.speak(msg);
+    }
+
+    msg.onend = resolve;
+
+    if (speechSynthesis.getVoices().length === 0) {
+      speechSynthesis.onvoiceschanged = pickVoice;
+    } else {
+      pickVoice();
+    }
+  });
+}
+
 
 
 /* 🔹 Toggle Button Controls */
@@ -1995,40 +1989,55 @@ btn.onclick = async () => {
     /* =====================================================
        FIXED SPEAK COMBO FUNCTION (NO MORE FREEZE)
     ====================================================== */
-    function speakCombo(text, rate = 0.9) {
-      return new Promise((resolve) => {
-        let finished = false;
+function speakCombo(text, rate = 0.74, pitch = 1.10) {
+  return new Promise((resolve) => {
+    let finished = false;
 
+    speechSynthesis.cancel();
+
+    const msg = new SpeechSynthesisUtterance(text);
+
+    // 🇮🇳 Indian soft English
+    msg.lang = "en-IN";
+
+    // 🌸 Most soft + calm 16-year-old tone
+    msg.rate = rate;       // slow & gentle
+    msg.pitch = pitch;     // soft, not sharp
+    msg.volume = 1;        // full clarity but not harsh
+
+    msg.onend = () => {
+      if (!finished) {
+        finished = true;
+        resolve();
+      }
+    };
+
+    // safety
+    setTimeout(() => {
+      if (!finished) {
         speechSynthesis.cancel();
+        finished = true;
+        resolve();
+      }
+    }, 5000);
 
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = "en-US";
-        msg.rate = rate;
+    // 🎤 Voice selection — softest possible
+    const voices = speechSynthesis.getVoices();
+    msg.voice =
+      voices.find(v =>
+        /india|indian|en-in/i.test(v.name)
+      ) ||
+      voices.find(v =>
+        /soft|calm|child|teen|young|girl|female/i.test(v.name)
+      ) ||
+      voices.find(v =>
+        /neutral|light|smooth/i.test(v.name)
+      ) ||
+      voices[0];
 
-        msg.onend = () => {
-          if (!finished) {
-            finished = true;
-            resolve();
-          }
-        };
-
-        // ⛑ SAFETY TIMEOUT — voice crash fix
-        setTimeout(() => {
-          if (!finished) {
-            speechSynthesis.cancel();
-            finished = true;
-            resolve();
-          }
-        }, 3000);
-
-        const voices = speechSynthesis.getVoices();
-        msg.voice =
-          voices.find(v => /male|man|Google US English/i.test(v.name)) ||
-          voices[0];
-
-        speechSynthesis.speak(msg);
-      });
-    }
+    speechSynthesis.speak(msg);
+  });
+}
 
     /* =====================================================
        START MINING
@@ -2061,17 +2070,19 @@ btn.onclick = async () => {
   // ✅ Correct Place → Bell plays ONLY after validation success
   const bell = new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
   bell.play().catch(()=>{});
+  await speakUser(`Hello ${currentUserName}, starting your mining machine. Please wait.`);
+
 
   btn.classList.remove("stop-active");
 
 
-      const startLines = [
-        "Initializing mining engine...",
-        "Connecting blockchain nodes...",
-        "Your machine is now online.",
-        "Activating mining core...",
-        "Mining started successfully."
-      ];
+   const startLines = [
+  "Preparing your machine...",
+  "Connecting servers...",
+  "Everything looks good...",
+  "Starting the engine...",
+  "Mining started successfully."
+];
 
       for (const line of startLines) {
         btn.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> ${line}`;
@@ -2145,6 +2156,7 @@ function playMachineStopSound() {
     
      // 🔔 Real Machine Shutdown Sound
     setTimeout(() => playMachineStopSound(), 50);
+   await speakUser(`Stopping your machine. Please wait.`);
 
 
     const stopLines = [
@@ -2569,92 +2581,53 @@ function centerError(msg) {
     }
 })();
 
-
-async function refreshActiveHistory() {
-  if (document.getElementById("miningBtn").classList.contains("active")) {
-    await loadMiningHistory(currentUser);
-  } else {
-    await loadReferralIncome(currentUser);
-  }
-}
-
-
-let startY = 0;
-let pulling = false;
-const pullDist = 55; // kitna kheechne par trigger hoga
-
-const list = document.getElementById("incomeHistoryList");
-const indicator = document.getElementById("pullRefreshIndicator");
-
-// touch start
-list.addEventListener("touchstart", (e) => {
-  if (list.scrollTop === 0) {
-    pulling = true;
-    startY = e.touches[0].clientY;
-  }
-});
-
-// touch move
-list.addEventListener("touchmove", (e) => {
-  if (!pulling) return;
-
-  const nowY = e.touches[0].clientY;
-  const diff = nowY - startY;
-
-  if (diff > 0) {
-    e.preventDefault();
-
-    const pull = Math.min(diff / 2, pullDist);
-
-    indicator.style.marginTop = `${pull - 40}px`;
-    indicator.style.opacity = pull / pullDist;
-  }
-});
-
-// touch end → TRIGGER refresh
-list.addEventListener("touchend", async () => {
-  if (!pulling) return;
-  pulling = false;
-
-  // user pulled enough?
-  if (indicator.style.opacity < 0.8) {
-    // reset
-    indicator.style.marginTop = "-40px";
-    indicator.style.opacity = "0";
-    return;
-  }
-
-  // SHOW indicator properly
-  indicator.classList.add("show");
-
-  // fade out list
-  list.classList.remove("fade-in");
-  list.classList.add("fade-out");
-
-  // 1 second loading feel
-  await new Promise(res => setTimeout(res, 1000));
-
-  // refresh data
-  await refreshActiveHistory();
-
-  // hide spinner
-  indicator.classList.remove("show");
-  indicator.style.opacity = "0";
-  indicator.style.marginTop = "-40px";
-
-  // fade-in new list
-  setTimeout(() => {
-    list.classList.remove("fade-out");
-    list.classList.add("fade-in");
-  }, 100);
-});
-
-
-function getActiveTab() {
-  return miningBtn.classList.contains("active") ? "mining" : "referral";
-}
-
 </script>
+<script>
+  // 🚫 Disable right click, select, drag
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
 
+  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
+  document.addEventListener("keydown", e => {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // 🔒 Silent DevTools detection (no popup)
+  (function() {
+    const devtools = /./;
+    devtools.toString = function() {
+      return ""; // no alert or console log
+    };
+    console.log("%c", devtools);
+  })();
+
+  // 🔐 Detect DevTools using resize trick (no popup)
+  setInterval(() => {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    if (widthDiff || heightDiff) {
+      // Optional: silently redirect or blank the page
+      document.body.innerHTML = "";
+    }
+  }, 1000);
+
+  // 🧱 Disable copy/paste/cut
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // 🔁 Freeze console methods silently
+  Object.freeze(console);
+  Object.freeze(window.console);
+</script>
 </body>
 </html>
