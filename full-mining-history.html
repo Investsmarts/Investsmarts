@@ -2,22 +2,106 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Full Mining History</title>
+<title>Mining History Statement</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 <style>
 body {
   background:#f5f7fa;
   font-family: 'Segoe UI', sans-serif;
-  padding:20px;
-  max-width:450px;
+  padding:0;
+  margin:0;
+  max-width:520px;
   margin:auto;
 }
 
-h2 {
-  text-align:center;
+/* ======================================
+   CLEAN HEADER
+====================================== */
+.header {
+  background:#ffffff;
+  padding:16px 20px;
+  border-bottom:1px solid #e3e3e3;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+
+.header-title {
+  font-size:18px;
+  font-weight:700;
   color:#28a745;
-  margin-bottom:20px;
+}
+
+.header-icon {
+  font-size:20px;
+  color:#28a745;
+}
+
+/* ======================================
+   STICKY CALENDAR NAV BAR
+====================================== */
+.date-bar {
+  background:#28a745;
+  padding:12px 16px;
+  color:#fff;
+  border-bottom-left-radius:15px;
+  border-bottom-right-radius:15px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.2);
+
+  position:sticky;
+  top:58px;      /* Header height */
+  z-index:15;
+}
+
+.date-row {
+  display:flex;
+  gap:8px;
+}
+
+.date-box {
+  flex:1;
+  background:#fff;
+  padding:6px;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:#333;
+  font-size:13px;
+}
+
+.date-box input {
+  border:none;
+  outline:none;
+  width:100%;
+  font-size:13px;
+}
+
+/* ======================================
+   MAIN CONTENT
+====================================== */
+.container {
+  padding:15px;
+}
+
+button {
+  width:100%;
+  margin-top:12px;
+  background:#007bff;
+  color:#fff;
+  border:none;
+  padding:10px;
+  border-radius:8px;
+  font-size:15px;
+  cursor:pointer;
+}
+
+button.filter-btn {
+  background:#28a745;
 }
 
 .history-card {
@@ -29,16 +113,98 @@ h2 {
   box-shadow:0 2px 8px rgba(0,0,0,0.08);
 }
 
-.amount { font-size:15px; font-weight:600; color:#111; }
-.profit { color:#28a745; font-weight:600; margin-top:6px; }
-.time { color:#666; font-size:12px; margin-top:4px; }
+.amount { font-size:15px; font-weight:600; }
+.profit { color:#28a745; margin-top:6px; font-weight:600; }
+.time { font-size:12px; color:#666; margin-top:4px; }
+
+/* ======================================
+   PREMIUM POPUP (NO LAG)
+====================================== */
+.errBox {
+  position: fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%) scale(0.8);
+  width:270px;
+  background:#ffffff;
+  border:2px solid #ff6b6b;
+  padding:25px 20px;
+  border-radius:12px;
+  text-align:center;
+  box-shadow:0 6px 25px rgba(0,0,0,0.15);
+  opacity:0;
+  z-index:9999;
+  pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+}
+
+.errBox.show {
+  opacity:1;
+  pointer-events:auto;
+  transform:translate(-50%, -50%) scale(1);
+}
+
+.errIcon {
+  font-size:55px;
+  color:#ff4d4d;
+  margin-bottom:10px;
+}
+
+.errText {
+  font-size:18px;
+  font-weight:600;
+  color:#ff4d4d;
+}
+
+.errArrow {
+  font-size:22px;
+  color:#ff4d4d;
+  margin-top:12px;
+}
 </style>
 </head>
 
 <body>
 
-<h2>Full Mining History</h2>
-<div id="fullMiningList"></div>
+<!-- ============ HEADER ============ -->
+<div class="header">
+  <div class="header-title">Mining Statement</div>
+  <i class="fa-solid fa-file-invoice-dollar header-icon"></i>
+</div>
+
+<!-- ============ STICKY DATE BAR ============ -->
+<div class="date-bar">
+  <div class="date-row">
+    <div class="date-box">
+      <i class="fa-solid fa-calendar-days"></i>
+      <input type="date" id="fromDate">
+    </div>
+
+    <div class="date-box">
+      <i class="fa-solid fa-calendar-check"></i>
+      <input type="date" id="toDate">
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE CONTENT ============ -->
+<div class="container">
+  <button id="filterBtn" class="filter-btn">Show History</button>
+  <button id="downloadBtn">Download PDF</button>
+
+  <div id="fullMiningList" style="margin-top:15px;"></div>
+</div>
+
+<!-- ============ PREMIUM POPUP ============ -->
+<div id="errorPopup" class="errBox">
+  <div class="errIcon">✖</div>
+  <div class="errText" id="errMessage">Error Message</div>
+  <div class="errArrow">↓</div>
+</div>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -60,8 +226,14 @@ const db = getFirestore(app);
 
 const list = document.getElementById("fullMiningList");
 
+let fullData = [];
+let filteredData = [];
+
+/* ======================================
+   FETCH FIREBASE MINING HISTORY
+====================================== */
 onAuthStateChanged(auth, (user) => {
-  if (!user) return location.href="auth.html";
+  if (!user) return location.href = "auth.html";
 
   const q = query(
     collection(db, "users", user.uid, "miningHistory"),
@@ -69,28 +241,144 @@ onAuthStateChanged(auth, (user) => {
   );
 
   onSnapshot(q, (snap) => {
-    list.innerHTML = "";
-
-    if (snap.empty) {
-      list.innerHTML = "<p>No mining history found.</p>";
-      return;
-    }
-
-    snap.forEach((d) => {
-      const data = d.data();
-      const date = new Date(data.time).toLocaleString();
-
-      const div = document.createElement("div");
-      div.className = "history-card";
-      div.innerHTML = `
-        <div class="amount">⛏️ Amount: $${data.amount.toFixed(2)}</div>
-        <div class="profit">Profit: +$${data.earned.toFixed(4)}</div>
-        <div class="time">📅 ${date}</div>
-      `;
-      list.appendChild(div);
-    });
+    fullData = [];
+    snap.forEach(d => fullData.push(d.data()));
+    render(fullData);
   });
 });
+
+/* ======================================
+   RENDER HISTORY LIST
+====================================== */
+function render(data) {
+  list.innerHTML = "";
+  if (data.length === 0) {
+    list.innerHTML = "<p>No history found.</p>";
+    return;
+  }
+
+  data.forEach(x => {
+    const date = new Date(x.time).toLocaleString();
+    list.innerHTML += `
+      <div class="history-card">
+        <div class="amount">⛏️ Amount: $${x.amount.toFixed(2)}</div>
+        <div class="profit">Profit: +$${x.earned.toFixed(4)}</div>
+        <div class="time">📅 ${date}</div>
+      </div>
+    `;
+  });
+}
+
+/* ======================================
+   PREMIUM POPUP FUNCTION
+====================================== */
+window.showError = function(msg) {
+  const box = document.getElementById("errorPopup");
+  const txt = document.getElementById("errMessage");
+
+  txt.innerText = msg;
+  box.classList.add("show");
+
+  setTimeout(() => {
+    box.classList.remove("show");
+  }, 2000);
+};
+
+/* ======================================
+   FILTER BUTTON
+====================================== */
+document.getElementById("filterBtn").onclick = () => {
+  let from = document.getElementById("fromDate").value;
+  let to = document.getElementById("toDate").value;
+
+  if (!from || !to) {
+    showError("Please select both dates");
+    return;
+  }
+
+  let fromTime = new Date(from).getTime();
+  let toTime = new Date(to).getTime() + 86400000;
+
+  filteredData = fullData.filter(x => x.time >= fromTime && x.time <= toTime);
+  render(filteredData);
+};
+
+/* ======================================
+   PDF DOWNLOAD
+====================================== */
+document.getElementById("downloadBtn").onclick = () => {
+  if (filteredData.length === 0) {
+    showError("No data to download");
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text("Mining History Statement", 14, 16);
+
+  let rows = filteredData.map(x => [
+    new Date(x.time).toLocaleString(),
+    "$" + x.amount.toFixed(2),
+    "$" + x.earned.toFixed(4)
+  ]);
+
+  doc.autoTable({
+    head: [["Date", "Amount", "Profit"]],
+    body: rows,
+    startY: 25,
+  });
+
+  doc.save("Mining_Statement.pdf");
+};
+</script>
+<script>
+  // 🚫 Disable right click, select, drag
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
+
+  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
+  document.addEventListener("keydown", e => {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // 🔒 Silent DevTools detection (no popup)
+  (function() {
+    const devtools = /./;
+    devtools.toString = function() {
+      return ""; // no alert or console log
+    };
+    console.log("%c", devtools);
+  })();
+
+  // 🔐 Detect DevTools using resize trick (no popup)
+  setInterval(() => {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    if (widthDiff || heightDiff) {
+      // Optional: silently redirect or blank the page
+      document.body.innerHTML = "";
+    }
+  }, 1000);
+
+  // 🧱 Disable copy/paste/cut
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // 🔁 Freeze console methods silently
+  Object.freeze(console);
+  Object.freeze(window.console);
 </script>
 </body>
 </html>
