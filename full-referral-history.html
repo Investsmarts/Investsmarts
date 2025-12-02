@@ -94,6 +94,20 @@ body{
   0%{transform:rotate(0);}
   100%{transform:rotate(360deg);}
 }
+
+/* HEADER HIDE */
+.header.hide {
+  transform: translateY(-100%);
+  transition: .25s ease;
+}
+
+/* SEARCH BAR SHIFT */
+.search-bar.shift {
+  top: 0 !important;
+  border-radius: 0;
+  transition: .25s ease;
+}
+
 </style>
 </head>
 
@@ -269,6 +283,29 @@ container.addEventListener("touchend",()=>{
   }
   pulling = false;
 });
+
+
+/* HEADER + SEARCH BAR SCROLL ANIMATION */
+let lastScroll = 0;
+const header = document.querySelector(".header");
+const searchBar = document.querySelector(".search-bar");
+
+window.addEventListener("scroll", () => {
+  let y = window.scrollY;
+
+  if (y > lastScroll) {
+    // scrolling down
+    header.classList.add("hide");
+    searchBar.classList.add("shift");
+  } else {
+    // scrolling up
+    header.classList.remove("hide");
+    searchBar.classList.remove("shift");
+  }
+
+  lastScroll = y;
+});
+
 </script>
 <script>
   // 🚫 Disable right click, select, drag
