@@ -1571,6 +1571,7 @@ const miningHistoryEl = document.getElementById("incomeHistoryList");
 const miningBtn = document.getElementById("miningIncomeBtn");
 const referralBtn = document.getElementById("referralIncomeBtn");
 
+
 let currentUser = null;
 let mining = false;
 let timerInterval = null;
@@ -1783,8 +1784,23 @@ if (!releaseSnap.empty) {
   }
 }
 
-/* 🔹 Load Real-time Mining History — only today */
+
+// ===========================
+// FASTEST MINING HISTORY LOADER
+// ===========================
+
+/* ===========================================
+   🔥 FAST MINING HISTORY SYSTEM (FINAL BLOCK)
+   =========================================== */
+
+let miningCache = [];
+let miningHistoryListener = null;
+
+/* 🚀 Load Mining History (With Instant Cache + Smooth Realtime) */
 async function loadMiningHistory(user) {
+  if (!user) return;
+
+  // ❌ OLD listener stop (to prevent duplicates)
   if (miningHistoryListener) {
     miningHistoryListener();
     miningHistoryListener = null;
@@ -1794,43 +1810,60 @@ async function loadMiningHistory(user) {
   const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
   const endOfDay = startOfDay + 86400000;
 
+  /* ⚡ STEP 1 → INSTANT CACHE LOAD */
+  if (miningCache.length > 0) {
+    renderMiningList(miningCache);
+  } else {
+    miningHistoryEl.innerHTML = `
+      <li style="opacity:0.6;text-align:center;padding:18px;">
+        Loading history...
+      </li>`;
+  }
+
+  /* ⚡ STEP 2 → REALTIME LISTENER (FASTEST + CLEAN) */
   const q = query(
     collection(db, "users", user.uid, "miningHistory"),
     orderBy("time", "desc")
   );
 
   miningHistoryListener = onSnapshot(q, (snap) => {
-    miningHistoryEl.innerHTML = "";
+    const todayDocs = snap.docs
+      .map(doc => doc.data())
+      .filter(d => d.time >= startOfDay && d.time < endOfDay);
 
-    const todayDocs = snap.docs.filter((d) => {
-      const t = d.data().time;
-      return t >= startOfDay && t < endOfDay;
-    });
+    // Update cache
+    miningCache = todayDocs;
 
-    if (todayDocs.length === 0) {
-      miningHistoryEl.innerHTML = `<li style="opacity:0.7;">No mining income today</li>`;
-      return;
-    }
+    // Update UI
+    renderMiningList(todayDocs);
+  });
+}
 
-    todayDocs.forEach((docSnap) => {
-      const d = docSnap.data();
-      const durMin = (d.duration / 60000).toFixed(1);
-      const date = new Date(d.time).toLocaleString();
+/* 🎨 Render Mining Cards (Smooth + Animated) */
+function renderMiningList(list) {
+  miningHistoryEl.innerHTML = "";
 
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <div class="amount"><i class="fa-solid fa-coins"></i> $${Number(d.amount).toFixed(2)} mined</div>
-        <div class="duration"><i class="fa-regular fa-clock"></i> ${durMin} min</div>
-        <div class="profit"><i class="fa-solid fa-arrow-trend-up"></i> +$${Number(d.earned).toFixed(4)}</div>
-        <span class="time"><i class="fa-regular fa-calendar"></i> ${date}</span>
-      `;
-     miningHistoryEl.appendChild(li);
+  if (!list || list.length === 0) {
+    miningHistoryEl.innerHTML = `<li style="opacity:0.7;">No mining income today</li>`;
+    return;
+  }
 
-setTimeout(() => {
-  li.classList.add("history-animate");
-}, 10); // small delay to allow DOM render
+  list.forEach((d) => {
+    const durMin = (d.duration / 60000).toFixed(1);
+    const date = new Date(d.time).toLocaleString();
 
-    });
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <div class="amount"><i class="fa-solid fa-coins"></i> $${Number(d.amount).toFixed(2)} mined</div>
+      <div class="duration"><i class="fa-regular fa-clock"></i> ${durMin} min</div>
+      <div class="profit"><i class="fa-solid fa-arrow-trend-up"></i> +$${Number(d.earned).toFixed(4)}</div>
+      <span class="time"><i class="fa-regular fa-calendar"></i> ${date}</span>
+    `;
+
+    miningHistoryEl.appendChild(li);
+
+    // Smooth animation
+    setTimeout(() => li.classList.add("history-animate"), 10);
   });
 }
 
@@ -1911,6 +1944,16 @@ onAuthStateChanged(auth, async (user) => {
   listenIncomeBoxes(); // realtime updates enable
 
 });
+
+
+if (miningBtn.classList.contains("active") && miningCache) {
+  miningHistoryEl.innerHTML = miningCache;
+}
+
+if (referralBtn.classList.contains("active") && referralCache) {
+  miningHistoryEl.innerHTML = referralCache;
+}
+
 
 /* 🔹 Toggle Button Controls */
 miningBtn.onclick = () => {
@@ -2605,6 +2648,11 @@ list.addEventListener("touchend", async () => {
     list.classList.add("fade-in");
   }, 100);
 });
+
+
+function getActiveTab() {
+  return miningBtn.classList.contains("active") ? "mining" : "referral";
+}
 
 </script>
 
