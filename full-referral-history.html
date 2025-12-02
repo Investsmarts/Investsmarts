@@ -2,45 +2,124 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Full Referral History</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<title>Referral History</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
-body {
+*{box-sizing:border-box;}
+body{
+  margin:0;
   background:#f5f7fa;
-  font-family: 'Segoe UI', sans-serif;
-  padding:20px;
-  max-width:450px;
-  margin:auto;
+  font-family:'Segoe UI',sans-serif;
+  overflow-x:hidden;
 }
 
-h2 {
+/* HEADER */
+.header{
+  position:fixed;
+  top:0; left:0;
+  width:100%;
+  background:#fff;
+  padding:12px 16px;
+  border-bottom:1px solid #ddd;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:1000;
+}
+.header-title{
+  font-size:18px;
+  font-weight:700;
+  color:#28a745;
+}
+
+/* SEARCH BAR */
+.search-bar{
+  position:fixed;
+  top:56px;
+  left:0;
+  width:100%;
+  padding:10px;
+  background:#28a745;
+  z-index:999;
+}
+.search-box{
+  width:100%;
+  padding:10px;
+  border-radius:5px;
+  border:none;
+  outline:none;
+  font-size:16px;
+}
+
+/* CONTENT */
+.container{
+  padding:20px 15px;
+  padding-top:130px;
+}
+
+.history-card{
+  background:#fff;
+  border-radius:8px;
+  border:1px solid #ddd;
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.06);
+}
+
+.user{font-size:15px;font-weight:600;}
+.mining{color:#111;margin-top:6px;font-size:14px;}
+.level{color:#555;margin-top:6px;font-size:14px;}
+.profit{color:#28a745;margin-top:6px;font-weight:600;}
+.time{color:#666;font-size:12px;margin-top:4px;}
+
+/* PULL REFRESH */
+.pull-refresh{
+  position:absolute;
+  top:-60px;
+  left:0;
+  width:100%;
   text-align:center;
   color:#28a745;
-  margin-bottom:20px;
+  font-weight:600;
+  opacity:0;
+  transition:.2s;
 }
+.pull-refresh.show{opacity:1;transform:translateY(60px);}
+.pull-spin{font-size:24px;animation:spin 1s linear infinite;}
 
-.history-card {
-  background:#fff;
-  border:1px solid #e2e2e2;
-  padding:14px;
-  border-radius:10px;
-  margin-bottom:12px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+@keyframes spin{
+  0%{transform:rotate(0);}
+  100%{transform:rotate(360deg);}
 }
-
-.user { font-size:15px; font-weight:600; color:#111; }
-.level { color:#555; font-size:13px; margin-top:6px; }
-.profit { color:#28a745; font-weight:600; margin-top:6px; }
-.time { color:#666; font-size:12px; margin-top:4px; }
 </style>
 </head>
 
 <body>
 
-<h2>Full Referral History</h2>
-<div id="fullReferralList"></div>
+<!-- HEADER -->
+<div class="header">
+  <div class="header-title">Referral History</div>
+  <i class="fa-solid fa-users-line" style="color:#28a745;font-size:20px;"></i>
+</div>
 
+<!-- SEARCH BAR -->
+<div class="search-bar">
+  <input type="text" id="searchInput" class="search-box" placeholder="Search Downline Name...">
+</div>
+
+<div id="pullRefresh" class="pull-refresh">
+  <i class="fa-solid fa-rotate-right pull-spin"></i>
+  <div>Refreshing...</div>
+</div>
+
+<div class="container">
+  <div id="fullReferralList"></div>
+</div>
+
+<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -59,52 +138,184 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const list = document.getElementById("fullReferralList");
+let finalData = [];
 
-onAuthStateChanged(auth, (user) => {
-  if (!user) return location.href="auth.html";
+/* LOAD REFERRAL HISTORY */
+onAuthStateChanged(auth, async (user)=>{
+  if(!user) return location.href="auth.html";
 
   const q = query(
-    collection(db, "referral_income"),
-    where("toUpline", "==", user.uid),
-    orderBy("time", "desc")
+    collection(db,"referral_income"),
+    where("toUpline","==",user.uid),
+    orderBy("time","asc")   // oldest first
   );
 
-  onSnapshot(q, async (snap) => {
-    list.innerHTML = "";
+  onSnapshot(q, async snap=>{
+    finalData = [];
+    for(const d of snap.docs){
+      const data = d.data();
 
-    if (snap.empty) {
-      list.innerHTML = "<p>No referral history found.</p>";
-      return;
-    }
-
-    for (const docSnap of snap.docs) {
-      const d = docSnap.data();
-      const date = new Date(d.time).toLocaleString();
-
+      // get downline details
       let downName = "User";
-      try {
-        const downRef = doc(db, "users", d.fromUser);
-        const downSnap = await getDoc(downRef);
-        if (downSnap.exists()) {
-          const u = downSnap.data();
-          downName = u.name || u.username || "User";
-        }
-      } catch {}
+      let miningAmount = 0;
 
-      const div = document.createElement("div");
-      div.className = "history-card";
-      div.innerHTML = `
-        <div class="user">👤 Downline: ${downName}</div>
-        <div class="level">Level: ${d.level}</div>
-        <div class="profit">Commission: $${d.amount.toFixed(4)}</div>
-        <div class="time">📅 ${date}</div>
-      `;
-      list.appendChild(div);
+      const userRef = doc(db,"users",data.fromUser);
+      const uSnap = await getDoc(userRef);
+      if(uSnap.exists()){
+        const u = uSnap.data();
+        downName = u.username || u.name || "User";
+        miningAmount = u.miningAmount || 0;
+      }
+
+      finalData.push({
+        ...data,
+        downName,
+        miningAmount
+      });
     }
+
+    render(finalData);
   });
 });
-</script>
 
+/* RENDER UI */
+function render(arr) {
+  const list = document.getElementById("fullReferralList");
+  list.innerHTML = "";
+
+  if (arr.length === 0) {
+    list.innerHTML = "<p>No referral history found.</p>";
+    return;
+  }
+
+  // GROUP by DATE
+  let groups = {};
+
+  arr.forEach(x => {
+    let d = new Date(x.time);
+    let dateKey = d.toISOString().split("T")[0]; // yyyy-mm-dd
+
+    if (!groups[dateKey]) groups[dateKey] = [];
+    groups[dateKey].push(x);
+  });
+
+  // SORT DATE GROUPS (LATEST → OLDEST)
+  let sortedDates = Object.keys(groups).sort((a, b) => new Date(b) - new Date(a));
+
+  // BUILD UI
+  sortedDates.forEach(dateKey => {
+    let niceDate = new Date(dateKey).toDateString(); // readable
+
+    // DATE HEADING
+    list.innerHTML += `
+      <div style="
+        margin:15px 0 5px;
+        font-weight:700;
+        font-size:16px;
+        color:#28a745;
+      ">📅 ${niceDate}</div>
+    `;
+
+    // Sort inside date group (latest first)
+    let inside = groups[dateKey].sort((a, b) => b.time - a.time);
+
+    inside.forEach(x => {
+      list.innerHTML += `
+        <div class="history-card">
+          <div class="user">👤 Downline: ${x.downName}</div>
+          <div class="mining">Mining Amount: $${x.miningAmount}</div>
+          <div class="level">Level: ${x.level}</div>
+          <div class="profit">Commission Earned: $${x.amount.toFixed(4)}</div>
+          <div class="time">🕒 ${new Date(x.time).toLocaleTimeString()}</div>
+        </div>
+      `;
+    });
+  });
+}
+
+
+/* SEARCH */
+document.getElementById("searchInput").addEventListener("input",(e)=>{
+  const val = e.target.value.toLowerCase();
+  const filtered = finalData.filter(x => x.downName.toLowerCase().includes(val));
+  render(filtered);
+});
+
+/* PULL TO REFRESH */
+let startY=0, pulling=false;
+const pullBox = document.getElementById("pullRefresh");
+const container = document.querySelector(".container");
+
+container.addEventListener("touchstart",(e)=>{
+  if(window.scrollY===0){
+    startY = e.touches[0].clientY;
+    pulling = true;
+  }
+});
+
+container.addEventListener("touchmove",(e)=>{
+  if(!pulling) return;
+
+  const diff = e.touches[0].clientY - startY;
+  if(diff > 60){
+    pullBox.classList.add("show");
+  }
+});
+
+container.addEventListener("touchend",()=>{
+  if(pullBox.classList.contains("show")){
+    pullBox.classList.remove("show");
+    location.reload();
+  }
+  pulling = false;
+});
+</script>
+<script>
+  // 🚫 Disable right click, select, drag
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
+
+  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
+  document.addEventListener("keydown", e => {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // 🔒 Silent DevTools detection (no popup)
+  (function() {
+    const devtools = /./;
+    devtools.toString = function() {
+      return ""; // no alert or console log
+    };
+    console.log("%c", devtools);
+  })();
+
+  // 🔐 Detect DevTools using resize trick (no popup)
+  setInterval(() => {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    if (widthDiff || heightDiff) {
+      // Optional: silently redirect or blank the page
+      document.body.innerHTML = "";
+    }
+  }, 1000);
+
+  // 🧱 Disable copy/paste/cut
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // 🔁 Freeze console methods silently
+  Object.freeze(console);
+  Object.freeze(window.console);
+</script>
 </body>
 </html>
