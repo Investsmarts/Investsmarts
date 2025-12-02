@@ -2,191 +2,229 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>Mining History Statement</title>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<title>Mining History</title>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
 <style>
-* {
-  box-sizing: border-box;
-}
 
-/* ======= MOBILE FIX: NO ZOOM ON INPUT ======= */
-input, button {
-  font-size: 16px !important;
-}
-
-body {
-  background:#f5f7fa;
-  font-family: 'Segoe UI', sans-serif;
-  padding:0;
+*{box-sizing:border-box;}
+body{
   margin:0;
-  width:100%;
+  background:#f5f7fa;
+  font-family:'Segoe UI',sans-serif;
   overflow-x:hidden;
 }
+input,button{font-size:16px !important;}
 
-/* ======================================
-   CLEAN HEADER (STICKY)
-====================================== */
-.header {
-  background:#ffffff;
-  padding:14px 16px;
-  border-bottom:1px solid #e3e3e3;
+/* ==========================
+      HEADER (Hide on Scroll)
+========================== */
+.header{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  background:#fff;
+  padding:12px 16px;
+  border-bottom:1px solid #ddd;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  position:sticky;
-  top:0;
-  z-index:20;
+  z-index:1000;
+  transition:transform .25s ease;
+}
+.header.hide{
+  transform:translateY(-100%);
 }
 
-.header-title {
-  font-size:17px;
-  font-weight:700;
-  color:#28a745;
-}
-
-.header-icon {
-  font-size:20px;
-  color:#28a745;
-}
-
-/* ======================================
-   STICKY CALENDAR NAV BAR (MOBILE SAFE)
-====================================== */
-.date-bar {
-  background:#28a745;
-  padding:10px 12px;
-  color:#fff;
-  border-bottom-left-radius:15px;
-  border-bottom-right-radius:15px;
-  position:sticky;
-  top:56px;
-  z-index:15;
-}
-
-.date-row {
-  display:flex;
-  gap:6px;
+/* ==========================
+     DATE BAR (Side-by-Side FIX)
+========================== */
+.date-bar{
+  position:fixed;
+  left:0;
   width:100%;
+  background:#28a745;
+  padding:5px;
+  border-bottom-left-radius:5px;
+  border-bottom-right-radius:5px;
+  z-index:999;
+  transition:top .25s ease, border-radius .25s ease;
+  top:52px; /* always below header */
 }
 
-.date-box {
+.date-bar.shift{
+  top:0;  /* header ki jagah aajayega */
+  border-radius:0;
+}
+
+/* SIDE-BY-SIDE PERFECT FIX */
+.date-row{
+  display:flex;
+  flex-direction:row;
+  width:100%;
+  gap:10px;
+}
+
+.date-box{
   flex:1;
+  min-width:0;
   background:#fff;
-  padding:8px;
-  border-radius:8px;
+  height:42px;
+  padding:0 10px;
+  border-radius:5px;
+  border:1px solid #ccc;
   display:flex;
   align-items:center;
-  gap:6px;
-  font-size:14px;
+  gap:8px;
+  white-space:nowrap;
 }
 
-.date-box input {
+.date-box input[type="date"]{
+  flex:1;
+  width:100%;
+  min-width:0;
   border:none;
   outline:none;
-  width:100%;
-  font-size:16px !important;
+  background:transparent;
 }
 
-/* ======================================
-   BODY CONTENT
-====================================== */
-.container {
+/* ==========================
+     CONTENT
+========================== */
+.container{
+  padding:20px 15px;
+  padding-top:140px;
+}
+
+button{
+  width:100%;
   padding:12px;
-}
-
-button {
-  width:100%;
   margin-top:12px;
-  background:#007bff;
-  color:#fff;
   border:none;
-  padding:12px;
-  border-radius:8px;
-  font-size:16px !important;
-  cursor:pointer;
+  border-radius:5px;
+  font-size:16px;
+  font-weight:600;
 }
+.filter-btn{background:#28a745;color:white;}
+#downloadBtn{background:#007bff;color:white;}
 
-button.filter-btn {
-  background:#28a745;
-}
-
-.history-card {
+/* ==========================
+     LOADING
+========================== */
+.loading-box{
+  width:100%;
   background:#fff;
-  border:1px solid #e2e2e2;
   padding:14px;
-  border-radius:10px;
-  margin-bottom:12px;
-  font-size:14px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.08);
-}
-
-/* ======================================
-   PREMIUM POPUP (MOBILE CENTER FIX)
-====================================== */
-.errBox {
-  position: fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%) scale(0.8);
-  width:80%;
-  max-width:280px;
-  background:#ffffff;
-  border:2px solid #ff6b6b;
-  padding:25px 20px;
-  border-radius:12px;
+  border-radius:5px;
+  border:1px solid #ddd;
   text-align:center;
-  box-shadow:0 6px 25px rgba(0,0,0,0.15);
-  opacity:0;
-  z-index:9999;
-  pointer-events:none;
-  transition:opacity .25s ease, transform .25s ease;
-}
-
-.errBox.show {
-  opacity:1;
-  pointer-events:auto;
-  transform:translate(-50%, -50%) scale(1);
-}
-
-.errIcon {
-  font-size:55px;
-  color:#ff4d4d;
+  font-size:15px;
+  color:#444;
+  display:none;
   margin-bottom:10px;
 }
 
-.errText {
-  font-size:18px;
-  font-weight:600;
-  color:#ff4d4d;
+.loading-spin{
+  font-size:22px;
+  margin-right:8px;
+  color:#28a745;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{
+  0%{transform:rotate(0);}
+  100%{transform:rotate(360deg);}
 }
 
-.errArrow {
-  font-size:22px;
-  color:#ff4d4d;
-  margin-top:12px;
+/* ==========================
+     HISTORY CARDS
+========================== */
+.history-card{
+  background:#fff;
+  border-radius:5px;
+  border:1px solid #ddd;
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
 }
+.amount{font-size:16px;font-weight:600;}
+.profit{color:#28a745;margin-top:6px;font-weight:600;}
+.time{font-size:13px;margin-top:4px;color:#555;}
+
+/* ==========================
+     POPUP
+========================== */
+.errBox{
+  position:fixed;
+  top:50%; left:50%;
+  width:260px;
+  background:#fff;
+  padding:22px;
+  border-radius:5px;
+  border:2px solid #ff4d4d;
+  text-align:center;
+  transform:translate(-50%,-50%) scale(.7);
+  opacity:0;
+  pointer-events:none;
+  transition:.25s ease;
+  z-index:2000;
+}
+.errBox.show{
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1);
+  pointer-events:auto;
+}
+.errIcon{font-size:48px;color:#ff3333;}
+.errText{font-size:17px;color:#ff3333;margin-top:8px;}
+.errArrow{font-size:18px;color:#ff3333;margin-top:6px;}
+
+/* PULL TO REFRESH INDICATOR */
+.pull-refresh {
+  position: absolute;
+  top: -60px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+  color: #28a745;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+.pull-refresh.show {
+  opacity: 1;
+  transform: translateY(60px);
+}
+
+.pull-spin {
+  font-size: 24px;
+  animation: spin 1s linear infinite;
+}
+
 </style>
+
 </head>
 
 <body>
 
-<!-- ============ HEADER ============ -->
-<div class="header">
-  <div class="header-title">Mining Statement</div>
-  <i class="fa-solid fa-file-invoice-dollar header-icon"></i>
+<!-- HEADER -->
+<div class="header" id="header">
+  <div style="font-weight:700;font-size:18px;color:#28a745;">Mining Statement</div>
+  <i class="fa-solid fa-file-invoice-dollar"></i>
 </div>
 
-<!-- ============ STICKY DATE BAR ============ -->
-<div class="date-bar">
+<!-- DATE BAR -->
+<div class="date-bar" id="dateBar">
   <div class="date-row">
     <div class="date-box">
       <i class="fa-solid fa-calendar-days"></i>
       <input type="date" id="fromDate">
     </div>
-
     <div class="date-box">
       <i class="fa-solid fa-calendar-check"></i>
       <input type="date" id="toDate">
@@ -194,53 +232,91 @@ button.filter-btn {
   </div>
 </div>
 
-<!-- ============ PAGE CONTENT ============ -->
+<div id="pullRefresh" class="pull-refresh">
+  <i class="fa-solid fa-rotate-right pull-spin"></i>
+  <div>Refreshing...</div>
+</div>
+
 <div class="container">
+
+  <div id="loadingBox" class="loading-box">
+    <i class="fa-solid fa-rotate-right loading-spin"></i>
+    Loading history...
+  </div>
+
   <button id="filterBtn" class="filter-btn">Show History</button>
   <button id="downloadBtn">Download PDF</button>
 
-  <div id="fullMiningList" style="margin-top:15px;"></div>
+  <div id="fullMiningList"></div>
 </div>
 
-<!-- ============ PREMIUM POPUP ============ -->
+<!-- POPUP -->
 <div id="errorPopup" class="errBox">
   <div class="errIcon">✖</div>
-  <div class="errText" id="errMessage">Error Message</div>
+  <div class="errText" id="errMessage">Error</div>
   <div class="errArrow">↓</div>
 </div>
 
-<!-- jsPDF -->
+<!-- LIBS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
 <script type="module">
-/* FIREBASE IMPORT */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-/* FIREBASE CONFIG */
+/* FIREBASE */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getFirestore, collection, query, orderBy, onSnapshot, doc, getDoc }
+  from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
-  authDomain: "btcinvest-c0e25.firebaseapp.com",
-  projectId: "btcinvest-c0e25",
-  storageBucket: "btcinvest-c0e25.appspot.com",
-  messagingSenderId: "204937458487",
-  appId: "1:204937458487:web:cc27ece1249999279f60b2"
+  apiKey:"AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain:"btcinvest-c0e25.firebaseapp.com",
+  projectId:"btcinvest-c0e25",
+  storageBucket:"btcinvest-c0e25.appspot.com",
+  messagingSenderId:"204937458487",
+  appId:"1:204937458487:web:cc27ece1249999279f60b2"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const list = document.getElementById("fullMiningList");
 let fullData = [];
 let filteredData = [];
+const list = document.getElementById("fullMiningList");
+
+/* POPUP FUNCTION */
+window.showError = (msg) => {
+  const pop = document.getElementById("errorPopup");
+  document.getElementById("errMessage").innerText = msg;
+  pop.classList.add("show");
+  setTimeout(() => pop.classList.remove("show"), 1800);
+};
 
 /* FETCH HISTORY */
-onAuthStateChanged(auth, (user) => {
-  if (!user) return location.href="auth.html";
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return location.href = "auth.html";
 
+  /* FETCH USER PROFILE */
+  const userData = await getDoc(doc(db, "users", user.uid));
+  const u = userData.data();
+
+  /* AUTO SET FROM DATE = REG DATE */
+  if (u.createdAt) {
+      let reg = new Date(u.createdAt);
+      let yyyy = reg.getFullYear();
+      let mm = String(reg.getMonth() + 1).padStart(2, "0");
+      let dd = String(reg.getDate()).padStart(2, "0");
+      document.getElementById("fromDate").value = `${yyyy}-${mm}-${dd}`;
+  }
+
+  /* AUTO SET TO DATE = TODAY */
+  let today = new Date();
+  document.getElementById("toDate").value = today.toISOString().split("T")[0];
+
+  /* HISTORY LIST */
   const q = query(
     collection(db, "users", user.uid, "miningHistory"),
     orderBy("time", "desc")
@@ -248,88 +324,242 @@ onAuthStateChanged(auth, (user) => {
 
   onSnapshot(q, (snap) => {
     fullData = [];
-    snap.forEach(d => fullData.push(d.data()));
-    render(fullData);
+    snap.forEach(doc => fullData.push(doc.data()));
+
+    renderWithBalance(fullData, u.walletBalance);
   });
 });
 
-/* DISPLAY DATA */
-function render(data) {
+/* =====================================
+      CALCULATION + RENDER FUNCTION
+===================================== */
+function renderWithBalance(data, currentWallet) {
+  
   list.innerHTML = "";
-  if (data.length === 0) {
-    list.innerHTML = "<p>No history found.</p>";
-    return;
+  if (!data.length) {
+      list.innerHTML = "<p>No history found</p>";
+      return;
   }
 
-  data.forEach(x => {
-    const date = new Date(x.time).toLocaleString();
+  // reverse for oldest → newest
+  let calc = [...data].reverse();
+
+  // TOTAL AMOUNT + PROFIT
+  let totalMining = calc.reduce((a, b) => a + b.amount, 0);
+  let totalProfit  = calc.reduce((a, b) => a + b.earned, 0);
+
+  // FIND STARTING BALANCE
+  let runningBalance = currentWallet - (totalMining + totalProfit);
+
+  // Now calculate each row
+  calc = calc.map(x => {
+      let previousBalance = runningBalance;
+      let total = previousBalance + x.amount + x.earned;
+      runningBalance = total;
+
+      return {
+        ...x,
+        previousBalance,
+        total
+      };
+  });
+
+  // return to DESC for UI
+  let finalList = calc.reverse();
+
+  // UI Render
+  finalList.forEach(x => {
     list.innerHTML += `
       <div class="history-card">
-        <div class="amount">⛏️ Amount: $${x.amount.toFixed(2)}</div>
-        <div class="profit">Profit: +$${x.earned.toFixed(4)}</div>
-        <div class="time">📅 ${date}</div>
+        <div class="time"> ${new Date(x.time).toLocaleString()}</div>
+        <div class="amount"> Mining Amount: $${x.amount.toFixed(2)}</div>
+        <div class="profit">Profit Earned: +$${x.earned.toFixed(4)}</div>
+        <div class="pbalance">Before Mining Wallet: $${x.previousBalance.toFixed(2)}</div>
+        <div class="tbalance">Total After Mining: $${x.total.toFixed(2)}</div>
       </div>
     `;
   });
+
+  // Save finalList globally for PDF
+  window.finalCalcList = finalList;
 }
 
-/* POPUP */
-window.showError = function(msg) {
-  const box = document.getElementById("errorPopup");
-  const txt = document.getElementById("errMessage");
-
-  txt.innerText = msg;
-  box.classList.add("show");
-
-  setTimeout(() => {
-    box.classList.remove("show");
-  }, 2000);
-};
-
-/* FILTER BUTTON */
+/* FILTER */
 document.getElementById("filterBtn").onclick = () => {
-  let from = document.getElementById("fromDate").value;
-  let to = document.getElementById("toDate").value;
+  let f = document.getElementById("fromDate").value;
+  let t = document.getElementById("toDate").value;
 
-  if (!from || !to) {
-    showError("Please select both dates");
-    return;
-  }
+  if (!f || !t) return showError("Select both dates");
 
-  let fromTime = new Date(from).getTime();
-  let toTime = new Date(to).getTime() + 86400000;
+  let from = new Date(f + " 00:00:00").getTime();
+  let to   = new Date(t + " 23:59:59").getTime();
 
-  filteredData = fullData.filter(x => x.time >= fromTime && x.time <= toTime);
-  render(filteredData);
+  filteredData = fullData.filter(x => x.time >= from && x.time <= to);
+
+  onAuthStateChanged(auth, async(user) => {
+      const userSnap = await getDoc(doc(db,"users",user.uid));
+      renderWithBalance(filteredData, userSnap.data().walletBalance);
+  });
 };
 
-/* PDF DOWNLOAD */
-document.getElementById("downloadBtn").onclick = () => {
-  if (filteredData.length === 0) {
-    showError("No data to download");
-    return;
+/* =====================================
+            PDF GENERATION
+===================================== */
+document.getElementById("downloadBtn").onclick = async () => {
+
+  const exportList = window.finalCalcList;
+  if (!exportList.length) return showError("No data to download");
+
+  const user = auth.currentUser;
+  const userSnap = await getDoc(doc(db, "users", user.uid));
+  const u = userSnap.data();
+
+  // Upline details
+  let upName="N/A", upEmail="N/A", upMobile="N/A";
+  if (u.upline1) {
+      const upSnap = await getDoc(doc(db, "users", u.upline1));
+      if (upSnap.exists()) {
+          let up = upSnap.data();
+          upName  = up.username || "N/A";
+          upEmail = up.email || "N/A";
+          upMobile = up.mobile || "N/A";
+      }
   }
 
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+  const pdf = new jsPDF();
 
-  doc.setFontSize(16);
-  doc.text("Mining History Statement", 14, 16);
 
-  let rows = filteredData.map(x => [
-    new Date(x.time).toLocaleString(),
-    "$" + x.amount.toFixed(2),
-    "$" + x.earned.toFixed(4)
-  ]);
+  /* PDF HEADER */
+  pdf.setFontSize(20);
+  pdf.setTextColor(34,139,34);
+  pdf.text("TrustDollar Holding LLC", 14, 16);
 
-  doc.autoTable({
-    head: [["Date", "Amount", "Profit"]],
-    body: rows,
-    startY: 25,
+  pdf.setFontSize(14);
+  pdf.text("Mining Account Statement Report", 14, 26);
+
+  pdf.setFontSize(11);
+  pdf.text("Contact: trustdollarreportportal@gmail.com", 14, 33);
+
+  /* USER INFO BOX */
+  const info = [
+    `Admin Name         : ${upName}`,
+    `Admin Email        : ${upEmail}`,
+    `Admin Mobile       : ${upMobile}`,
+    `User Name          : ${u.username}`,
+    `User Email         : ${u.email}`,
+    `User Mobile        : ${u.mobile}`,
+    `Aadhaar Number     : ${u.aadhaar || "N/A"}`,
+    `Mining Amount      : $${u.miningAmount || 0}`,
+    `Current Wallet     : $${u.walletBalance}`
+  ];
+
+  pdf.setDrawColor(0,128,0);
+  pdf.rect(12, 38, 186, info.length * 7 + 8);
+
+  let yy = 50;
+  info.forEach(x => {
+    pdf.text(x, 16, yy);
+    yy += 7;
   });
 
-  doc.save("Mining_Statement.pdf");
+  /* TABLE */
+  let rows = exportList.map(x => [
+    new Date(x.time).toLocaleString(),
+    "$"+x.amount.toFixed(2),
+    "$"+x.earned.toFixed(4),
+    "$"+x.previousBalance.toFixed(2),
+    "$"+x.total.toFixed(2)
+  ]);
+
+  pdf.autoTable({
+    head: [["Date & Time", "Amount", "Profit", "Prev Balance", "Total"]],
+    body: rows,
+    startY: yy + 10,
+    headStyles: { fillColor: [40, 167, 69] },
+    styles: { fontSize: 9 }
+  });
+
+  /* FOOTER */
+  let fY = pdf.lastAutoTable.finalY + 10;
+
+  pdf.setDrawColor(0,128,0);
+  pdf.rect(12, fY, 186, 40);
+
+  let footer = 
+`This report is issued by TrustDollar Holding LLC. All mining rewards 
+shown here represent verified backend processing executed under the 
+TrustDollar Mining Network. For compliance, verification or support, 
+contact: trustdollarreportportal@gmail.com`;
+
+  pdf.text(pdf.splitTextToSize(footer,180), 16, fY + 8);
+
+  pdf.save(`${u.username}_Mining_Statement.pdf`);
 };
+
+
+async function pullToRefreshAction() {
+  document.getElementById("loadingBox").style.display = "block";
+  list.innerHTML = "";
+
+  const user = auth.currentUser;
+  const userSnap = await getDoc(doc(db, "users", user.uid));
+  const u = userSnap.data();
+
+  setTimeout(() => {
+    renderWithBalance(fullData, u.walletBalance);
+    document.getElementById("loadingBox").style.display = "none";
+  }, 500);
+}
+
+</script>
+
+<script>
+  // 🚫 Disable right click, select, drag
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
+
+  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
+  document.addEventListener("keydown", e => {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // 🔒 Silent DevTools detection (no popup)
+  (function() {
+    const devtools = /./;
+    devtools.toString = function() {
+      return ""; // no alert or console log
+    };
+    console.log("%c", devtools);
+  })();
+
+  // 🔐 Detect DevTools using resize trick (no popup)
+  setInterval(() => {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    if (widthDiff || heightDiff) {
+      // Optional: silently redirect or blank the page
+      document.body.innerHTML = "";
+    }
+  }, 1000);
+
+  // 🧱 Disable copy/paste/cut
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // 🔁 Freeze console methods silently
+  Object.freeze(console);
+  Object.freeze(window.console);
 </script>
 
 </body>
