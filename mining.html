@@ -516,7 +516,7 @@ button:active {
 
 #refreshIndicator {
   position: absolute;
-  top: -25px;
+  top: -30px !important;
   left: 50%;
   transform: translateX(-50%);
   background: #00c853;
@@ -525,23 +525,17 @@ button:active {
   font-weight: 600;
   padding: 6px 14px;
   border-radius: 20px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
   opacity: 0;
-  transition: all 0.3s ease;
+  transition: 0.3s ease;
   pointer-events: none;
   z-index: 10;
 }
-#refreshIndicator.active {
-  top: 10px;
-  opacity: 1;
-}
-
 
 #refreshIndicator.active {
-  top: 8px;
-  opacity: 1;
-  transform: translateX(-50%) scale(1);
+  top: 10px !important;
+  opacity: 1 !important;
 }
+
 
 #refreshIndicator i {
   font-size: 14px;
@@ -2401,10 +2395,16 @@ historyList.addEventListener("touchmove", (e) => {
   if (!pulling) return;
 
   const distance = e.touches[0].clientY - startY;
+
   if (distance > 0) {
     e.preventDefault();
+
+    // Move history slightly
     historyList.style.transform = `translateY(${Math.min(distance, 80)}px)`;
-    refreshIndicator.style.top = Math.min(distance - 40, 25) + "px";
+
+    // Indicator always INSIDE container
+    refreshIndicator.style.top = (Math.min(distance, 60) - 30) + "px";
+
     refreshIndicator.style.opacity = Math.min(distance / pullThreshold, 1);
   }
 });
@@ -2413,32 +2413,32 @@ historyList.addEventListener("touchend", async () => {
   if (!pulling) return;
   pulling = false;
 
-  historyList.style.transition = "0.25s";
+  // Reset history back to normal
+  historyList.style.transition = "transform 0.25s ease";
   historyList.style.transform = "translateY(0px)";
-  setTimeout(() => (historyList.style.transition = ""), 250);
+  setTimeout(() => historyList.style.transition = "", 250);
 
   if (historyList.scrollTop !== 0) return;
 
-// Show indicator
-refreshIndicator.classList.add("active");
+  // Show refresh indicator INSIDE only
+  refreshIndicator.classList.add("active");
 
-// Hide history for 1 second
-historyList.style.opacity = "0";
-historyList.style.transition = "opacity 0.4s ease";
+  // Hide history briefly
+  historyList.style.opacity = "0";
+  historyList.style.transition = "opacity 0.4s ease";
 
-// Wait for refresh
-await refreshActiveHistory();
+  // Load new data
+  await refreshActiveHistory();
 
-// After 1 sec, show history again
-setTimeout(() => {
-  historyList.style.opacity = "1";  // show again
-}, 1000);
+  // Show history again
+  setTimeout(() => {
+    historyList.style.opacity = "1";
+  }, 1000);
 
-// Hide indicator slowly
-setTimeout(() => {
-  refreshIndicator.classList.remove("active");
-}, 900);
-
+  // Hide indicator
+  setTimeout(() => {
+    refreshIndicator.classList.remove("active");
+  }, 900);
 });
 
 </script>
@@ -2557,6 +2557,15 @@ function centerError(msg) {
         }
     }
 })();
+
+
+async function refreshActiveHistory() {
+  if (document.getElementById("miningBtn").classList.contains("active")) {
+    await loadMiningHistory(currentUser);
+  } else {
+    await loadReferralIncome(currentUser);
+  }
+}
 
 </script>
 <script>
