@@ -749,6 +749,16 @@
     opacity: 0;
   }
 }
+.video-title {
+  max-width: 420px;
+  margin: 14px auto 10px;
+  font-size: 17px;
+  font-weight: 600;        /* ⭐ clean bold */
+  color: #fbc02d;          /* pila */
+  text-align: center;
+  letter-spacing: 0.6px;
+  line-height: 1.4;
+}
 
 </style>
 </head>
@@ -796,6 +806,9 @@
       </div>
     </div>
 
+<div class="video-title">
+  TrustDollar Live  | Earn Daily with Blockchain Security
+</div>
 
 <div class="video-box">
   <div class="video-thumb" id="videoThumb">
@@ -806,11 +819,12 @@
       decoding="async"
     >
 
-    <div class="yt-play">
-      <span class="pulse"></span>
-      <span class="triangle"></span>
-      <span class="live-text">LIVE</span>
-    </div>
+    <div class="yt-play" id="playBtn">
+  <span class="pulse"></span>
+  <span class="triangle"></span>
+  <span class="live-text">LIVE</span>
+</div>
+
   </div>
 </div>
 
@@ -1149,7 +1163,7 @@ function typeEffect() {
 typeEffect();
 
 
-document.addEventListener("pointerdown", e => {
+document.querySelector(".video-box").addEventListener("pointerdown", e => {
   const ripple = document.createElement("span");
   ripple.className = "ripple";
   ripple.style.left = e.clientX + "px";
@@ -1163,9 +1177,12 @@ document.addEventListener("pointerdown", e => {
 </script>
 
 <script>
+const playBtn = document.getElementById("playBtn");
 const thumb = document.getElementById("videoThumb");
 
-thumb.addEventListener("pointerdown", () => {
+playBtn.addEventListener("pointerdown", (e) => {
+  e.stopPropagation(); // ⭐ important: sirf icon click count ho
+
   const video = document.createElement("video");
 
   video.src =
@@ -1174,12 +1191,15 @@ thumb.addEventListener("pointerdown", () => {
   video.controls = true;
   video.playsInline = true;
   video.autoplay = true;
+  video.muted = true;      // mobile safety
   video.preload = "auto";
   video.style.width = "100%";
-  video.style.display = "block"; // 🔥 IMPORTANT FIX
+  video.style.height = "100%";
+  video.style.display = "block";
 
   thumb.replaceWith(video);
 }, { passive: true });
+
 </script>
 
 <script>
