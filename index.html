@@ -752,6 +752,12 @@
   display: none;
 }
 
+.video-thumb img {
+  width: 100%;
+  display: block;   /* ⭐ VERY IMPORTANT */
+}
+
+
 </style>
 </head>
 <body>
@@ -799,25 +805,21 @@
     </div>
 
 
-    <div class="video-box">
+<div class="video-box">
   <div class="video-thumb" id="videoThumb">
-    <img src="myphoto/WhatsApp Image 2025-12-13 at 11.55.30 PM.jpeg" alt="TrustDollar Live Video">
+    <img
+      src="myphoto/WhatsApp Image 2025-12-13 at 11.55.30 PM.jpeg"
+      alt="Live Video"
+      loading="lazy"
+      decoding="async"
+    >
 
-    <!-- 🔴 LIVE Play Button -->
     <div class="yt-play">
       <span class="pulse"></span>
       <span class="triangle"></span>
       <span class="live-text">LIVE</span>
     </div>
   </div>
-
-  <video id="promoVideo"
-    controls
-    playsinline
-    preload="metadata">
-    <source src="https://res.cloudinary.com/dvlxd9gjm/video/upload/q_auto,f_auto/v1765649901/WhatsApp_Video_2025-12-13_at_2.57.08_PM_rttcab.mp4"
-            type="video/mp4">
-  </video>
 </div>
 
     
@@ -1155,29 +1157,42 @@ function typeEffect() {
 typeEffect();
 
 
-document.addEventListener("click", function (e) {
-  const container = document.getElementById("click-ring");
-
-  const ring = document.createElement("span");
-  ring.classList.add("ring");
-  ring.style.left = e.clientX + "px";
-  ring.style.top = e.clientY + "px";
-
-  container.appendChild(ring);
-
-  setTimeout(() => ring.remove(), 800);
-});
 
 </script>
+
 <script>
 const thumb = document.getElementById("videoThumb");
-const video = document.getElementById("promoVideo");
 
 thumb.addEventListener("pointerdown", () => {
-  thumb.style.display = "none";
-  video.style.display = "block";
-  video.currentTime = 0;
-  video.play();
+  const video = document.createElement("video");
+
+  video.src =
+    "https://res.cloudinary.com/dvlxd9gjm/video/upload/q_auto,f_auto/v1765649901/WhatsApp_Video_2025-12-13_at_2.57.08_PM_rttcab.mp4";
+
+  video.controls = true;
+  video.playsInline = true;
+  video.autoplay = true;
+  video.preload = "auto";
+  video.style.width = "100%";
+
+  // ⭐ Thumbnail ko click ke baad hi replace karo
+  thumb.replaceWith(video);
+}, { passive: true });
+</script>
+<script>
+let ringTimeout;
+document.addEventListener("pointerdown", e => {
+  const box = document.getElementById("click-ring");
+  box.innerHTML = "";
+
+  const ring = document.createElement("span");
+  ring.className = "ring";
+  ring.style.left = e.clientX + "px";
+  ring.style.top = e.clientY + "px";
+  box.appendChild(ring);
+
+  clearTimeout(ringTimeout);
+  ringTimeout = setTimeout(() => box.innerHTML = "", 400);
 }, { passive: true });
 </script>
 
