@@ -752,6 +752,10 @@
   display: none;
 }
 
+.video-thumb img {
+  width: 100%;
+  display: block;   /* ⭐ VERY IMPORTANT */
+}
 
 
 </style>
@@ -1170,11 +1174,12 @@ thumb.addEventListener("pointerdown", () => {
   video.autoplay = true;
   video.preload = "auto";
   video.style.width = "100%";
+  video.style.display = "block"; // 🔥 IMPORTANT FIX
 
-  // ⭐ Thumbnail ko click ke baad hi replace karo
   thumb.replaceWith(video);
 }, { passive: true });
 </script>
+
 <script>
 let ringTimeout;
 document.addEventListener("pointerdown", e => {
@@ -1194,4 +1199,3 @@ document.addEventListener("pointerdown", e => {
 
 </body>
 </html>
-
