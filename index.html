@@ -678,6 +678,79 @@
     gap: 20px;
   }
 }
+.video-box {
+  max-width: 420px;
+  margin: 40px auto;
+  border-radius: 5px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+}
+
+/* Thumbnail */
+.video-thumb {
+  position: relative;
+  cursor: pointer;
+}
+
+/* LIVE button container */
+.yt-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90px;
+  height: 90px;
+}
+
+/* Pulse ring */
+.yt-play .pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(255,0,0,0.35);
+  animation: livePulse 1.6s infinite;
+}
+
+/* Play triangle */
+.yt-play .triangle {
+  position: absolute;
+  top: 50%;
+  left: 54%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  border-left: 26px solid white;
+  border-top: 16px solid transparent;
+  border-bottom: 16px solid transparent;
+}
+
+/* LIVE text */
+.yt-play .live-text {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: red;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.6px;
+}
+
+@keyframes livePulse {
+  0%   { transform: scale(0.8); opacity: 0.7; }
+  70%  { transform: scale(1.3); opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Hide video initially */
+.video-box video {
+  width: 100%;
+  display: none;
+}
 
 </style>
 </head>
@@ -724,6 +797,29 @@
         <div class="slide-card"><img src="myphoto/22222222.png" alt="slide4"></div>
       </div>
     </div>
+
+
+    <div class="video-box">
+  <div class="video-thumb" id="videoThumb">
+    <img src="myphoto/WhatsApp Image 2025-12-13 at 11.55.30 PM.jpeg" alt="TrustDollar Live Video">
+
+    <!-- 🔴 LIVE Play Button -->
+    <div class="yt-play">
+      <span class="pulse"></span>
+      <span class="triangle"></span>
+      <span class="live-text">LIVE</span>
+    </div>
+  </div>
+
+  <video id="promoVideo"
+    controls
+    playsinline
+    preload="metadata">
+    <source src="https://res.cloudinary.com/dvlxd9gjm/video/upload/q_auto,f_auto/v1765649901/WhatsApp_Video_2025-12-13_at_2.57.08_PM_rttcab.mp4"
+            type="video/mp4">
+  </video>
+</div>
+
     
    <h1>Secure Your Funds with TrustDollar V2</h1>
     <p>Blockchain-powered platform designed to keep your investments safe and transparent. 
@@ -877,6 +973,7 @@ Please login to continue managing your earnings safely and transparently.
             <li><a href="terms.html">Terms of Service</a></li>
             <li><a href="privacy.html">Privacy Policy</a></li>
             <li><a href="about.html">About Us</a></li>
+            <li><a href="support.html">Support</a></li>
           </ul>
         </div>
       </div>
@@ -1073,52 +1170,16 @@ document.addEventListener("click", function (e) {
 
 </script>
 <script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
+const thumb = document.getElementById("videoThumb");
+const video = document.getElementById("promoVideo");
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  });
-
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
-
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
-
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
+thumb.addEventListener("pointerdown", () => {
+  thumb.style.display = "none";
+  video.style.display = "block";
+  video.currentTime = 0;
+  video.play();
+}, { passive: true });
 </script>
+
 </body>
 </html>
-
