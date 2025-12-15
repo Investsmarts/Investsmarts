@@ -1,150 +1,141 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
-    <title>Maintenance In Progress</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
-        }body {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #ffffff;
-        color: #1f7a1f;
-        text-align: center;
-        padding: 20px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+<title>Mining Activation</title>
 
-    .container {
-        max-width: 600px;
-        width: 100%;
-        border: 2px solid #1f7a1f;
-        border-radius: 16px;
-        padding: 40px 20px;
-    }
-
-    h1 {
-        font-size: clamp(24px, 5vw, 36px);
-        margin-bottom: 15px;
-        position: relative;
-        background: linear-gradient(90deg, #1f7a1f, #6dff6d, #1f7a1f);
-        background-size: 200% auto;
-        color: transparent;
-        -webkit-background-clip: text;
-        background-clip: text;
-        animation: shine 2.5s linear infinite;
-    }
-
-    p {
-        font-size: clamp(14px, 3.5vw, 18px);
-        line-height: 1.6;
-        margin-bottom: 10px;
-    }
-
-    .highlight {
-        font-weight: bold;
-    }
-
-    .loader {
-        margin: 25px auto 0;
-        width: 45px;
-        height: 45px;
-        border: 4px solid rgba(31, 122, 31, 0.3);
-        border-top: 4px solid #1f7a1f;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes shine {
-        0% { background-position: 0% center; }
-        100% { background-position: 200% center; }
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-        .status-btn {
-        margin-top: 20px;
-        padding: 12px 24px;
-        font-size: 16px;
-        font-weight: bold;
-        color: #ffffff;
-        background-color: #1f7a1f;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .status-btn:hover {
-        opacity: 0.9;
-    }
-
-    .status-text {
-        margin-top: 15px;
-        font-size: 18px;
-        font-weight: bold;
-        display: none;
-        animation: slideDown 0.6s ease forwards;
-    }
-
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+body{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#ffffff;
+  color:#1f7a1f;
+  text-align:center;
+  padding:20px;
+}
+.container{
+  max-width:600px;
+  width:100%;
+  border:2px solid #1f7a1f;
+  border-radius:16px;
+  padding:40px 20px;
+}
+h1{
+  font-size:clamp(24px,5vw,36px);
+  margin-bottom:15px;
+  background:linear-gradient(90deg,#1f7a1f,#6dff6d,#1f7a1f);
+  background-size:200% auto;
+  color:transparent;
+  -webkit-background-clip:text;
+  background-clip:text;
+  animation:shine 2.5s linear infinite;
+}
+p{
+  font-size:clamp(14px,3.5vw,18px);
+  line-height:1.6;
+  margin-bottom:10px;
+}
+.highlight{
+  font-weight:bold;
+}
+.loader{
+  margin:25px auto 0;
+  width:45px;
+  height:45px;
+  border:4px solid rgba(31,122,31,0.3);
+  border-top:4px solid #1f7a1f;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+@keyframes shine{
+  0%{background-position:0% center;}
+  100%{background-position:200% center;}
+}
+@keyframes spin{
+  0%{transform:rotate(0deg);}
+  100%{transform:rotate(360deg);}
+}
+.status-btn{
+  margin-top:20px;
+  padding:12px 24px;
+  font-size:16px;
+  font-weight:bold;
+  color:#fff;
+  background:#1f7a1f;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+.status-btn:hover{opacity:0.9;}
+.status-text{
+  margin-top:15px;
+  font-size:18px;
+  font-weight:bold;
+  display:none;
+  animation:slideDown .6s ease forwards;
+}
+@keyframes slideDown{
+  from{opacity:0;transform:translateY(-10px);}
+  to{opacity:1;transform:translateY(0);}
+}
 </style>
+
 <script>
-    let typed = false;
-    function showStatus() {
-        const status = document.getElementById('status');
-        const text = 'Your mining is running';
-        if (typed) return;
-        status.style.display = 'block';
-        status.innerHTML = '';
-        let i = 0;
-        typed = true;
-        const typing = setInterval(() => {
-            if (i < text.length) {
-                status.innerHTML += text.charAt(i);
-                i++;
-            } else {
-                clearInterval(typing);
-            }
-        }, 80);
+let typed=false;
+function showStatus(){
+  if(typed) return;
+  typed=true;
+  const status=document.getElementById("status");
+  const text="Mining will go live shortly. Please wait 10–15 minutes while systems are being activated.";
+  status.style.display="block";
+  status.innerHTML="";
+  let i=0;
+  const typing=setInterval(()=>{
+    if(i<text.length){
+      status.innerHTML+=text.charAt(i);
+      i++;
+    }else{
+      clearInterval(typing);
     }
-
-    function hideStatus() {
-        const status = document.getElementById('status');
-        status.style.display = 'none';
-        status.innerHTML = '';
-        typed = false;
-    }
+  },60);
+}
+function hideStatus(){
+  const status=document.getElementById("status");
+  status.style.display="none";
+  status.innerHTML="";
+  typed=false;
+}
 </script>
-
 </head>
+
 <body>
-    <div class="container">
-        <h1>Maintenance In Progress</h1>
-        <p>We are currently working on the website<br>
-        for a better experience.</p>
-        <p class="highlight">Mining will open before Monday, 11 AM</p>
-        <p class="highlight">Date: Monday, 15 December 2025</p>
-        <p>For. support</p>
-        <p>trustdollarteam@gmail.com</p>
-        <button class="status-btn" onclick="showStatus()" ondblclick="hideStatus()">My Mining Status</button>
-        <div id="status" class="status-text"></div>
-        <div class="loader"></div>
-    </div>
+<div class="container">
+  <h1>Mining Activation In Progress</h1>
+
+  <p>Our mining infrastructure is currently being initialized<br>
+     to ensure stable and secure performance.</p>
+
+  <p class="highlight">⏳ Mining will be live within 10–15 minutes</p>
+  <p class="highlight">Please stay connected</p>
+
+  <p>For support</p>
+  <p>trustdollarteam@gmail.com</p>
+
+  <button class="status-btn"
+    onclick="showStatus()"
+    ondblclick="hideStatus()">Check Mining Status</button>
+
+  <div id="status" class="status-text"></div>
+  <div class="loader"></div>
+</div>
 </body>
 </html>
