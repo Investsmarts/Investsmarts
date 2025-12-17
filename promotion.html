@@ -732,16 +732,47 @@ onAuthStateChanged(auth, async user => {
 });
 
 // ✅ Copy & Share Referral Functions
+
+function getInviteMessage(refLink) {
+  return `🔐 TrusTDollar
+
+The world’s first secure, reliable, and fully transparent TrusTDollar Mining platform 🌍⚡
+
+Earn up to 1%-2% daily income through TrusTDollar mining with a 100% secure and fully automated system.
+
+💼 Key Features:
+✅ Stable daily returns ✅
+✅ All wallet withdrawals ✅
+✅ Minimum withdrawal from $20 max 40k ✅
+✅ Fully secure  system ✅
+
+ Register today and start earning!
+
+👉 Register Now:👇
+${refLink}`;
+}
+
+// 📋 COPY (Text + Link)
 window.copyReferral = function () {
   const refLink = document.getElementById("refLink").innerText;
+
   if (!refLink || refLink.includes("Loading")) {
-    showPopup("Referral link not ready yet!");
+    showPopup("Referral link not ready yet!", "#ff3b30");
     return;
   }
-  navigator.clipboard.writeText(refLink);
-  showPopup("Referral link copied!");
-};
 
+  const fullMessage = getInviteMessage(refLink);
+
+  navigator.clipboard.writeText(fullMessage).then(() => {
+    // 📳 haptic feedback (mobile only)
+    if (navigator.vibrate) navigator.vibrate(30);
+    showPopup("Invite message copied successfully!");
+  }).catch(() => {
+    showPopup("Copy failed!", "#ff3b30");
+  });
+
+
+// 📤 SHARE (Text + Link)
 window.shareReferral = function () {
   const refLink = document.getElementById("refLink").innerText;
   const btn = document.querySelector(".btn-share");
@@ -750,6 +781,28 @@ window.shareReferral = function () {
     showPopup("Referral link not ready yet!", "#ff3b30");
     return;
   }
+
+  const fullMessage = getInviteMessage(refLink);
+  // 🔄 animation start
+  btn.classList.add("loading");
+
+  if (navigator.share) {
+    navigator.share({
+      title: "TrustDollar Invite",
+      text: fullMessage
+    }).then(() => {
+      if (navigator.vibrate) navigator.vibrate(40);
+      showPopup("Invite ready to share!");
+    }).catch(() => {
+      showPopup("Share cancelled", "#ffc107");
+    }).finally(() => {
+      btn.classList.remove("loading");
+    });
+  } else {
+    btn.classList.remove("loading");
+    showPopup("Sharing not supported", "#ff3b30");
+  }
+};
 
   // 🔄 animation start
   btn.classList.add("loading");
@@ -762,22 +815,23 @@ window.shareReferral = function () {
   }, 1500);
 };
 
+
 function shareInvite(refLink) {
-  const fullMessage = `🔐 TrustDollar
+  const fullMessage = `🔐 TrusTDollar
 
-The world’s first secure, reliable, and fully transparent Bitcoin Mining platform 🌍⚡
+The world’s first secure, reliable, and fully transparent TrusTDollar Mining platform 🌍⚡
 
-Earn up to 1% daily income through Bitcoin mining with a 100% secure and fully automated system.
+Earn up to 1%-2% daily income through TrusTDollar mining with a 100% secure and fully automated system.
 
 💼 Key Features:
 ✅ Stable daily returns
-✅ Direct wallet withdrawals
-✅ Minimum withdrawal from $20
-✅ Fully secure & transparent system
+✅ All wallet withdrawals
+✅ Minimum withdrawal from $20 max 40k
+✅ Fully secure  system
 
 🚀 Register today and start earning!
 
-👉 Register Now:
+👉 Register Now:👇
 ${refLink}`;
 
   if (navigator.share) {
