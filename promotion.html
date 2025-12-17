@@ -447,6 +447,34 @@ body {
     font-size: 9.5px;
   }
 }
+/* 🔄 Share button animation */
+.btn-share {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-share.loading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.btn-share.loading::after {
+  content: "Sharing...";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
 </style>
 </head>
@@ -716,21 +744,56 @@ window.copyReferral = function () {
 
 window.shareReferral = function () {
   const refLink = document.getElementById("refLink").innerText;
+  const btn = document.querySelector(".btn-share");
+
   if (!refLink || refLink.includes("Loading")) {
-    showPopup("Referral link not ready yet!");
+    showPopup("Referral link not ready yet!", "#ff3b30");
     return;
   }
+
+  // 🔄 animation start
+  btn.classList.add("loading");
+
+  shareInvite(refLink);
+
+  // ⏱️ animation end
+  setTimeout(() => {
+    btn.classList.remove("loading");
+  }, 1500);
+};
+
+function shareInvite(refLink) {
+  const fullMessage = `🔐 TrustDollar
+
+The world’s first secure, reliable, and fully transparent Bitcoin Mining platform 🌍⚡
+
+Earn up to 1% daily income through Bitcoin mining with a 100% secure and fully automated system.
+
+💼 Key Features:
+✅ Stable daily returns
+✅ Direct wallet withdrawals
+✅ Minimum withdrawal from $20
+✅ Fully secure & transparent system
+
+🚀 Register today and start earning!
+
+👉 Register Now:
+${refLink}`;
 
   if (navigator.share) {
     navigator.share({
       title: "TrustDollar Invite",
-      text: "Join TrustDollar and earn secure rewards!",
-      url: refLink,
+      text: fullMessage
+    }).catch(() => {
+      showPopup("Share cancelled", "#ffc107");
     });
   } else {
-    alert("Sharing not supported on this device.");
+    showPopup("Sharing not supported", "#ff3b30");
   }
-};
+}
+
+
+
 
 // puip up ke liey hai 
 // 🌿 TrustDollar Popup Function
