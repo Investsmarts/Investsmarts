@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Trust Dollar | Withdrawal Timeline</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{ box-sizing:border-box; }
+
+/* BODY */
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:#f5f8f6;
+  color:#1e7f43;
+}
+
+/* HEADER */
+.app-header{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:1000;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 18px;
+  background:rgba(255,255,255,0.75);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid #e3eee8;
+}
+
+.brand{ font-weight:600; color:#1ca64c; }
+.secure{
+  font-size:12px;
+  color:#2e8b57;
+  padding:4px 10px;
+  border:1px solid #bfe8d2;
+  border-radius:5px;
+  background:#f4fbf7;
+}
+
+/* CONTAINER */
+.container{
+  max-width:460px;
+  margin:90px auto 20px;
+  background:#fff;
+  padding:18px;
+  border-radius:5px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  position:relative;
+}
+
+h1{
+  text-align:center;
+  color:#1ca64c;
+  margin-bottom:18px;
+}
+
+/* TABLE */
+.table-box{
+  border:1px solid #e3eee8;
+  border-radius:5px;
+  overflow:hidden;
+  position:relative;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+
+th,td{
+  padding:12px 6px;
+  text-align:center;
+}
+
+th{
+  background:#e9f7ef;
+  color:#178f47;
+}
+
+tr{ border-bottom:1px solid #edf4ef; }
+tr:last-child{ border-bottom:none; }
+
+/* STATUS BUTTON */
+.status-btn{
+  padding:6px 14px;
+  font-size:11px;
+  border-radius:5px;
+  font-weight:600;
+  border:1px solid #1ca64c;
+  pointer-events:auto; /* 🔥 clickable */
+}
+
+.status-btn.pending{
+  background:#fff;
+  color:#1ca64c;
+  cursor:pointer;
+}
+
+.status-btn.pending:hover{
+  background:#1ca64c;
+  color:#fff;
+}
+
+.status-btn.completed{
+  background:#e9f7ef;
+  color:#1ca64c;
+  cursor:not-allowed;
+  pointer-events:none;
+}
+
+/* PROGRESS LINE (CLICK BLOCK FIX) */
+.progress-line,
+.progress-fill{
+  pointer-events:none;   /* 🔥 click pass through */
+}
+
+.progress-line{
+  position:absolute;
+  left:6px;
+  top:0;
+  bottom:0;
+  width:3px;
+  background:#dff3e8;
+}
+
+.progress-fill{
+  width:100%;
+  height:0%;
+  background:#1ca64c;
+  transition:height .6s ease;
+}
+
+/* NOTES */
+.note{
+  margin-top:14px;
+  padding:12px;
+  background:#f1faf5;
+  border:1px solid #c9efd9;
+  border-radius:5px;
+  font-size:12px;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<header class="app-header">
+  <span class="brand">Trust Dollar</span>
+  <span class="secure">Secure</span>
+</header>
+
+<div class="container">
+  <h1> Timeline</h1>
+
+  <div class="table-box">
+    <div class="progress-line">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Deposit ($)</th>
+          <th>Timing</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>$90,000</td><td>15 Minutes</td><td><button class="status-btn pending" data-amount="90000">PENDING</button></td></tr>
+        <tr><td>2</td><td>$80,000</td><td>30 Minutes</td><td><button class="status-btn pending" data-amount="80000">PENDING</button></td></tr>
+        <tr><td>3</td><td>$70,000</td><td>1 Hour</td><td><button class="status-btn pending" data-amount="70000">PENDING</button></td></tr>
+        <tr><td>4</td><td>$60,000</td><td>1.5 Hours</td><td><button class="status-btn pending" data-amount="60000">PENDING</button></td></tr>
+        <tr><td>5</td><td>$50,000</td><td>3 Hours</td><td><button class="status-btn pending" data-amount="50000">PENDING</button></td></tr>
+        <tr><td>6</td><td>$40,000</td><td>6 Hours</td><td><button class="status-btn pending" data-amount="40000">PENDING</button></td></tr>
+        <tr><td>7</td><td>$30,000</td><td>1 Day</td><td><button class="status-btn pending" data-amount="30000">PENDING</button></td></tr>
+        <tr><td>8</td><td>$20,000</td><td>1.5 Days</td><td><button class="status-btn pending" data-amount="20000">PENDING</button></td></tr>
+        <tr><td>9</td><td>$10,000</td><td>3 Days</td><td><button class="status-btn pending" data-amount="10000">PENDING</button></td></tr>
+        <tr><td>10</td><td>$5,000</td><td>5 Days</td><td><button class="status-btn pending" data-amount="5000">PENDING</button></td></tr>
+        <tr><td>11</td><td>$2,000</td><td>10 Days</td><td><button class="status-btn pending" data-amount="2000">PENDING</button></td></tr>
+        <tr><td>12</td><td>$1,000</td><td>15 Days</td><td><button class="status-btn pending" data-amount="1000">PENDING</button></td></tr>
+        <tr><td>13</td><td>$500</td><td>25 Days</td><td><button class="status-btn pending" data-amount="500">PENDING</button></td></tr>
+        <tr><td>14</td><td>$200</td><td>30 Days</td><td><button class="status-btn pending" data-amount="200">PENDING</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">Once referral income reaches $20, same-day withdrawal access is enabled.</div>
+  <div class="note">Referral earnings are credited the same day they are generated.</div>
+</div>
+
+<!-- 🔥 FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+firebase.initializeApp({
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25",
+  storageBucket: "btcinvest-c0e25.appspot.com",
+  messagingSenderId: "204937458487",
+  appId: "1:204937458487:web:cc27ece1249999279f60b2"
+});
+
+const db = firebase.firestore();
+const userId = "USER_ID_HERE"; // 👈 real UID yaha
+
+db.collection("users").doc(userId).onSnapshot(doc=>{
+  if(!doc.exists) return;
+
+  const lifetimeDeposit = doc.data().lifetimeDeposit || 0;
+  const buttons = document.querySelectorAll(".status-btn");
+  let completed = 0;
+
+  buttons.forEach(btn=>{
+    const required = Number(btn.dataset.amount);
+
+    if(lifetimeDeposit >= required){
+      btn.textContent = "COMPLETED";
+      btn.classList.remove("pending");
+      btn.classList.add("completed");
+      completed++;
+    }else{
+      btn.textContent = "PENDING";
+      btn.classList.add("pending");
+      btn.onclick = ()=> window.location.href = "deposit.html";
+    }
+  });
+
+  document.getElementById("progressFill").style.height =
+    (completed / buttons.length) * 100 + "%";
+});
+</script>
+
+</body>
+</html>
