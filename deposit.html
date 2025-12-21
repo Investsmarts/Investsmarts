@@ -6,7 +6,16 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Deposit</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+
   <style>
+    html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
     body {
       font-family: 'Poppins', sans-serif;
       background: #f5f7fa;
@@ -51,13 +60,14 @@
 /* ✅ Popup etc (same as before) */
 .popup-overlay {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  inset: 0;                 /* 🔥 top right bottom left = 0 */
   background: rgba(0,0,0,0.6);
   display: none;
   justify-content: center;
   align-items: center;
   z-index: 2000;
+
+  padding-bottom: 80px;     /* ✅ navbar se upar rahe */
 }
 
 /* ✅ Popup box center me chhota rahe */
@@ -66,17 +76,23 @@
   border-radius: 5px;
   padding: 20px;
   width: 90%;
-  max-width: 360px;        /* ✅ max width fixed */
-  height: auto;            /* ✅ content ke hisaab se height */
-  max-height: none;        /* ❌ pura screen na le */
-  overflow: visible;       /* ❌ scroll hata diya */
+  max-width: 360px;
+
+  max-height: calc(100dvh - 120px);   /* 🔥 REAL viewport height */
+  min-height: fit-content;            /* 🔥 content ko force dikhao */
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
   text-align: center;
   box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-  animation: fadeIn 0.25s ease;
+
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-sizing: border-box;
 }
+
 
 @keyframes fadeIn {
   from {opacity: 0; transform: scale(0.9);}
@@ -89,21 +105,42 @@
   border: 1px solid #ddd;
   border-radius: 5px;
   background: #fafafa;
+
+  display: flex;              /* ✅ center fix */
+  justify-content: center;
+  align-items: center;
+
+  max-width: 100%;
+  overflow: hidden;
 }
+
+/* 🔥 QR canvas MUST be square */
 .qr-code canvas {
   width: 160px !important;
   height: 160px !important;
+  max-width: 100%;
 }
+@media (max-width: 360px) {
+  .qr-code canvas {
+    width: 140px !important;
+    height: 140px !important;
+  }
+}
+
 
 .address-box {
   background: #f5f7fa;
-  padding: 12px;
+  padding: 8px 10px;
   border-radius: 5px;
-  font-size: 14px;
-  word-break: break-all;
-  margin: 10px 0;
+  font-size: 13px;
+  margin: 8px 0;
   width: 100%;
   text-align: center;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .amount-input {
@@ -149,18 +186,7 @@
 .close-btn { background: #dc3545; }
 .paid-btn { background: #007bff; }
 
-/* ✅ Mobile optimization */
-@media (max-width: 480px) {
-  .popup {
-    width: 95%;
-    max-width: 260px;
-    padding: 25px;
-  }
-  .qr-code canvas {
-    width: 140px !important;
-    height: 140px !important;
-  }
-}
+
 /* History */
 .history-section {margin-top:30px;}
 .history-card {background:#fff;border-radius:5px;padding:15px;margin-bottom:15px;box-shadow:0 4px 12px rgba(0,0,0,0.08);font-size:14px;}
@@ -474,113 +500,8 @@
   text-align: center;            /* Center align */
   line-height: 1.5;
 
-  }
-</style>
-</head>
-<body>
-  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
- <div class="dashboard">
-    <!-- ✅ Total Deposit Card -->
-    <div class="balance-card">
-      <div class="balance-icon">
-        <i class='bx bxs-dollar-circle'></i>
-      </div>
-      <div class="balance-info">
-        <h3>Total Deposit (USDT)</h3>
-        <p class="amount">$<span id="totalDeposit">0.00</span></p>
-        <small id="userLevel">My Level: No Level</small>
-      </div>
-    </div>
-
-    <!-- Animated Instruction Card -->
-<div class="instruction-card" id="instructionCard">
-  <i class='bx bx-info-circle'></i>
-  <span>Send the exact amount you have entered</span>
-</div>
-
-
-<!-- ✅ icone Deposit Card -->
- <div class="deposit-actions">
-  <div class="action-btn" onclick="openPopup()">
-    <i class='bx bx-credit-card'></i>
-    <span>Deposit</span>
-  </div>
-  <div class="action-btn" onclick="scrollToHistory()">
-    <i class='bx bx-list-ul'></i>
-    <span>History</span>
-  </div>
-  <div class="action-btn" onclick="scanFeature()">
-    <i class='bx bx-scan'></i>
-    <span>Scan</span>
-  </div>
-</div>
-
-<script>
-function scrollToHistory() {
-  document.querySelector('.history-section').scrollIntoView({ behavior: 'smooth' });
 }
 
-function scanFeature() {
-  alert('QR Scan feature coming soon!');
-}
-</script>
-
- <!-- Deposit Info -->
-<div class="info-card">
-  <h3>Deposit Section</h3>
-
-  <!-- ✅ Green Info Box -->
-  <div class="info-text-box">
-    Click below to get your <b>BEP20 deposit address</b> with QR code.
-  </div>
-
-  <button class="btn-deposit" onclick="openPopup()">
-    <i class='bx bx-qr'></i> Get Deposit Address
-  </button>
-  </div>
-
-<!-- History -->
-<div class="history-section">
-  <div class="history-header-box">
-    <span class="title">Deposit History</span>
-    <button class="refresh-btn" onclick="manualRefresh()">🔄 Refresh</button>
-  </div>
-  <div id="historyList">
-    <p style="text-align:center; color:#666;">Loading...</p>
-  </div>
- </div>
-
-  </div>
-
-  <!-- ✅ Popup -->
-   <div class="popup-overlay" id="popupOverlay">
-    <div class="popup">
-      <h2>Deposit Funds</h2>
-      <input type="number" id="depositAmount" class="amount-input" placeholder="Enter amount to deposit">
-      <div id="amountInstruction" class="amount-instruction"></div>
-      <div id="qrcode" class="qr-code"></div>
-      <div class="address-box" id="depositAddress"></div>
-      <button class="copy-btn" onclick="copyAddress()">Copy Address</button>
-      <div class="action-buttons">
-        <button class="close-btn" onclick="cancelDeposit()">Cancel</button>
-        <button class="paid-btn" onclick="markPaid()">I Have Paid</button>
-      </div>
-    </div>
-   </div>
-
-<div class="verify-popup" id="verifyPopup">
-  <div class="verify-ring"></div>
-  <p id="verifyText">Verifying your payment<br>Please wait patiently...</p>
-</div>
-
-   <div class="error-popup" id="errorPopup">Enter valid amount</div>
-
-
-<!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
-<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
-
-<style>
 :root {
   --nav-bg: #fff;
   --nav-text: #444;
@@ -690,7 +611,241 @@ function scanFeature() {
     font-size: 9.5px;
   }
 }
+
+  .copy-success {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: #fff;
+  padding: 22px 26px;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  text-align: center;
+  z-index: 5000;
+  display: none;
+  animation: popIn 0.3s ease forwards;
+}
+
+.copy-success p {
+  margin: 10px 0 0;
+  font-weight: 600;
+  color: #2e7d32;
+  font-size: 15px;
+}
+
+.tick-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #2ecc71;
+  color: #fff;
+  font-size: 28px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+
+/* 🔔 Amount Attention Animation */
+@keyframes shakeBulb {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+  100% { transform: translateX(0); }
+}
+
+.amount-input.attention {
+  border: 2px solid #ff3b30 !important;
+  animation: shakeBulb 0.45s ease;
+  box-shadow: 0 0 0 4px rgba(255,59,48,0.15);
+}
+
+/* 🚨 Amount Missing Popup */
+.alert-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: #fff;
+  padding: 22px 26px;
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+  text-align: center;
+  z-index: 6000;
+  display: none;
+  animation: alertPop 0.25s ease forwards;
+}
+
+.alert-popup p {
+  margin: 10px 0 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #d32f2f;
+}
+
+.alert-icon {
+  font-size: 32px;
+}
+
+@keyframes alertPop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -55%) scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* 🔔 Shake animation (bulb style) */
+@keyframes shakeBulb {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+  100% { transform: translateX(0); }
+}
+
+.amount-input.attention {
+  border: 2px solid #d32f2f !important;
+  animation: shakeBulb 0.45s ease;
+  box-shadow: 0 0 0 4px rgba(211,47,47,0.18);
+}
+
+
 </style>
+</head>
+<body>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+ <div class="dashboard">
+    <!-- ✅ Total Deposit Card -->
+    <div class="balance-card">
+      <div class="balance-icon">
+        <i class='bx bxs-dollar-circle'></i>
+      </div>
+      <div class="balance-info">
+        <h3>Total Deposit (USDT)</h3>
+        <p class="amount">$<span id="totalDeposit">0.00</span></p>
+        <small id="userLevel">My Level: No Level</small>
+      </div>
+    </div>
+
+    <!-- Animated Instruction Card -->
+<div class="instruction-card" id="instructionCard">
+  <i class='bx bx-info-circle'></i>
+  <span>Send the exact amount you have entered</span>
+</div>
+
+
+<!-- ✅ icone Deposit Card -->
+ <div class="deposit-actions">
+  <div class="action-btn" onclick="openPopup()">
+    <i class='bx bx-credit-card'></i>
+    <span>Deposit</span>
+  </div>
+  <div class="action-btn" onclick="scrollToHistory()">
+    <i class='bx bx-list-ul'></i>
+    <span>History</span>
+  </div>
+  <div class="action-btn" onclick="scanFeature()">
+    <i class='bx bx-scan'></i>
+    <span>Scan</span>
+  </div>
+</div>
+
+<script>
+function scrollToHistory() {
+  document.querySelector('.history-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+function scanFeature() {
+  alert('QR Scan feature coming soon!');
+}
+</script>
+
+ <!-- Deposit Info -->
+<div class="info-card">
+  <h3>Deposit Section</h3>
+
+  <!-- ✅ Green Info Box -->
+  <div class="info-text-box">
+    Click below to get your <b>BEP20 deposit address</b> with QR code.
+  </div>
+
+  <button class="btn-deposit" onclick="openPopup()">
+    <i class='bx bx-qr'></i> Get Deposit Address
+  </button>
+  </div>
+
+<!-- History -->
+<div class="history-section">
+  <div class="history-header-box">
+    <span class="title">Deposit History</span>
+    <button class="refresh-btn" onclick="manualRefresh()">🔄 Refresh</button>
+  </div>
+  <div id="historyList">
+    <p style="text-align:center; color:#666;">Loading...</p>
+  </div>
+ </div>
+</div>
+  
+  <div class="copy-success" id="copySuccess">
+  <div class="tick-circle">✔</div>
+  <p>Address copied successfully</p>
+</div>
+
+  <!-- ✅ Popup -->
+   <div class="popup-overlay" id="popupOverlay">
+    <div class="popup">
+      <h2>Deposit Funds</h2>
+      <input type="number" id="depositAmount" class="amount-input" placeholder="Enter amount to deposit">
+      <div id="amountInstruction" class="amount-instruction"></div>
+      <div id="qrcode" class="qr-code"></div>
+
+       <div class="address-box" id="depositAddress"></div>
+
+
+
+      <button class="copy-btn" onclick="copyAddress()">Copy Address</button>
+      <div class="action-buttons">
+        <button class="close-btn" onclick="cancelDeposit()">Cancel</button>
+        <button class="paid-btn" onclick="markPaid()">I Have Paid</button>
+      </div>
+    </div>
+   </div>
+
+<div class="verify-popup" id="verifyPopup">
+  <div class="verify-ring"></div>
+  <p id="verifyText">Verifying your payment<br>Please wait patiently...</p>
+</div>
+
+  <div class="error-popup" id="errorPopup">Enter valid amount</div>
+
+<div class="alert-popup" id="amountAlert">
+  <div class="alert-icon">⚠️</div>
+  <p>Please enter amount first</p>
+</div>
+
+<audio id="alertSound" preload="auto">
+  <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
+  <source src="https://actions.google.com/sounds/v1/alarms/beep_short.mp3" type="audio/mpeg">
+</audio>
+
+
+
 
 <!-- ✅ HTML Navbar -->
 <div class="bottom-nav" id="mainNav">
@@ -829,16 +984,31 @@ document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
   }
 
   qrCodeEl.innerHTML = ""; // purana QR clear karo
-  new QRCode(qrCodeEl, { text: qrText, width: 180, height: 180 });
+  new QRCode(qrCodeEl, {text: qrText, width: 160,height: 160});
+
 }
 
+
 window.openPopup = function() {
+  localStorage.setItem("deposit_popup_open", "yes");
   popupOverlay.style.display = "flex";
   const amountInput = document.getElementById("depositAmount");
   amountInput.value = "";
   amountInput.disabled = false;
   amountInput.style.border = "1px solid #ccc"; // reset border
   instructionEl.style.display = "none";
+
+  const savedAmount = localStorage.getItem("deposit_amount");
+if (savedAmount) {
+  amountInput.value = savedAmount;
+  updateQRCode(); // QR bhi restore
+}
+
+// 👇 YE ADD KARO
+amountInput.oninput = () => {
+  localStorage.setItem("deposit_amount", amountInput.value);
+  updateQRCode();
+};
 
   // ✅ Random deposit address set karo
   currentDepositAddress = depositAddresses[Math.floor(Math.random() * depositAddresses.length)];
@@ -847,30 +1017,77 @@ window.openPopup = function() {
   // ✅ Default QR (sirf address)
   updateQRCode();
 
-  // ✅ Jab user amount type kare to QR update hota rahe
-  amountInput.addEventListener("input", updateQRCode);
 
   // ❌ Yahan ab koi entry Firestore me create nahi hogi
   currentDepositId = null; // reset kar do, jab tak user pay na kare
 };
 
 // ❌ Cancel: kuch bhi Firebase me save mat karo
+
 window.cancelDeposit = function() {
   popupOverlay.style.display = "none";
   qrCodeEl.innerHTML = "";
   currentDepositId = null; // clear current deposit id
+  
+  localStorage.removeItem("deposit_popup_open");
+  localStorage.removeItem("deposit_amount");
+
 };
 
 // ✅ Copy address as usual
-window.copyAddress = function() {
+window.copyAddress = function () {
+  const amountInput = document.getElementById("depositAmount");
+  const amount = parseFloat(amountInput.value);
+
+  // ❌ Amount missing
+  if (!amount || amount <= 0) {
+    const popup = document.getElementById("amountAlert");
+    const sound = document.getElementById("alertSound");
+
+    // 🔔 play google beep
+    sound.currentTime = 0;
+    sound.play().catch(()=>{});
+
+    // 🔁 shake input
+    amountInput.classList.remove("attention");
+    void amountInput.offsetWidth; // reflow
+    amountInput.classList.add("attention");
+
+    // 🚨 show popup
+    popup.style.display = "block";
+
+    setTimeout(() => {
+      popup.style.display = "none";
+      amountInput.classList.remove("attention");
+    }, 1800);
+
+    // 👀 focus input
+    amountInput.focus();
+
+    return; // ❌ STOP COPY
+  }
+
+  // ✅ Amount present → copy
   navigator.clipboard.writeText(currentDepositAddress);
-  showError("Address copied!");
+
+  const box = document.getElementById("copySuccess");
+  box.style.display = "block";
+
+  setTimeout(() => {
+    box.style.display = "none";
+  }, 1800);
 };
+
 
 // ✅ Entry tabhi create karo jab user "I Have Paid" dabaye
 window.markPaid = async function () {
   const amountInput = document.getElementById("depositAmount");
   const amount = parseFloat(amountInput.value) || 0;
+  
+  localStorage.removeItem("deposit_popup_open");
+  localStorage.removeItem("deposit_amount");
+
+ 
 
   if (amount <= 0) {
     showError("Enter valid amount");
@@ -1046,7 +1263,7 @@ await addDoc(collection(db, "users", refUID, "rewardNotifications"), {
 
 
    // ✅ Watch deposit status and give commission only on first approved deposit
-   function watchDepositStatus(userId, depositId) {
+function watchDepositStatus(userId, depositId) {
   const depositRef = doc(db, "users", userId, "deposits", depositId);
 
   onSnapshot(depositRef, async (snap) => {
@@ -1055,11 +1272,16 @@ await addDoc(collection(db, "users", refUID, "rewardNotifications"), {
 
     const status = (data.status || "").toLowerCase();
 
+    // 🔒 already processed → stop immediately
+    if (data.rewardGiven) return;
+
     // ✅ Trigger only when deposit is approved/completed
-    if (["completed", "approved", "success", "done"].includes(status) && !data.rewardGiven) {
-      console.log(`✅ Deposit ${depositId} approved for user ${userId}, checking first deposit...`);
+    if (["completed", "approved", "success", "done"].includes(status)) {
 
       try {
+        const amount = parseFloat(data.amount || 0);
+        if (amount < 200) return;
+
         // 🧠 Fetch all deposits of this user
         const depositsRef = collection(db, "users", userId, "deposits");
         const allDeposits = await getDocs(depositsRef);
@@ -1067,24 +1289,26 @@ await addDoc(collection(db, "users", refUID, "rewardNotifications"), {
         // 🔍 Check if user has any previous completed deposits
         const completedBefore = allDeposits.docs.some(
           (d) =>
+            d.id !== depositId &&
             ["completed", "approved", "done", "success"].includes(
               (d.data().status || "").toLowerCase()
-            ) && d.id !== depositId
+            )
         );
 
-        const amount = parseFloat(data.amount || 0);
-
-        if (!completedBefore && amount >= 200) {
-          console.log("🎯 First deposit detected — giving referral commission...");
-          await updateDoc(depositRef, { rewardGiven: true }); // prevent double reward
-          await giveReferralCommission(userId, amount, depositId);
-        } else if (!completedBefore && amount < 200) {
-          console.log("⚠️ First deposit below $200 — skipping reward.");
-        } else {
+        if (completedBefore) {
           console.log("⚠️ Not first deposit. No referral commission.");
+          return;
         }
+
+        // 🔐 VERY IMPORTANT → lock first
+        await updateDoc(depositRef, { rewardGiven: true });
+
+        // ✅ Now give commission
+        await giveReferralCommission(userId, amount, depositId);
+
+        console.log("🎉 Referral commission given successfully");
       } catch (err) {
-        console.error("❌ Error checking first deposit:", err);
+        console.error("❌ Error in watchDepositStatus:", err);
       }
     }
   });
@@ -1165,9 +1389,24 @@ onAuthStateChanged(auth, (user) => {
     currentUserId = user.uid;
     loadDepositHistory(user.uid);
     watchTotalDeposit(user.uid);
-    watchAllDeposits(user.uid); // ✅ ye line nayi add karo
+    watchAllDeposits(user.uid);
+
+    // ✅ RESTORE POPUP AFTER AUTH
+    const popupOpen = localStorage.getItem("deposit_popup_open");
+    const savedAmount = localStorage.getItem("deposit_amount");
+
+    if (popupOpen === "yes") {
+      openPopup();
+
+      if (savedAmount) {
+        const amountInput = document.getElementById("depositAmount");
+        amountInput.value = savedAmount;
+        updateQRCode();
+      }
+    }
   }
 });
+
 
 window.copyOrderId = function(orderId) {
   navigator.clipboard.writeText(orderId);
@@ -1241,53 +1480,6 @@ function watchTotalDeposit(userId) {
 }
 
 </script>
-<script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  });
-
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
-
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
-
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
-</script>
 </body>
 </html>
-
