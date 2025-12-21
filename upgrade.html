@@ -201,8 +201,10 @@ tr:last-child{ border-bottom:none; }
 <!-- 🔥 FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
 <script>
+/* 🔥 FIREBASE INIT */
 firebase.initializeApp({
   apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
   authDomain: "btcinvest-c0e25.firebaseapp.com",
@@ -213,34 +215,77 @@ firebase.initializeApp({
 });
 
 const db = firebase.firestore();
-const userId = "USER_ID_HERE"; // 👈 real UID yaha
+const auth = firebase.auth();
 
-db.collection("users").doc(userId).onSnapshot(doc=>{
-  if(!doc.exists) return;
+/* 🔐 LOGGED-IN USER BASED LIFETIME DEPOSIT */
+auth.onAuthStateChanged(user => {
 
-  const lifetimeDeposit = doc.data().lifetimeDeposit || 0;
+  if (!user) {
+    // login nahi hai to login page
+    window.location.href = "login.html";
+    return;
+  }
+
+  const uid = user.uid; // ✅ current logged-in user
+
+  // 🔥 LIFETIME DEPOSIT = ALL SUCCESS DEPOSITS KA SUM
+  db.collection("transactions")
+    .where("userId", "==", uid)
+    .where("type", "==", "deposit")
+    .where("status", "==", "success")
+    .onSnapshot(snapshot => {
+
+      let lifetimeDeposit = 0;
+
+      snapshot.forEach(doc => {
+        lifetimeDeposit += Number(doc.data().amount || 0);
+      });
+
+      console.log("Lifetime Deposit:", lifetimeDeposit);
+      updateStatus(lifetimeDeposit);
+    });
+});
+
+/* 🔁 UI UPDATE LOGIC */
+function updateStatus(lifetimeDeposit){
+
   const buttons = document.querySelectorAll(".status-btn");
   let completed = 0;
 
-  buttons.forEach(btn=>{
+  buttons.forEach(btn => {
+
     const required = Number(btn.dataset.amount);
 
-    if(lifetimeDeposit >= required){
+    if (lifetimeDeposit >= required) {
+      // ✅ COMPLETED
       btn.textContent = "COMPLETED";
       btn.classList.remove("pending");
       btn.classList.add("completed");
+      btn.disabled = true;
+      btn.style.pointerEvents = "none";
       completed++;
-    }else{
+
+    } else {
+      // ⏳ PENDING
       btn.textContent = "PENDING";
+      btn.classList.remove("completed");
       btn.classList.add("pending");
-      btn.onclick = ()=> window.location.href = "deposit.html";
+      btn.disabled = false;
+      btn.style.pointerEvents = "auto";
+      btn.onclick = () => {
+        window.location.href = "deposit.html";
+      };
     }
   });
 
-  document.getElementById("progressFill").style.height =
-    (completed / buttons.length) * 100 + "%";
-});
+  // 🔥 Progress line update
+  const bar = document.getElementById("progressFill");
+  if (bar) {
+    bar.style.height = (completed / buttons.length) * 100 + "%";
+  }
+}
 </script>
+
 
 </body>
 </html>
