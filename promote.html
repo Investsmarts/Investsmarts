@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+<title>Promote & Earn</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+
+<style>
+html,body{
+  margin:0;
+  height:100%;
+  background:#f5f7fb;
+  font-family:Inter,system-ui,sans-serif;
+  -webkit-overflow-scrolling:touch;
+}
+*{box-sizing:border-box}
+
+/* HEADER */
+.header{
+  position:fixed;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  max-width:420px;
+  width:100%;
+  background:#fff;
+  padding:12px 14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border-bottom:1px solid #e5e7eb;
+  z-index:9999;
+}
+.header i{font-size:20px;cursor:pointer}
+.header span{font-weight:600}
+
+/* CONTAINER */
+.container{
+  max-width:420px;
+  margin:auto;
+  padding:64px 12px 20px;
+}
+
+/* CARD */
+.card{
+  background:#fff;
+  border-radius:5px;
+  padding:16px;
+}
+
+/* LINK */
+.ref-box{
+  background:#f1f5f9;
+  padding:12px;
+  border-radius:5px;
+  font-size:13px;
+  line-height:1.4;
+  word-break:break-all;
+  margin-bottom:12px;
+  position:relative;
+}
+
+/* QR */
+.qr-box{
+  display:flex;
+  justify-content:center;
+  margin-bottom:14px;
+}
+
+/* BUTTONS */
+.btn-group{
+  display:flex;
+  gap:10px;
+}
+.btn{
+  flex:1;
+  padding:12px;
+  border-radius:5px;
+  border:none;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  cursor:pointer;
+  transition:.3s;
+}
+.btn-copy{
+  background:#fff;
+  border:1px solid #e5e7eb;
+}
+.btn-share{
+  background:#16a34a;
+  color:#fff;
+}
+.btn.loading{
+  opacity:.7;
+  pointer-events:none;
+}
+.btn.loading i{
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* POPUP */
+.popup{
+  position:fixed;
+  bottom:90px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#00c853;
+  color:#fff;
+  padding:10px 16px;
+  border-radius:20px;
+  opacity:0;
+  transition:.3s;
+}
+.popup.show{opacity:1}
+
+/* 🔄 TEXT LOADING ANIMATION */
+.btn.loading span{
+  position:relative;
+}
+
+.btn.loading span::after{
+  content:"";
+  position:absolute;
+  right:-18px;
+  animation:dots 1.4s infinite;
+}
+
+@keyframes dots{
+  0%{content:"";}
+  33%{content:".";}
+  66%{content:"..";}
+  100%{content:"...";}
+}
+/* ✅ SUCCESS POPUP OVERLAY */
+.success-popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.15);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s ease;
+  z-index:10000;
+}
+
+/* visible state */
+.success-popup.show{
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* BOX */
+.success-box{
+  background:#fff;
+  padding:24px 28px;
+  border-radius:5px;
+  text-align:center;
+  transform:scale(0.8);
+  animation:popScale .45s ease forwards;
+  box-shadow:0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* GREEN TICK */
+.success-icon{
+  width:64px;
+  height:64px;
+  margin:0 auto 10px;
+  background:#16a34a;
+  color:#fff;
+  border-radius:5%;
+  font-size:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* TEXT */
+.success-text{
+  font-size:14px;
+  font-weight:600;
+  color:#0f172a;
+}
+
+@keyframes popScale{
+  to{ transform:scale(1); }
+}
+
+/* =========================
+   🏆 TOP INVITERS SCROLL BOX
+   ========================= */
+
+.top-inviter-section{
+  margin-top:18px;
+}
+
+.top-inviter-header{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:15px;
+  font-weight:600;
+  color:#0f172a;
+  margin-bottom:4px;
+}
+
+.top-inviter-sub{
+  font-size:12px;
+  color:#64748b;
+  margin-bottom:8px;
+}
+
+/* SCROLLABLE CONTAINER */
+.top-inviter-scroll{
+  max-height:220px;              /* 👈 scroll height */
+  overflow-y:auto;
+  background:#ffffff;
+  border-radius:5px;
+  border:1px solid #e5e7eb;
+}
+
+/* individual row */
+.inviter{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 12px;
+  border-bottom:1px solid #f1f5f9;
+}
+
+.inviter:last-child{
+  border-bottom:none;
+}
+
+/* LEFT SIDE */
+.inviter-left{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* country icon (emoji based) */
+.inviter-flag{
+  font-size:18px;
+  width:22px;
+  text-align:center;
+}
+
+/* name + mobile */
+.inviter-info{
+  display:flex;
+  flex-direction:column;
+}
+
+.inviter-name{
+  font-size:14px;
+  font-weight:500;
+  color:#0f172a;
+}
+
+.inviter-mobile{
+  font-size:12px;
+  color:#94a3b8;
+}
+
+/* RIGHT SIDE */
+.inviter-right{
+  font-size:12px;
+  font-weight:600;
+  color:#16a34a;
+  background:#ecfdf5;
+  padding:4px 10px;
+  border-radius:5px;
+  white-space:nowrap;
+}
+
+/* smooth scroll feel */
+.top-inviter-scroll{
+  scrollbar-width:thin;
+  scrollbar-color:#cbd5e1 transparent;
+}
+.top-inviter-scroll::-webkit-scrollbar{
+  width:4px;
+}
+.top-inviter-scroll::-webkit-scrollbar-thumb{
+  background:#cbd5e1;
+  border-radius:5px;
+}
+
+
+/* 🥇🥈🥉 TOP 3 HIGHLIGHT */
+.inviter.top-1 {
+  background: linear-gradient(90deg,#fff7cc,#ffffff);
+}
+.inviter.top-2 {
+  background: linear-gradient(90deg,#f1f5f9,#ffffff);
+}
+.inviter.top-3 {
+  background: linear-gradient(90deg,#fef3c7,#ffffff);
+}
+
+/* left border medal feel */
+.inviter.top-1 { border-left:4px solid #facc15; }
+.inviter.top-2 { border-left:4px solid #94a3b8; }
+.inviter.top-3 { border-left:4px solid #f59e0b; }
+
+/* 🔴 LIVE AD TEXT – BIGGER & CLEAN */
+.live-ad{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  margin:14px 0 6px;
+  background:#f8fafc;
+  border:1px dashed #cbd5e1;
+  border-radius:5px;
+}
+
+.live-text{
+  font-size:14px;        /* 👈 bada kiya (was 12px) */
+  font-weight:500;
+  color:#0f172a;
+  letter-spacing:0.2px;
+}
+
+/* 🔴 LIVE RED DOT (VISIBLE + BLINKING) */
+.live-dot{
+  width:10px;
+  height:10px;
+  min-width:10px;
+  min-height:10px;
+  background:#ef4444;          /* proper red */
+  border-radius:5%;
+  box-shadow:0 0 0 rgba(239,68,68,0.7);
+  animation:livePulse 1.4s infinite;
+}
+
+/* 🔥 Pulse animation */
+@keyframes livePulse{
+  0%{
+    box-shadow:0 0 0 0 rgba(239,68,68,0.7);
+  }
+  70%{
+    box-shadow:0 0 0 8px rgba(239,68,68,0);
+  }
+  100%{
+    box-shadow:0 0 0 0 rgba(239,68,68,0);
+  }
+}
+/* 🔥 LIVE STATS BOX */
+.live-stats-box{
+  margin:14px 0;
+  padding:14px 16px;
+  background:#ffffff;
+  border-radius:5px;
+  box-shadow:0 8px 18px rgba(0,0,0,.06);
+}
+
+/* header */
+.live-stats-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:8px;
+}
+
+.live-title{
+  font-size:15px;
+  font-weight:600;
+  color:#0f172a;
+}
+
+/* 🔴 LIVE DOT (same animation) */
+.live-dot{
+  width:10px;
+  height:10px;
+  background:#ef4444;
+  border-radius:5px;
+  animation:livePulse 1.4s infinite;
+}
+
+@keyframes livePulse{
+  0%{ box-shadow:0 0 0 0 rgba(239,68,68,.7); }
+  70%{ box-shadow:0 0 0 8px rgba(239,68,68,0); }
+  100%{ box-shadow:0 0 0 0 rgba(239,68,68,0); }
+}
+
+/* numbers */
+.live-stats-text{
+  font-size:14px;
+  color:#334155;
+}
+
+.live-stats-text span{
+  font-weight:700;
+  color:#16a34a;
+  margin-left:4px;
+}
+
+.live-stats-sub{
+  margin-top:6px;
+  font-size:12px;
+  color:#64748b;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <i class="ri-arrow-left-line" onclick="history.back()"></i>
+  <span>Promote & Earn</span>
+</div>
+
+
+
+
+<div class="container">
+
+  <!-- 🔥 SINGLE BOX -->
+  <div class="card">
+    <h3 style="margin:0 0 8px;font-size:15px;">Your Referral</h3>
+
+    <!-- LINK -->
+    <div id="refLink" class="ref-box">Loading...</div>
+
+    <!-- QR JUST BELOW LINK -->
+    <div id="qrcode" class="qr-box"></div>
+
+    <!-- BUTTONS -->
+    <div class="btn-group">
+  <button class="btn btn-copy" onclick="copyReferral()">
+    <i class="ri-file-copy-line"></i>
+    <span>Copy</span>
+  </button>
+
+  <button class="btn btn-share" onclick="shareReferral()">
+    <i class="ri-share-forward-line"></i>
+    <span>Share</span>
+  </button>
+</div>
+</div>
+
+<!-- 🔴 LIVE AD STRIP -->
+<div class="live-ad">
+  <span class="live-dot"></span>
+  <span class="live-text">
+    Live Activity • New invites happening worldwide
+  </span>
+</div>
+
+<!-- 🏆 TOP INVITERS (SCROLLABLE BOX) -->
+<div class="top-inviter-section">
+
+  <div class="top-inviter-header">
+    <span class="trophy">🏆</span>
+    <span class="title">Today's Top Inviters Worldwide</span>
+
+  </div>
+
+  <div class="top-inviter-sub">
+    Showing recent top inviters from our global community
+  </div>
+
+  <!-- SCROLLABLE LIST -->
+  <div id="topInviters" class="top-inviter-scroll">
+    <!-- JS yahan rows inject karega -->
+  </div>
+
+</div>
+
+
+
+
+
+</div>
+<!-- ✅ SUCCESS POPUP (Axis Bank Style) -->
+<div id="successPopup" class="success-popup">
+  <div class="success-box">
+    <div class="success-icon">✓</div>
+    <div class="success-text">Referral link generated successfully</div>
+  </div>
+</div>
+
+
+
+
+<div id="tdPopup" class="popup"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* 🔐 CACHE HELPERS */
+function saveCache(key, data){
+  localStorage.setItem(key, JSON.stringify({
+    data,
+    time: Date.now()
+  }));
+}
+
+function loadCache(key, expiryMin = 60){
+  const raw = localStorage.getItem(key);
+  if(!raw) return null;
+  const c = JSON.parse(raw);
+  const age = (Date.now() - c.time) / (1000 * 60);
+  if(age > expiryMin) return null;
+  return c.data;
+}
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.referralLink = "";
+
+/* 🚀 STEP 0: INSTANT LOAD FROM CACHE */
+const cachedLink = loadCache("PROMOTE_REF");
+
+if(cachedLink){
+  referralLink = cachedLink;
+  const refEl = document.getElementById("refLink");
+  refEl.innerText = referralLink;
+
+  makeScratchable(refEl); // ✅ SCRATCH HERE ALSO
+
+  document.getElementById("qrcode").innerHTML = "";
+  new QRCode(document.getElementById("qrcode"),{
+    text: referralLink,
+    width:120,
+    height:120
+  });
+}
+
+
+/* 🔄 STEP 1: FIREBASE BACKGROUND UPDATE */
+onAuthStateChanged(auth, async user=>{
+  if(!user) return location.href="login.html";
+
+  const snap = await getDoc(doc(db,"users",user.uid));
+  if(!snap.exists()) return;
+
+  const code = snap.data().referralCode || user.uid;
+  const freshLink = `https://smartfundad.com/index.html?ref=${code}`;
+
+  // update only if changed
+  if(freshLink !== referralLink){
+    referralLink = freshLink;
+    document.getElementById("refLink").innerText = referralLink;
+    makeScratchable(document.getElementById("refLink"));
+    document.getElementById("qrcode").innerHTML = "";
+
+    new QRCode(document.getElementById("qrcode"),{
+      text: referralLink,
+      width:120,
+      height:120
+    });
+
+    saveCache("PROMOTE_REF", referralLink);
+  }
+});
+</script>
+<script>
+function getInviteMessage(link){
+return `🔐 TrusTDollar
+
+The world’s first secure, reliable, and fully transparent TrusTDollar Mining platform 🌍⚡
+
+Earn up to 1%-2% daily income through TrusTDollar mining with a 100% secure and fully automated system.
+
+💼 Key Features:
+✅ Stable daily returns
+✅ All wallet withdrawals
+✅ Minimum withdrawal from $20 max 40k
+✅ Fully secure system
+
+🚀 Register today and start earning!
+
+👉 Register Now:
+${link}`;
+}
+
+function copyReferral(){
+  const btn = document.querySelector(".btn-copy");
+  const span = btn.querySelector("span");
+
+  if(!referralLink){
+    return showPopup("Link not ready", "#ff3b30");
+  }
+
+  btn.classList.add("loading");
+  const originalText = span.innerText;
+  span.innerText = "Generating your referral link";
+
+  // ⏳ realistic delay
+  setTimeout(()=>{
+    span.innerText = "Preparing invite message";
+
+    setTimeout(()=>{
+      navigator.clipboard.writeText(getInviteMessage(referralLink));
+
+      btn.classList.remove("loading");
+      span.innerText = originalText;
+
+      showSuccess("Invite copied successfully!");
+    }, 900);
+
+  }, 800);
+}
+
+
+function shareReferral(){
+  const btn = document.querySelector(".btn-share");
+  const span = btn.querySelector("span");
+
+  if(!referralLink){
+    return showPopup("Link not ready", "#ff3b30");
+  }
+
+  btn.classList.add("loading");
+  const originalText = span.innerText;
+  span.innerText = "Preparing invite";
+
+  setTimeout(()=>{
+    span.innerText = "Opening share options";
+
+    setTimeout(()=>{
+      btn.classList.remove("loading");
+      span.innerText = originalText;
+
+      if(navigator.share){
+        navigator.share({
+          title:"TrustDollar Invite",
+          text:getInviteMessage(referralLink)
+        }).catch(()=>{});
+      } else {
+        showPopup("Sharing not supported", "#ff3b30");
+      }
+
+    }, 900);
+
+  }, 700);
+}
+
+
+function showSuccess(message="Success"){
+  const popup = document.getElementById("successPopup");
+  popup.querySelector(".success-text").innerText = message;
+
+  popup.classList.add("show");
+
+  // auto close
+  setTimeout(()=>{
+    popup.classList.remove("show");
+  },1800);
+}
+
+</script>
+<script>
+/* ==================================================
+   🌍 LIVE TOP INVITERS SYSTEM (AUTO + DYNAMIC)
+   ================================================== */
+
+/* 🌐 BASE USERS (30+ USERS, 15+ COUNTRIES) */
+const BASE_INVITERS = [
+  {name:"Rahul S.", country:"India", mobile:"9876543210"},
+  {name:"Amit K.", country:"India", mobile:"9123456789"},
+  {name:"Sneha P.", country:"India", mobile:"9988776655"},
+  {name:"Rohit M.", country:"India", mobile:"9090909090"},
+  {name:"Pooja R.", country:"India", mobile:"9811122233"},
+
+  {name:"John M.", country:"USA", mobile:"2025550198"},
+  {name:"David R.", country:"USA", mobile:"4155551122"},
+  {name:"Chris L.", country:"USA", mobile:"3105557788"},
+  {name:"Kevin J.", country:"USA", mobile:"4085559911"},
+
+  {name:"Emma W.", country:"UK", mobile:"7700123456"},
+  {name:"Oliver B.", country:"UK", mobile:"7400567890"},
+
+  {name:"Lucas A.", country:"Brazil", mobile:"11987654321"},
+  {name:"Carlos M.", country:"Mexico", mobile:"5512349876"},
+
+  {name:"Ahmed K.", country:"UAE", mobile:"501234567"},
+  {name:"Yusuf A.", country:"Saudi Arabia", mobile:"551234999"},
+
+  {name:"Daniel S.", country:"Germany", mobile:"1512345678"},
+  {name:"Pierre L.", country:"France", mobile:"612345678"},
+
+  {name:"Kenji T.", country:"Japan", mobile:"9012345678"},
+  {name:"Wei L.", country:"China", mobile:"13812345678"},
+
+  {name:"Michael C.", country:"Canada", mobile:"6475558899"},
+  {name:"Alex P.", country:"Australia", mobile:"412345678"},
+
+  {name:"Marco R.", country:"Italy", mobile:"3331234567"},
+  {name:"Jose P.", country:"Spain", mobile:"612987654"},
+  {name:"Ivan D.", country:"Russia", mobile:"9123456789"},
+  {name:"Noah V.", country:"Netherlands", mobile:"612345123"},
+  {name:"Ali H.", country:"Turkey", mobile:"5312345678"},
+  {name:"Fatima Z.", country:"Pakistan", mobile:"3001234567"},
+  {name:"Aisha N.", country:"Bangladesh", mobile:"1712345678"},
+  {name:"Samuel K.", country:"Nigeria", mobile:"8031234567"}
+];
+
+/* 🏳️ FLAGS */
+const FLAGS = {
+  India:"🇮🇳", USA:"🇺🇸", UK:"🇬🇧", Canada:"🇨🇦", Australia:"🇦🇺",
+  Germany:"🇩🇪", France:"🇫🇷", Japan:"🇯🇵", China:"🇨🇳",
+  Brazil:"🇧🇷", Mexico:"🇲🇽", UAE:"🇦🇪", "Saudi Arabia":"🇸🇦",
+  Pakistan:"🇵🇰", Bangladesh:"🇧🇩", Nigeria:"🇳🇬",
+  Italy:"🇮🇹", Spain:"🇪🇸", Russia:"🇷🇺", Turkey:"🇹🇷",
+  Netherlands:"🇳🇱"
+};
+
+function flag(c){ return FLAGS[c] || "🌍"; }
+
+/* 📱 MASK MOBILE */
+function mask(m){
+  return m.slice(0,2) + "******" + m.slice(-2);
+}
+
+/* 🔢 INIT INVITES (100–400) */
+let LIVE_DATA = BASE_INVITERS.map(u => ({
+  ...u,
+  invites: Math.floor(Math.random()*300) + 100
+}));
+
+/* 🔄 SHUFFLE */
+function shuffle(arr){
+  return arr.sort(()=>Math.random()-0.5);
+}
+
+/* 🏆 RENDER */
+function renderInviters(){
+  const box = document.getElementById("topInviters");
+  if(!box) return;
+
+  box.innerHTML = "";
+
+  // sort by invites desc
+  LIVE_DATA.sort((a,b)=>b.invites - a.invites);
+
+  LIVE_DATA.forEach((u,i)=>{
+    const row = document.createElement("div");
+    row.className = "inviter";
+
+    // 🥇🥈🥉 highlight
+    if(i===0) row.classList.add("top-1");
+    if(i===1) row.classList.add("top-2");
+    if(i===2) row.classList.add("top-3");
+
+    row.innerHTML = `
+      <div class="inviter-left">
+        <div class="inviter-flag">${flag(u.country)}</div>
+        <div class="inviter-info">
+          <div class="inviter-name">${u.name}</div>
+          <div class="inviter-mobile">${mask(u.mobile)}</div>
+        </div>
+      </div>
+      <div class="inviter-right">${u.invites} invites</div>
+    `;
+
+    box.appendChild(row);
+  });
+}
+
+/* 📈 INVITE COUNT AUTO INCREASE */
+function growInvites(){
+  LIVE_DATA.forEach(u=>{
+    const add = Math.random() < 0.4 ? Math.floor(Math.random()*3) : 0;
+    u.invites += add;
+  });
+}
+
+/* 🔁 USER ROTATION (REAL FEEL) */
+function rotateUsers(){
+  shuffle(LIVE_DATA);
+}
+
+/* 🚀 INIT */
+document.addEventListener("DOMContentLoaded", ()=>{
+  renderInviters();
+
+  // invite count increase every 5s
+  setInterval(()=>{
+    growInvites();
+    renderInviters();
+  },5000);
+
+  // rotate users every 20s
+  setInterval(()=>{
+    rotateUsers();
+    renderInviters();
+  },20000);
+});
+
+// 🌍 Live Global Activity Texts (Professional)
+const adTexts = [
+  "Live Activity • Real users inviting across 135+ countries",
+  "Global network expanding • Members joining every minute",
+  "Trusted worldwide • Active inviters from 135 countries",
+  "Community growth in real time • Secure & transparent",
+  "Top inviters earning rewards as the network grows",
+  "Worldwide participation • Invitations happening live",
+  "A truly global platform • Users from 135+ nations",
+  "Real people, real invites • Activity updating live"
+];
+
+let adIndex = 0;
+
+setInterval(() => {
+  const el = document.querySelector(".live-text");
+  if (!el) return;
+
+  adIndex = (adIndex + 1) % adTexts.length;
+  el.textContent = adTexts[adIndex];
+}, 4000);
+
+</script>
+<script>
+function makeScratchable(refEl){
+  const wrapper = document.createElement("div");
+  wrapper.style.position = "relative";
+  wrapper.style.width = "100%";
+
+  refEl.parentNode.insertBefore(wrapper, refEl);
+  wrapper.appendChild(refEl);
+
+  const canvas = document.createElement("canvas");
+  canvas.style.position = "absolute";
+  canvas.style.top = "0";
+  canvas.style.left = "0";
+  canvas.style.width = "100%";
+  canvas.style.height = "100%";
+  canvas.style.zIndex = "2";
+  canvas.style.borderRadius = "10px";
+
+  wrapper.appendChild(canvas);
+
+  const ctx = canvas.getContext("2d");
+
+  function resize(){
+    const rect = refEl.getBoundingClientRect();
+
+    canvas.width  = rect.width;
+    canvas.height = rect.height;
+
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = "#cbd5e1";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    ctx.fillStyle = "#475569";
+    ctx.font = "500 13px Inter, system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.fillText(
+      "Scratch to unlock your referral link 🔐",
+      canvas.width / 2,
+      canvas.height / 2
+    );
+  }
+
+  resize();
+  window.addEventListener("resize", resize);
+
+  let scratching = false;
+  let revealed = false;
+
+  function scratch(x,y){
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    ctx.arc(x,y,20,0,Math.PI*2);
+    ctx.fill();
+  }
+
+  function check(){
+    const img = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+    let cleared = 0;
+
+    for(let i=3;i<img.length;i+=4){
+      if(img[i] === 0) cleared++;
+    }
+
+    if(cleared > img.length / 4 * 0.35){
+      revealed = true;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      // ⏳ 3 second baad auto hide
+      setTimeout(()=>{
+        revealed = false;
+        resize();
+      },3000);
+    }
+  }
+
+  // 🖱 mouse
+  canvas.addEventListener("mousedown",()=>scratching=true);
+  canvas.addEventListener("mouseup",()=>scratching=false);
+  canvas.addEventListener("mouseleave",()=>scratching=false);
+  canvas.addEventListener("mousemove",e=>{
+    if(!scratching || revealed) return;
+    const r = canvas.getBoundingClientRect();
+    scratch(e.clientX - r.left, e.clientY - r.top);
+    check();
+  });
+
+  // 📱 touch
+  canvas.addEventListener("touchstart",()=>scratching=true);
+  canvas.addEventListener("touchend",()=>scratching=false);
+  canvas.addEventListener("touchmove",e=>{
+    if(!scratching || revealed) return;
+    const r = canvas.getBoundingClientRect();
+    const t = e.touches[0];
+    scratch(t.clientX - r.left, t.clientY - r.top);
+    check();
+  });
+}
+
+</script>
+
+</body>
+</html>
