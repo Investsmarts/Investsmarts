@@ -18,10 +18,10 @@
 
 <div class="team-sticky">
   <div class="team-filters">
-    <button onclick="filterLevel('all')" class="active">All</button>
-    <button onclick="filterLevel(1)">Level 1</button>
-    <button onclick="filterLevel(2)">Level 2</button>
-    <button onclick="filterLevel(3)">Level 3</button>
+   <button onclick="filterLevel('all', this)" class="active">All</button>
+<button onclick="filterLevel(1, this)">Level 1</button>
+<button onclick="filterLevel(2, this)">Level 2</button>
+<button onclick="filterLevel(3, this)">Level 3</button>
   </div>
 
   <div class="sticky-actions">
@@ -48,7 +48,7 @@
 </div>
 
 <div id="videoLoader" class="video-loader hidden">
-<video id="loaderVideo" preload="auto" autoplay muted playsinline>
+<video id="loaderVideo" preload="auto" muted playsinline>
     <source src="Promotion/WhatsApp Video 2025-12-23 at 5.11.03 PM.mp4" type="video/mp4">
   </video>
 </div>
@@ -452,11 +452,12 @@ function renderTeam(list) {
 }
 
 /* ================= FILTER ================= */
-window.filterLevel = function(level){
+window.filterLevel = function(level, btn){
   currentLevel = level;
   document.querySelectorAll(".team-filters button")
     .forEach(b => b.classList.remove("active"));
-  event.target.classList.add("active");
+
+  btn.classList.add("active");
   renderByCurrentLevel();
 };
 
