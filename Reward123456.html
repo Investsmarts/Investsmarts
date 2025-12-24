@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no">
+
+<title>Rewards</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  font-family:Inter,system-ui,sans-serif;
+  background:#f8fafc;
+  color:#0f172a;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+
+.container{
+  max-width:420px;
+  margin:auto;
+  padding:20px 14px 20px;
+}
+
+/* HEADER */
+.page-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.back-btn{
+  border:none;
+  background:#ffffff;
+  width:36px;
+  height:36px;
+  border-radius:5px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.05);
+}
+
+.back-btn i{
+  font-size:20px;
+  color:#16a34a;
+}
+
+.header-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.header-title h1{
+  font-size:18px;
+  font-weight:600;
+  margin:0;
+}
+
+/* INTRO */
+.page-intro{
+  font-size:16px;
+  line-height:1.6;
+  color:#475569;
+  margin-bottom:20px;
+}
+
+/* REWARD LIST */
+.reward-box{
+  background:#ffffff;
+  border-radius:5px;
+  padding:18px;
+  border:1px solid #e5e7eb;
+  box-shadow:0 4px 12px rgba(0,0,0,.05);
+  margin-bottom:18px;
+}
+
+.reward-title{
+  font-size:18px;
+  font-weight:600;
+  margin-bottom:14px;
+}
+
+.reward-item{
+  padding:14px 0;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.reward-item:last-child{
+  border-bottom:none;
+}
+
+.reward-count{
+  font-size:18px;
+  font-weight:700;
+  color:#16a34a;
+}
+
+.reward-text{
+  font-size:16px;
+  margin-top:4px;
+  color:#475569;
+}
+
+/* NOTICE BOX */
+.notice-box{
+  background:#ffffff;
+  border-radius:5px;
+  padding:16px;
+  border-left:4px solid #16a34a;
+  box-shadow:0 4px 12px rgba(0,0,0,.05);
+}
+
+.notice-box p{
+  font-size:16px;
+  line-height:1.6;
+  color:#0f172a;
+  margin:0;
+}
+
+.reward-box{
+  background:#ffffff;
+  border-radius:5px;
+  padding:18px;
+  border:1px solid #e5e7eb;
+  box-shadow:0 4px 12px rgba(0,0,0,.05);
+  margin-bottom:18px;
+}
+
+.reward-title{
+  font-size:18px;
+  font-weight:600;
+  margin-bottom:14px;
+}
+
+.reward-item{
+  font-size:16px;          /* ✅ zoom safe */
+  padding:10px 0;
+  border-bottom:1px solid #e5e7eb;
+  color:#475569;
+}
+
+.reward-item:last-child{
+  border-bottom:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <button class="back-btn" onclick="goBack()">
+      <i class="ri-arrow-left-line"></i>
+    </button>
+
+    <div class="header-title">
+      <h1>Rewards</h1>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="page-intro">
+    Complete direct referral milestones to become eligible for premium rewards.
+    All rewards are processed based on verified user completion.
+  </div>
+
+  <!-- REWARDS -->
+  <div class="reward-box">
+
+    <div class="reward-title">Direct Referral Rewards</div>
+
+    <div class="reward-item">
+      <div class="reward-count">500 Direct Users</div>
+      <div class="reward-text">Eligible for premium reward</div>
+    </div>
+
+    <div class="reward-item">
+      <div class="reward-count">1,000 Direct Users</div>
+      <div class="reward-text">Higher value reward eligibility</div>
+    </div>
+
+    <div class="reward-item">
+      <div class="reward-count">5,000 Direct Users</div>
+      <div class="reward-text">Advanced reward tier unlocked</div>
+    </div>
+
+    <div class="reward-item">
+      <div class="reward-count">15,000 Direct Users</div>
+      <div class="reward-text">Top-level premium reward</div>
+    </div>
+
+  </div>
+
+  <!-- NOTICE -->
+  <div class="notice-box">
+<p>
+  As soon as all your direct users are completed,
+  please contact us immediately so that reward
+  verification and processing can be initiated.
+</p>
+
+  </div>
+</div>
+<div class="reward-box">
+
+  <div class="reward-title">
+    Possible Premium Rewards
+  </div>
+  <div class="reward-item">Luxury Car (2 Units)</div>
+  <div class="reward-item">Premium House / Home Property</div>
+  <div class="reward-item">International Travel Package</div>
+  <div class="reward-item">Sports Bike</div>
+  <div class="reward-item">Premium Sedan Car</div>
+  <div class="reward-item">Electric Vehicle (EV)</div>
+  <div class="reward-item">Luxury SUV</div>
+  <div class="reward-item">High-End Laptop</div>
+  <div class="reward-item">Latest Smartphone</div>
+  <div class="reward-item">Premium Smart Watch</div>
+  <div class="reward-item">International Flight Tickets</div>
+  <div class="reward-item">Luxury Hotel Stay Package</div>
+  <div class="reward-item">Gold or Silver Reward Item</div>
+  <div class="reward-item">Premium Home Appliances</div>
+  <div class="reward-item">Office Setup Package</div>
+  <div class="reward-item">Business Support Grant</div>
+  <div class="reward-item">Exclusive Event Access</div>
+  <div class="reward-item">Premium Lifestyle Accessories</div>
+  <div class="reward-item">Travel & Adventure Experience</div>
+  <div class="reward-item">Customized Reward Package</div>
+</div>
+</div>
+<script>
+function goBack(){
+  if(document.referrer){
+    history.back();
+  }else{
+    location.href="Dashboard.html";
+  }
+}
+</script>
+<script>
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
+
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // lighter console annoyance
+  setInterval(() => {
+    console.clear();
+  }, 1500);
+</script>
+
+</body>
+</html>
