@@ -160,11 +160,11 @@ body {
 ============================== */
 .reward-slider {
   margin-top: 16px;
-  height: 150px;
+  height: 200px;          /* 👈 thoda bada */
   border-radius: 6px;
   overflow: hidden;
   position: relative;
-  background: #000;
+  background: #000;      /* side space ke liye */
 }
 
 .reward-slider img {
@@ -172,7 +172,7 @@ body {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;   /* ✅ FULL IMAGE */
   opacity: 0;
   transition: opacity .6s ease;
 }
@@ -305,9 +305,7 @@ h2 {
 /* ==============================
    RESPONSIVE
 ============================== */
-@media (max-width: 480px) {
-  .reward-slider { height: 140px; }
-}
+
 .live-card{
   background:#fff;
   border-radius:5px;
@@ -321,6 +319,17 @@ h2 {
   box-shadow:0 6px 14px rgba(0,0,0,.06);
   border-left:1px solid #ef4444;
   margin:14px 0;
+}
+
+.reward-slider::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.05),
+    rgba(0,0,0,.15)
+  );
 }
 
 /* 🔴 blinking dot */
@@ -621,6 +630,11 @@ h2 {
   font-size:12px;
   color:#64748b;
 }
+@media (max-width: 480px) {
+  .reward-slider {
+    height: 230px;       /* mobile me aur clear */
+  }
+}
 
 </style>
 </head>
@@ -681,26 +695,28 @@ h2 {
       <i class="ri-gift-line"></i>
       <span>Rewards</span>
     </div>
-
-    <div class="action-card">
+     <div class="action-card"onclick="location.href='deposit.html'">
       <i class="ri-vip-diamond-line"></i>
-      <span>Upgrade Plan</span>
+      <span>Upgrade Account </span>
     </div>
 
 
-    <div class="action-card">
+    <div class="action-card"onclick="location.href='Achievements.html'">
       <i class="ri-award-line"></i>
       <span>Achievements</span>
     </div>
   </div>
    </div>
   <!-- IMAGE ONLY SLIDER -->
-  <div class="reward-slider" id="rewardSlider">
-    <img src="Promotion/aaaaaaaaaaaaa.jpeg" class="active">
-    <img src="Promotion/cccccccccc.png"class="active">
-    <img src="Promotion/bbbbbbbbbbbb.jpeg"class="active">
-    <img src="Promotion/cccccccc.jpeg"class="active">
-  </div>
+ <div class="reward-slider" id="rewardSlider">
+  <img src="Promotion/6666.jpeg" class="active">
+  <img src="Promotion/5555.jpeg">
+  <img src="Promotion/4444.jpeg">
+  <img src="Promotion/3333.jpeg">
+  <img src="Promotion/2222.jpeg">
+  <img src="Promotion/111111.jpeg">
+</div>
+
 
 <div class="status-box">
   <span class="status-label">Account Status</span>
@@ -1221,6 +1237,48 @@ setInterval(()=>{
   typeStatus();
 })();
 </script>
+<script>
+(() => {
+  const slider = document.getElementById("rewardSlider");
+  if (!slider) return;
+
+  // 🔹 create bg layer dynamically
+  const bg = document.createElement("div");
+
+  bg.style.position = "absolute";
+  bg.style.inset = "-20px";
+  bg.style.backgroundSize = "cover";
+  bg.style.backgroundPosition = "center";
+  bg.style.filter = "blur(18px) brightness(.85)";
+  bg.style.transform = "scale(1.2)";
+  bg.style.zIndex = "0";
+
+  slider.prepend(bg);
+
+  // bring images above bg
+  slider.querySelectorAll("img").forEach(img => {
+    img.style.position = "absolute";
+    img.style.zIndex = "1";
+  });
+
+  const slides = slider.querySelectorAll("img");
+  let index = 0;
+
+  function updateBg(img) {
+    bg.style.backgroundImage = `url('${img.src}')`;
+  }
+
+  // initial bg
+  updateBg(slides[0]);
+
+  // hook into existing slider interval
+  setInterval(() => {
+    updateBg(slides[index]);
+    index = (index + 1) % slides.length;
+  }, 4000);
+})();
+</script>
+
 
 </body>
 </html>
