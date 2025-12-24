@@ -24,18 +24,22 @@
 <button onclick="filterLevel(3, this)">Level 3</button>
   </div>
 
-  <div class="sticky-actions">
-    <button id="refreshTeam" class="refresh-btn">🔄</button>
+<div class="sticky-actions">
+  <button id="refreshTeam" class="refresh-btn">🔄</button>
 
-    <div class="team-search">
-      <input
-        type="text"
-        id="teamSearch"
-        placeholder="Search by name…"
-        autocomplete="off"
-      />
-    </div>
+  <div class="team-search">
+    <input
+      type="text"
+      id="teamSearch"
+      placeholder="Search by name…"
+      autocomplete="off"
+    />
   </div>
+
+  <!-- ✅ COUNT -->
+  <div class="team-count" id="teamCount">0</div>
+</div>
+
 </div>
 
 
@@ -56,33 +60,25 @@
 </div>
 
 <style>
-  body{
+/* ================= BASE ================= */
+html,body{
   margin:0;
+  overflow-x:hidden;
   font-family:Inter,system-ui,sans-serif;
   background:#f5f7fb;
 }
 
 .team-page{
-  max-width:420px;     /* 📱 mobile + laptop same feel */
+  max-width:420px;
   margin:0 auto;
   padding:0 12px;
 }
 
-/* header */
+/* ================= HEADER ================= */
 .team-header{
+  position:sticky;
   top:0;
-}
-
-
-/* prevent horizontal scroll */
-html,body{
-  overflow-x:hidden;
-}
-
-  .team-header{
-  position: sticky;
-  top: 0;
-  z-index: 60;
+  z-index:100;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -104,15 +100,20 @@ html,body{
   color:#0f172a;
 }
 
-.team-page h2{
-  font-size:18px;
-  margin:10px 0 14px;
+/* ================= STICKY FILTER BAR ================= */
+.team-sticky{
+  position:sticky;
+  top:52px; /* header height */
+  z-index:90;
+  background:#f5f7fb;
+  padding-bottom:8px;
 }
 
+/* ================= FILTER BUTTONS ================= */
 .team-filters{
   display:flex;
   gap:8px;
-  margin-bottom:12px;
+  margin-bottom:10px;
 }
 
 .team-filters button{
@@ -130,9 +131,64 @@ html,body{
   color:#fff;
 }
 
+/* ================= SEARCH + REFRESH + COUNT ================= */
+.sticky-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.refresh-btn{
+  width:40px;
+  height:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:none;
+  background:#16a34a;
+  color:#fff;
+  border-radius:5px;
+  font-size:18px;
+  cursor:pointer;
+  flex-shrink:0;
+}
+
+.team-search{
+  flex:1;
+}
+
+.team-search input{
+  width:100%;
+  height:40px;
+  padding:0 12px;
+  font-size:14px;
+  border:1px solid #e5e7eb;
+  border-radius:5px;
+  outline:none;
+}
+
+.team-count{
+  min-width:42px;
+  height:40px;
+  padding:0 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  font-weight:600;
+  background:#e5e7eb;
+  color:#0f172a;
+  border-radius:5px;
+}
+
+/* ================= LIST ================= */
+.team-list{
+  padding-top:10px;
+}
+
 .team-card{
   background:#fff;
-  border-radius:8px;
+  border-radius:10px;
   padding:10px;
   margin-bottom:10px;
   box-shadow:0 4px 12px rgba(0,0,0,.05);
@@ -145,80 +201,24 @@ html,body{
   margin:4px 0;
 }
 
+/* ================= BADGES ================= */
 .badge{
   font-size:11px;
   padding:2px 6px;
   border-radius:4px;
 }
 
-.badge.active{background:#dcfce7;color:#166534}
-.badge.inactive{background:#fee2e2;color:#991b1b}
-
-.team-card i{
-  color:#16a34a;
-  font-size:15px;
-  vertical-align:middle;
-  margin-right:4px;
+.badge.active{
+  background:#dcfce7;
+  color:#166534;
 }
 
-.team-search{
-  margin-bottom:10px;
+.badge.inactive{
+  background:#fee2e2;
+  color:#991b1b;
 }
 
-.team-search input{
-  width:100%;
-  padding:8px 10px;
-  font-size:13px;
-  border:1px solid #e5e7eb;
-  border-radius:6px;
-  outline:none;
-}
-
-.video-loader{
-  position:fixed;
-  inset:0;
-
- 
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:99999;
-}
-
-.video-loader video{
-  width:180px;          /* 👈 size bada */
-  max-width:60%;
-  height:auto;
-  object-fit:contain;
-}
-
-.hidden{
-  display:none;
-}
-.team-sticky{
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background:#f5f7fb;
-  padding-bottom:8px;
-}
-
-/* refresh + search row */
-.sticky-actions{
-  display:flex;
-  gap:8px;
-  align-items:center;
-}
-
-.refresh-btn{
-  border:none;
-  background:#16a34a;
-  color:#fff;
-  border-radius:6px;
-  padding:6px 10px;
-  font-size:14px;
-  cursor:pointer;
-}
+/* ================= EMPTY STATE ================= */
 .empty-state{
   text-align:center;
   padding:32px 16px;
@@ -226,11 +226,10 @@ html,body{
 }
 
 .empty-state img{
-  width:160px;        /* 👈 image badi */
+  width:160px;
   max-width:75%;
   margin-bottom:18px;
 }
-
 
 .empty-state h3{
   font-size:16px;
@@ -244,20 +243,55 @@ html,body{
   line-height:1.6;
   color:#64748b;
 }
+
+/* ================= INVITE BUTTON ================= */
 .invite-btn{
-  margin-top:14px;
-  padding:8px 16px;
-  font-size:13px;
-  font-weight:500;
+  margin-top:20px;
+  width:100%;
+  padding:14px 22px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+
+  font-size:15px;
+  font-weight:600;
   border:none;
-  border-radius:8px;
-  background:#16a34a;
+  border-radius:10px;
+
+  background:linear-gradient(135deg,#22c55e,#16a34a);
   color:#fff;
+
+  box-shadow:0 10px 22px rgba(22,163,74,.28);
   cursor:pointer;
+  transition:all .2s ease;
 }
 
 .invite-btn:active{
   transform:scale(.97);
+  box-shadow:0 6px 14px rgba(22,163,74,.25);
+}
+
+/* ================= VIDEO LOADER ================= */
+.video-loader{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+}
+
+.video-loader video{
+  width:180px;
+  max-width:60%;
+  height:auto;
+  object-fit:contain;
+}
+
+.hidden{
+  display:none;
 }
 
 .fade-in{
@@ -274,8 +308,17 @@ html,body{
     transform:translateY(0);
   }
 }
+.team-count{
+  transition:transform .15s ease, background .15s ease;
+}
+
+.team-count.bump{
+  transform:scale(1.08);
+  background:#dcfce7;
+}
 
 </style>
+
 
 <script type="module">
 
@@ -339,10 +382,13 @@ onAuthStateChanged(auth, async (user) => {
 
   // ⚡ instant cache render
   const cached = loadCache();
-  if(cached){
-    allMembers = cached;
-    renderByCurrentLevel();
-  }
+if(cached){
+  allMembers = cached;
+  renderByCurrentLevel();
+}else{
+  updateCount([]); // 👈 safety
+}
+
 
   // 🔄 silent fresh fetch
   await fetchTeamData(user);
@@ -414,7 +460,11 @@ function renderTeam(list) {
           No members have joined your team yet.<br>
           Share your referral link to start building a strong and active network.
         </p>
-        <button class="invite-btn" onclick="goToInvite()">Invite Now</button>
+        <button class="invite-btn" onclick="goToInvite()">
+  <i class="ri-user-add-line"></i>
+  Invite & Earn Rewards
+</button>
+
       </div>
     `;
     return;
@@ -462,27 +512,39 @@ window.filterLevel = function(level, btn){
 };
 
 function renderByCurrentLevel(){
+  let list;
   if(currentLevel === "all"){
-    renderTeam(allMembers);
+    list = allMembers;
   }else{
-    renderTeam(allMembers.filter(u => u.level === currentLevel));
+    list = allMembers.filter(u => u.level === currentLevel);
   }
+
+  renderTeam(list);
+  updateCount(list);
 }
+
+
 
 /* ================= SEARCH ================= */
 searchInput.addEventListener("input", () => {
   const keyword = searchInput.value.toLowerCase().trim();
+
   const base = currentLevel === "all"
     ? allMembers
     : allMembers.filter(u => u.level === currentLevel);
 
-  renderTeam(
-    keyword ? base.filter(u => u.name.toLowerCase().includes(keyword)) : base
-  );
+  const filtered = keyword
+    ? base.filter(u => u.name.toLowerCase().includes(keyword))
+    : base;
+
+  renderTeam(filtered);
+  updateCount(filtered);   // ✅ count bhi update hoga
 });
+
 
 /* ================= REFRESH ================= */
 refreshBtn.addEventListener("click", async () => {
+    updateCount([]);   
   showVideoLoader();
 });
 
@@ -520,7 +582,7 @@ function getJoinedTime(u){
 }
 
 window.goToInvite = () => {
-  window.location.href = "promot.html";
+  window.location.href = "promote.html";
 };
 async function showVideoLoader(){
   const wrap = document.getElementById("videoLoader");
@@ -536,5 +598,12 @@ async function showVideoLoader(){
   }
 }
 
-</script>
 
+function updateCount(list){
+  const el = document.getElementById("teamCount");
+  el.textContent = list.length;
+  el.classList.add("bump");
+  setTimeout(()=>el.classList.remove("bump"),150);
+}
+
+</script>
