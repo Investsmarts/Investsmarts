@@ -1,4 +1,9 @@
+<meta 
+  name="viewport" 
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
 <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+
 
 <div class="team-page">
 
@@ -51,6 +56,29 @@
 </div>
 
 <style>
+  body{
+  margin:0;
+  font-family:Inter,system-ui,sans-serif;
+  background:#f5f7fb;
+}
+
+.team-page{
+  max-width:420px;     /* 📱 mobile + laptop same feel */
+  margin:0 auto;
+  padding:0 12px;
+}
+
+/* header */
+.team-header{
+  top:0;
+}
+
+
+/* prevent horizontal scroll */
+html,body{
+  overflow-x:hidden;
+}
+
   .team-header{
   position: sticky;
   top: 0;
@@ -453,18 +481,12 @@ searchInput.addEventListener("input", () => {
 });
 
 /* ================= REFRESH ================= */
-refreshBtn.addEventListener("click", () => {
+refreshBtn.addEventListener("click", async () => {
   showVideoLoader();
 });
 
+
 /* ================= VIDEO LOADER ================= */
-function showVideoLoader(){
-  const wrap = document.getElementById("videoLoader");
-  const vid  = document.getElementById("loaderVideo");
-  wrap.classList.remove("hidden");
-  vid.currentTime = 0;
-  vid.play();
-}
 
 function hideVideoLoader(){
   document.getElementById("videoLoader").classList.add("hidden");
@@ -499,5 +521,18 @@ function getJoinedTime(u){
 window.goToInvite = () => {
   window.location.href = "invite.html";
 };
+async function showVideoLoader(){
+  const wrap = document.getElementById("videoLoader");
+  const vid  = document.getElementById("loaderVideo");
+
+  wrap.classList.remove("hidden");
+  vid.currentTime = 0;
+
+  try{
+    await vid.play();   // mobile + desktop dono me chalega
+  }catch(e){
+    console.log("Video play blocked:", e);
+  }
+}
 
 </script>
