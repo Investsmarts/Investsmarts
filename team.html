@@ -562,18 +562,24 @@ function renderByCurrentLevel(){
 
 
 /* ================= SEARCH ================= */
+let searchTimer;
+
 searchInput.addEventListener("input", () => {
-  const keyword = searchInput.value.toLowerCase().trim();
+  clearTimeout(searchTimer);
 
-  const base = currentLevel === "all"
-    ? allMembers
-    : allMembers.filter(u => u.level === currentLevel);
+  searchTimer = setTimeout(() => {
+    const keyword = searchInput.value.toLowerCase().trim();
 
-  const filtered = keyword
-    ? base.filter(u => u.name.toLowerCase().includes(keyword))
-    : base;
+    const base = currentLevel === "all"
+      ? allMembers
+      : allMembers.filter(u => u.level === currentLevel);
 
-  renderTeam(filtered); // 👈 count automatic
+    const filtered = keyword
+      ? base.filter(u => u.name.toLowerCase().includes(keyword))
+      : base;
+
+    renderTeam(filtered);   // smooth render
+  }, 200); // 200ms debounce
 });
 
 
