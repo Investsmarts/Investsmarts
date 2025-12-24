@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<title>Reward Dashboard</title>
+<!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+<!-- ICONS -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+  /* ==============================
+   GLOBAL SCROLL FIX
+============================== */
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ==============================
+   BODY
+============================== */
+body {
+  font-family: Inter, system-ui, sans-serif;
+  background: #f5f7fb;
+  color: #0f172a;
+}
+
+/* ==============================
+   FIXED HEADER
+============================== */
+.header {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px;
+
+  background: #fff;
+  padding: 10px 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  z-index: 10000;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #16a34a;
+  color: #fff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+
+  position: relative;
+  overflow: hidden;
+}
+
+.app-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.app-sub {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.header-right i {
+  font-size: 22px;
+  color: #16a34a;
+  cursor: pointer;
+}
+
+/* ==============================
+   MAIN SCROLL CONTAINER
+============================== */
+.container {
+  max-width: 420px;
+  margin: auto;
+
+  /* 🔝 header space | 🔽 bottom nav space */
+  padding: 60px 9px 92px;
+
+  min-height: 100vh;
+}
+
+/* ==============================
+   ACTION GRID
+============================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.action-wrapper {
+  background: #fff;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+}
+
+.action-card {
+  background: #fff;
+  border-radius: 5px;
+  height: 110px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.action-card i {
+  font-size: 26px;
+  color: #16a34a;
+  margin-bottom: 8px;
+}
+
+.action-card span {
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* ==============================
+   SLIDER
+============================== */
+.reward-slider {
+  margin-top: 16px;
+  height: 150px;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  background: #000;
+}
+
+.reward-slider img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity .6s ease;
+}
+
+.reward-slider img.active {
+  opacity: 1;
+}
+
+/* ==============================
+   OVERVIEW
+============================== */
+h2 {
+  font-size: 17px;
+  margin: 18px 0 10px;
+}
+
+.overview {
+  background: #fff;
+  border-radius: 6px;
+  padding: 14px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.05);
+}
+
+.overview-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 14px;
+}
+
+.overview-row.total {
+  font-weight: 700;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 8px;
+  margin-bottom: 6px;
+}
+
+.muted {
+  color: #64748b;
+}
+
+/* ==============================
+   BOTTOM NAVBAR
+============================== */
+:root {
+  --nav-bg: #fff;
+  --nav-text: #444;
+  --nav-border: rgba(0,0,0,.08);
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  background: var(--nav-bg);
+  border-top: 1px solid var(--nav-border);
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  padding: 10px 0;
+  z-index: 10000;
+}
+
+.bottom-nav .nav-item {
+  flex: 1;
+  text-align: center;
+  font-size: 10px;
+  color: var(--nav-text);
+  text-decoration: none;
+}
+
+.bottom-nav .nav-item i {
+  font-size: 18px;
+  display: block;
+  margin-bottom: 2px;
+  opacity: .8;
+}
+
+.bottom-nav .nav-item.active i {
+  opacity: 1;
+  transform: scale(1.1);
+}
+/* ==============================
+   BOTTOM NAV ACTIVE COLORS (RESTORE)
+============================== */
+.bottom-nav .nav-item.active i {
+  opacity: 1;
+  transform: scale(1.12);
+  animation: bulbGlow 1.6s ease-in-out infinite alternate;
+}
+
+.bottom-nav .nav-item.active span {
+  opacity: 1;
+  font-weight: 600;
+}
+
+/* Individual colors */
+.bottom-nav .nav-item:nth-child(1).active i { color: #00c853; } /* Home */
+.bottom-nav .nav-item:nth-child(2).active i { color: #ffc107; } /* Mining */
+.bottom-nav .nav-item:nth-child(3).active i { color: #ff3b30; } /* Promotion */
+.bottom-nav .nav-item:nth-child(4).active i { color: #00bcd4; } /* Account */
+
+/* Glow animation */
+@keyframes bulbGlow {
+  from { filter: brightness(1); }
+  to   { filter: brightness(1.6); }
+}
+
+/* ==============================
+   COIN ROTATOR
+============================== */
+.coin {
+  position: absolute;
+  font-size: 18px;
+  color: #fff;
+  opacity: 0;
+  transform: scale(.6) rotate(0deg);
+  transition: .6s ease;
+}
+
+.coin.active {
+  opacity: 1;
+  transform: scale(1) rotate(360deg);
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+@media (max-width: 480px) {
+  .reward-slider { height: 140px; }
+}
+.live-card{
+  background:#fff;
+  border-radius:8px;
+  padding:12px 14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:13px;
+  font-weight:500;
+  color:#0f172a;
+  box-shadow:0 6px 14px rgba(0,0,0,.06);
+  border-left:4px solid #ef4444;
+  margin:14px 0;
+}
+
+/* 🔴 blinking dot */
+.live-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#ef4444;
+  animation:pulse 1.4s infinite;
+}
+
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(239,68,68,.7)}
+  70%{box-shadow:0 0 0 6px rgba(239,68,68,0)}
+  100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}
+}
+.live-text{
+  display:inline-block;
+  transition: transform .6s ease, opacity .6s ease;
+}
+
+.live-text.enter{
+  opacity:0;
+  transform: translateY(8px);
+}
+
+.live-text.show{
+  opacity:1;
+  transform: translateY(0);
+}
+
+.live-text.exit{
+  opacity:0;
+  transform: translateY(-8px);
+}
+
+
+.chart-card{
+  background:#fff;
+  border-radius:8px;
+  padding:14px;
+  margin:16px 0;
+  box-shadow:0 6px 14px rgba(0,0,0,.06);
+}
+
+.chart-title{
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:12px;
+}
+
+.bar-chart{
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  height:150px;
+}
+
+.bar-wrap{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  font-size:10px;
+}
+
+.bar{
+  width:100%;
+  background:linear-gradient(180deg,#22c55e,#16a34a);
+  border-radius:4px 4px 0 0;
+  height:60%;
+  position:relative;
+  transition:height 1.2s ease;
+}
+
+.bar span{
+  position:absolute;
+  top:-20px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:11px;
+  font-weight:600;
+  color:#0f172a;
+  background:#fff;
+  padding:2px 6px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,.1);
+}
+
+.flag{
+  margin-top:6px;
+  font-size:14px;
+}
+.bar{
+  width:100%;
+  min-height:20px;          /* ✅ safety */
+  background:linear-gradient(180deg,#22c55e,#16a34a);
+  border-radius:4px 4px 0 0;
+  position:relative;
+  transition:height 1.2s ease;
+}
+.bar{
+  width:100%;
+  min-height:100px;
+  border-radius:6px 6px 0 0;
+  position:relative;
+  transition:height 1.2s ease, background .6s ease;
+}
+
+/* 🎨 different colors for each danda */
+.bar-wrap:nth-child(1)  .bar{ background:linear-gradient(180deg,#22c55e,#16a34a); }
+.bar-wrap:nth-child(2)  .bar{ background:linear-gradient(180deg,#3b82f6,#2563eb); }
+.bar-wrap:nth-child(3)  .bar{ background:linear-gradient(180deg,#f97316,#ea580c); }
+.bar-wrap:nth-child(4)  .bar{ background:linear-gradient(180deg,#a855f7,#7e22ce); }
+.bar-wrap:nth-child(5)  .bar{ background:linear-gradient(180deg,#06b6d4,#0891b2); }
+.bar-wrap:nth-child(6)  .bar{ background:linear-gradient(180deg,#84cc16,#4d7c0f); }
+.bar-wrap:nth-child(7)  .bar{ background:linear-gradient(180deg,#ef4444,#b91c1c); }
+.bar-wrap:nth-child(8)  .bar{ background:linear-gradient(180deg,#14b8a6,#0f766e); }
+.bar-wrap:nth-child(9)  .bar{ background:linear-gradient(180deg,#eab308,#a16207); }
+.bar-wrap:nth-child(10) .bar{ background:linear-gradient(180deg,#6366f1,#4338ca); }
+.bar-wrap:nth-child(11) .bar{ background:linear-gradient(180deg,#ec4899,#be185d); }
+.bar-wrap:nth-child(12) .bar{ background:linear-gradient(180deg,#0ea5e9,#0369a1); }
+
+</style>
+</head>
+
+<body>
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo-circle">
+      <i class="ri-bitcoin-line coin active"></i>
+      <i class="ri-money-dollar-circle-line coin"></i>
+      <i class="ri-ethereum-line coin"></i>
+    </div>
+
+    <div>
+      <div class="app-name">Reward Panel</div>
+      <div class="app-sub">Earn • Invite • Grow</div>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <i class="ri-wallet-3-line"></i>
+  </div>
+</div>
+
+
+<div class="container">
+
+  <div class="live-card">
+    <span class="live-dot"></span>
+    <span id="liveText" class="live-text show">
+      🌱 Small steps today build big rewards tomorrow
+    </span>
+  </div>
+
+
+
+  <!-- ACTION BOXES -->
+<!-- ACTION BOXES -->
+  <div class="action-wrapper">
+  <div class="grid">
+    <div class="action-card" onclick="location.href='promote.html'">
+      <i class="ri-megaphone-line"></i>
+      <span>Promote & Earn</span>
+    </div>
+
+    <div class="action-card" onclick="location.href='team.html'">
+      <i class="ri-team-line"></i>
+      <span>My Team</span>
+    </div>
+
+    <div class="action-card" onclick="location.href='levels.html'">
+      <i class="ri-node-tree"></i>
+      <span>Level Breakdown</span>
+    </div>
+
+    <div class="action-card"onclick="location.href='Reward123456.html'">
+      <i class="ri-gift-line"></i>
+      <span>Rewards</span>
+    </div>
+
+    <div class="action-card">
+      <i class="ri-vip-diamond-line"></i>
+      <span>Upgrade Plan</span>
+    </div>
+
+
+    <div class="action-card">
+      <i class="ri-award-line"></i>
+      <span>Achievements</span>
+    </div>
+  </div>
+   </div>
+  <!-- IMAGE ONLY SLIDER -->
+  <div class="reward-slider" id="rewardSlider">
+    <img src="Promotion/aaaaaaaaaaaaa.jpeg" class="active">
+    <img src="Promotion/cccccccccc.png"class="active">
+    <img src="Promotion/bbbbbbbbbbbb.jpeg"class="active">
+    <img src="Promotion/cccccccc.jpeg"class="active">
+  </div>
+
+  <!-- OVERVIEW -->
+  <h2>Team Overview </h2>
+  <div class="overview">
+    <div class="overview-row total">
+      <span>Total Members Joined</span>
+      <span id="totalMembers">0</span>
+    </div>
+
+    <div class="overview-row">
+      <span class="muted">Level 1 Members</span>
+      <span id="lv1">0</span>
+    </div>
+
+    <div class="overview-row">
+      <span class="muted">Level 2 Members</span>
+      <span id="lv2">0</span>
+    </div>
+
+    <div class="overview-row">
+      <span class="muted">Level 3 Members</span>
+      <span id="lv3">0</span>
+    </div>
+  </div>
+
+<div class="chart-card">
+  <div class="chart-title">Global Team Growth</div>
+
+  <div class="bar-chart" id="userChart">
+    <!-- JS se bars aayenge -->
+  </div>
+
+  <div class="chart-note">
+    🌍 Represents community expansion across regions
+  </div>
+</div>
+
+</div>
+
+
+<!-- ✅ HTML Navbar -->
+<div class="bottom-nav" id="mainNav">
+  <a href="Dashboard.html" class="nav-item">
+    <i class="ri-home-5-fill"></i>
+    <span>Home</span>
+  </a>
+
+  <a href="mining.html" class="nav-item">
+    <i class="ri-bar-chart-2-fill"></i>
+    <span>Mining</span>
+  </a>
+
+  <a href="promotion.html" class="nav-item">
+    <i class="ri-gift-fill"></i>
+    <span>Promotion</span>
+  </a>
+
+  <a href="account.html" class="nav-item">
+    <i class="ri-user-3-fill"></i>
+    <span>Account</span>
+  </a>
+</div>
+
+<div id="pageLoader"></div>
+
+<!-- 🔥 SLIDER JS -->
+<script>
+const slider=document.getElementById("rewardSlider");
+const slides=slider.querySelectorAll("img");
+let index=0;
+
+setInterval(()=>{
+  slides[index].classList.remove("active");
+  index=(index+1)%slides.length;
+  slides[index].classList.add("active");
+},4000);
+
+let startX=0;
+slider.addEventListener("touchstart",e=>{
+  startX=e.touches[0].clientX;
+});
+slider.addEventListener("touchend",e=>{
+  let endX=e.changedTouches[0].clientX;
+  if(Math.abs(startX-endX)<40)return;
+  slides[index].classList.remove("active");
+  index=endX<startX?(index+1)%slides.length:(index-1+slides.length)%slides.length;
+  slides[index].classList.add("active");
+});
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* 🔥 LOCAL STORAGE CACHE HELPERS */
+function saveCache(key, data) {
+  localStorage.setItem(key, JSON.stringify({
+    data,
+    time: Date.now()
+  }));
+}
+
+function loadCache(key, expirySeconds = 300) { // 5 min
+  const raw = localStorage.getItem(key);
+  if (!raw) return null;
+
+  const cached = JSON.parse(raw);
+  const age = (Date.now() - cached.time) / 1000;
+  if (age > expirySeconds) return null;
+
+  return cached.data;
+}
+
+/* 🔥 FIREBASE INIT */
+const firebaseConfig = {
+  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+  authDomain: "btcinvest-c0e25.firebaseapp.com",
+  projectId: "btcinvest-c0e25"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+/* 🚀 STEP 0: SHOW CACHED DATA INSTANTLY */
+const cached = loadCache("TEAM_COUNT");
+if (cached) {
+  document.getElementById("lv1").textContent = cached.lv1;
+  document.getElementById("lv2").textContent = cached.lv2;
+  document.getElementById("lv3").textContent = cached.lv3;
+  document.getElementById("totalMembers").textContent = cached.total;
+}
+
+/* 🔥 STEP 1: BACKGROUND FIREBASE UPDATE */
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
+
+  // 🔹 Get current user Firestore data
+  const userSnap = await getDoc(doc(db, "users", user.uid));
+  if (!userSnap.exists()) return;
+
+  const currentUser = userSnap.data();
+  const referralCode = currentUser.referralCode;
+  if (!referralCode) return;
+
+  let lv1 = 0, lv2 = 0, lv3 = 0;
+
+  // 🔹 Parallel queries (FAST)
+  const q1 = query(collection(db, "users"), where("referredBy", "==", referralCode));
+  const q2 = query(collection(db, "users"), where("upline2", "==", user.uid));
+  const q3 = query(collection(db, "users"), where("upline3", "==", user.uid));
+
+  const [s1, s2, s3] = await Promise.all([
+    getDocs(q1),
+    getDocs(q2),
+    getDocs(q3)
+  ]);
+
+  lv1 = s1.size;
+  lv2 = s2.size;
+  lv3 = s3.size;
+
+  const total = lv1 + lv2 + lv3;
+
+  // 🔥 UPDATE UI
+  document.getElementById("lv1").textContent = lv1;
+  document.getElementById("lv2").textContent = lv2;
+  document.getElementById("lv3").textContent = lv3;
+  document.getElementById("totalMembers").textContent = total;
+
+  // 🔥 SAVE CACHE
+  saveCache("TEAM_COUNT", { lv1, lv2, lv3, total });
+});
+</script>
+<script>
+const coins = document.querySelectorAll(".coin");
+let coinIndex = 0;
+
+setInterval(() => {
+  coins.forEach(c => c.classList.remove("active"));
+
+  coins[coinIndex].classList.add("active");
+
+  coinIndex = (coinIndex + 1) % coins.length;
+}, 2000); // 👈 har 2 second me next coin
+</script>
+
+
+<script>
+/* 🌗 Auto theme detect */
+function detectTheme() {
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.setAttribute("data-theme", prefersDark ? "dark" : "light");
+}
+detectTheme();
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", detectTheme);
+
+/* 💡 Auto highlight based on page URL */
+const currentPage = window.location.pathname.split("/").pop().toLowerCase();
+document.querySelectorAll(".bottom-nav .nav-item").forEach(item => {
+  const href = item.getAttribute("href")?.toLowerCase();
+  if (currentPage === href) item.classList.add("active");
+});
+
+/* 🌊 Ripple effect + manual highlight */
+document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
+  item.addEventListener("click", (e) => {
+    // highlight
+    document.querySelector(".bottom-nav .nav-item.active")?.classList.remove("active");
+    item.classList.add("active");
+
+    // ripple
+    const ripple = document.createElement("span");
+    ripple.classList.add("ripple");
+    const rect = item.getBoundingClientRect();
+    ripple.style.left = `${e.clientX - rect.left}px`;
+    ripple.style.top = `${e.clientY - rect.top}px`;
+    item.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 500);
+  });
+});
+</script>
+
+<script>
+const texts = [
+  "🌱 Small steps today build big rewards tomorrow",
+  "✨ Consistency is the real key to growth",
+  "🚀 Invite, engage, and grow your network",
+  "💡 Smart work brings long-term benefits",
+  "🤝 Strong teams create stronger success",
+  "📈 Every effort adds value over time",
+  "⭐ Stay active and unlock your potential",
+  "🔥 Focus on progress, not instant results"
+];
+
+let tIndex = 0;
+const textEl = document.getElementById("liveText");
+
+// initial text
+textEl.textContent = texts[0];
+
+setInterval(() => {
+  // exit animation
+  textEl.classList.remove("show");
+  textEl.classList.add("exit");
+
+  setTimeout(() => {
+    // change text while hidden
+    tIndex = (tIndex + 1) % texts.length;
+    textEl.textContent = texts[tIndex];
+
+    // enter animation
+    textEl.classList.remove("exit");
+    textEl.classList.add("enter");
+
+    requestAnimationFrame(() => {
+      textEl.classList.remove("enter");
+      textEl.classList.add("show");
+    });
+
+  }, 600); // must match CSS transition time
+
+}, 3500);
+</script>
+<script>
+const countries = [
+  { flag: "🇮🇳", value: 19 },
+  { flag: "🇺🇸", value: 12 },
+  { flag: "🇬🇧", value: 8 },
+  { flag: "🇧🇷", value: 15 },
+  { flag: "🇵🇭", value: 10 },
+  { flag: "🇮🇩", value: 7 },
+  { flag: "🇳🇬", value: 9 },
+  { flag: "🇧🇩", value: 14 },
+  { flag: "🇲🇽", value: 6 },
+  { flag: "🇻🇳", value: 11 },
+  { flag: "🇵🇰", value: 5 },
+  { flag: "🇰🇪", value: 4 }
+];
+
+const chart = document.getElementById("userChart");
+
+// clear old (safety)
+chart.innerHTML = "";
+
+// create bars
+countries.forEach(item => {
+  const wrap = document.createElement("div");
+  wrap.className = "bar-wrap";
+
+  const bar = document.createElement("div");
+  bar.className = "bar";
+  bar.style.height = item.value + "%";
+
+  const percent = document.createElement("span");
+  percent.textContent = item.value + "%";
+  bar.appendChild(percent);
+
+  const icon = document.createElement("div");
+  icon.className = "flag";
+  icon.textContent = item.flag;
+
+  wrap.appendChild(bar);
+  wrap.appendChild(icon);
+  chart.appendChild(wrap);
+});
+
+// 🔄 soft animation (little movement, not crazy)
+setInterval(() => {
+  document.querySelectorAll(".bar").forEach(bar => {
+    const base = parseInt(bar.querySelector("span").textContent);
+    const variation = Math.floor(Math.random() * 3) - 1; // -1,0,+1
+    const newVal = Math.max(3, Math.min(30, base + variation));
+
+    bar.style.height = newVal + "%";
+    bar.querySelector("span").textContent = newVal + "%";
+  });
+}, 3000);
+</script>
+<script>
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
+
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
+
+  // lighter console annoyance
+  setInterval(() => {
+    console.clear();
+  }, 1500);
+</script>
+
+</body>
+</html>
