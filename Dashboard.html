@@ -15,9 +15,9 @@
   <style>
      body {
        font-family: 'Poppins', sans-serif;
-      background: #f5f7fa;
+      
       margin: 0;
-      padding: 15px;
+      padding: 9px;
       padding-bottom: 90px;
       color: #333;
 
@@ -98,14 +98,84 @@
     }
 
    /* ✅ Header */
-    .header {
-      position: fixed; top: 0; left: 0; width: 100%;
-      background: #ffffff00;
-      color: #21d82b; text-align: center;
-      padding: 10px; font-size: 18px; font-weight: bold;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-      z-index: 1000;
-    }
+.header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  padding: 8px 10px;                 /* 👈 tighter */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  z-index: 1000;
+}
+
+/* LEFT SIDE */
+.header-left{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;                      /* 🔑 MOST IMPORTANT */
+  flex: 1;                           /* 👈 left ko flexible */
+}
+
+/* ICON */
+.header-icon{
+  font-size: 18px;
+  color: #22c55e;
+  flex-shrink: 0;                    /* 👈 icon kabhi shrink nahi */
+}
+
+/* TEXT WRAP */
+.header-text{
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* TITLE */
+.header-title{
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;           /* 👈 agar jagah kam ho */
+}
+
+/* SUBTITLE */
+.header-sub{
+  font-size: 10px;
+  color: #6b7280;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* RIGHT SIDE (🔔 FIXED) */
+.header-right{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;                       /* 🔑 fixed space */
+  height: 36px;
+  flex-shrink: 0;                    /* 👈 kabhi cut nahi */
+}
+
+/* NOTIFICATION ICON */
+.header-right i{
+  font-size: 18px;
+  color: #64748b;
+}
+.header-right{
+  background: rgba(0,0,0,.04);
+  border-radius: 50%;
+}
+
    .wallet-card {
    margin-top: 80px;  /* sirf wallet box ko neeche karega */
    }
@@ -277,7 +347,7 @@
 /* fuuter ka hai */
 
   .footer {
-    background: #e8f5e9;
+   
     color: #333;
     padding: 50px 20px 20px;
   }
@@ -407,19 +477,25 @@
 
 /* Top Big Box */
 .stats-main {
-  background: linear-gradient(135deg, #00c6ff, #00ff99);
   text-align: center;
   padding: 20px;
-  color: #fff;
+  color: #1f2937;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
+
 .stats-main .stats-value {
-  font-size: 26px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 500;              /* 👈 PATLA */
+  letter-spacing: 0.4px;         /* 👈 softness */
+  color: #0f172a;                /* harsh black hata */
 }
+
 .stats-main .stats-label {
-  font-size: 14px;
-  opacity: 0.9;
-  margin-top: 6px;
+  font-size: 13px;
+  margin-top: 8px;
+  color: #6b7280;
+  font-weight: 400;              /* 👈 light */
 }
 
 /* Grid Layout */
@@ -462,9 +538,9 @@
 }
 
 /* Colors */
-.stats-item.yellow { background: #fff7e6; }
-.stats-item.pink { background: #ffe6e9; }
-.stats-item.blue { background: #e6f2ff; }
+.stats-item.yellow { background: #f7f7f700; }
+.stats-item.pink { background: #f7f7f700; }
+.stats-item.blue { background: #f7f7f700; }
 
 
 /* Full Page Click Ripple */
@@ -492,7 +568,21 @@
 
 
 
-   <div class="header">MY Dashword </div>
+<div class="header">
+  <div class="header-left">
+    <i class="ri-dashboard-3-line header-icon"></i>
+    <div class="header-text">
+      <div class="header-title">My Dashboard</div>
+      <div class="header-sub">Overview & account activity</div>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <i class="ri-notification-3-line"></i>
+  </div>
+</div>
+
+
 <!-- 🌿 TrustDollar Balance Card -->
 <div class="trust-card">
   <style>
@@ -614,12 +704,109 @@
     @media(max-width:480px){
       .trust-card {
         padding: 16px;
-        border-radius: 10px;
+        border-radius: 5px;
         max-width: 90%;
       }
       .trust-amount { font-size: 22px; }
       .trust-actions button { font-size: 12px; padding: 9px 0; }
     }
+    .stats-note{
+  font-size:12px;
+  margin-top:6px;
+  color:#6b7280;
+  font-weight:400;
+}
+
+.status-title{
+  font-size:12px;
+  font-weight:600;
+  color:#64748b;
+  letter-spacing:.6px;
+  margin:6px 0 8px;
+  text-transform:uppercase;
+}
+
+.status-guide{
+  background:#ffffff;
+  border:1px solid #e5e7eb;
+  border-radius:5px;
+  padding:16px 18px;
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  font-size:14px;
+  color:#0f172a;
+ 
+}
+
+/* 🔴 live dot */
+.guide-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#22c55e;
+  margin-top:6px;
+  animation:pulse 1.4s infinite;
+}
+
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(34,197,94,.6)}
+  70%{box-shadow:0 0 0 6px rgba(34,197,94,0)}
+  100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}
+}
+
+.status-text{
+  line-height:1.6;
+}
+
+/* MAIN SYSTEM BOX */
+.trust-box{
+  background:#ffffff;
+  border:1px solid #e5e7eb;
+  border-radius:5px;
+  padding:18px 20px;
+  margin:20px 0;
+ 
+  font-size:14px;
+  color:#0f172a;
+}
+
+/* MAIN TITLE */
+.trust-title{
+  font-size:16px;
+  font-weight:600;
+  color:#0f172a;
+  margin-bottom:16px;
+}
+
+/* SECTION LABELS (SECURITY STATUS, DATA & SYNC etc.) */
+.trust-box p strong{
+  display:block;
+  font-size:12px;
+  font-weight:600;
+  color:#64748b;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+
+/* SECTION TEXT */
+.trust-box p{
+  margin:0 0 18px;
+  line-height:1.65;
+  color:#334155;
+  font-size:14px;
+}
+
+/* LAST NOTE */
+.trust-note{
+  font-size:12px;
+  color:#fffefe;
+  border-top:1px solid #e5e7eb;
+  padding-top:12px;
+  margin-top:6px;
+}
+
   </style>
 <style>
 .username-box {
@@ -662,6 +849,9 @@
     </div>
     <div class="trust-note">Tap to hide balance</div>
   </div>
+<p class="trust-note">
+  This dashboard is linked to your verified account.
+</p>
 
  <!-- 🔥 User Info (Live from Firebase) -->
 <div class="trust-userline">
@@ -724,6 +914,21 @@ document.querySelector(".btn-add").addEventListener("click", () => {
     <button class="btn" onclick="window.location.href='withdrawal.html'"><i class='bx bx-upload'></i> Withdraw </button>
     <button class="btn" onclick="window.location.href='record.html'"> <i class='bx bx-transfer'></i> Record</button>
    </div>
+
+<div class="status-wrapper">
+
+ <div class="status-title"> 🟡SYSTEM NOTICE 🟡</div>
+
+
+  <div class="status-guide">
+    <span class="guide-dot"></span>
+    <span id="statusGuideText" class="status-text">
+      Account status is normal and active.
+    </span>
+  </div>
+
+</div>
+
 
   <!-- Income Card -->
   <div class="income-card"><h3>My Income (USDT)</h3>
@@ -827,11 +1032,42 @@ document.querySelector(".btn-add").addEventListener("click", () => {
       <h4>Mining Rate</h4><div class="stats-subvalue" id="yesterdayOutput">$4899140</div><p>Current Hash rate</p><div class="stats-subvalue">300 (PH/s)</div>
     </div>
 
-    <div class="stats-item pink"><h4>Participants</h4><div class="stats-subvalue" id="participants">11016687</div>
-    </div>
+  <div class="stats-item pink">
+  <h4>Participants</h4>
+  <div class="stats-subvalue" id="participants">11,016,687</div>
+  <p class="stats-note">Verified active participants</p>
+  <p class="stats-note">Total computing strength</p>
 
-    <div class="stats-item blue full"><h4>Countries Covered</h4><div class="stats-subvalue">135+</div></div></div>
+</div>
+
+<div class="stats-item blue full"><h4>Countries Covered</h4><div class="stats-subvalue">135+</div></div></div>
    </div>
+
+<div class="trust-box">
+  <div class="trust-title"> Transparency & System Policy</div>
+
+  <p>
+    <strong>Automated Processing</strong>
+    All activities on this platform are processed through automated systems.
+    User data, rewards, and balances are handled transparently.
+  </p>
+
+  <p>
+    <strong>Fair Usage Policy</strong>
+    Duplicate accounts, artificial activity, or manual manipulation
+    of rewards are strictly not allowed.
+  </p>
+
+  <p>
+    <strong>System Monitoring</strong>
+    System logs are reviewed regularly to ensure fairness,
+    accuracy, and long-term platform stability.
+  </p>
+
+  <div class="trust-note">
+    Thank you for using TrustDollar responsibly.
+  </div>
+</div>
 
    <!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
 <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
@@ -1035,27 +1271,45 @@ document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
       </div>
     </div>
 
-    <div class="footer-col">
-      <h3>Stay Updated</h3>
-      <p>Subscribe for updates, news & earning tips.</p>
-      <form id="subscribeForm" class="subscribe-form" method="POST" action="https://formsubmit.co/trustdollarteam@gmail.com">
-        <input type="email" name="email" placeholder="Enter your email" required>
-        <button type="submit">Submit</button>
+<div class="footer-col">
+  <h3>Stay Updated</h3>
+  <p>Subscribe for updates, news & earning tips.</p>
 
-        <!-- Hidden fields for formsubmit.co -->
-        <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="_subject" value="New Subscriber!">
-      </form>
-    </div>
+  <form id="subscribeForm" class="subscribe-form"
+        method="POST"
+        action="https://formsubmit.co/trustdollarteam@gmail.com">
 
-    <div id="successPopup" class="popup">
-     Thank you for subscribing.
-   </div>
- </div>
+    <input type="email" name="email" placeholder="Enter your email" required>
+    <button type="submit">Submit</button>
 
- <div class="footer-bottom">
+    <!-- Hidden fields -->
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_subject" value="New Subscriber!">
+
+    <!-- ✅ AUTO THANK YOU EMAIL TO USER -->
+    <input type="hidden" name="_autoresponse"
+      value="Thank you for subscribing to TrustDollar!&#10;&#10;
+We’re glad to have you with us.&#10;&#10;
+Your subscription is now active. You’ll receive important updates,
+earning tips, and system notifications directly in your inbox.&#10;&#10;
+Our platform operates with automated monitoring and security checks
+to ensure transparency and smooth performance.&#10;&#10;
+Stay consistent, follow system guidelines, and focus on long-term growth.
+We’re here to keep you informed every step of the way.&#10;&#10;
+— Team TrustDollar" />
+
+  </form>
+</div>
+
+<div id="successPopup" class="popup">
+  Thank you for subscribing.
+</div>
+
+<div class="footer-bottom">
   © 2025 TrustDollar V2 | All Rights Reserved
 </div>
+
+
 </footer>
   <div id="greetingPopup" 
      style="display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%);
@@ -1388,55 +1642,40 @@ document.addEventListener("click", function (e) {
 
 </script>
 <script>
-  window.addEventListener("load", showGreetingOnce);
-</script>
-<script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
+(() => {
+  const messages = [
+    "System status verified. Your account is active and secure.",
+    "All activities are monitored under automated security checks.",
+    "Invite only genuine users to maintain account integrity.",
+    "Multiple or duplicate accounts may lead to restriction.",
+    "Rewards are calculated only after successful system verification.",
+    "No manual action is required from your side at this moment.",
+    "Your data is protected using encrypted security protocols.",
+    "System updates run automatically to ensure smooth performance.",
+    "Account health is reviewed continuously by the system.",
+    "Thank you for following platform guidelines."
+  ];
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  });
+  const el = document.getElementById("statusGuideText");
+  if (!el) return;
 
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
+  let index = 0;
 
-  // 🔐 Detect DevTools using resize trick (no popup)
+  // ✅ initial safe text
+  el.textContent = messages[0];
+
   setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
+    el.classList.add("hide");
 
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
+    setTimeout(() => {
+      index = (index + 1) % messages.length;
+      el.textContent = messages[index];
+      el.classList.remove("hide");
+    }, 500);
 
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
+  }, 3500);
+})();
 </script>
+
 </body>
 </html>
-
