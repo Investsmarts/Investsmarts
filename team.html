@@ -316,6 +316,29 @@ html,body{
   transform:scale(1.08);
   background:#dcfce7;
 }
+.empty-state img{
+  filter:
+    grayscale(1)
+    sepia(.35)
+    hue-rotate(85deg)
+    brightness(1.08)
+    contrast(.9);
+}
+.invite-btn{
+  position:relative;
+  overflow:hidden;
+}
+
+.invite-btn .typing-cursor::after{
+  content:"|";
+  margin-left:2px;
+  animation:blink 1s infinite;
+}
+
+@keyframes blink{
+  0%,50%{opacity:1}
+  51%,100%{opacity:0}
+}
 
 </style>
 
@@ -405,9 +428,20 @@ async function fetchTeamData(user) {
 
   const myCode = meSnap.data().referralCode;
 
-  const q1 = query(collection(db,"users"), where("referredBy","==",myCode), limit(30));
-  const q2 = query(collection(db,"users"), where("upline2","==",user.uid), limit(30));
-  const q3 = query(collection(db,"users"), where("upline3","==",user.uid), limit(30));
+const q1 = query(
+  collection(db,"users"),
+  where("referredBy","==",myCode)
+);
+
+const q2 = query(
+  collection(db,"users"),
+  where("upline2","==",user.uid)
+);
+
+const q3 = query(
+  collection(db,"users"),
+  where("upline3","==",user.uid)
+);
 
   const [s1, s2, s3] = await Promise.all([
     getDocs(q1),
@@ -445,30 +479,36 @@ function pushUser(u, level) {
 }
 
 /* ================= RENDER ================= */
-function renderTeam(list) {
+function renderTeam(list){
 
-  if (list.length === 0) {
+  // ✅ COUNT YAHIN SE
+  updateCount(list);
 
-    if (emptyRendered) return;   // ✅ FIXED: prevent re-render blink
+  if(list.length === 0){
+
+    if(emptyRendered) return;
     emptyRendered = true;
 
     teamList.innerHTML = `
       <div class="empty-state fade-in">
-        <img src="Promotion/WhatsApp Image 2025-12-23 at 9.24.13 PM.jpeg" alt="Team Illustration">
+        <img src="Promotion/WhatsApp Image 2025-12-23 at 9.24.13 PM.jpeg">
         <h3>Your Team Awaits</h3>
         <p>
           No members have joined your team yet.<br>
           Share your referral link to start building a strong and active network.
         </p>
         <button class="invite-btn" onclick="goToInvite()">
-  <i class="ri-user-add-line"></i>
-  Invite & Earn Rewards
-</button>
-
+          <i class="ri-user-add-line"></i>
+          Invite & Earn Rewards
+        </button>
       </div>
     `;
+    setTimeout(startInviteTyping, 100);
     return;
+
   }
+
+  emptyRendered = false;
 
   let html = "";
   list.forEach(u => {
@@ -512,15 +552,11 @@ window.filterLevel = function(level, btn){
 };
 
 function renderByCurrentLevel(){
-  let list;
-  if(currentLevel === "all"){
-    list = allMembers;
-  }else{
-    list = allMembers.filter(u => u.level === currentLevel);
-  }
+  const list = currentLevel === "all"
+    ? allMembers
+    : allMembers.filter(u => u.level === currentLevel);
 
-  renderTeam(list);
-  updateCount(list);
+  renderTeam(list); // 👈 count automatic
 }
 
 
@@ -537,14 +573,14 @@ searchInput.addEventListener("input", () => {
     ? base.filter(u => u.name.toLowerCase().includes(keyword))
     : base;
 
-  renderTeam(filtered);
-  updateCount(filtered);   // ✅ count bhi update hoga
+  renderTeam(filtered); // 👈 count automatic
 });
+
 
 
 /* ================= REFRESH ================= */
 refreshBtn.addEventListener("click", async () => {
-    updateCount([]);   
+    
   showVideoLoader();
 });
 
@@ -604,6 +640,32 @@ function updateCount(list){
   el.textContent = list.length;
   el.classList.add("bump");
   setTimeout(()=>el.classList.remove("bump"),150);
+}
+
+
+function startInviteTyping(){
+  const inviteBtn = document.querySelector(".invite-btn");
+  if(!inviteBtn) return;
+
+  const fullText = "Invite & Earn Rewards";
+  let i = 0;
+
+  inviteBtn.innerHTML = `
+    <i class="ri-user-add-line"></i>
+    <span class="typing-cursor"></span>
+  `;
+
+  const span = inviteBtn.querySelector(".typing-cursor");
+
+  function type(){
+    if(i <= fullText.length){
+      span.textContent = fullText.slice(0, i);
+      i++;
+      setTimeout(type, 80);
+    }
+  }
+
+  type();
 }
 
 </script>
