@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<!-- ✅ Mobile zoom completely disabled -->
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no">
+
+<title>Dream Reward</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Inter,system-ui,sans-serif;
+  background:#f8fafc;
+  color:#0f172a;
+
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+
+.container{
+  width:100%;
+  max-width:420px;
+  margin:auto;
+  padding:16px 16px 40px;
+}
+
+/* =====================
+   HEADER
+===================== */
+.page-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.back-btn{
+  border:none;
+  background:#ffffff;
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.05);
+  cursor:pointer;
+}
+
+.back-btn i{
+  font-size:20px;
+  color:#16a34a;
+}
+
+.back-btn:active{
+  transform:scale(.95);
+}
+
+.page-title{
+  font-size:18px;
+  font-weight:600;
+}
+
+/* =====================
+   IMAGE
+===================== */
+.image-box{
+  margin:20px 0;
+  text-align:center;
+}
+
+.image-box img{
+  width:100%;
+  height:auto;
+  border-radius:16px;
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+  user-select:none;
+  pointer-events:none;
+}
+
+/* =====================
+   TEXT
+===================== */
+.motivation-text{
+  font-size:16px;          /* ✅ zoom safe */
+  line-height:1.7;
+  color:#475569;
+  text-align:center;
+}
+</style>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <button class="back-btn" onclick="goBack()">
+      <i class="ri-arrow-left-line"></i>
+    </button>
+    <div class="page-title">Dream Reward</div>
+  </div>
+
+  <!-- IMAGE -->
+  <div class="image-box">
+    <!-- 👇 apni image ka path -->
+    <img src="Promotion/CUH7SDGFJHSD8HKDHD8WEHJKHBDHDDSDFSDF.png" alt="Dream Reward">
+  </div>
+
+  <!-- MOTIVATIONAL TEXT -->
+  <p class="motivation-text">
+    Every big dream begins with a strong decision to move forward.
+    Achieving your goals requires consistent effort, honesty,
+    and patience. True success is never instant — it is built
+    step by step through dedication and integrity.
+    Stay focused, work sincerely, and continue giving your best,
+    because every genuine effort brings you closer to turning
+    your dreams into reality.
+  </p>
+
+</div>
+
+<script>
+function goBack(){
+  if(document.referrer && document.referrer !== ""){
+    window.history.back();
+  }else{
+    window.location.href = "promotion.html";
+  }
+}
+</script>
+
+</body>
+</html>
