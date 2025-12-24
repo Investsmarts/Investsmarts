@@ -1,548 +1,853 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" 
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TrustDollar | Real-Time Referrals</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+<meta charset="UTF-8">
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<title>Reward Dashboard</title>
 <!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
 <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+<!-- ICONS -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+
 <style>
-body {
-  font-family: "Poppins", sans-serif;
-  background: #f1f5f9;
+  /* ==============================
+   GLOBAL SCROLL FIX
+============================== */
+html, body {
+  height: 100%;
   margin: 0;
-  padding-top: 70px;
-  padding-bottom: 100px;
-  color: #333;
-}
-.container { max-width: 950px; margin: auto; padding: 10px; }
-.card {
-  background: #fff; padding: 20px; border-radius: 5px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08); margin-bottom: 20px;
-  text-align: center;
-}
-.header {
-  position: fixed; top: 0; left: 0; width: 100%;
-  background: #ffffff00;
-  color: #21d82b; text-align: center;
-  padding: 10px; font-size: 18px; font-weight: bold;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-  z-index: 1000;
-}
-.team-grid {
-  display: grid; grid-template-columns: repeat(2,1fr);
-  gap: 14px; margin-top: 15px;
-}
-.team-box {
-  background: #f8fafc; border-radius: 1px;
-  padding: 16px 0; box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-  text-align: center; transition: 0.3s;
-}
-.team-box:hover { transform: translateY(-3px); }
-.team-box .label { font-size: 15px; color: #2563eb; font-weight: 600; margin-bottom: 6px; display:block; }
-.team-box .value {
-  font-size: 16px; font-weight: 700; color: #16a34a;
-   border: 1px solid #a7f3d0;
-  padding: 6px 12px; border-radius: 5px;
-}
-.team-box.total { background: #f8fafc; }
-.team-box.total .value { background:#7299c0; color:#fff; }
-
-.btn-row { display:flex; justify-content:center; gap:40px; margin-top:15px; }
-.btn { padding:10px 18px; border:none; border-radius:5px; cursor:pointer; font-weight:bold; color:#fff; transition:0.3s; }
-.btn-copy { background:#00aaff; }
-.btn-share { background:#ff9800; }
-#qrcode-wrapper { display:flex; justify-content:center; margin:15px 0; }
-#qrcode { padding:10px; border:2px solid #22c55e; border-radius:5px; }
-
-.level-buttons { display:flex; justify-content:space-between; gap:8px; margin:15px 0; }
-.level-btn {
-  flex:1; padding:10px; border:none; border-radius:8px;
-  font-weight:600; cursor:pointer; background:#e5e7eb; color:#333;
-}
-.level-btn.active { background:#2563eb; color:#fff; }
-
-.level-content {
-  display:none; border:1px solid #e5e7eb; border-radius:5px;
-  padding:12px; background:#fff; margin-bottom:12px;
-}
-.level-content.active { display:block; }
-
-.user-table { width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
-.user-table th, .user-table td { padding:10px; border-bottom:1px solid #eee; text-align:center; }
-.status-active { color:green; font-weight:bold; }
-.status-inactive { color:red; }
-
-.popup {
-  position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
-  background:#333; color:#fff; padding:12px 18px; border-radius:5px;
-  display:none; z-index:999;
-}
-
-/* scroll & search */
-.scrollable-list {
-  max-height: 250px;
   overflow-y: auto;
-  border: 1px solid #e5e7eb;
-  border-radius: 5px;
-  padding: 8px;
-  margin-top: 10px;
-  background: #fff;
-}
-.scrollable-list::-webkit-scrollbar { width: 6px; }
-.scrollable-list::-webkit-scrollbar-thumb { background: #00c853; border-radius: 6px; }
-.scrollable-list::-webkit-scrollbar-track { background: #f1f5f9; }
-
-.search-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 10px 0 8px;
-  gap: 6px;
-}
-.search-bar input {
-  flex: 1;
-  padding: 8px 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 13px;
-}
-.search-bar button {
-  background: #00c853;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.search-bar button:hover { background: #00994e; }
-
-
-
-#qrcode img {
-  border-radius: 10px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  -webkit-overflow-scrolling: touch;
 }
 
+* {
+  box-sizing: border-box;
+}
 
-/* 🌟 TrustDollar Popup Notification */
-.td-popup {
+/* ==============================
+   BODY
+============================== */
+body {
+  font-family: Inter, system-ui, sans-serif;
+  background: #f5f7fb;
+  color: #0f172a;
+}
+
+/* ==============================
+   FIXED HEADER
+============================== */
+.header {
   position: fixed;
-  bottom: 90px;
+  top: 0;
   left: 50%;
   transform: translateX(-50%);
-  background: #00c853;
-  color: #fff;
-  font-weight: 600;
-  padding: 10px 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.4s ease;
-  z-index: 9999;
-}
-.td-popup.show {
-  opacity: 1;
-  bottom: 110px;
-}
-
-
-
-
-/* 🌟 Top Fixed Level Navigation (like Smart Mining) */
-.top-level-nav {
-  position: fixed;
-  top: 48px; /* Just below your header */
-  left: 0;
   width: 100%;
-  background: #ffffff;
+  max-width: 420px;
+
+  background: #fff;
+  padding: 10px 14px;
+
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  z-index: 10000;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #16a34a;
+  color: #fff;
+
+  display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 27px;
-  padding: 9px 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  z-index: 999;
+  font-weight: 700;
+  font-size: 16px;
+
+  position: relative;
+  overflow: hidden;
 }
 
-.level-tab {
-  background: #f1f5f9;
-  border: 1px solid #d1d5db;
-  border-radius: 5px;
-  padding: 8px 16px;
+.app-name {
+  font-size: 15px;
   font-weight: 600;
-  color: #2563eb;
+}
+
+.app-sub {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.header-right i {
+  font-size: 22px;
+  color: #16a34a;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
-.level-tab.active {
-  background: #22c55e;
-  color: white;
-  border-color: #22c55e;
-  box-shadow: 0 3px 8px rgba(34,197,94,0.4);
+/* ==============================
+   MAIN SCROLL CONTAINER
+============================== */
+.container {
+  max-width: 420px;
+  margin: auto;
+
+  /* 🔝 header space | 🔽 bottom nav space */
+  padding: 60px 9px 92px;
+
+  min-height: 100vh;
 }
 
-.level-tab:hover {
-  background: #dcfce7;
+/* ==============================
+   ACTION GRID
+============================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
-/* ✅ Adjust padding so content doesn't hide under top nav */
-body {
-  padding-top: 100px !important;
+.action-wrapper {
+  background: #fff;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
 }
 
+.action-card {
+  background: #fff;
+  border-radius: 5px;
+  height: 110px;
 
-.referral-link {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  white-space: normal;
-  max-width: 100%;
-  display: inline-block;
-  color: #2563eb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.action-card i {
+  font-size: 26px;
+  color: #505359;
+  margin-bottom: 8px;
+}
+
+.action-card span {
+  font-size: 13px;
   font-weight: 500;
+  color: #334155;
   text-align: center;
+  line-height: 1.3;
+}
+
+/* ==============================
+   SLIDER
+============================== */
+.reward-slider {
+  margin-top: 16px;
+  height: 200px;          /* 👈 thoda bada */
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  background: #000;      /* side space ke liye */
+}
+
+.reward-slider img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;   /* ✅ FULL IMAGE */
+  opacity: 0;
+  transition: opacity .6s ease;
+}
+
+.reward-slider img.active {
+  opacity: 1;
+}
+
+/* ==============================
+   OVERVIEW
+============================== */
+h2 {
+  font-size: 17px;
+  margin: 18px 0 10px;
+}
+
+.overview {
+  background: #fff;
+  border-radius: 6px;
+  padding: 14px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.05);
+}
+
+.overview-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
   font-size: 14px;
-  background: #f0fdf4;
-  border: 1px solid #86efac;
-  border-radius: 8px;
-  padding: 6px 8px;
-  word-break: break-all;
 }
 
-
-/* 🌈 Animated border for Level 1 */
-.team-box:nth-child(1) {
-  position: relative;
-  border-radius: 10px;
-  overflow: hidden;
-  background: #f8fafc;
+.overview-row.total {
+  font-weight: 700;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 8px;
+  margin-bottom: 6px;
 }
 
-.team-box:nth-child(1)::before {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border-radius: 5px;
-  background: conic-gradient(
-    from 0deg,
-    #ff0000,
-    #ff9900,
-    #00ff00,
-    #00ffff,
-    #0000ff,
-    #ff00ff,
-    #ff0000
-  );
-  animation: rotateBorder 4s linear infinite;
-  z-index: 0;
+.muted {
+  color: #64748b;
 }
 
-.team-box:nth-child(1)::after {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  border-radius: 5px;
-  background: #f8fafc;
-  z-index: 1;
-}
-
-.team-box:nth-child(1) * {
-  position: relative;
-  z-index: 2;
-}
-
-@keyframes rotateBorder {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-
-/* 🔥 Smooth hide/show animation */
-.header,
-.top-level-nav {
-  transition: transform 0.4s ease, opacity 0.3s ease;
-}
-
-.header.hide,
-.top-level-nav.hide {
-  transform: translateY(-100%);
-  opacity: 0;
-}
-
-/* 🌈 Animated rotating border for ALL team boxes */
-.team-box {
-  position: relative;
-  border-radius: 5px;
-  overflow: hidden;
-  background: #f8fafc;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  cursor: pointer;
-}
-
-.team-box::before {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border-radius: 12px;
-  background: conic-gradient(
-    from 0deg,
-    #ff0000,
-    #ff9900,
-    #00ff00,
-    #00ffff,
-    #0000ff,
-    #ff00ff,
-    #ff0000
-  );
-  animation: rotateBorder 4s linear infinite;
-  z-index: 0;
-}
-
-.team-box::after {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  border-radius: 5px;
-  background: #f8fafc;
-  z-index: 1;
-}
-
-.team-box * {
-  position: relative;
-  z-index: 2;
-}
-
-@keyframes rotateBorder {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* 👇 Optional: Hover effect thoda upar uthta hai */
-.team-box:hover {
-  transform: translateY(-4px);
-}
-
-/* 🌀 Hide animation (already working with your JS) */
-.team-box.hide {
-  transform: scale(0.9);
-  opacity: 0;
-  pointer-events: none;
-}
-
-
-
+/* ==============================
+   BOTTOM NAVBAR
+============================== */
 :root {
   --nav-bg: #fff;
   --nav-text: #444;
-  --nav-border: rgba(0, 0, 0, 0.08);
+  --nav-border: rgba(0,0,0,.08);
 }
 
-[data-theme="dark"] {
-  --nav-bg: #0f0f0f;
-  --nav-text: #ccc;
-  --nav-border: rgba(255, 255, 255, 0.1);
-}
-
-/* 🔹 Navbar Base (height reduced) */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
+
   background: var(--nav-bg);
   border-top: 1px solid var(--nav-border);
+
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 10px 0; /* 👈 thinner padding */
-  z-index: 9999;
-  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
+
+  padding: 10px 0;
+  z-index: 10000;
 }
 
-/* 🔹 Nav items (slimmer text + less spacing) */
 .bottom-nav .nav-item {
   flex: 1;
   text-align: center;
+  font-size: 10px;
   color: var(--nav-text);
   text-decoration: none;
-  font-size: 10px; /* 👈 smaller text */
-  position: relative;
-  padding: 4px 0; /* 👈 less padding */
-  transition: all 0.3s ease;
 }
 
-/* 🔹 Icon (reduced size + gap) */
 .bottom-nav .nav-item i {
-  font-size: 18px; /* 👈 smaller icons (was 22px) */
+  font-size: 18px;
   display: block;
-  opacity: 0.75;
-  margin-bottom: 2px; /* 👈 smaller gap */
-  transition: all 0.3s ease;
+  margin-bottom: 2px;
+  opacity: .8;
 }
 
-/* 🔹 Text */
-.bottom-nav .nav-item span {
-  opacity: 0.7;
-  transition: all 0.3s ease;
-}
-
-/* 🔹 Divider lines */
-.bottom-nav .nav-item:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 25%;
-  width: 1px;
-  height: 50%;
-  background: var(--nav-border);
-}
-
-/* 🔹 Active State (icons glow thoda soft) */
 .bottom-nav .nav-item.active i {
-  transform: scale(1.1);
   opacity: 1;
+  transform: scale(1.1);
+}
+/* ==============================
+   BOTTOM NAV ACTIVE COLORS (RESTORE)
+============================== */
+.bottom-nav .nav-item.active i {
+  opacity: 1;
+  transform: scale(1.12);
   animation: bulbGlow 1.6s ease-in-out infinite alternate;
 }
+
 .bottom-nav .nav-item.active span {
   opacity: 1;
   font-weight: 600;
 }
 
-/* Active colors */
-.bottom-nav .nav-item:nth-child(1).active i { color: #00c853; }
-.bottom-nav .nav-item:nth-child(2).active i { color: #ffc107; }
-.bottom-nav .nav-item:nth-child(3).active i { color: #ff3b30; }
-.bottom-nav .nav-item:nth-child(4).active i { color: #00bcd4; }
+/* Individual colors */
+.bottom-nav .nav-item:nth-child(1).active i { color: #00c853; } /* Home */
+.bottom-nav .nav-item:nth-child(2).active i { color: #ffc107; } /* Mining */
+.bottom-nav .nav-item:nth-child(3).active i { color: #ff3b30; } /* Promotion */
+.bottom-nav .nav-item:nth-child(4).active i { color: #00bcd4; } /* Account */
 
+/* Glow animation */
 @keyframes bulbGlow {
   from { filter: brightness(1); }
-  to { filter: brightness(1.6); }
+  to   { filter: brightness(1.6); }
 }
 
-/* 🔹 Ripple (same) */
-.ripple {
+/* ==============================
+   COIN ROTATOR
+============================== */
+.coin {
   position: absolute;
-  border-radius: 50%;
-  transform: scale(0);
-  animation: ripple 0.6s linear;
-  background: rgba(0, 200, 83, 0.15);
-}
-@keyframes ripple {
-  to { transform: scale(3); opacity: 0; }
-}
-
-/* 🔹 Responsive tuning */
-@media (max-width: 480px) {
-  .bottom-nav .nav-item i {
-    font-size: 17px;
-  }
-  .bottom-nav .nav-item span {
-    font-size: 9.5px;
-  }
-}
-/* 🔄 Share button animation */
-.btn-share {
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-share.loading {
-  pointer-events: none;
-  opacity: 0.8;
-}
-
-.btn-share.loading::after {
-  content: "Sharing...";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
+  font-size: 18px;
   color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  animation: fadeIn 0.3s ease;
+  opacity: 0;
+  transform: scale(.6) rotate(0deg);
+  transition: .6s ease;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.coin.active {
+  opacity: 1;
+  transform: scale(1) rotate(360deg);
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+
+.live-card{
+  background:#fff;
+  border-radius:5px;
+  padding:12px 14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:13px;
+  font-weight:500;
+  color:#0f172a;
+  box-shadow:0 6px 14px rgba(0,0,0,.06);
+  border-left:1px solid #ef4444;
+  margin:14px 0;
+}
+
+.reward-slider::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.05),
+    rgba(0,0,0,.15)
+  );
+}
+
+/* 🔴 blinking dot */
+.live-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#ef4444;
+  animation:pulse 1.4s infinite;
+}
+
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(239,68,68,.7)}
+  70%{box-shadow:0 0 0 6px rgba(239,68,68,0)}
+  100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}
+}
+.live-text{
+  display:inline-block;
+  transition: transform .6s ease, opacity .6s ease;
+}
+
+.live-text.enter{
+  opacity:0;
+  transform: translateY(8px);
+}
+
+.live-text.show{
+  opacity:1;
+  transform: translateY(0);
+}
+
+.live-text.exit{
+  opacity:0;
+  transform: translateY(-8px);
+}
+
+
+.chart-card{
+  background:#fff;
+  border-radius:8px;
+  padding:14px;
+  margin:16px 0;
+  box-shadow:0 6px 14px rgba(0,0,0,.06);
+}
+
+.chart-title{
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:12px;
+}
+
+.bar-chart{
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  height:150px;
+}
+
+.bar-wrap{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  font-size:10px;
+}
+
+.bar{
+  width:100%;
+  background:linear-gradient(180deg,#22c55e,#16a34a);
+  border-radius:4px 4px 0 0;
+  height:60%;
+  position:relative;
+  transition:height 1.2s ease;
+}
+
+.bar span{
+  position:absolute;
+  top:-20px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:11px;
+  font-weight:600;
+  color:#0f172a;
+  background:#fff;
+  padding:2px 6px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,.1);
+}
+
+.flag{
+  margin-top:6px;
+  font-size:14px;
+}
+.bar{
+  width:100%;
+  min-height:20px;          /* ✅ safety */
+  background:linear-gradient(180deg,#22c55e,#16a34a);
+  border-radius:4px 4px 0 0;
+  position:relative;
+  transition:height 1.2s ease;
+}
+.bar{
+  width:100%;
+  min-height:100px;
+  border-radius:6px 6px 0 0;
+  position:relative;
+  transition:height 1.2s ease, background .6s ease;
+}
+
+/* 🎨 different colors for each danda */
+.bar-wrap:nth-child(1)  .bar{ background:linear-gradient(180deg,#22c55e,#16a34a); }
+.bar-wrap:nth-child(2)  .bar{ background:linear-gradient(180deg,#3b82f6,#2563eb); }
+.bar-wrap:nth-child(3)  .bar{ background:linear-gradient(180deg,#f97316,#ea580c); }
+.bar-wrap:nth-child(4)  .bar{ background:linear-gradient(180deg,#a855f7,#7e22ce); }
+.bar-wrap:nth-child(5)  .bar{ background:linear-gradient(180deg,#06b6d4,#0891b2); }
+.bar-wrap:nth-child(6)  .bar{ background:linear-gradient(180deg,#84cc16,#4d7c0f); }
+.bar-wrap:nth-child(7)  .bar{ background:linear-gradient(180deg,#ef4444,#b91c1c); }
+.bar-wrap:nth-child(8)  .bar{ background:linear-gradient(180deg,#14b8a6,#0f766e); }
+.bar-wrap:nth-child(9)  .bar{ background:linear-gradient(180deg,#eab308,#a16207); }
+.bar-wrap:nth-child(10) .bar{ background:linear-gradient(180deg,#6366f1,#4338ca); }
+.bar-wrap:nth-child(11) .bar{ background:linear-gradient(180deg,#ec4899,#be185d); }
+.bar-wrap:nth-child(12) .bar{ background:linear-gradient(180deg,#0ea5e9,#0369a1); }
+
+.signal-card{
+  background:#ffffff;              /* 🤍 safed box */
+  color:#16a34a;                   /* 🌿 green text */
+  border-radius:5px;
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-size:13px;
+  margin:16px 0;
+  box-shadow:0 6px 14px rgba(0,0,0,.06);
+  border:1px solid #dcfce7;        /* light green border */
+}
+
+.signal-dot{
+  width:12px;                      /* ⬆️ bada dot */
+  height:12px;
+  border-radius:50%;
+  background:#22c55e;
+  animation:blink 1.2s infinite;
+  box-shadow:0 0 0 0 rgba(34,197,94,.6);
+}
+
+@keyframes blink{
+  0%{
+    opacity:.4;
+    box-shadow:0 0 0 0 rgba(34,197,94,.6);
+  }
+  70%{
+    opacity:1;
+    box-shadow:0 0 0 8px rgba(34,197,94,0);
+  }
+  100%{
+    opacity:.4;
+    box-shadow:0 0 0 0 rgba(34,197,94,0);
+  }
+}
+.notice-box{
+  background:#ffffff;
+  border:1px solid #e5e7eb;
+  border-radius:5px;
+  padding:14px 16px;
+  margin:16px 0;
+}
+
+.notice-label{
+  display:block;
+  font-size:11px;
+  color:#64748b;
+  margin-bottom:6px;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+}
+
+#noticeText{
+  font-size:13px;
+  color:#0f172a;
+  line-height:1.5;
+  min-height:38px;
+  white-space:pre-wrap;
+}
+.status-box{
+  background:#ffffff;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  padding:14px 16px;
+  margin:16px 0;
+}
+
+.status-label{
+  display:block;
+  font-size:11px;
+  color:#64748b;
+  margin-bottom:6px;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+}
+
+#statusText{
+  font-size:13px;
+  color:#0f172a;
+  line-height:1.5;
+  min-height:38px;
+}
+
+.system-box{
+  background:#ffffff;
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  padding:16px;
+  margin:18px 0;
+}
+
+.system-title{
+  font-size:16px;
+  font-weight:600;
+  color:#0f172a;
+  margin-bottom:14px;
+}
+
+.system-section{
+  margin-bottom:14px;
+}
+
+.system-section:last-child{
+  margin-bottom:0;
+}
+
+.system-label{
+  display:block;
+  font-size:11px;
+  color:#64748b;
+  margin-bottom:4px;
+  text-transform:uppercase;
+  letter-spacing:.4px;
+}
+
+.system-section p{
+  font-size:14px;
+  line-height:1.6;
+  color:#0f172a;
+}
+
+.competition-card{
+  background:#ffffff;
+  border-radius:5px;
+  padding:16px;
+  margin:18px 0;
+  border:1px solid #e5e7eb;
+  box-shadow:0 4px 12px rgba(0,0,0,.05);
+}
+
+.competition-title{
+  font-size:15px;
+  font-weight:600;
+  color:#0f172a;
+  margin-bottom:8px;
+}
+
+.competition-text{
+  font-size:15px;
+  line-height:1.6;
+  color:#475569;
+  margin-bottom:14px;
+}
+
+.competition-stats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.competition-stats .stat{
+  background:#f8fafc;
+  border-radius:5px;
+  padding:12px;
+}
+
+.competition-stats span{
+  display:block;
+  font-size:11px;
+  color:#64748b;
+  margin-bottom:4px;
+}
+
+.competition-stats strong{
+  font-size:14px;
+  font-weight:600;
+  color:#16a34a;
+}
+
+.competition-note{
+  margin-top:14px;
+  font-size:12px;
+  color:#64748b;
+}
+@media (max-width: 480px) {
+  .reward-slider {
+    height: 230px;       /* mobile me aur clear */
+  }
 }
 
 </style>
 </head>
+
 <body>
-<div class="header">My Referrals</div>
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo-circle">
+      <i class="ri-bitcoin-line coin active"></i>
+      <i class="ri-money-dollar-circle-line coin"></i>
+      <i class="ri-ethereum-line coin"></i>
+    </div>
+
+    <div>
+      <div class="app-name">Reward Panel</div>
+      <div class="app-sub">Earn • Invite • Grow</div>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <i class="ri-wallet-3-line"></i>
+  </div>
+</div>
 
 
 <div class="container">
-  <div class="card">
-    
-    <div class="team-grid">
-      <div class="team-box"><span class="label">Level 1</span><span id="teamLv1" class="value">0</span></div>
-      <div class="team-box"><span class="label">Level 2</span><span id="teamLv2" class="value">0</span></div>
-      <div class="team-box"><span class="label">Level 3</span><span id="teamLv3" class="value">0</span></div>
-      <div class="team-box total"><span class="label">Total</span><span id="teamTotal" class="value">0</span></div>
-    </div>
-  </div>
-<!-- ✅ Popup Notification -->
-<div id="tdPopup" class="td-popup"></div>
 
-  <div class="card referral-card">
-    <b>Your link:</b>
-    <div id="refLink" class="referral-link">Loading referral link...</div>
-    <div id="qrcode-wrapper"><div id="qrcode"></div></div>
-    <div class="btn-row">
-      <button class="btn btn-copy" onclick="copyReferral()">Copy Link</button>
-      <button class="btn btn-share" onclick="shareReferral()">Share Link</button>
-    </div>
+  <div class="live-card">
+    <span class="live-dot"></span>
+    <span id="liveText" class="live-text show">
+      🌱 Small steps today build big rewards tomorrow
+    </span>
   </div>
 
-<!-- 🌟 Top Level Navigation -->
-<div class="top-level-nav">
-  <button class="level-tab active" onclick="showLevel(1)">Level 1</button>
-  <button class="level-tab" onclick="showLevel(2)">Level 2</button>
-  <button class="level-tab" onclick="showLevel(3)">Level 3</button>
+
+
+  <!-- ACTION BOXES -->
+<!-- ACTION BOXES -->
+  <div class="action-wrapper">
+  <div class="grid">
+    <div class="action-card" onclick="location.href='promote.html'">
+      <i class="ri-megaphone-line"></i>
+      <span>Promote & Earn</span>
+    </div>
+
+    <div class="action-card" onclick="location.href='team.html'">
+      <i class="ri-team-line"></i>
+      <span>My Team</span>
+    </div>
+
+    <div class="action-card" onclick="location.href='levels.html'">
+      <i class="ri-node-tree"></i>
+      <span>Level Breakdown</span>
+    </div>
+
+    <div class="action-card"onclick="location.href='Reward123456.html'">
+      <i class="ri-gift-line"></i>
+      <span>Rewards</span>
+    </div>
+     <div class="action-card"onclick="location.href='deposit.html'">
+      <i class="ri-vip-diamond-line"></i>
+      <span>Upgrade Account </span>
+    </div>
+
+
+    <div class="action-card"onclick="location.href='Achievements.html'">
+      <i class="ri-award-line"></i>
+      <span>Achievements</span>
+    </div>
+  </div>
+   </div>
+  <!-- IMAGE ONLY SLIDER -->
+ <div class="reward-slider" id="rewardSlider">
+  <img src="Promotion/6666.jpeg" class="active">
+  <img src="Promotion/5555.jpeg">
+  <img src="Promotion/4444.jpeg">
+  <img src="Promotion/3333.jpeg">
+  <img src="Promotion/2222.jpeg">
+  <img src="Promotion/111111.jpeg">
 </div>
 
-  <div id="level1" class="level-content active">
-    <h3>Earning: <b id="level1Earning">$0</b></h3>
-    <div class="search-bar">
-      <input type="text" id="searchLv1" placeholder="Search member by name...">
-      <button onclick="searchLevel(1)">Search</button>
+
+<div class="status-box">
+  <span class="status-label">Account Status</span>
+  <p id="statusText"></p>
+</div>
+
+  <!-- OVERVIEW -->
+  <h2>Team Overview </h2>
+  <div class="overview">
+    <div class="overview-row total">
+      <span>Total Members Joined</span>
+      <span id="totalMembers">0</span>
     </div>
-    <div id="level1List" class="scrollable-list"></div>
+
+    <div class="overview-row">
+      <span class="muted">Level 1 Members</span>
+      <span id="lv1">0</span>
+    </div>
+
+    <div class="overview-row">
+      <span class="muted">Level 2 Members</span>
+      <span id="lv2">0</span>
+    </div>
+
+    <div class="overview-row">
+      <span class="muted">Level 3 Members</span>
+      <span id="lv3">0</span>
+    </div>
   </div>
 
-  <div id="level2" class="level-content">
-    <h3>Earning: <b id="level2Earning">$0</b></h3>
-    <div class="search-bar">
-      <input type="text" id="searchLv2" placeholder="Search member by name...">
-      <button onclick="searchLevel(2)">Search</button>
-    </div>
-    <div id="level2List" class="scrollable-list"></div>
+<div class="chart-card">
+  <div class="chart-title">Global Team Growth</div>
+
+  <div class="bar-chart" id="userChart">
+    <!-- JS se bars aayenge -->
   </div>
 
-  <div id="level3" class="level-content">
-    <h3>Earning: <b id="level3Earning">$0</b></h3>
-    <div class="search-bar">
-      <input type="text" id="searchLv3" placeholder="Search member by name...">
-      <button onclick="searchLevel(3)">Search</button>
-    </div>
-    <div id="level3List" class="scrollable-list"></div>
+  <div class="chart-note">
+    🌍 Represents community expansion across regions
   </div>
 </div>
 
+<div class="signal-card">
+  <span class="signal-dot"></span>
+  <span id="signalText">Analyzing team behavior…</span>
+</div>
 
+<div class="notice-box">
+  <span class="notice-label">System Notice</span>
+  <p id="noticeText"></p>
+</div>
 
+<div class="system-box">
 
+  <div class="system-title">System Overview</div>
+
+  <div class="system-section">
+    <span class="system-label">Security Status</span>
+    <p>
+      Your account is active and secured.
+      No unusual login activity detected.
+    </p>
+  </div>
+
+  <div class="system-section">
+    <span class="system-label">Data & Sync</span>
+    <p>
+      Referral and team data are syncing normally.
+      Cached data may update automatically.
+    </p>
+  </div>
+
+  <div class="system-section">
+    <span class="system-label">Account Timeline</span>
+    <p>
+      Account created successfully.
+      Last system update processed recently.
+    </p>
+  </div>
+
+  <div class="system-section">
+    <span class="system-label">System Rules</span>
+    <p>
+      Rewards are calculated based on verified activity.
+      Manual intervention is not required in normal cases.
+    </p>
+  </div>
+
+</div>
+
+<div class="competition-card">
+
+  <div class="competition-title">
+    Join the TrusTDollar Competition to unlock higher rewards
+
+  </div>
+
+  <p class="competition-text">
+    As your team grows, you move into higher competition brackets.
+    Each bracket offers increased commission and reward potential.
+  </p>
+
+  <div class="competition-stats">
+    <div class="stat">
+      <span>Users Range</span>
+      <strong>10 – 100</strong>
+    </div>
+
+    <div class="stat">
+      <span>Entry Fee</span>
+      <strong>$140 – $1200</strong>
+    </div>
+
+    <div class="stat">
+      <span>Commission</span>
+      <strong>20% – 42%</strong>
+    </div>
+
+    <div class="stat">
+      <span>Reward Potential</span>
+      <strong>Up to $8400</strong>
+    </div>
+  </div>
+
+  <div class="competition-note">
+    Fees and rewards scale automatically based on verified user activity.
+  </div>
+
+</div>
+
+</div>
 
 
 <!-- ✅ HTML Navbar -->
@@ -568,23 +873,47 @@ body {
   </a>
 </div>
 
+<div id="pageLoader"></div>
 
+<!-- 🔥 SLIDER JS -->
+<script>
+const slider=document.getElementById("rewardSlider");
+const slides=slider.querySelectorAll("img");
+let index=0;
 
+setInterval(()=>{
+  slides[index].classList.remove("active");
+  index=(index+1)%slides.length;
+  slides[index].classList.add("active");
+},4000);
 
-<div id="popup" class="popup"></div>
+let startX=0;
+slider.addEventListener("touchstart",e=>{
+  startX=e.touches[0].clientX;
+});
+slider.addEventListener("touchend",e=>{
+  let endX=e.changedTouches[0].clientX;
+  if(Math.abs(startX-endX)<40)return;
+  slides[index].classList.remove("active");
+  index=endX<startX?(index+1)%slides.length:(index-1+slides.length)%slides.length;
+  slides[index].classList.add("active");
+});
+</script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { 
-  getFirestore, collection, query, where, onSnapshot, 
-  doc, getDoc, getDocs 
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import { 
-  getAuth, onAuthStateChanged 
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-// ⚡ SMART CACHE SYSTEM
+/* 🔥 LOCAL STORAGE CACHE HELPERS */
 function saveCache(key, data) {
   localStorage.setItem(key, JSON.stringify({
     data,
@@ -592,330 +921,91 @@ function saveCache(key, data) {
   }));
 }
 
-function loadCache(key, expiryMinutes = 10) {
-  let cached = localStorage.getItem(key);
-  if (!cached) return null;
+function loadCache(key, expirySeconds = 300) { // 5 min
+  const raw = localStorage.getItem(key);
+  if (!raw) return null;
 
-  cached = JSON.parse(cached);
-  const age = (Date.now() - cached.time) / (1000 * 60);
-
-  if (age > expiryMinutes) return null;
+  const cached = JSON.parse(raw);
+  const age = (Date.now() - cached.time) / 1000;
+  if (age > expirySeconds) return null;
 
   return cached.data;
 }
 
+/* 🔥 FIREBASE INIT */
 const firebaseConfig = {
   apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
   authDomain: "btcinvest-c0e25.firebaseapp.com",
-  projectId: "btcinvest-c0e25",
-  storageBucket: "btcinvest-c0e25.firebasestorage.app",
-  messagingSenderId: "204937458487",
-  appId: "1:204937458487:web:cc27ece1249999279f60b2",
-  measurementId: "G-HG0Q8ZHT6G"
+  projectId: "btcinvest-c0e25"
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-// 🔄 Switch Level Tabs (top nav buttons)
-window.showLevel = function(level) {
-  document.querySelectorAll(".level-tab").forEach(btn => btn.classList.remove("active"));
-  document.querySelector(`.level-tab:nth-child(${level})`).classList.add("active");
-
-  document.querySelectorAll(".level-content").forEach(c => c.classList.remove("active"));
-  document.getElementById(`level${level}`).classList.add("active");
-};
-
-window.searchLevel = function(level){
-  const val=document.getElementById(`searchLv${level}`).value.toLowerCase();
-  const table=document.querySelector(`#level${level}List table`);
-  if(!table)return;
-  const rows=table.getElementsByTagName("tr");
-  for(let i=1;i<rows.length;i++){
-    const td=rows[i].getElementsByTagName("td")[0];
-    if(td){
-      const name=td.textContent||td.innerText;
-      rows[i].style.display=name.toLowerCase().includes(val)?"":"none";
-    }
-  }
-};
-
-// hybrid + team counts
-function hybridLevelSystem(currentUser, level){
-  const membersMap={};
-  let q;
-  if(level===1) q=query(collection(db,"users"),where("referredBy","==",currentUser.referralCode));
-  else if(level===2) q=query(collection(db,"users"),where("upline2","==",currentUser.uid));
-  else if(level===3) q=query(collection(db,"users"),where("upline3","==",currentUser.uid));
-
-  onSnapshot(q,s=>{
-    s.forEach(docSnap=>{
-      const d=docSnap.data();
-      membersMap[d.uid||docSnap.id]={name:d.name||"Unnamed",lifetimeDeposit:(d.totalInvested||d.lifetimeDeposit||0),totalInvested:d.totalInvested||0};
-    });
-    renderHybrid(level,membersMap);
-  });
-
-  const cq=query(collection(db,"users",currentUser.uid,"commissions"),where("level","==",level));
-  onSnapshot(cq,async snap=>{
-    for(const docSnap of snap.docs){
-      const c=docSnap.data();let name="Unknown",active=false;
-      try{
-        const downSnap=await getDoc(doc(db,"users",c.fromUser));
-        if(downSnap.exists()){
-          const d=downSnap.data();name=d.name||"Unnamed";active=(d.totalInvested||d.lifetimeDeposit||0)>0;
-        }
-      }catch{}
-      membersMap[c.fromUser]={name,lifetimeDeposit:active?1:0,totalInvested:(membersMap[c.fromUser]?.totalInvested||0)+parseFloat(c.amount||0)};
-    }
-    renderHybrid(level,membersMap);
-  });
+/* 🚀 STEP 0: SHOW CACHED DATA INSTANTLY */
+const cached = loadCache("TEAM_COUNT");
+if (cached) {
+  document.getElementById("lv1").textContent = cached.lv1;
+  document.getElementById("lv2").textContent = cached.lv2;
+  document.getElementById("lv3").textContent = cached.lv3;
+  document.getElementById("totalMembers").textContent = cached.total;
 }
 
-function renderHybrid(level,map){
-  const members=Object.values(map);
-  const c=document.getElementById(`level${level}List`);
-  if(!members.length){c.innerHTML="<em>No users found</em>";return;}
-  let total=0;members.forEach(m=>total+=m.totalInvested);
-  document.getElementById(`level${level}Earning`).textContent="$"+total.toFixed(2);
-  c.innerHTML=`<table class="user-table"><thead><tr><th>Name</th><th>Status</th><th>Received</th></tr></thead><tbody>${
-    members.map(u=>`<tr><td>${u.name}</td><td>${u.lifetimeDeposit>0?"<span class='status-active'>Active</span>":"<span class='status-inactive'>Inactive</span>"}</td><td>$${(u.totalInvested||0).toFixed(2)}</td></tr>`).join("")
-  }</tbody></table>`;
-}
+/* 🔥 STEP 1: BACKGROUND FIREBASE UPDATE */
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
 
+  // 🔹 Get current user Firestore data
+  const userSnap = await getDoc(doc(db, "users", user.uid));
+  if (!userSnap.exists()) return;
 
-// QR CODE KA HAI YE 
-// ⚡ FAST + CACHED AUTH SYSTEM
-onAuthStateChanged(auth, async user => {
-  if (!user) return (window.location.href = "login.html");
-
-  // STEP 1 → Cache Try
-  let cachedUser = loadCache("USER_" + user.uid);
-  if (cachedUser) {
-    loadUserUI(cachedUser, user.uid);  // UI instantly load
-  }
-
-  // STEP 2 → Fresh DB Fetch
-  const snap = await getDoc(doc(db, "users", user.uid));
-  if (!snap.exists()) return;
-
-  const currentUser = { ...snap.data(), uid: user.uid };
-
-  // STEP 3 → Save Cache
-  saveCache("USER_" + user.uid, currentUser);
-
-  // STEP 4 → Update UI
-  loadUserUI(currentUser, user.uid);
-
-  // ⬇️⬇️⬇️ MOVE YOUR TEAM REFERRAL CODE **INSIDE HERE** ⬇️⬇️⬇️
-
-  const ref1 = query(collection(db, "users"), where("referredBy", "==", currentUser.referralCode));
-  const ref2 = query(collection(db, "users"), where("upline2", "==", user.uid));
-  const ref3 = query(collection(db, "users"), where("upline3", "==", user.uid));
+  const currentUser = userSnap.data();
+  const referralCode = currentUser.referralCode;
+  if (!referralCode) return;
 
   let lv1 = 0, lv2 = 0, lv3 = 0;
 
-  const updateCounts = () => {
-    document.getElementById("teamLv1").textContent = lv1;
-    document.getElementById("teamLv2").textContent = lv2;
-    document.getElementById("teamLv3").textContent = lv3;
-    document.getElementById("teamTotal").textContent = lv1 + lv2 + lv3;
-  };
+  // 🔹 Parallel queries (FAST)
+  const q1 = query(collection(db, "users"), where("referredBy", "==", referralCode));
+  const q2 = query(collection(db, "users"), where("upline2", "==", user.uid));
+  const q3 = query(collection(db, "users"), where("upline3", "==", user.uid));
 
-  onSnapshot(ref1, s => { lv1 = s.size; updateCounts(); });
-  onSnapshot(ref2, s => { lv2 = s.size; updateCounts(); });
-  onSnapshot(ref3, s => { lv3 = s.size; updateCounts(); });
+  const [s1, s2, s3] = await Promise.all([
+    getDocs(q1),
+    getDocs(q2),
+    getDocs(q3)
+  ]);
 
-  ["1", "2", "3"].forEach(lv => hybridLevelSystem(currentUser, parseInt(lv)));
+  lv1 = s1.size;
+  lv2 = s2.size;
+  lv3 = s3.size;
 
-});
+  const total = lv1 + lv2 + lv3;
 
-// ✅ Copy & Share Referral Functions
+  // 🔥 UPDATE UI
+  document.getElementById("lv1").textContent = lv1;
+  document.getElementById("lv2").textContent = lv2;
+  document.getElementById("lv3").textContent = lv3;
+  document.getElementById("totalMembers").textContent = total;
 
-function getInviteMessage(refLink) {
-  return `🔐 TrusTDollar
-
-The world’s first secure, reliable, and fully transparent TrusTDollar Mining platform 🌍⚡
-
-Earn up to 1%-2% daily income through TrusTDollar mining with a 100% secure and fully automated system.
-
-💼 Key Features:
-✅ Stable daily returns ✅
-✅ All wallet withdrawals ✅
-✅ Minimum withdrawal from $20 max 40k ✅
-✅ Fully secure  system ✅
-
- Register today and start earning!
-
-👉 Register Now:👇
-${refLink}`;
-}
-
-// 📋 COPY (Text + Link)
-window.copyReferral = function () {
-  const refLink = document.getElementById("refLink").innerText;
-
-  if (!refLink || refLink.includes("Loading")) {
-    showPopup("Referral link not ready yet!", "#ff3b30");
-    return;
-  }
-
-  const fullMessage = getInviteMessage(refLink);
-
-  navigator.clipboard.writeText(fullMessage).then(() => {
-    // 📳 haptic feedback (mobile only)
-    if (navigator.vibrate) navigator.vibrate(30);
-    showPopup("Invite message copied successfully!");
-  }).catch(() => {
-    showPopup("Copy failed!", "#ff3b30");
-  });
-
-
-// 📤 SHARE (Text + Link)
-window.shareReferral = function () {
-  const refLink = document.getElementById("refLink").innerText;
-  const btn = document.querySelector(".btn-share");
-
-  if (!refLink || refLink.includes("Loading")) {
-    showPopup("Referral link not ready yet!", "#ff3b30");
-    return;
-  }
-
-  const fullMessage = getInviteMessage(refLink);
-  // 🔄 animation start
-  btn.classList.add("loading");
-
-  if (navigator.share) {
-    navigator.share({
-      title: "TrustDollar Invite",
-      text: fullMessage
-    }).then(() => {
-      if (navigator.vibrate) navigator.vibrate(40);
-      showPopup("Invite ready to share!");
-    }).catch(() => {
-      showPopup("Share cancelled", "#ffc107");
-    }).finally(() => {
-      btn.classList.remove("loading");
-    });
-  } else {
-    btn.classList.remove("loading");
-    showPopup("Sharing not supported", "#ff3b30");
-  }
-};
-
-  // 🔄 animation start
-  btn.classList.add("loading");
-
-  shareInvite(refLink);
-
-  // ⏱️ animation end
-  setTimeout(() => {
-    btn.classList.remove("loading");
-  }, 1500);
-};
-
-
-function shareInvite(refLink) {
-  const fullMessage = `🔐 TrusTDollar
-
-The world’s first secure, reliable, and fully transparent TrusTDollar Mining platform 🌍⚡
-
-Earn up to 1%-2% daily income through TrusTDollar mining with a 100% secure and fully automated system.
-
-💼 Key Features:
-✅ Stable daily returns
-✅ All wallet withdrawals
-✅ Minimum withdrawal from $20 max 40k
-✅ Fully secure  system
-
-🚀 Register today and start earning!
-
-👉 Register Now:👇
-${refLink}`;
-
-  if (navigator.share) {
-    navigator.share({
-      title: "TrustDollar Invite",
-      text: fullMessage
-    }).catch(() => {
-      showPopup("Share cancelled", "#ffc107");
-    });
-  } else {
-    showPopup("Sharing not supported", "#ff3b30");
-  }
-}
-
-
-
-
-// puip up ke liey hai 
-// 🌿 TrustDollar Popup Function
-function showPopup(message, color = "#00c853") {
-  const popup = document.getElementById("tdPopup");
-  popup.style.background = color;
-  popup.innerText = message;
-  popup.classList.add("show");
-  setTimeout(() => popup.classList.remove("show"), 2000);
-}
-
-</script>
-<script>
-let lastScroll = 0;
-const header = document.querySelector(".header");
-const topNav = document.querySelector(".top-level-nav");
-
-window.addEventListener("scroll", () => {
-  const currentScroll = window.pageYOffset;
-
-  if (currentScroll > lastScroll && currentScroll > 100) {
-    // 👇 Scroll down → hide
-    header.classList.add("hide");
-    topNav.classList.add("hide");
-  } else {
-    // 👆 Scroll up → show
-    header.classList.remove("hide");
-    topNav.classList.remove("hide");
-  }
-
-  lastScroll = currentScroll;
+  // 🔥 SAVE CACHE
+  saveCache("TEAM_COUNT", { lv1, lv2, lv3, total });
 });
 </script>
 <script>
-// 🧩 Team box click → hide
-document.querySelectorAll(".team-box").forEach(box => {
-  box.addEventListener("click", () => {
-    box.classList.add("hide");
-    setTimeout(() => {
-      box.style.display = "none";
-    }, 300); // animation ke baad hide karna
-  });
-});
-</script>
+const coins = document.querySelectorAll(".coin");
+let coinIndex = 0;
 
-<script>
-// ⏳ Auto Logout After 5 Hours Inactivity
-
-const AUTO_LOGOUT_TIME = 5 * 60 * 60 * 1000; // 5 hours
-
-let lastActivity = Date.now();
-
-// User activity detect
-function updateActivity() {
-  lastActivity = Date.now();
-}
-document.addEventListener("click", updateActivity);
-document.addEventListener("mousemove", updateActivity);
-document.addEventListener("keydown", updateActivity);
-
-// Check inactivity every 20 seconds
 setInterval(() => {
-  if (Date.now() - lastActivity > AUTO_LOGOUT_TIME) {
-    localStorage.setItem("logoutReason", "expired");
-    window.location.href = "index.html"; // redirect
-  }
-}, 20000);
+  coins.forEach(c => c.classList.remove("active"));
+
+  coins[coinIndex].classList.add("active");
+
+  coinIndex = (coinIndex + 1) % coins.length;
+}, 2000); // 👈 har 2 second me next coin
 </script>
+
 
 <script>
 /* 🌗 Auto theme detect */
@@ -950,172 +1040,243 @@ document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
     setTimeout(() => ripple.remove(), 500);
   });
 });
+</script>
 
+<script>
+const texts = [
+  "🌱 Small steps today build big rewards tomorrow",
+  "✨ Consistency is the real key to growth",
+  "🚀 Invite, engage, and grow your network",
+  "💡 Smart work brings long-term benefits",
+  "🤝 Strong teams create stronger success",
+  "📈 Every effort adds value over time",
+  "⭐ Stay active and unlock your potential",
+  "🔥 Focus on progress, not instant results"
+];
 
+let tIndex = 0;
+const textEl = document.getElementById("liveText");
 
-// -------------------------------
-// 🔥 REWARD COMPETITION BOX SYSTEM
-// -------------------------------
-async function loadRewardCompetitions(userUID) {
-const rewardRef = collection(db, "users", userUID, "RewardCompetition");
+// initial text
+textEl.textContent = texts[0];
 
-    const rewardSnap = await getDocs(rewardRef);
+setInterval(() => {
+  // exit animation
+  textEl.classList.remove("show");
+  textEl.classList.add("exit");
 
-    if (rewardSnap.empty) {
-        console.log("No reward competitions.");
-        return;
-    }
+  setTimeout(() => {
+    // change text while hidden
+    tIndex = (tIndex + 1) % texts.length;
+    textEl.textContent = texts[tIndex];
 
-    rewardSnap.forEach(async (pkg) => {
-        const data = pkg.data();
+    // enter animation
+    textEl.classList.remove("exit");
+    textEl.classList.add("enter");
 
-        let packageSize = parseInt(data.package);
-        let income = parseFloat(data.income.replace("$", ""));
-        let totalDays = parseInt(data.day);
-        let createdAt = new Date(data.createdAt);
-        let today = new Date();
-
-        let daysPassed = Math.floor((today - createdAt) / (1000 * 60 * 60 * 24));
-        if (daysPassed < 0) daysPassed = 0;
-
-        let daysRemaining = totalDays - daysPassed;
-        if (daysRemaining < 0) daysRemaining = 0;
-
-        // 🔢 FORMULAS
-        let perMember = income / packageSize;
-        let activeCredit = perMember * 0.66; // 66% like your example
-
-        // MEMBERS JO CREATED DATE KE BAAD AAYE
-        const membersRef = query(
-            collection(db, "users"),
-            where("referredBy", "==", data.email)
-        );
-
-        const membersSnap = await getDocs(membersRef);
-
-        let memberList = [];
-        let activeMembers = 0;
-
-        membersSnap.forEach((m) => {
-            const md = m.data();
-            let joinedDate = new Date(md.createdAt || md.joinedAt || today);
-
-            if (joinedDate >= createdAt) {
-                let isActive = (md.totalInvested || 0) > 0;
-
-                if (isActive) activeMembers++;
-
-                memberList.push({
-                    name: md.name,
-                    active: isActive,
-                    credit: isActive ? activeCredit : 0
-                });
-            }
-        });
-
-        let earned = activeMembers * activeCredit;
-        let pending = income - earned;
-        if (pending < 0) pending = 0;
-
-        let progressPercent = (daysPassed / totalDays) * 100;
-        if (progressPercent > 100) progressPercent = 100;
-
-        // -------------------------------
-        // 🔥 UI BOX CREATE
-        // -------------------------------
-        const container = document.querySelector(".container");
-
-        let box = document.createElement("div");
-        box.className = "card";
-        box.style.padding = "15px";
-        box.style.marginTop = "15px";
-
-        box.innerHTML = `
-            <div style="font-weight:700;font-size:18px;margin-bottom:6px;">
-                ${packageSize} Users Package 
-                <span style="color:${activeMembers > 0 ? 'green':'red'};font-size:14px;">
-                    ${activeMembers > 0 ? "Active" : "Inactive"}
-                </span>
-            </div>
-
-            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-                <div>Fee: ${data.fee}</div>
-                <div>Commission: ${data.commission}</div>
-            </div>
-
-            <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
-                <div>Income: ${data.income}</div>
-                <div>Days: ${data.day}</div>
-            </div>
-
-            <hr style="margin:8px 0;">
-
-            <div><b>Members joined after (${createdAt.toDateString()}):</b></div>
-
-            <div style="margin-top:6px;">
-                ${memberList.length === 0 ? "<i>No members yet</i>":""}
-                ${memberList.map(m=>`
-                    <div style="margin:3px 0;">
-                        - ${m.name} → 
-                        <span style="color:${m.active?'green':'red'}">
-                            ${m.active ? 'Active' : 'Inactive'}
-                        </span>
-                        ${m.active ? `→ $${m.credit.toFixed(2)}` : ""}
-                    </div>
-                `).join("")}
-            </div>
-
-            <hr style="margin:8px 0;">
-
-            <div style="font-size:15px;">
-                Earned: <b>$${earned.toFixed(2)}</b> <br>
-                Pending: <b>$${pending.toFixed(2)}</b>
-            </div>
-
-            <div style="margin-top:10px;">${daysRemaining} days remaining</div>
-
-            <div style="
-                width:100%; 
-                height:10px; 
-                background:#ddd; 
-                border-radius:5px;
-                margin-top:5px;
-            ">
-                <div style="
-                    width:${progressPercent}%; 
-                    height:100%; 
-                    background:#22c55e; 
-                    border-radius:5px;
-                "></div>
-            </div>
-
-            <hr style="margin-top:10px;">
-        `;
-
-        container.appendChild(box);
+    requestAnimationFrame(() => {
+      textEl.classList.remove("enter");
+      textEl.classList.add("show");
     });
-}
 
+  }, 600); // must match CSS transition time
 
-function loadUserUI(data, uid) {
-  const refCode = data.referralCode || uid;
-  const finalRefLink = `https://smartfundad.com/index.html?ref=${refCode}`;
+}, 3500);
+</script>
+<script>
+const countries = [
+  { flag: "🇮🇳", value: 19 },
+  { flag: "🇺🇸", value: 12 },
+  { flag: "🇬🇧", value: 8 },
+  { flag: "🇧🇷", value: 15 },
+  { flag: "🇵🇭", value: 10 },
+  { flag: "🇮🇩", value: 7 },
+  { flag: "🇳🇬", value: 9 },
+  { flag: "🇧🇩", value: 14 },
+  { flag: "🇲🇽", value: 6 },
+  { flag: "🇻🇳", value: 11 },
+  { flag: "🇵🇰", value: 5 },
+  { flag: "🇰🇪", value: 4 }
+];
 
-  document.getElementById("refLink").textContent = finalRefLink;
+const chart = document.getElementById("userChart");
 
-  // QR reset
-  document.getElementById("qrcode").innerHTML = "";
-  new QRCode(document.getElementById("qrcode"), {
-      text: finalRefLink,
-      width: 120,
-      height: 120,
-      colorDark: "#000000",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.H
+// clear old (safety)
+chart.innerHTML = "";
+
+// create bars
+countries.forEach(item => {
+  const wrap = document.createElement("div");
+  wrap.className = "bar-wrap";
+
+  const bar = document.createElement("div");
+  bar.className = "bar";
+  bar.style.height = item.value + "%";
+
+  const percent = document.createElement("span");
+  percent.textContent = item.value + "%";
+  bar.appendChild(percent);
+
+  const icon = document.createElement("div");
+  icon.className = "flag";
+  icon.textContent = item.flag;
+
+  wrap.appendChild(bar);
+  wrap.appendChild(icon);
+  chart.appendChild(wrap);
+});
+
+// 🔄 soft animation (little movement, not crazy)
+setInterval(() => {
+  document.querySelectorAll(".bar").forEach(bar => {
+    const base = parseInt(bar.querySelector("span").textContent);
+    const variation = Math.floor(Math.random() * 3) - 1; // -1,0,+1
+    const newVal = Math.max(3, Math.min(30, base + variation));
+
+    bar.style.height = newVal + "%";
+    bar.querySelector("span").textContent = newVal + "%";
   });
-}
+}, 3000);
+</script>
+<script>
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("selectstart", e => e.preventDefault());
+  document.addEventListener("dragstart", e => e.preventDefault());
 
+  ["copy", "paste", "cut"].forEach(evt =>
+    document.addEventListener(evt, e => e.preventDefault())
+  );
 
+  // lighter console annoyance
+  setInterval(() => {
+    console.clear();
+  }, 1500);
+</script>
+<script>
+const signals=[
+  "Analyzing team behavior…",
+  "Growth pattern looks stable",
+  "High engagement detected",
+  "Network activity rising",
+  "System confidence: Strong"
+];
+
+let si=0;
+const el=document.getElementById("signalText");
+
+setInterval(()=>{
+  el.style.opacity=0;
+  setTimeout(()=>{
+    si=(si+1)%signals.length;
+    el.textContent=signals[si];
+    el.style.opacity=1;
+  },400);
+},2800);
+</script>
+<script>
+(() => {
+  const notices = [
+    "Reward not yet received. Please wait while the system completes verification.",
+    "If the reward is delayed beyond 24 hours, please contact your administrator.",
+    "Referral data is syncing. Some values may update shortly.",
+    "Your account is active. No action is required at this time.",
+    "System maintenance may cause temporary delays in reward updates."
+  ];
+
+  let nIndex = 0, charIndex = 0;
+  const noticeEl = document.getElementById("noticeText");
+
+  function type(){
+    if(charIndex < notices[nIndex].length){
+      noticeEl.textContent += notices[nIndex][charIndex++];
+      setTimeout(type, 35);
+    } else {
+      setTimeout(()=>{
+        charIndex = 0;
+        nIndex = (nIndex + 1) % notices.length;
+        noticeEl.textContent = "";
+        type();
+      }, 2500);
+    }
+  }
+
+  type();
+})();
+</script>
+
+<script>
+(() => {
+  const states = [
+    "You are currently eligible to invite new users.",
+    "Reward eligibility depends on verified team activity.",
+    "No pending action is required from your side.",
+    "Some features unlock automatically as your team grows.",
+    "Account status is normal and active."
+  ];
+
+  let sIndex = 0;
+  let cIndex = 0;
+  const speed = 32;
+  const statusEl = document.getElementById("statusText");
+
+  function typeStatus(){
+    if(cIndex < states[sIndex].length){
+      statusEl.textContent += states[sIndex].charAt(cIndex);
+      cIndex++;
+      setTimeout(typeStatus, speed);
+    } else {
+      setTimeout(() => {
+        cIndex = 0;
+        sIndex = (sIndex + 1) % states.length;
+        statusEl.textContent = "";
+        typeStatus();
+      }, 2600);
+    }
+  }
+
+  typeStatus();
+})();
+</script>
+<script>
+(() => {
+  const slider = document.getElementById("rewardSlider");
+  if (!slider) return;
+
+  // 🔹 create bg layer dynamically
+  const bg = document.createElement("div");
+
+  bg.style.position = "absolute";
+  bg.style.inset = "-20px";
+  bg.style.backgroundSize = "cover";
+  bg.style.backgroundPosition = "center";
+  bg.style.filter = "blur(18px) brightness(.85)";
+  bg.style.transform = "scale(1.2)";
+  bg.style.zIndex = "0";
+
+  slider.prepend(bg);
+
+  // bring images above bg
+  slider.querySelectorAll("img").forEach(img => {
+    img.style.position = "absolute";
+    img.style.zIndex = "1";
+  });
+
+  const slides = slider.querySelectorAll("img");
+  let index = 0;
+
+  function updateBg(img) {
+    bg.style.backgroundImage = `url('${img.src}')`;
+  }
+
+  // initial bg
+  updateBg(slides[0]);
+
+  // hook into existing slider interval
+  setInterval(() => {
+    updateBg(slides[index]);
+    index = (index + 1) % slides.length;
+  }, 4000);
+})();
 </script>
 
 
