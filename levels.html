@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Level Breakdown</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:Inter,system-ui,sans-serif;
+  background:#f8fafc;
+  color:#0f172a;
+}
+
+.container{
+  max-width:420px;
+  margin:auto;
+  padding:20px 14px 80px;
+}
+
+/* header */
+.page-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.page-header i{
+  font-size:22px;
+  color:#16a34a;
+}
+
+.page-header h1{
+  font-size:18px;
+  font-weight:600;
+}
+
+/* intro */
+.page-intro{
+  font-size:14px;
+  color:#475569;
+  margin-bottom:20px;
+  line-height:1.6;
+}
+
+/* level card */
+.level-card{
+  background:#ffffff;
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:16px;
+  border:1px solid #e5e7eb;
+  box-shadow:0 4px 12px rgba(0,0,0,.05);
+}
+
+.level-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.level-name{
+  font-size:15px;
+  font-weight:600;
+}
+
+.level-badge{
+  font-size:12px;
+  color:#16a34a;
+  background:#ecfdf5;
+  padding:4px 10px;
+  border-radius:20px;
+}
+
+.level-info{
+  font-size:14px;
+  color:#475569;
+  line-height:1.6;
+}
+
+.level-meta{
+  margin-top:12px;
+  font-size:13px;
+  color:#64748b;
+}
+
+/* soft divider */
+.divider{
+  height:1px;
+  background:#e5e7eb;
+  margin:20px 0;
+}
+
+.page-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.back-btn{
+  border:none;
+  background:#ffffff;
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.05);
+  cursor:pointer;
+}
+
+.back-btn i{
+  font-size:20px;
+  color:#16a34a;
+}
+
+.header-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.header-title i{
+  font-size:22px;
+  color:#16a34a;
+}
+
+.header-title h1{
+  font-size:18px;
+  font-weight:600;
+  margin:0;
+}
+.back-btn:active{
+  transform:scale(.95);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+<div class="page-header">
+
+  <button class="back-btn" onclick="history.back()">
+    <i class="ri-arrow-left-line"></i>
+  </button>
+
+  <div class="header-title">
+    <i class="ri-node-tree"></i>
+    <h1>Level Breakdown</h1>
+  </div>
+
+</div>
+
+  <!-- Intro -->
+  <div class="page-intro">
+    Levels are designed to reflect your network growth.
+    As your team expands, additional benefits and rewards
+    become available automatically.
+  </div>
+
+  <!-- Level 1 -->
+  <div class="level-card">
+    <div class="level-top">
+      <div class="level-name">Level 1</div>
+      <div class="level-badge">Entry Level</div>
+    </div>
+    <div class="level-info">
+      This level includes users who join directly using your referral.
+      Rewards are calculated based on verified participation.
+    </div>
+    <div class="level-meta">
+      Typical range: 1 – 10 users
+    </div>
+  </div>
+
+  <!-- Level 2 -->
+  <div class="level-card">
+    <div class="level-top">
+      <div class="level-name">Level 2</div>
+      <div class="level-badge">Growth Level</div>
+    </div>
+    <div class="level-info">
+      Level 2 includes users invited by your Level 1 members.
+      Reward potential increases as network activity grows.
+    </div>
+    <div class="level-meta">
+      Typical range: 11 – 50 users
+    </div>
+  </div>
+
+  <!-- Level 3 -->
+  <div class="level-card">
+    <div class="level-top">
+      <div class="level-name">Level 3</div>
+      <div class="level-badge">Expansion Level</div>
+    </div>
+    <div class="level-info">
+      This level represents deeper network expansion.
+      System rewards are applied automatically based on rules.
+    </div>
+    <div class="level-meta">
+      Typical range: 50+ users
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Note -->
+  <div class="page-intro">
+    Level benefits are managed by the system and update automatically.
+    No manual action is required to progress between levels.
+  </div>
+
+</div>
+
+
+</body>
+</html>
