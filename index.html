@@ -1227,16 +1227,56 @@ Please login to continue managing your earnings safely and transparently.
           </ul>
         </div>
       </div>
+
       <div class="footer-col">
         <h3>Stay Updated</h3>
         <p>Subscribe for updates, news & earning tips.</p>
-        <form id="subscribeForm" class="subscribe-form">
-          <input type="email" name="email" placeholder="Enter your email" required>
-          <button type="submit">Submit</button>
-        </form>
+
+         <form id="subscribeForm"
+      action="https://formsubmit.co/trustdollarteam@gmail.com"
+      method="POST"
+      class="subscribe-form">
+
+  <!-- User Email -->
+  <input type="email" name="email" placeholder="Enter your email" required>
+
+  <!-- 🔐 Security -->
+  <input type="hidden" name="_captcha" value="false">
+
+  <!-- 🔁 After submit (optional) -->
+  <input type="hidden" name="_next" value="https://www.smartfundad.com/thank-you.html">
+
+  <!-- 📩 Email Subject (Tumhe jo mail aayega) -->
+  <input type="hidden" name="_subject" value="New TrustDollar Subscriber">
+
+  <!-- 🤝 Auto Reply to USER -->
+  <input type="hidden" name="_autoresponse" value="
+Hello,
+
+Thank you for subscribing to TrustDollar.
+
+You have successfully joined our official update list.
+From now on, you will receive important platform updates,
+system notices, and digital finance insights from TrustDollar.
+
+If you did not request this subscription, you may safely ignore this email.
+
+Regards,
+TrustDollar Team
+https://www.smartfundad.com
+">
+
+  <!-- 📌 Reply-To user -->
+  <input type="hidden" name="_replyto" value="%email">
+
+  <button type="submit">Submit</button>
+</form>
+
       </div>
       <div id="successPopup" class="popup">
-        Thank you for subscribing.
+       Thank you for subscribing.
+       Please check your email for confirmation.
+
       </div>
     </div>
     <div class="footer-bottom">
