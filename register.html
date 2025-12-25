@@ -212,6 +212,8 @@
   </style>
 </head>
 <body>
+<form onsubmit="return false;">
+
 
   <!-- 🔄 Blur + Loading Overlay -->
 <div id="blurOverlay">
@@ -279,8 +281,9 @@
         <label for="referral">Referral Code (Optional)</label>
       </div>
 
-      <button id="registerBtn">Register</button>
+      <button id="registerBtn" type="button">Register</button>
 
+   </form>
       <div class="login-box">
         Already have an account? <a href="login.html">Login here</a>
       </div>
@@ -934,53 +937,41 @@ emailInput.addEventListener("input", () => {
 </script>
 
 <script>
-  // 🚫 Disable right click, select, drag
+const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+if (!isIOS) {
+  // 🚫 Desktop only restrictions
   document.addEventListener("contextmenu", e => e.preventDefault());
   document.addEventListener("selectstart", e => e.preventDefault());
   document.addEventListener("dragstart", e => e.preventDefault());
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
   document.addEventListener("keydown", e => {
     if (
       e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
+      (e.ctrlKey && e.shiftKey && ["I","J"].includes(e.key)) ||
+      (e.ctrlKey && ["U","C","X","V","S"].includes(e.key))
     ) {
       e.preventDefault();
-      return false;
     }
   });
 
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
-
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
-
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
+  ["copy","paste","cut"].forEach(evt =>
     document.addEventListener(evt, e => e.preventDefault())
   );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
+}
 </script>
+<script>
+const registerBtn = document.getElementById("registerBtn");
+registerBtn.addEventListener("touchstart", e => {
+  e.preventDefault();
+}, { passive: false });
+</script>
+<script>
+document.querySelector("form").addEventListener("submit", e => {
+  e.preventDefault();
+});
+</script>
+
 </body>
 </html>
-
 
