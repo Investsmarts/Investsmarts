@@ -800,9 +800,13 @@
     <div class="slider" id="slider">
       <div class="slides">
         <div class="slide-card"><img src="myphoto/33.png" alt="slide1"></div>
+        <div class="slide-card"><img src="myphoto/c.jpeg" alt="slide1"></div>
         <div class="slide-card"><img src="myphoto/11.png" alt="slide2"></div>
+        <div class="slide-card"><img src="myphoto/cc.jpeg" alt="slide1"></div>
         <div class="slide-card"><img src="myphoto/22.png" alt="slide3"></div>
+        <div class="slide-card"><img src="myphoto/ccc.jpeg" alt="slide1"></div>
         <div class="slide-card"><img src="myphoto/22222222.png" alt="slide4"></div>
+        <div class="slide-card"><img src="myphoto/cccc.jpeg" alt="slide1"></div>
       </div>
     </div>
 
@@ -1203,42 +1207,42 @@ playBtn.addEventListener("pointerdown", (e) => {
 </script>
 
 <script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("selectstart", e => e.preventDefault());
+document.addEventListener("dragstart", e => e.preventDefault());
+["copy","paste","cut"].forEach(evt =>
+  document.addEventListener(evt, e => e.preventDefault())
+);
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  });
-
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
-
-
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
+setInterval(() => console.clear(), 1500);
 </script>
+
+<script>
+(function () {
+  let open = false;
+  const limit = 160;
+  setInterval(() => {
+    if (
+      window.outerWidth - window.innerWidth > limit ||
+      window.outerHeight - window.innerHeight > limit
+    ) {
+      if (!open) console.warn("DevTools detected");
+      open = true;
+    } else {
+      open = false;
+    }
+  }, 1200);
+})();
+</script>
+
+<script>
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && ["u","s"].includes(e.key.toLowerCase()))
+  ) e.preventDefault();
+});
+</script>
+
 </body>
 </html>
-
