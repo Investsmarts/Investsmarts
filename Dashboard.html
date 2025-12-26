@@ -806,6 +806,46 @@
   padding-top:12px;
   margin-top:6px;
 }
+.announcement-wrap{
+  max-width:480px;
+  margin:14px auto 20px;
+}
+
+.announcement-btn{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:14px 16px;
+  background:#ffffff;
+  border:1px solid #e5e7eb;
+  border-radius:5px;
+  text-decoration:none;
+ 
+}
+
+.live-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#dc2626;
+  flex-shrink:0;
+  margin-top:6px;
+  animation:pulseLive 1.4s infinite;
+}
+
+@keyframes pulseLive{
+  0%{ box-shadow:0 0 0 0 rgba(220,38,38,.5); }
+  70%{ box-shadow:0 0 0 6px rgba(220,38,38,0); }
+  100%{ box-shadow:0 0 0 0 rgba(220,38,38,0); }
+}
+
+.announcement-text{
+  font-size:14px;
+  font-weight:400;
+  color:#334155;
+  line-height:1.5;
+  word-break:break-word;
+}
 
   </style>
 <style>
@@ -927,6 +967,15 @@ document.querySelector(".btn-add").addEventListener("click", () => {
     </span>
   </div>
 
+</div>
+<div class="announcement-wrap">
+  <a href="https://investsmarts.github.io/announcmentdaly/" class="announcement-btn">
+
+    <span class="live-dot"></span>
+
+    <span id="typingText" class="announcement-text"></span>
+
+  </a>
 </div>
 
 
@@ -1675,6 +1724,71 @@ document.addEventListener("click", function (e) {
 
   }, 3500);
 })();
+</script>
+<script>
+(() => {
+  const text = "Click Here, New Update Available";
+  const el = document.getElementById("typingText");
+
+  let index = 0;
+
+  function startTyping() {
+    el.textContent = "";
+    index = 0;
+
+    function type() {
+      if (index < text.length) {
+        el.textContent += text.charAt(index);
+        index++;
+        setTimeout(type, 55); // typing speed
+      } else {
+        // full text likhne ke baad pause
+        setTimeout(startTyping, 2500); // 👈 repeat delay
+      }
+    }
+
+    type();
+  }
+
+  startTyping();
+})();
+</script>
+<script>
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("selectstart", e => e.preventDefault());
+document.addEventListener("dragstart", e => e.preventDefault());
+["copy","paste","cut"].forEach(evt =>
+  document.addEventListener(evt, e => e.preventDefault())
+);
+
+setInterval(() => console.clear(), 1500);
+</script>
+
+<script>
+(function () {
+  let open = false;
+  const limit = 160;
+  setInterval(() => {
+    if (
+      window.outerWidth - window.innerWidth > limit ||
+      window.outerHeight - window.innerHeight > limit
+    ) {
+      if (!open) console.warn("DevTools detected");
+      open = true;
+    } else {
+      open = false;
+    }
+  }, 1200);
+})();
+</script>
+
+<script>
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && ["u","s"].includes(e.key.toLowerCase()))
+  ) e.preventDefault();
+});
 </script>
 
 </body>
