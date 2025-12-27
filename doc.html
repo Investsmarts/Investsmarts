@@ -1,352 +1,489 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TrustDollar - Documents</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --green:#16a34a;
-      --bg:#f6fff7;
-      --card:#ffffff;
-      --muted:#6b6b6b;
-    }
-    *{box-sizing:border-box; margin:0; padding:0}
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: var(--bg);
-      color: #222;
-      line-height: 1.6;
-    }
-    header {
-      background: var(--green);
-      color: #fff;
-      padding: 16px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: 600;
-    }
-    .container {
-      width: 95%;
-      max-width: 960px;
-      margin: 20px auto;
-      padding: 18px;
-      background: var(--card);
-      border-radius: 10px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-      overflow-wrap: break-word;
-      word-wrap: break-word;
-    }
-    h2 {
-      color: var(--green);
-      margin-top: 20px;
-      font-size: 18px;
-    }
-    p, li { font-size: 15px; margin: 6px 0; color:#333; }
-    strong { color: var(--green); }
-    .highlight {
-      background: #e8f7ee;
-      border-left: 5px solid var(--green);
-      padding: 12px;
-      margin: 12px 0;
-      border-radius: 8px;
-    }
-    ul, ol { padding-left: 18px; }
-    .certificate { text-align: center; margin: 25px 0; }
-    .certificate img { max-width: 100%; border: 2px solid var(--green); border-radius: 10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
-    table.ref {
-      width:100%;
-      border-collapse:collapse;
-      margin-top:8px;
-      font-size:14px;
-    }
-    table.ref th, table.ref td {
-      padding:10px;
-      border:1px solid #ddd;
-      text-align:left;
-    }
-    .table-wrapper { overflow-x:auto; }
-    .company-card{
-      display:flex; flex-wrap:wrap; gap:14px;
-      align-items:flex-start;
-      padding:12px; border:1px solid #ddd; border-radius:8px;
-      background:#fafafa;
-      margin-top:12px;
-    }
-    .company-card .left {
-      min-width:60px; height:60px;
-      background:#e8f7ee;
-      display:flex; align-items:center; justify-content:center;
-      border-radius:8px;
-      font-weight:700; color:var(--green);
-      font-size:18px;
-    }
-    .disclaimer {
-      background: #fff7e6;
-      border: 2px solid #f59e0b;
-      color: #92400e;
-      padding: 14px;
-      border-radius: 8px;
-      margin: 20px 0;
-      font-size: 14px;
-      text-align: center;
-      font-weight: 600;
-    }
-    footer {
-      background: var(--green);
-      color:#fff;
-      text-align:center;
-      padding:12px;
-      margin-top:20px;
-      font-size:14px;
-      border-radius:0 0 10px 10px;
-    }
-    @media (max-width:600px){
-      h2 { font-size:16px; }
-      p, li { font-size:14px; }
-      header { font-size:18px; }
-    }
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
 
-/* === Image Slider CSS === */
-.slider {
-  position: relative;
-  width: 100%;
-  max-width: 500px;
-  margin: auto;
-  overflow: hidden;
-  border: 2px solid var(--green);
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+<title>TrustDollar - Documents</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --green:#16a34a;
+  --bg:#ffffff;
+  --card:#ffffff;
+  --text:#1f2937;
+  --soft:#f9fafb;
+  --border:#e5e7eb;
 }
 
-.slides {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
-.slides img {
-  width: 100%;
-  flex-shrink: 0;
+body{
+  font-family:'Poppins',sans-serif;
+  background:var(--soft);
+  color:var(--text);
+  line-height:1.75;
+  overflow-x:hidden;
 }
-/* Arrow buttons */
-.prev, .next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(22,163,74,0.7);
-  color: #fff;
-  border: none;
-  padding: 10px 14px;
-  cursor: pointer;
-  border-radius: 50%;
-  font-size: 18px;
-}
-.prev { left: 10px; }
-.next { right: 10px; }
-.prev:hover, .next:hover { background: var(--green); }
 
-/* Dots indicators */
-.dots {
-  text-align: center;
-  margin-top: 8px;
+/* Header */
+header{
+  background:var(--green);
+  color:#fff;
+  padding:16px;
+  text-align:center;
+  font-size:20px;
+  font-weight:600;
 }
-.dots span {
-  display: inline-block;
-  width: 10px; height: 10px;
-  margin: 3px;
-  background: #ccc;
-  border-radius: 50%;
-  cursor: pointer;
+
+/* Container */
+.container{
+  width:95%;
+  max-width:960px;
+  margin:20px auto;
+  background:var(--card);
+  padding:22px;
+  border-radius:12px;
+  box-shadow:0 8px 22px rgba(0,0,0,0.06);
+  overflow:hidden;
 }
-.dots span.active { background: var(--green); }
+
+/* Headings */
+h2{
+  margin-top:22px;
+  font-size:18px;
+  color:#111827;
+  word-wrap:break-word;
+}
+
+/* Text */
+p,li{
+  font-size:15px;
+  margin:6px 0;
+  color:#374151;
+  word-wrap:break-word;
+  overflow-wrap:anywhere;
+}
+
+/* Typing text */
+.type{
+  display:inline;
+  white-space:normal;      /* 🔥 FIX */
+  word-break:break-word;
+  overflow-wrap:anywhere;
+  border-right:2px solid var(--green);
+  animation:blink 0.8s infinite;
+}
+
+@keyframes blink{
+  50%{border-color:transparent}
+}
+
+/* Highlight box */
+.highlight{
+  background:#f0fdf4;
+  border-left:4px solid var(--green);
+  padding:14px;
+  border-radius:8px;
+  margin:14px 0;
+}
+
+/* Table */
+.table-wrap{
+  width:100%;
+  overflow-x:auto;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+th,td{
+  padding:10px;
+  border:1px solid var(--border);
+  font-size:14px;
+  text-align:left;
+}
+
+/* Company card */
+.company-card{
+  display:flex;
+  gap:14px;
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fafafa;
+  flex-wrap:wrap;
+}
+.company-card .left{
+  width:60px;
+  height:60px;
+  border-radius:10px;
+  background:#ecfdf5;
+  color:var(--green);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  flex-shrink:0;
+}
+
+/* Disclaimer */
+.disclaimer{
+  background:#fff1f2;
+  border:1px solid #fecaca;
+  color:#7f1d1d;
+  padding:16px;
+  border-radius:10px;
+  margin:22px 0;
+  font-weight:600;
+  text-align:center;
+}
+
+/* === Image Slider === */
+.slider{
+  position:relative;
+  max-width:520px;
+  margin:30px auto;
+  overflow:hidden;
+  border-radius:14px;
+  border:1px solid var(--border);
+  box-shadow:0 10px 26px rgba(0,0,0,0.08);
+  background:#fff;
+}
+
+.slides{
+  display:flex;
+  transition:transform 0.5s ease;
+}
+
+.slides img{
+  width:100%;
+  height:auto;
+  flex-shrink:0;
+  display:block;
+}
+
+/* arrows */
+.prev,.next{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  background:rgba(0,0,0,0.55);
+  color:#fff;
+  border:none;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  cursor:pointer;
+  font-size:18px;
+}
+.prev{left:10px}
+.next{right:10px}
+
+/* dots */
+.dots{
+  text-align:center;
+  margin-top:10px;
+}
+.dots span{
+  display:inline-block;
+  width:9px;
+  height:9px;
+  background:#d1d5db;
+  border-radius:50%;
+  margin:4px;
+}
+.dots span.active{
+  background:var(--green);
+}
+
+/* Footer */
+footer{
+  background:var(--green);
+  color:#fff;
+  text-align:center;
+  padding:12px;
+  font-size:14px;
+  margin-top:20px;
+}
+
+/* Responsive */
+@media(max-width:600px){
+  header{font-size:18px}
+  h2{font-size:16px}
+  p,li{font-size:14px}
+}
 
 
-  </style>
+/* Overlay */
+.img-viewer{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(6px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .35s ease;
+  z-index:9999;
+}
+
+/* Active */
+.img-viewer.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* Image box */
+.img-box{
+  background:#fff;
+  padding:10px;
+  border-radius:14px;
+  max-width:90%;
+  max-height:80%;
+  box-shadow:0 20px 40px rgba(0,0,0,.25);
+  animation:zoomIn .4s ease;
+}
+
+/* Image */
+.img-box img{
+  max-width:100%;
+  max-height:70vh;
+  display:block;
+  border-radius:10px;
+}
+
+/* Animation */
+@keyframes zoomIn{
+  from{
+    transform:scale(.85) translateY(30px);
+    opacity:0;
+  }
+  to{
+    transform:scale(1) translateY(0);
+    opacity:1;
+  }
+}
+.close-btn{
+  position:absolute;
+  top:8px;
+  right:12px;
+  font-size:28px;
+  color:#111;
+  cursor:pointer;
+}
+
+.slides img{
+  user-select:none;
+}
+
+</style>
 </head>
+
 <body>
 
-  <header>TrustDollar - Legal & Policy Documents</header>
+<header>TrustDollar – Legal & Policy Documents</header>
 
-  <div class="container">
+<div class="container">
 
-    <div class="highlight">
-       <strong>Daily Staking Income:</strong> 1% <br>
-       <strong>Referral Bonus:</strong> Level 1 → 17% | Level 2 → 8% | Level 3 → 5%
-    </div>
-
-    <h2>1. Terms & Conditions</h2>
-    <p>All users must follow the platform rules. <strong>Deposits, withdrawals, and referral benefits</strong> may change according to company policies. Continued use means you accept updated terms.</p>
-
-    <h2>2. Privacy Policy</h2>
-    <p>We collect and use data to <strong>process payments</strong>, provide services, and maintain security. Data is stored only as required by law.</p>
-
-    <h2>3. Risk Disclaimer</h2>
-    <div class="highlight">
-       <strong>Investments are risky.</strong> TrustDollar does not guarantee fixed or assured returns. Rewards may vary with <strong>market conditions</strong>.
-    </div>
-
-    <h2>4. Staking Policy</h2>
-    <ul>
-      <li><strong>Minimum staking:</strong> $200👉150k</li>
-      <li><strong>Daily income:</strong> up to 1%/3.1%</li>
-      <li><strong>Lock-in period:</strong>👉  1 day to 👉140 days</li>
-      <li><strong>Referral income:</strong> 17% / 8% / 5%</li>
-      <li><strong>Early withdrawal:</strong> penalties may apply</li>
-    </ul>
-
-    <h2>5. Refund & Cancellation Policy</h2>
-    <p>Deposits once staked are <strong>non-refundable</strong> until lock-in is complete. Cancellation follows company rules.</p>
-
-    <h2>6. KYC / AML Policy</h2>
-    <p>KYC verification may be required to prevent <strong>fraud or money laundering</strong>. Suspicious transactions can be blocked.</p>
-
-    <h2>7. Cookie Policy</h2>
-    <p>We use <strong>cookies</strong> to improve performance. You can disable cookies in your browser, but some features may not work.</p>
-
-    <h2>8. Referral Plan</h2>
-    <div class="table-wrapper">
-      <table class="ref">
-        <thead>
-          <tr><th>Level</th><th>Commission</th><th>Notes</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Level 1</td><td><strong>17%</strong></td><td>LV1 referral</td></tr>
-          <tr><td>Level 2</td><td><strong>8%</strong></td><td>LV2 referral</td></tr>
-          <tr><td>Level 3</td><td><strong>5%</strong></td><td>LV3 referral</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h2>9. FAQs / Help Center</h2>
-    <ul>
-      <li><strong>Minimum deposit:</strong> $200👉40k</li>
-<li>
-  <strong>Withdrawal time:</strong> Our withdrawal system is now fully automatic. 
-  Based on your assigned level, the funds can arrive in your wallet anytime within the allotted timeframe. 
-  Kindly wait patiently while the process completes. 
-  (Depends on wallet balance & system load.)
-</li>
-
-
-      <li><strong>Charges:</strong> Platform fee 0.00 per transaction</li>
-      <li><strong>Referral income:</strong> Auto credited</li>
-    </ul>
-
-    <h2>10. Company (Sample U.S. Details)</h2>
-    <div class="company-card">
-      <div class="left">TD</div>
-      <div>
-        <strong>TrustDollar Holdings, LLC</strong><br>
-        500 Delaware Ave, Suite 200, Wilmington, DE 19801, USA<br>
-        <strong>Owner:</strong> Michael R. Bennett
-      </div>
-    </div>
-
-    <div class="slider">
-  <div class="slides">
-    <img src="myphoto/JSDGUROWEJRKWHRKJAHFKLAJ.png" alt="Certificate 1">
-    <img src="myphoto/5386823GHGHG.png" alt="Certificate 2">
-    <img src="myphoto/GKJKG68767hkjhj.png" alt="Certificate 3">
+  <div class="highlight">
+    <div class="type" data-text="Daily Staking Income: 1%"></div><br>
+    <div class="type" data-text="Referral Bonus: Level 1 – 17% | Level 2 – 8% | Level 3 – 5%"></div>
   </div>
 
-  <!-- Arrow buttons -->
-  <button class="prev" onclick="showSlide(index-1)">&#10094;</button>
-  <button class="next" onclick="showSlide(index+1)">&#10095;</button>
+  <h2>1. Terms & Conditions</h2>
+  <p class="type" data-text="All users must comply with platform rules. Policies may change without prior notice."></p>
 
-  <!-- Dots indicators -->
+  <h2>2. Privacy Policy</h2>
+  <p class="type" data-text="User data is collected only to process services and maintain platform security."></p>
+
+  <h2>3. Risk Disclaimer</h2>
+  <div class="highlight">
+    <div class="type" data-text="Investments are subject to market risks. Returns are not guaranteed."></div>
+  </div>
+
+  <h2>4. Staking Policy</h2>
+  <ul>
+    <li class="type" data-text="Minimum staking amount starts from $200"></li>
+    <li class="type" data-text="Daily income may vary depending on plan"></li>
+    <li class="type" data-text="Lock-in period ranges from 1 to 140 days"></li>
+  </ul>
+
+  <h2>5. Referral Plan</h2>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Level</th><th>Commission</th></tr>
+      <tr><td>Level 1</td><td>17%</td></tr>
+      <tr><td>Level 2</td><td>8%</td></tr>
+      <tr><td>Level 3</td><td>5%</td></tr>
+    </table>
+  </div>
+
+<h2>6. Company Information</h2>
+
+<div class="company-card">
+  <div class="left">TD</div>
+
+  <div>
+    <strong>TrustDollar Holdings, LLC</strong><br><br>
+
+    <p>
+      <b>Registration Type:</b> Limited Liability Company (LLC)<br>
+      <b>Jurisdiction:</b> Delaware, United States<br>
+      <b>Business Nature:</b> Digital Finance & Cloud Staking Services<br>
+      <b>Operational Model:</b> Online Platform Based Services
+    </p>
+
+    <p>
+      <b>Compliance:</b> The platform follows internal KYC & AML policies
+      to prevent fraud, abuse, and unauthorized financial activities.
+    </p>
+
+    <p>
+      <b>Support Email:</b> support@trustdollar.com<br>
+      <b>Working Hours:</b> 24×7 (UTC Based)
+    </p>
+
+    <p style="font-size:13px;color:#6b7280">
+      TrustDollar operates as an independent digital platform.
+      Users are responsible for understanding applicable local laws
+      before participating in any financial activity.
+    </p>
+
+    <p style="font-size:14px;color:#374151">
+      <b>Compliance Notice:</b> TrustDollar follows internal KYC & AML
+      compliance procedures to prevent fraud and unauthorized activities.
+    </p>
+  </div>
+</div>
+
+  <div class="disclaimer">
+    <div class="type" data-text="Please read all documents carefully before investing."></div>
+  </div>
+
+<h2>Certificates & Legal Proof</h2>
+<p style="font-size:14px;color:#6b7280;margin-top:6px">
+  The following documents are provided for reference and verification purposes only.
+</p>
+
+
+  <div class="slider">
+    <div class="slides">
+     <img class="zoom-img" src="myphoto/JSDGUROWEJRKWHRKJAHFKLAJ.png">
+
+      <img class="zoom-img"src="myphoto/5386823GHGHG.png">
+     <img class="zoom-img"src="myphoto/GKJKG68767hkjhj.png">
+    </div>
+    <button class="prev" onclick="moveSlide(-1)">‹</button>
+    <button class="next" onclick="moveSlide(1)">›</button>
+  </div>
+
   <div class="dots">
-    <span onclick="showSlide(0)"></span>
-    <span onclick="showSlide(1)"></span>
-    <span onclick="showSlide(2)"></span>
+    <span onclick="goSlide(0)"></span>
+    <span onclick="goSlide(1)"></span>
+    <span onclick="goSlide(2)"></span>
+  </div>
+<div class="img-viewer" id="imgViewer">
+  <div class="img-box">
+    <span class="close-btn">×</span>
+    <img id="imgViewerSrc">
+    <p id="imgCaption"
+       style="text-align:center;font-size:13px;color:#555;margin-top:6px">
+    </p>
   </div>
 </div>
 
-
-<div class="disclaimer" style="
-  background:#ffeaea;
-  border:2px solid #dc2626;
-  color:#b91c1c;
-  padding:16px;
-  border-radius:8px;
-  margin:22px 0;
-  font-size:15px;
-  font-weight:600;
-  text-align:center;">
-  
-   <b>Investment is subject to market risks.</b><br>
-  Please read all terms & conditions carefully before investing.<br><br>
-   <b>TrustDollar shall not be held responsible for any financial loss or damages arising from investments or staking activities. Users are solely responsible for their investment decisions.</b>
 </div>
 
-
-  </div>
-
-  <footer>
-    © 2025 TrustDollar. All Rights Reserved. | Safe • Secure • Transparent
-  </footer>
+<footer>
+© 2025 TrustDollar • Secure • Transparent
+</footer>
 
 <script>
-// ❌ Right-click disable
-  document.addEventListener("contextmenu", function(e) {
-    e.preventDefault();
-    
-  });
-
-// ❌ Disable text selection
-  document.addEventListener("selectstart", function(e) {
-    e.preventDefault();
-  });
-
-// ❌ Disable copy (Ctrl+C), cut (Ctrl+X), paste (Ctrl+V), view-source (Ctrl+U)
-  document.addEventListener("keydown", function(e) {
-    if (
-      (e.ctrlKey && (e.key === "c" || e.key === "C")) || 
-      (e.ctrlKey && (e.key === "x" || e.key === "X")) || 
-      (e.ctrlKey && (e.key === "v" || e.key === "V")) || 
-      (e.ctrlKey && (e.key === "u" || e.key === "U")) || 
-    (e.key === "F12") // DevTools
-    ) {
-      e.preventDefault();
-    
+/* Typing Effect */
+document.querySelectorAll('.type').forEach(el=>{
+  const text = el.getAttribute('data-text');
+  let i = 0;
+  el.textContent = "";
+  function type(){
+    if(i < text.length){
+      el.textContent += text.charAt(i);
+      i++;
+      setTimeout(type, 30);
+    }else{
+      el.style.borderRight="none";
+    }
   }
+  type();
 });
 
-/* === Image Slider Script === */
-const slider = document.querySelector('.slides');
-let index = 0;
+/* Slider */
+let slideIndex = 0;
+const slides = document.querySelector('.slides');
+const dots = document.querySelectorAll('.dots span');
 
-function showSlide(i) {
-  const total = document.querySelectorAll('.slides img').length;
-  index = (i + total) % total; // loop
-  slider.style.transform = `translateX(${-index * 100}%)`;
-
-  // update dots active state
-  const dots = document.querySelectorAll('.dots span');
-  if (dots.length) {
-    dots.forEach((dot, idx) => {
-      dot.classList.toggle('active', idx === index);
-    });
-  }
+function updateSlide(){
+  slides.style.transform = `translateX(${-slideIndex * 100}%)`;
+  dots.forEach((d,i)=>d.classList.toggle('active',i===slideIndex));
 }
 
-// Auto slide every 4s
-setInterval(() => { showSlide(index + 1); }, 4000);
+function moveSlide(n){
+  slideIndex = (slideIndex + n + dots.length) % dots.length;
+  updateSlide();
+}
+function goSlide(n){
+  slideIndex = n;
+  updateSlide();
+}
+setInterval(()=>moveSlide(1),4000);
+updateSlide();
+</script>
+<script>
+const viewer = document.getElementById("imgViewer");
+const viewerImg = document.getElementById("imgViewerSrc");
 
-// Touch/Swipe support
-let startX = 0;
-slider.parentElement.addEventListener('touchstart', e => startX = e.touches[0].clientX);
-slider.parentElement.addEventListener('touchend', e => {
-  let endX = e.changedTouches[0].clientX;
-  if (startX - endX > 50) showSlide(index + 1); // left swipe
-  if (endX - startX > 50) showSlide(index - 1); // right swipe
+/* Attach to all images */
+document.querySelectorAll(".zoom-img").forEach(img=>{
+  img.style.cursor="zoom-in";
+  img.addEventListener("click",()=>{
+    viewerImg.src = img.src;
+    viewer.classList.add("active");
+  });
 });
 
-// Start with first slide
-showSlide(0);
+/* Click anywhere to close */
+viewer.addEventListener("click",()=>{
+  viewer.classList.remove("active");
+  viewerImg.src="";
+});
 
+document.querySelector(".close-btn").onclick = ()=>{
+  viewer.classList.remove("active");
+  viewerImg.src="";
+};
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){
+    viewer.classList.remove("active");
+    viewerImg.src="";
+  }
+});
+viewerImg.onload = ()=>{
+  document.getElementById("imgCaption").innerText =
+    "Official TrustDollar Legal Certificate";
+};
 
 </script>
+
 </body>
 </html>
-
