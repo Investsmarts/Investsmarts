@@ -1,114 +1,384 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>About Us - TrustDollar</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body { font-family:'Poppins',sans-serif; margin:0; padding:0; background:#f6fff7; color:#222; line-height:1.6; }
-    header { background:#16a34a; color:#fff; padding:16px; text-align:center; font-size:20px; font-weight:600; }
-    .container { width:95%; max-width:960px; margin:20px auto; padding:18px; background:#fff; border-radius:10px; box-shadow:0 6px 16px rgba(0,0,0,0.08); }
-    h2 { color:#16a34a; margin-top:20px; font-size:18px; }
-    p, li { font-size:15px; margin:6px 0; color:#333; }
-    strong { color:#16a34a; }
-    ul { padding-left:18px; }
-    .highlight { background:#e8f7ee; border-left:5px solid #16a34a; padding:12px; margin:12px 0; border-radius:8px; }
-    footer { background:#16a34a; color:#fff; text-align:center; padding:12px; margin-top:20px; font-size:14px; border-radius:0 0 10px 10px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
+
+<title>About TrustDollar | Cloud Mining & Digital Finance Platform</title>
+
+<meta name="description" content="TrustDollar is a professional cloud mining platform offering secure digital mining, transparent earnings, and referral income through a user-focused system.">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#f9fafb;
+  --card:#ffffff;
+  --soft:#f0fdf4;
+  --primary:#16a34a;
+  --title:#0f172a;
+  --text:#475569;
+  --muted:#64748b;
+  --border:#e5e7eb;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.85;
+}
+
+/* Header */
+header{
+  background:#ffffff;
+  border-bottom:1px solid var(--border);
+  padding:22px 14px;
+  text-align:center;
+}
+
+header h1{
+  margin:0;
+  font-size:22px;
+  font-weight:600;
+  color:var(--title);
+}
+
+header p{
+  margin:6px 0 0;
+  font-size:14px;
+  color:var(--muted);
+}
+
+/* Container */
+.container{
+  width:94%;
+  max-width:900px;
+  margin:22px auto;
+  background:var(--card);
+  border-radius:14px;
+  padding:26px;
+  box-shadow:0 10px 30px rgba(0,0,0,.04);
+}
+
+/* Soft Highlight */
+.soft-box{
+  background:var(--soft);
+  border:1px solid #dcfce7;
+  padding:16px 18px;
+  border-radius:12px;
+  font-size:14px;
+  color:#166534;
+  margin-bottom:26px;
+}
+
+/* Section */
+.section{
+  margin-bottom:26px;
+}
+
+.section h2{
+  margin:0 0 8px;
+  font-size:18px;
+  font-weight:600;
+  color:var(--title);
+}
+
+.section p{
+  margin:0;
+  font-size:14.5px;
+  color:var(--text);
+}
+
+/* Values */
+.values{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+  margin-top:14px;
+}
+
+.value-card{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+  background:#ffffff;
+}
+
+.value-card h3{
+  margin:0 0 6px;
+  font-size:15px;
+  font-weight:500;
+  color:var(--title);
+}
+
+.value-card p{
+  margin:0;
+  font-size:13.5px;
+  color:var(--muted);
+}
+
+/* Footer note */
+.note{
+  margin-top:28px;
+  padding:18px;
+  border-radius:12px;
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  font-size:13.5px;
+  color:#9a3412;
+  text-align:center;
+}
+
+/* Footer */
+footer{
+  text-align:center;
+  font-size:13px;
+  color:var(--muted);
+  padding:20px 10px 26px;
+}
+
+/* Mobile */
+@media(max-width:480px){
+  header h1{font-size:20px}
+  .container{padding:20px}
+}
+
+.wave-wrap{
+  width:100%;
+  overflow:hidden;
+  line-height:0;
+}
+
+.wave-wrap svg{
+  display:block;
+  width:100%;
+  height:90px;
+}
+
+.wave-wrap path{
+  fill:#ffffff;
+  animation:waveMove 12s ease-in-out infinite alternate;
+}
+
+@keyframes waveMove{
+  from{transform:translateX(0)}
+  to{transform:translateX(-40px)}
+}
+.feature-box{
+  margin-top:26px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:18px;
+  background:#ffffff;
+}
+
+.choose{
+  text-align:center;
+}
+
+.choose h2{
+  font-size:20px;
+  font-weight:600;
+  color:var(--title);
+  margin-bottom:14px;
+  min-height:32px; /* typing jump fix */
+}
+
+.choose-list{
+  max-width:520px;
+  margin:0 auto;
+}
+
+.choose-list p{
+  font-size:14px;
+  color:var(--muted);
+  margin:8px 0;
+}
+
+</style>
 </head>
+
 <body>
 
-  <header>About Us - TrustDollar</header>
+<header>
+  <h1>About TrustDollar</h1>
+  <p>Professional Cloud Mining & Digital Finance Platform</p>
+</header>
 
-  <div class="container">
+<div class="wave-wrap">
+  <svg viewBox="0 0 1440 90" preserveAspectRatio="none">
+    <path d="M0,40 C240,80 480,0 720,20 960,40 1200,70 1440,40 L1440,0 L0,0 Z"></path>
+  </svg>
+</div>
 
-    <div class="highlight">
-      🌍 <strong>Building Trust through Transparent Finance</strong>
+<div class="container">
+
+  <!-- WHY CHOOSE (TYPING EFFECT) -->
+  <div class="section choose">
+    <h2><span id="typing-text"></span></h2>
+
+    <div class="choose-list">
+      <p>• Daily income generated through active cloud mining</p>
+      <p>• Daily referral income when invited users activate mining</p>
+      <p>• Daily commission through multi-level referral structure</p>
+      <p>• Earnings calculated transparently and reflected in wallet</p>
     </div>
-
-    <h2>Who We Are</h2>
-    <p>TrustDollar is a global digital staking and earning platform focused on <strong>secure investments</strong> and <strong>long-term growth</strong>. Our mission is to provide every user with an opportunity to earn stable income through innovative financial technology.</p>
-
-    <h2>Our Mission</h2>
-    <p>We aim to create a transparent ecosystem where investors and communities can <strong>grow together</strong>. Our core values are:</p>
-    <ul>
-      <li><strong>Security</strong> – Protecting user funds and data with strong encryption</li>
-      <li><strong>Transparency</strong> – Clear policies, referral plans, and withdrawal rules</li>
-      <li><strong>Growth</strong> – Providing sustainable daily income up to 1%</li>
-      <li><strong>Community</strong> – Rewarding users for referrals and active participation</li>
-    </ul>
-
-    <h2>Why Choose TrustDollar?</h2>
-    <ul>
-      <li>✅ Up to <strong>1% daily staking rewards</strong></li>
-      <li>✅ Multi-level <strong>referral income (17% / 8% / 5%)</strong></li>
-      <li>✅ Professional policies: T&C, Privacy, KYC, Risk Disclaimer</li>
-      <li>✅ Fast withdrawals (depending on wallet balance & system load)</li>
-      <li>✅ Global team with strong market presence</li>
-    </ul>
-
-    <h2>Our Vision</h2>
-    <p>We believe in a world where <strong>digital finance</strong> empowers people. Our vision is to become a trusted global brand for secure investment, accessible to everyone.</p>
-
-    <div class="highlight">
-      💡 <b>Note:</b> Investment is subject to market risks. TrustDollar shall not be held responsible for losses.  
-    </div>
-
   </div>
 
-  <footer>
-    © 2025 TrustDollar. All Rights Reserved. | Safe • Secure • Transparent
-  </footer>
+  <!-- INTRO -->
+  <div class="soft-box">
+    ☁️ TrustDollar is designed for users who want a simple, transparent, and modern way to participate in
+    <strong>cloud mining</strong> and digital earning without managing hardware or complex systems.
+  </div>
+
+  <!-- WHO WE ARE -->
+  <div class="section">
+    <h2>Who We Are</h2>
+    <p>
+      TrustDollar is a cloud-based digital mining platform that allows users to participate in mining operations
+      through secure online infrastructure. We remove the technical barriers of traditional mining and offer
+      a clean, user-friendly environment where earnings are easy to understand and track.
+    </p>
+  </div>
+
+  <!-- WHAT WE DO -->
+  <div class="section">
+    <h2>What We Do</h2>
+    <p>
+      Our system converts user deposits into cloud mining power. Once activated, mining rewards are calculated
+      automatically and credited to the user wallet. Alongside mining, users can grow their income through
+      a structured referral program.
+    </p>
+  </div>
+
+  <!-- CORE PRINCIPLES (SHORT CARDS ONLY) -->
+  <div class="section">
+    <h2>Our Core Principles</h2>
+
+    <div class="values">
+      <div class="value-card">
+        <h3>Transparency</h3>
+        <p>Clear earning logic, visible wallet records, and defined system rules.</p>
+      </div>
+
+      <div class="value-card">
+        <h3>Security</h3>
+        <p>Account protection through verification layers and controlled system access.</p>
+      </div>
+
+      <div class="value-card">
+        <h3>Cloud Mining</h3>
+        <p>No hardware, no setup. Mining power is fully managed on the cloud.</p>
+      </div>
+
+      <div class="value-card">
+        <h3>User Responsibility</h3>
+        <p>Users remain in full control of deposits, mining, and referrals.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECURITY & RESPONSIBILITY (LONG EXPLANATION) -->
+  <div class="section">
+    <h2>Security & Responsibility</h2>
+    <p>
+      TrustDollar follows responsible system practices designed to help protect user accounts,
+      balances, and participation flow. Users independently manage their deposits, mining activation,
+      and referral activity based on their understanding and risk awareness.
+    </p>
+  </div>
+
+  <!-- WHY TRUSTDOLLAR -->
+  <div class="section">
+    <h2>Why TrustDollar</h2>
+    <p>
+      TrustDollar focuses on clarity over hype. Earnings are system-driven,
+      referrals activate only after deposits, and users always remain in control
+      of their participation decisions.
+    </p>
+  </div>
+
+  <!-- VISION -->
+  <div class="section">
+    <h2>Our Vision</h2>
+    <p>
+      Our vision is to make cloud mining accessible, understandable, and structured
+      for everyday users worldwide through a transparent and responsible digital platform.
+    </p>
+  </div>
+
+  <!-- HOW EARNINGS WORK -->
+  <div class="feature-box">
+    <h3>How Earnings Are Generated</h3>
+    <p>
+      After mining activation, earnings are calculated daily based on system performance.
+      Referral rewards are added when invited users deposit and activate mining.
+      All income records remain visible in the user wallet.
+    </p>
+  </div>
+
+  <!-- RISK NOTE -->
+  <div class="note">
+    ⚠️ Risk Disclosure:<br>
+    Cloud mining and digital finance involve operational and market risks.
+    Deposits are required to activate mining and referral earnings.
+    Earnings are not guaranteed. Users should participate responsibly.
+  </div>
+
+  <!-- FINAL SOFT LINE -->
+  <div class="section" style="text-align:center">
+    <p style="font-size:13px;color:#64748b">
+      Designed with clarity, responsibility, and long-term participation in mind.
+    </p>
+  </div>
+
+</div>
+
+<footer>
+  © 2025 TrustDollar • Cloud Mining • Transparency • User Responsibility
+</footer>
+
 <script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
+const texts = [
+  "Why Choose TrustDollar?",
+  "Daily Mining Income",
+  "Daily Referral Income",
+  "Daily Commission Rewards"
+];
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  });
+let count = 0;
+let index = 0;
+let currentText = "";
+let letter = "";
 
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
+(function type(){
+  if(count === texts.length){
+    count = 0;
+  }
 
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
+  currentText = texts[count];
+  letter = currentText.slice(0, ++index);
 
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
+  document.getElementById("typing-text").textContent = letter;
 
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
+  if(letter.length === currentText.length){
+    setTimeout(() => {
+      index = 0;
+      count++;
+    }, 1200);
+  }
+
+  setTimeout(type, 90);
+})();
 </script>
-
 
 </body>
 </html>
-
