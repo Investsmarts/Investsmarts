@@ -4,6 +4,11 @@
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
 
+<script>
+if (!location.hash) {
+  location.replace(location.pathname + "#team#myteam");
+}
+</script>
 
 <div class="team-page">
 
@@ -65,7 +70,7 @@ html,body{
   margin:0;
   overflow-x:hidden;
   font-family:Inter,system-ui,sans-serif;
-  background:#f5f7fb;
+  
 }
 
 .team-page{
@@ -316,14 +321,7 @@ html,body{
   transform:scale(1.08);
   background:#dcfce7;
 }
-.empty-state img{
-  filter:
-    grayscale(1)
-    sepia(.35)
-    hue-rotate(85deg)
-    brightness(1.08)
-    contrast(.9);
-}
+
 .invite-btn{
   position:relative;
   overflow:hidden;
@@ -491,7 +489,7 @@ function renderTeam(list){
 
     teamList.innerHTML = `
       <div class="empty-state fade-in">
-        <img src="Promotion/WhatsApp Image 2025-12-23 at 9.24.13 PM.jpeg">
+        <img src="Promotion/ABCDEFGHI.jpeg">
         <h3>Your Team Awaits</h3>
         <p>
           No members have joined your team yet.<br>
@@ -674,4 +672,14 @@ function startInviteTyping(){
   type();
 }
 
+</script>
+<script>
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("selectstart", e => e.preventDefault());
+document.addEventListener("dragstart", e => e.preventDefault());
+["copy","paste","cut"].forEach(evt =>
+  document.addEventListener(evt, e => e.preventDefault())
+);
+
+setInterval(() => console.clear(), 1500);
 </script>
