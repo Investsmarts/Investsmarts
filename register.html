@@ -345,13 +345,13 @@
   <div class="success-box">
 
     <!-- 🎥 Success Animation -->
-    <video 
-      id="successVideo"
-      src="promotion/success.mp4"
-      autoplay
-      muted
-      playsinline
-    ></video>
+  <video 
+  id="successVideo"
+  src="promotion/success.mp4"
+  muted
+  playsinline
+  preload="auto"
+></video>
 
     <!-- ✅ Text -->
     <div class="success-text">
@@ -775,10 +775,18 @@ const successOverlay = document.getElementById("successOverlay");
 const video = document.getElementById("successVideo");
 
 // 🔄 Restart video every time
-video.currentTime = 0;
-video.play();
-
 successOverlay.style.display = "flex";
+
+video.pause();
+video.currentTime = 0;
+
+const playPromise = video.play();
+if (playPromise !== undefined) {
+  playPromise.catch(() => {
+    video.muted = true;
+    video.play();
+  });
+}
 
 // ⏳ Video duration ke baad redirect
 setTimeout(() => {
@@ -1241,6 +1249,16 @@ document.addEventListener("dragstart", e => e.preventDefault());
 );
 
 setInterval(() => console.clear(), 500);
+</script>
+<script>
+const successVideo = document.getElementById("successVideo");
+
+// 🔥 Page load hote hi video preload
+window.addEventListener("load", () => {
+  if (successVideo) {
+    successVideo.load();
+  }
+});
 </script>
 
 </body>
