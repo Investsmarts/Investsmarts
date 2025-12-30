@@ -320,16 +320,19 @@
 <body>
 
 <script>
-  // Clean URL without reloading page
-  if (window.location.pathname.includes("register.html")) {
-    window.history.replaceState(
-      null,
-      "",
-      "/auth/registrater#register"
-    );
+(function () {
+  // agar hash nahi hai to default hash set karo
+  if (!window.location.hash) {
+    window.location.hash = "#register";
   }
-</script>
 
+  // refresh pe bhi hash preserve rahe
+  window.addEventListener("hashchange", () => {
+    // future ke liye safe hook (optional)
+    console.log("Current hash:", window.location.hash);
+  });
+})();
+</script>
 
 
 <!-- 🔄 Processing Overlay -->
