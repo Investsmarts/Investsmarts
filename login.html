@@ -10,16 +10,15 @@
 
 body {
   font-family: "Poppins", sans-serif;
-  background: linear-gradient(180deg, #f0fdf4, #e6f9ed);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  min-height: 100vh;
   margin: 0;
-  padding: 20px 10px 100px; /* bottom nav ke liye space */
-  overflow-x: hidden; /* horizontal scrollbar hatao */
-  overflow-y: auto;   /* vertical scroll allow karo */
+  padding: 70px 10px 90px; /* header + bottom nav space */
+  background: #f9fafb;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-left: 14px;
+  padding-right: 14px;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Smooth scrolling + clean scrollbar fix */
@@ -34,13 +33,17 @@ body::-webkit-scrollbar {
   background: transparent; /* invisible scrollbar track */
 }
 
+.login-box {
+  margin-left: auto;
+  margin-right: auto;
+}
 
 .login-box {
   width: 100%;
   max-width: 400px;
-  background: #fff;
+  background: #ffff;
   border-radius: 5px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+ 
   overflow: hidden;
 }
 
@@ -113,7 +116,7 @@ body::-webkit-scrollbar {
 .input-group input,
 .input-group select {
   width: 100%;
-  padding: 12px 40px 12px 12px;
+  padding: 12px 4px 12px 12px;
   border-radius: 5px;
   border: 1.5px solid #ccc;
   font-size: 15px;
@@ -124,7 +127,7 @@ body::-webkit-scrollbar {
 .input-group input:focus,
 .input-group select:focus {
   border-color: #16a34a;
-  box-shadow: 0 0 8px rgba(22, 163, 74, 0.25);
+  
 }
 
 /* Country + phone */
@@ -175,17 +178,21 @@ body::-webkit-scrollbar {
 }
 
 button {
-  width: 100%;
   padding: 12px;
-  border: none;
   border-radius: 5px;
-  background: linear-gradient(135deg, #16a34a, #22c55e);
-  color: #fff;
-  font-weight: 700;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
 }
+
+/* sirf normal single buttons full width hon */
+.form > button {
+  width: 100%;
+}
+
+/* btn-row ke andar width auto */
+.btn-row button {
+  width: auto;
+  flex: 1;
+}
+
 button:hover {
   background: linear-gradient(135deg, #15803d, #16a34a);
 }
@@ -208,53 +215,66 @@ button:hover {
   display: block;
 }
 
-/* Popup */
+/* =========================
+   🏦 BANK-STYLE POPUP MODAL
+   ========================= */
+
 .popup-overlay {
   position: fixed;
   inset: 0;
-  display: none;
-  justify-content: center;
+  display: flex;
   align-items: center;
-  backdrop-filter: blur(6px);
+  justify-content: center;
+
   background: rgba(0, 0, 0, 0.35);
-  z-index: 2000;
-}
-.popup {
-  background: #fff;
-  padding: 26px 34px;
-  border-radius: 5px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  text-align: center;
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  transform: scale(0.85);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
   opacity: 0;
-  transition: all 0.4s cubic-bezier(0.25, 1, 0.3, 1);
-}
-.popup.show {
-  opacity: 1;
-  transform: scale(1);
-}
-.popup.success {
-  border-left: 6px solid #28a745;
-}
-.popup.error {
-  border-left: 6px solid #dc3545;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  z-index: 3000;
 }
 
-/* Responsive */
-@media (max-width: 480px) {
-  .login-box {
-    margin: 0 10px;
-  }
-  .tab {
-    font-size: 15px;
-    padding: 12px 0;
-  }
-  .phone-row select {
-    width: 80px;
-  }
+.popup-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.popup {
+  background: #ffffff;
+  min-width: 260px;
+  max-width: 90%;
+  padding: 22px 26px;
+  border-radius: 10px;
+
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+
+  box-shadow: 0 12px 35px rgba(0,0,0,0.18);
+
+  transform: translateY(12px) scale(0.96);
+  opacity: 0;
+  transition:
+    transform 0.35s cubic-bezier(0.25, 1, 0.3, 1),
+    opacity 0.35s ease;
+}
+
+/* Show animation */
+.popup-overlay.show .popup {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* Success / Error accent */
+.popup.success {
+  border-left: 5px solid #16a34a;
+}
+
+.popup.error {
+  border-left: 5px solid #dc2626;
 }
 
 
@@ -362,15 +382,10 @@ div[style*="Security Notice"] {
   padding: 10px;
   font-size: 18px;
   font-weight: bold;
-  background: #ffffff00;
-  color: #21d82b;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background: #ffffff;
+  color: #000000;
+ 
   z-index: 1000;
-}
-
-/* ✅ Add body top padding for fixed header space */
-body {
-  padding-top: 40px; /* add below your other body styles */
 }
 
 
@@ -403,11 +418,284 @@ h2 {
   to { transform: rotate(360deg); }
 }
 
+/* 🔥 Login + Register side by side */
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-row button {
+  flex: 1;
+  padding: 12px;
+  font-size: 15px;
+}
+
+/* Login button thoda strong */
+.login-btn {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Register outline style */
+.register-btn {
+  background: transparent;
+  border: 2px solid #16a34a;
+  color: #16a34a;
+  font-weight: 600;
+  margin-top: 0; /* 👈 important */
+}
+
+.register-btn:hover {
+  background: #16a34a;
+  color: #fff;
+}
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  text-align: center;
+  padding: 10px 10px 6px;
+  font-size: 18px;
+  font-weight: bold;
+  background: #ffffff;
+  color: #000000;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+/* 🔹 Sub text inside header */
+.header-subtext {
+  margin-top: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #166534;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Live dot */
+.header-subtext .dot {
+  width: 7px;
+  height: 7px;
+  background: #16a34a;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.6; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Typing text */
+#typingText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* body spacing adjust (IMPORTANT) */
+body {
+  padding-top: 64px; /* header + subtext height */
+}
+
+/* 🔐 Multi Security Section */
+.login-security-multi {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed #e5e7eb;
+  font-size: 12.8px;
+  color: #475569;
+}
+
+/* Main title */
+.security-main-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #166534;
+  margin-bottom: 10px;
+}
+
+.security-main-title i {
+  color: #16a34a;
+}
+
+/* Each item */
+.security-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+/* Number circle */
+.sec-no {
+  width: 20px;
+  height: 20px;
+  background: #ffff;
+  color: #166534;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Heading */
+.security-item h4 {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* Text */
+.security-item p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #475569;
+}
+/* =========================
+   🔧 FINAL CENTER + SCROLL FIX
+   ========================= */
+
+/* 1️⃣ Browser ko clear scroll owner do */
+html {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100%;
+  margin: 0 !important;
+
+  /* header + bottom nav space */
+  padding-top: 70px !important;
+  padding-bottom: 90px !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+
+  background: #f9fafb;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ❌ force scrollbar hide mat karo */
+body::-webkit-scrollbar {
+  width: 6px;
+}
+body::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.15);
+  border-radius: 5px;
+}
+
+/* 2️⃣ Login box PERFECT CENTER */
+.login-box {
+  max-width: 400px !important;
+  width: 100%;
+  margin: 0 auto !important;
+}
+
+/* 3️⃣ Security section SAME LINE + SAME WIDTH */
+.login-security-multi {
+  max-width: 400px !important;
+  width: 100%;
+  margin: 14px auto 0 !important;
+  padding-left: 12px;
+  padding-right: 12px;
+  box-sizing: border-box;
+}
+
+/* 4️⃣ Gift card bhi exact center */
+.gift-card {
+  max-width: 400px !important;
+  width: 100%;
+  margin: 20px auto 0 !important;
+}
+
+/* 5️⃣ Header text true center */
+.header,
+.header-subtext {
+  text-align: center;
+}
+
+/* 🔒 Input wrapper must be relative */
+.input-group {
+  position: relative;
+}
+
+/* 🔹 Status icon base */
+.status-icon {
+  position: absolute;
+  right: 12px;
+  top: 38px;              /* input ke center ke paas */
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;  /* click block na ho */
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* ⏳ Loading */
+.status-icon.loading {
+  color: #9ca3af;        /* gray */
+  animation: pulseIcon 1.2s infinite;
+}
+
+/* ✔ Success */
+.status-icon.success {
+  color: #16a34a;        /* green */
+  transform: scale(1.05);
+}
+
+/* ❌ Error */
+.status-icon.error {
+  color: #dc2626;        /* red */
+}
+
+/* 🔄 Subtle pulse animation */
+@keyframes pulseIcon {
+  0%   { opacity: 0.6; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+/* 📱 Mobile tweak */
+@media (max-width: 480px) {
+  .status-icon {
+    top: 36px;
+    font-size: 15px;
+  }
+}
 
 </style>
 </head>
 <body>
- <div class="header">𝐒𝐞𝐜𝐮𝐫𝐞 𝐘𝐨𝐮𝐫 𝐅𝐮𝐧𝐝𝐬 𝐰𝐢𝐭𝐡 𝐒𝐚𝐟𝐞</div>
+<div class="header">
+  𝐒𝐞𝐜𝐮𝐫𝐞 𝐘𝐨𝐮𝐫 𝐅𝐮𝐧𝐝𝐬 𝐰𝐢𝐭𝐡 𝐒𝐚𝐟𝐞
+  <div class="header-subtext">
+    <span class="dot"></span>
+    <span id="typingText"></span>
+  </div>
+</div>
+
 <div class="popup-overlay" id="popupOverlay">
   <div id="popup" class="popup"></div>
 </div>
@@ -420,41 +708,47 @@ h2 {
   </div>
 
   <div class="form">
-    <!-- 📞 Phone -->
-    <div class="form-section" id="phoneForm">
+<!-- 📞 Phone -->
+<div class="form-section" id="phoneForm">
 
-      <div class="input-group">
-        <label><i class="fas fa-phone"></i> Phone Number</label>
-        <div class="phone-row">
-          
-          <input type="tel" id="login-identifier" placeholder="Please enter phone number" />
-          <span id="idStatus" class="status-icon"></span>
-        </div>
-      </div>
-
-      <div class="input-group">
-        <label><i class="fas fa-lock"></i> Password</label>
-        <input type="password" id="login-password" placeholder="Password" />
-        <i class="fa-regular fa-eye eye-icon" id="toggle-password"></i>
-        <span id="passStatus" class="status-icon"></span>
-      </div>
-
-      <div class="actions">
-        <label><input type="checkbox" /> Remember password</label>
-        <a href="#" id="forgot-btn" style="color:#16a34a;text-decoration:none;font-weight:600;">Forgot?</a>
-      </div>
-
-      <button id="loginBtn">Login</button>
-      <button class="register-btn">Register</button>
+  <div class="input-group">
+    <label><i class="fas fa-phone"></i> Phone Number</label>
+    <div class="phone-row">
+      <input type="tel" id="login-identifier" placeholder="Please enter phone number" />
+      <span id="idStatus" class="status-icon"></span>
     </div>
+  </div>
 
-   <!-- 📧 Email -->
+  <div class="input-group">
+    <label><i class="fas fa-lock"></i> Password</label>
+    <input type="password" id="login-password" placeholder="Password" />
+    <i class="fa-regular fa-eye eye-icon" id="toggle-password"></i>
+    <span id="passStatus" class="status-icon"></span>
+  </div>
+
+  <div class="actions">
+    <label><input type="checkbox" /> Remember password</label>
+    <a href="#" id="forgot-btn" style="color:#16a34a;font-weight:600;">Forgot?</a>
+  </div>
+
+  <div class="btn-row">
+    <button class="login-btn" id="loginBtn">Login</button>
+    <button class="register-btn">Register</button>
+  </div>
+
+</div>
+
+
+<!-- 📧 Email -->
 <div class="form-section active" id="emailForm">
 
   <div class="input-group">
     <label><i class="fas fa-envelope"></i> Email</label>
     <input type="email" id="email-login" placeholder="Please enter email address" />
+    <span class="status-icon" id="emailStatus"></span>
+
   </div>
+
   <div class="input-group">
     <label><i class="fas fa-lock"></i> Password</label>
     <input type="password" id="email-password" placeholder="Password" />
@@ -463,19 +757,27 @@ h2 {
 
   <div class="actions">
     <label><input type="checkbox" id="remember-email" /> Remember password</label>
-    <a href="#" id="forgot-email-btn" style="color:#16a34a;text-decoration:none;font-weight:600;">Forgot?</a>
+    <a href="#" id="forgot-email-btn" style="color:#16a34a;font-weight:600;">Forgot?</a>
   </div>
 
-  <button id="emailLoginBtn">Login</button>
-  <button class="register-btn">Register</button>
+  <div class="btn-row">
+    <button class="login-btn" id="emailLoginBtn">Login</button>
+    <button class="register-btn">Register</button>
+  </div>
+
 </div>
 
-    <!-- 👤 Username -->
+
+<!-- 👤 Username -->
 <div class="form-section" id="userForm">
+
   <div class="input-group">
     <label><i class="fas fa-user"></i> Username</label>
     <input type="text" id="user-login" placeholder="Enter your username" />
+    <span class="status-icon" id="userStatus"></span>
+
   </div>
+
   <div class="input-group">
     <label><i class="fas fa-lock"></i> Password</label>
     <input type="password" id="user-password" placeholder="Password" />
@@ -484,13 +786,90 @@ h2 {
 
   <div class="actions">
     <label><input type="checkbox" id="remember-user" /> Remember password</label>
-    <a href="#" id="forgot-user-btn" style="color:#16a34a;text-decoration:none;font-weight:600;">Forgot?</a>
+    <a href="#" id="forgot-user-btn" style="color:#16a34a;font-weight:600;">Forgot?</a>
   </div>
 
-  <button id="userLoginBtn">Login</button>
-  <button class="register-btn">Register</button>
+  <div class="btn-row">
+    <button class="login-btn" id="userLoginBtn">Login</button>
+    <button class="register-btn">Register</button>
+  </div>
 </div>
 </div>
+</div>
+<!-- 🔐 Account Security Guidelines -->
+<div class="login-security-multi">
+
+  <div class="security-main-title">
+    <i class="fas fa-shield-alt"></i>
+    Account Security Guidelines
+  </div>
+
+  <div class="security-item">
+    <span class="sec-no">1</span>
+    <div>
+      <h4>Keep Your Password Private</h4>
+      <p>Never share your password, OTP, or login details with anyone.</p>
+    </div>
+  </div>
+
+  <div class="security-item">
+    <span class="sec-no">2</span>
+    <div>
+      <h4>Avoid Public Devices</h4>
+      <p>Do not log in from public computers or shared devices.</p>
+    </div>
+  </div>
+
+  <div class="security-item">
+    <span class="sec-no">3</span>
+    <div>
+      <h4>Do Not Use Another Phone</h4>
+      <p>Avoid accessing your account from someone else’s mobile phone.</p>
+    </div>
+  </div>
+
+  <div class="security-item">
+    <span class="sec-no">4</span>
+    <div>
+      <h4>Limit Wrong Password Attempts</h4>
+      <p>Please do not try incorrect passwords more than 10 times.</p>
+    </div>
+  </div>
+
+  <div class="security-item">
+    <span class="sec-no">5</span>
+    <div>
+      <h4>Account Lock Protection</h4>
+      <p>If your account is locked, wait 10 minutes before trying again.</p>
+    </div>
+  </div>
+
+  <div class="security-item">
+    <span class="sec-no">6</span>
+    <div>
+      <h4>Always Log Out</h4>
+      <p>Make sure to log out properly after finishing your session.</p>
+    </div>
+  </div>
+
+  <div class="security-item">
+    <span class="sec-no">7</span>
+    <div>
+      <h4>Use a Secure Network</h4>
+      <p>Login only using trusted and secure internet connections.</p>
+    </div>
+  </div>
+
+  <div class="security-item">
+    <span class="sec-no">8</span>
+    <div>
+      <h4>Report Suspicious Activity</h4>
+      <p>If you notice any unusual activity, contact support immediately.</p>
+    </div>
+  </div>
+
+</div>
+
 </div>
 <!-- 🎁 Gift Animation Card -->
 <div class="card gift-card">
@@ -505,7 +884,7 @@ h2 {
 
 
   </div>
-   <div class="gift-title">Enjoy <span class="brand">Secure Access</span></div>
+   
 </div>
 <!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
 <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
@@ -736,16 +1115,21 @@ async function getUserIP() {
 }
 
 
-const popup = document.getElementById('popup');
-const popupOverlay = document.getElementById('popupOverlay');
-function showPopup(msg, type = 'success') {
+const popup = document.getElementById("popup");
+const popupOverlay = document.getElementById("popupOverlay");
+
+function showPopup(msg, type = "success") {
+  // text + type set
   popup.textContent = msg;
-  popup.className = "popup " + type + " show";
-  popupOverlay.style.display = 'flex';
+  popup.className = `popup ${type}`;
+
+  // show with smooth animation
+  popupOverlay.classList.add("show");
+
+  // auto hide (smooth)
   setTimeout(() => {
-    popupOverlay.style.display = 'none';
-    popup.className = "popup";
-  }, 2000);
+    popupOverlay.classList.remove("show");
+  }, 2200);
 }
 
 document.getElementById("toggle-password").addEventListener("click", () => {
@@ -755,143 +1139,6 @@ document.getElementById("toggle-password").addEventListener("click", () => {
 
 
 // ✅ Final Unified Live Validation (Phone + Email + Username)
-
-const idFields = {
-  phone: document.getElementById("login-identifier"),
-  email: document.getElementById("email-login"),
-  user: document.getElementById("user-login")
-};
-
-const idStatuses = {
-  phone: document.getElementById("idStatus"),
-  email: document.createElement("span"),
-  user: document.createElement("span")
-};
-
-// 🔧 Utility: message div create karna
-function attachValidationField(input) {
-  const msg = document.createElement("div");
-  msg.className = "valid-msg";
-  input.parentNode.appendChild(msg);
-  return msg;
-}
-
-// ✅ Add message areas
-const phoneMsg = attachValidationField(idFields.phone);
-const emailMsg = attachValidationField(idFields.email);
-const userMsg = attachValidationField(idFields.user);
-
-let checkTimer;
-
-// ⚙️ Common function for all input fields
-function setupValidation(input, type, msg, statusIcon) {
-  input.addEventListener("input", () => {
-    clearTimeout(checkTimer);
-    let value = input.value.trim();
-    let error = "";
-
-    // 🧠 Validation rules
-    if (!value) {
-      msg.textContent = "";
-      msg.className = "valid-msg";
-      input.classList.remove("valid", "invalid");
-      if (statusIcon) statusIcon.textContent = "";
-      return;
-    }
-
-    if (type === "phone") {
-      value = value.replace(/\D/g, "");
-      input.value = value;
-      if (value.length !== 10) error = "Enter 10-digit phone number.";
-    } else if (type === "email") {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(value)) error = "Enter a valid email address.";
-    } else if (type === "user") {
-      if (value.length < 3) error = "Username must be at least 3 characters.";
-    }
-
-    // 🔴 Show local error OR 🟢 Looks good
-    if (error) {
-      msg.textContent = error;
-      msg.className = "valid-msg error";
-      input.classList.add("invalid");
-      input.classList.remove("valid");
-      if (statusIcon) statusIcon.textContent = "";
-      return;
-    } else {
-      msg.textContent = "Looks good!";
-      msg.className = "valid-msg success";
-      input.classList.add("valid");
-      input.classList.remove("invalid");
-    }
-
-    // 🔁 Firestore existence check after short delay
-    if (value.length >= 3) {
-      if (statusIcon) statusIcon.innerHTML = '<span class="spinner"></span>';
-      checkTimer = setTimeout(() => checkUserExist(value, statusIcon), 600);
-    }
-  });
-}
-
-// 🔥 Firebase: user existence check
-async function checkUserExist(value, statusIcon) {
-  if (!value.trim()) {
-    if (statusIcon) statusIcon.textContent = "";
-    return;
-  }
-
-  try {
-    const ref = doc(db, "logins", value.trim().toLowerCase());
-    const snap = await getDoc(ref);
-
-    if (snap.exists()) {
-      statusIcon.textContent = "✅";
-      statusIcon.className = "status-icon green active";
-    } else {
-      statusIcon.textContent = "❌";
-      statusIcon.className = "status-icon red active";
-    }
-  } catch (e) {
-    console.error("Firestore check error:", e);
-    statusIcon.textContent = "❌";
-    statusIcon.className = "status-icon red active";
-  }
-}
-
-// ✅ Apply unified validation
-setupValidation(idFields.phone, "phone", phoneMsg, idStatuses.phone);
-setupValidation(idFields.email, "email", emailMsg, idStatuses.email);
-setupValidation(idFields.user, "user", userMsg, idStatuses.user);
-
-
-/* 🔴 Real-time Password Check */
-const passInput = document.getElementById("login-password");
-const passStatus = document.getElementById("passStatus");
-const phoneInput = document.getElementById("login-identifier"); // ✅ add this line
-
-passInput.addEventListener("input", async () => {
-  const identifier = phoneInput.value.trim().toLowerCase(); // ✅ change here
-  const password = passInput.value;
-  if (!identifier || password.length < 6) {
-    passStatus.innerHTML = "";
-    return;
-  }
-
-  passStatus.innerHTML = '<span class="spinner"></span>';
-  const ref = doc(db, "logins", identifier);
-  const snap = await getDoc(ref);
-  if (!snap.exists()) { passStatus.innerHTML = "❌"; passStatus.className = "status-icon red active"; return; }
-
-  const email = snap.data().email;
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    passStatus.textContent = "✅";
-    passStatus.className = "status-icon green active";
-  } catch {
-    passStatus.textContent = "❌";
-    passStatus.className = "status-icon red active";
-  }
-});
 
 
 
@@ -1109,7 +1356,7 @@ if (!snap.empty) {
 
 // ✅ Success popup aur redirect
 showPopup("✅ Login successful!", "success");
-setTimeout(() => (window.location.href = "Dashboard.html"), 1500);
+setTimeout(() => (window.location.href = "Dashboard.html"), 2000);
 
 
 
@@ -1134,7 +1381,8 @@ setTimeout(() => (window.location.href = "Dashboard.html"), 1500);
     let newAttempts = (userData.failedAttempts || 0) + 1;
     const updates = { failedAttempts: newAttempts };
 
-    const MAX_FAILED = 3;
+    const MAX_FAILED = 5;
+
     const LOCK_MINUTES = 15;
 
     if (newAttempts >= MAX_FAILED) {
@@ -1190,54 +1438,146 @@ document.querySelectorAll('.register-btn').forEach(btn => {
   });
 });
 
+
+
+
+  let liveTimer;
+
+function debounceCheck(fn, delay = 500) {
+  clearTimeout(liveTimer);
+  liveTimer = setTimeout(fn, delay);
+}
+
+// 1 
+
+//2
+async function liveCheck(value, type, statusEl) {
+  if (!value) {
+    statusEl.textContent = "";
+    statusEl.className = "status-icon";
+    return;
+  }
+
+  statusEl.textContent = "⏳";
+  statusEl.className = "status-icon loading";
+
+  try {
+    let exists = false;
+
+    if (type === "email") {
+      // ✅ EMAIL → query
+      const q = query(
+        collection(db, "logins"),
+        where("email", "==", value.toLowerCase())
+      );
+      const snap = await getDocs(q);
+      exists = !snap.empty;
+
+    } else {
+      // ✅ PHONE / USERNAME → doc id
+      const ref = doc(db, "logins", value.toLowerCase());
+      const snap = await getDoc(ref);
+      exists = snap.exists();
+    }
+
+    if (exists) {
+      statusEl.textContent = "✔";
+      statusEl.className = "status-icon success";
+    } else {
+      statusEl.textContent = "✖";
+      statusEl.className = "status-icon error";
+    }
+
+  } catch (e) {
+    console.error(e);
+    statusEl.textContent = "✖";
+    statusEl.className = "status-icon error";
+  }
+}
+
+//3333
+const phoneInput = document.getElementById("login-identifier");
+const phoneStatus = document.getElementById("idStatus");
+
+phoneInput.addEventListener("input", () => {
+  if (!document.getElementById("phoneForm").classList.contains("active")) return;
+
+  phoneInput.value = phoneInput.value.replace(/\D/g, "");
+
+  if (phoneInput.value.length !== 10) {
+    phoneStatus.textContent = "✖";
+    phoneStatus.className = "status-icon error";
+    return;
+  }
+
+  phoneStatus.textContent = "⏳";
+  phoneStatus.className = "status-icon loading";
+
+  debounceCheck(() => {
+    liveCheck(phoneInput.value, "phone", phoneStatus);
+  });
+});
+///7777
+const userInput = document.getElementById("user-login");
+const userStatus = document.getElementById("userStatus");
+
+userInput.addEventListener("input", () => {
+  const value = userInput.value.trim();
+
+  if (value.length < 3) {
+    userStatus.textContent = "✖";
+    userStatus.className = "status-icon error";
+    return;
+  }
+
+  userStatus.textContent = "⏳";
+  userStatus.className = "status-icon loading";
+
+  debounceCheck(() => {
+    liveCheck(value, "user", userStatus);
+  });
+});
+
+
 </script>
 <script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
+const messages = [
+  "Login using Email, Phone or Username",
+  "Your account is protected with secure verification",
+  "Forgot password? Use the reset option anytime",
+  "Choose your login tab above to continue safely",
+  "Please do not try more than 10 incorrect passwords",
+  "If your account gets locked, wait 10 minutes and try again"
+];
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  });
+let msgIndex = 0;
+let charIndex = 0;
+const typingEl = document.getElementById("typingText");
+const typingSpeed = 45;
+const holdTime = 1600;
 
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
+function typeMessage() {
+  if (charIndex < messages[msgIndex].length) {
+    typingEl.textContent += messages[msgIndex].charAt(charIndex);
+    charIndex++;
+    setTimeout(typeMessage, typingSpeed);
+  } else {
+    setTimeout(eraseMessage, holdTime);
+  }
+}
 
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
+function eraseMessage() {
+  if (charIndex > 0) {
+    typingEl.textContent = messages[msgIndex].substring(0, charIndex - 1);
+    charIndex--;
+    setTimeout(eraseMessage, 25);
+  } else {
+    msgIndex = (msgIndex + 1) % messages.length;
+    setTimeout(typeMessage, 300);
+  }
+}
 
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
+typeMessage();
 </script>
 </body>
 </html>
-
