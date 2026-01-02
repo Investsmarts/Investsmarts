@@ -8,6 +8,10 @@
 <title>Account — TrustDollar</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+
+
 <style>
 :root {
   --green: #00c853;
@@ -24,58 +28,10 @@ body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
   background: var(--bg);
-  color: #222;
+  
   padding-bottom: 100px; /* 
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-}
-
-
-/* === PROFILE CARD FIXED FIT VERSION === */
-.profile-header {
-  position: relative;
-  display: flex;
-  align-items: center;
-  background: #ffffff;
-  border-radius: 5px;
-  padding: 25px 25px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
-  max-width: 640px;
-  margin: 15px auto;
-  font-family: 'Poppins', sans-serif;
-  color: #222;
-  border: 1px solid #e9e9e9;
-}
-
-/* 🔹 Top Gradient Strip */
-.profile-header::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 10px;
-  background: linear-gradient(90deg, #00c853, #00bfa5, #00e676);
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
-/* PROFILE IMAGE LEFT */
-.profile-pic {
-  flex-shrink: 0;
-  width: 140px;
-  height: 140px;
-  border-radius: 5px;
-  overflow: hidden;
-  border: 3px solid #fff;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
-  background: #f0f0f0;
-}
-.profile-pic img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 5px;
 }
 
 /* RIGHT SIDE INFO (no internal boxes) */
@@ -98,7 +54,7 @@ body {
   background: transparent;
   border: none;
   padding: 0;
-  box-shadow: none;
+  
 }
 
 /* ✅ Tick before text */
@@ -116,22 +72,6 @@ body {
   50% { opacity: 0.4; transform: scale(1.15); }
 }
 
-/* Responsive — image stays left */
-@media (max-width: 600px) {
-  .profile-header {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 20px 15px;
-  }
-  .profile-pic {
-    width: 110px;
-    height: 110px;
-  }
-  .info-box {
-    font-size: 13px;
-  }
-}
 
 
 /* ACTION GRID */
@@ -146,7 +86,7 @@ body {
   border-radius: 5px;
   padding: 12px 6px;
   text-align: center;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+  
   cursor: pointer;
   transition: transform 0.2s ease;
 }
@@ -154,7 +94,7 @@ body {
   transform: translateY(-3px);
 }
 .action-item i {
-  color: #00c853;
+  
   font-size: 22px;
   margin-bottom: 4px;
 }
@@ -171,7 +111,7 @@ body {
   border-radius: 5px;
   margin: 14px 18px;
   padding: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+ 
 }
 .section-title {
   font-size: 15px;
@@ -192,7 +132,7 @@ body {
 }
 .section-row i {
   font-size: 18px;
-  color: var(--green);
+  
   margin-right: 10px;
 }
 .section-row span {
@@ -243,228 +183,8 @@ body {
   background: #dc2626;
 }
 
-/* RESPONSIVE BREAKPOINTS */
-@media (max-width: 768px) {
-  .balance-card {
-    width: 94%;
-  }
-  .section {
-    margin: 12px;
-  }
-  .profile-pic {
-    width: 75px;
-    height: 75px;
-  }
-}
-
-@media (max-width: 480px) {
-  .profile-header {
-    padding: 20px 15px 50px;
-  }
-  .profile-name {
-    font-size: 16px;
-  }
-  .action-grid {
-    gap: 8px;
-  }
-  .action-item i {
-    font-size: 20px;
-  }
-  .action-item span {
-    font-size: 11px;
-  }
-  .logout-btn {
-    width: 92%;
-  }
-}
 
 
-
-/* 🔴 Notification red dot beside bell */
-#notifyLink {
-  position: relative;
-}
-#notifyDot {
-  position: absolute;
-  top: 8px;
-  left: 28px; /* perfect beside bell */
-  width: 10px;
-  height: 10px;
-  background: red;
-  border-radius: 5px;
-  display: none;
-  box-shadow: 0 0 8px rgba(255, 0, 0, 0.6);
-  animation: blinkDot 1s infinite ease-in-out;
-}
-
-/* 🔔 Blink animation for red dot */
-@keyframes blinkDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.3; transform: scale(1.2); }
-}
-
-/* 🟢 Center popup alert */
-.center-alert {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
-  background: linear-gradient(135deg, #00c853, #00bfa5);
-  color: #fff;
-  padding: 14px 26px;
-  border-radius: 5px;
-  font-weight: 600;
-  font-size: 15px;
-  text-align: center;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-  z-index: 2000;
-  opacity: 0;
-  transition: all 0.4s ease;
-}
-.center-alert.show {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-/* 🔸 Thin Gradient Header Bar */
-.profile-header::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 10px;  /* ✅ strip height */
-  background: linear-gradient(90deg, #00c853, #00bfa5, #00e676);
-  border-top-left-radius: 14px;
-  border-top-right-radius: 14px;
-}
-
-
-/* 🟢 LIVE STATUS INDICATOR */
-.live-status {
-  position: absolute;
-  bottom: 15px;
-  right: 20px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(0, 200, 83, 0.1);
-  padding: 6px 12px;
-  border-radius: 20px;
-  border: 1px solid rgba(0, 200, 83, 0.25);
-  font-size: 13px;
-  font-weight: 500;
-  color: #00c853;
-  box-shadow: 0 2px 8px rgba(0, 200, 83, 0.2);
-  animation: fadeSlideIn 0.6s ease;
-}
-
-.live-dot {
-  width: 10px;
-  height: 10px;
-  background-color: #00c853;
-  border-radius: 50%;
-  box-shadow: 0 0 8px rgba(0, 200, 83, 0.8);
-  animation: pulseLive 1.4s infinite ease-in-out;
-}
-
-/* ✨ Soft Blink Animation */
-@keyframes pulseLive {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.4); opacity: 0.5; }
-}
-
-/* ✨ Slide-in entry animation */
-@keyframes fadeSlideIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* 📱 Adjust on small screens */
-@media (max-width: 600px) {
-  .live-status {
-    bottom: 10px;
-    right: 10px;
-    font-size: 12px;
-    padding: 5px 10px;
-  }
-}
-.live-dot {
-  width: 10px;
-  height: 10px;
-  background-color: #00ff55;
-  border-radius: 50%;
-  box-shadow: 0 0 15px rgba(0, 255, 55, 0.8);
-  animation: pulseLive 0.9s infinite ease-in-out;
-}
-
-
-</style>
-
-</head>
-<body>
-
-<div id="newNotifAlert" class="center-alert">🔔 You have a new notification!</div>
-
-<div class="profile-header">
-  <div class="profile-pic">
-    <img id="profileImage" alt="User">
-  </div>
-
-  <div class="profile-info">
-    <div class="info-box" id="userName">Loading...</div>
-    <div class="info-box" id="joinDate">Joined: --</div>
-    <div class="info-box" id="userUID">Email: Loading...</div>
-    <div class="info-box" id="lastLogin">Last login: --</div>
-  </div>
-
-  <!-- ✅ Sahi jagah -->
-  <div class="live-status">
-    <span class="live-dot"></span>
-    <span class="live-text">Your account is live</span>
-  </div>
-</div>
-
-
-<div class="action-grid">
-  <div class="action-item"><i class='bx bx-wallet'></i><span>Paytm</span></div>
-  <div class="action-item"><i class='bx bx-download'></i><span>Deposit</span></div>
-  <div class="action-item"><i class='bx bx-upload'></i><span>Withdraw</span></div>
-  <div class="action-item"><i class='bx bx-crown'></i><span>VIP</span></div>
-</div>
-
-<!-- 🔹 HISTORY SECTION -->
-<div class="section">
-  <div class="section-title">History</div>
-  <div class="section-row" id="txnLink"><i class='bx bx-history'></i><span>Transaction History</span></div>
-  <div class="section-row" id="depHist"><i class='bx bx-file'></i><span>Deposit History</span></div>
-  <div class="section-row" id="withHist"><i class='bx bx-up-arrow-circle'></i><span>Withdraw History</span></div>
-</div>
-
-<!-- 🔹 MORE SECTION -->
-<div class="section">
-  <div class="section-title">More</div>
-  <div class="section-row" id="notifyLink"><i class='bx bx-bell'></i><div id="notifyDot"></div><span>Notifications</span></div>
-    <div class="section-row" id="giftLink"><i class='bx bx-gift'></i><span>Gifts</span></div>
-  <div class="section-row" id="langLink"><i class='bx bx-globe'></i><span>English </span></div>
-</div>
-
-<!-- 🔹 SERVICE CENTER SECTION -->
-<div class="section">
-  <div class="section-title">Service Center</div>
-  <div class="service-grid">
-    <div id="settingsLink"><i class='bx bx-cog'></i><br>Settings</div>
-    <div id="feedbackLink"><i class='bx bx-message-dots'></i><br>Feedback</div>
-    <div id="announceLink"><i class='bx bx-megaphone'></i><br>Announcement</div>
-    <div id="supportLink"><i class='bx bx-support'></i><br>Live Support</div>
-    <div id="guideLink"><i class='bx bx-book'></i><br>Guide</div>
-    <div id="aboutLink"><i class='bx bx-info-circle'></i><br>About</div>
-  </div>
-</div>
-
-<!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
-<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
-
-<style>
 :root {
   --nav-bg: #fff;
   --nav-text: #444;
@@ -490,7 +210,6 @@ body {
   align-items: center;
   padding: 10px 0; /* 👈 thinner padding */
   z-index: 9999;
-  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
 }
 
 /* 🔹 Nav items (slimmer text + less spacing) */
@@ -574,7 +293,701 @@ body {
     font-size: 9.5px;
   }
 }
+
+
+
+
+/* 🔴 Notification red dot beside bell */
+#notifyLink {
+  position: relative;
+}
+#notifyDot {
+  position: absolute;
+  top: 8px;
+  left: 28px; /* perfect beside bell */
+  width: 10px;
+  height: 10px;
+  background: red;
+  border-radius: 5px;
+  display: none;
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.6);
+  animation: blinkDot 1s infinite ease-in-out;
+}
+
+/* 🔔 Blink animation for red dot */
+@keyframes blinkDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.2); }
+}
+
+/* 🟢 Center popup alert */
+.center-alert {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: linear-gradient(135deg, #00c853, #00bfa5);
+  color: #fff;
+  padding: 14px 26px;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 15px;
+  text-align: center;
+  
+  z-index: 2000;
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+.center-alert.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* ===== PREMIUM FB STYLE HEADER ===== */
+
+.fb-profile-header {
+  background: #fff;
+  border-radius: 16px;
+  margin: 14px;
+  overflow: hidden;
+ 
+}
+
+/* Cover */
+.fb-cover {
+  height: 110px;
+  background: linear-gradient(
+    135deg,
+    #16a34a,
+    #22c55e,
+    #86efac
+  );
+}
+
+/* Profile Row */
+.fb-profile-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 18px 18px;
+  margin-top: -40px;
+}
+
+/* Avatar */
+.fb-avatar {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  background: #fff;
+  padding: 4px;
+  border-radius: 50%;
+  
+}
+
+.fb-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Live dot */
+.avatar-live {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 14px;
+  height: 14px;
+  background: #16a34a;
+  border-radius: 50%;
+  border: 3px solid #fff;
+ 
+}
+
+/* ===== FB USER INFO (SAME DATA, PREMIUM LOOK) ===== */
+
+.fb-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Name */
+.fb-user-info .info-line.name {
+  font-size: 17px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* Normal text */
+.fb-user-info .info-line {
+  font-size: 13px;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Muted (last login) */
+.fb-user-info .info-line.muted {
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* Soft premium dot */
+.fb-user-info .info-line::before {
+  content: "•";
+  color: #22c55e;
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Cover */
+.fb-cover {
+  position: relative;
+  height: 120px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.cover-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.cover-img.active {
+  opacity: 1;
+}
+
+/* Profile Avatar */
+.fb-avatar {
+  width: 90px;
+  height: 90px;
+  background: #fff;
+  padding: 4px;
+  border-radius: 50%;
+ 
+  cursor: pointer;
+}
+
+/* Fullscreen Viewer */
+.image-viewer {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+
+.image-viewer img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 12px;
+}
+
+.image-viewer.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+/* ===== USER INFO ATTACHED BOX (FINAL FIX) ===== */
+
+.user-info-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+
+  margin: -12px 14px 14px;   /* header se chipka */
+  padding: 16px 18px;
+
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-top: none;
+  border-radius: 0 0 16px 16px;
+
+ 
+}
+
+/* Left info */
+.user-info-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Name + badges row */
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.name-row .name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* Info lines */
+.user-info-box .info-line {
+  font-size: 13px;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-info-box .info-line.muted {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.user-info-box .info-line::before {
+  content: "•";
+  color: #22c55e;
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* ===== LIVE STATUS (RIGHT SIDE) ===== */
+
+.account-live {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 5px;
+
+  background: rgba(22, 163, 74, 0.12);
+  border: 1px solid rgba(22, 163, 74, 0.3);
+  color: #16a34a;
+
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.account-live .live-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #16a34a;
+ 
+  animation: pulseLive 1.2s infinite ease-in-out;
+}
+
+@keyframes pulseLive {
+  0%,100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.5; }
+}
+
+/* Mobile */
+@media (max-width: 520px) {
+  .user-info-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .account-live {
+    margin-top: 6px;
+  }
+}
+
+
+
+/* ===== LOGOUT MODAL OVERLAY ===== */
+.logout-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.logout-modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ===== LOGOUT MODAL OVERLAY ===== */
+.logout-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 100000;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.logout-modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ===== LOGOUT CARD ===== */
+.logout-box {
+  width: 92%;
+  max-width: 380px;
+
+  background: #ffffff;
+  border-radius: 14px;
+
+  box-shadow: 0 30px 70px rgba(0,0,0,0.28);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  animation: scaleIn 0.25s ease;
+}
+
+/* ===== HEADER (alag clearly) ===== */
+.logout-box h3 {
+  margin: 0;
+  padding: 16px 18px;
+
+  font-size: 17px;
+  font-weight: 600;
+  color: #0f172a;
+
+  background: #f8fafc;
+  border-bottom: 1px solid #e5e7eb;
+
+  text-align: center;
+}
+
+/* ===== BODY TEXT ===== */
+.logout-box p {
+  margin: 0;
+  padding: 18px 20px;
+
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.55;
+  text-align: center;
+}
+
+/* ===== BUTTON ROW ===== */
+.logout-actions {
+  display: flex;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* COMMON BUTTON */
+.logout-actions button {
+  flex: 1;
+  padding: 13px 0;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  border: none;
+  background: none;
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+/* NO */
+.btn-no {
+  background: #f8fafc;
+  color: #334155;
+}
+
+.btn-no:hover {
+  background: #f1f5f9;
+}
+
+/* YES */
+.btn-yes {
+  color: #ef4444;
+  border-left: 1px solid #e5e7eb;
+}
+
+.btn-yes:hover {
+  background: rgba(239,68,68,0.08);
+}
+
+/* ===== ANIMATION ===== */
+@keyframes scaleIn {
+  from {
+    transform: translateY(6px) scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+/* ===== ACCOUNT WARNING BOX ===== */
+.account-warning-box {
+  margin: 6px 14px 14px;
+  padding: 14px 16px;
+
+ 
+  border: 1px solid #fde68a;
+  border-radius: 5px;
+
+
+}
+
+/* Title */
+.warning-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 14px;
+  font-weight: 600;
+  color: #92400e;
+  margin-bottom: 8px;
+}
+
+.warning-title i {
+  font-size: 18px;
+}
+
+/* List */
+.warning-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Each warning */
+.warning-list li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+
+  font-size: 13px;
+  color: #78350f;
+  line-height: 1.45;
+}
+
+/* Bullet dot */
+.warning-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #f59e0b;
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Last item spacing fix */
+.warning-list li:last-child {
+  margin-bottom: 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;              /* 👈 gap kam */
+  padding: 0 16px;
+  margin: 14px 0 22px;   /* 👈 vertical space kam */
+}
+
+.stat-box {
+  background: #ffffff;
+  border-radius: 5px;
+  padding: 10px 6px;     /* 👈 sabse important: padding kam */
+  text-align: center;
+}
+
+/* icon thoda chota */
+.stat-box i {
+  font-size: 18px;       /* 👈 22 → 18 */
+  color: #00c853;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* label compact */
+.stat-label {
+  font-size: 11px;       /* 👈 12 → 11 */
+  color: #64748b;
+  line-height: 1.2;
+}
+
+/* value compact */
+.stat-value {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;       /* 👈 15 → 13 */
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* VIP box */
+.stat-box.vip {
+  background: linear-gradient(135deg, #fff7ed, #fffbeb);
+  border: 1px solid #fde68a;
+}
+
+.stat-box.vip i {
+  color: #f59e0b;
+}
+
+/* Mobile */
+@media (max-width: 520px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
 </style>
+
+</head>
+<body>
+
+  <div class="page-wrap">
+<!-- 🔷 Premium Profile Header -->
+<div class="fb-profile-header">
+
+  <!-- Cover Slider -->
+  <div class="fb-cover" id="coverSlider">
+    <img src="https://picsum.photos/900/400?1" class="cover-img active">
+    <img src="https://picsum.photos/900/400?2" class="cover-img">
+    <img src="https://picsum.photos/900/400?3" class="cover-img">
+  </div>
+
+  <!-- Profile Row -->
+  <div class="fb-profile-row">
+    <div class="fb-avatar" id="profileAvatar">
+      <img id="profileImage" src="https://i.pravatar.cc/300">
+    </div>
+
+   
+  </div>
+</div>
+
+<!-- Fullscreen Image Viewer -->
+<div class="image-viewer" id="imageViewer">
+  <img id="viewerImg">
+</div>
+
+
+<div id="newNotifAlert" class="center-alert">🔔 You have a new notification!</div>
+
+<div class="user-info-box">
+
+  <!-- LEFT: User Information -->
+  <div class="user-info-left">
+
+    <!-- Name + Badges -->
+    <div class="name-row">
+      <span class="name" id="userName">Loading...</span>
+
+</div>
+    <div class="info-line" id="joinDate">Joined: --</div>
+    <div class="info-line" id="userUID">Email: --</div>
+    <div class="info-line muted" id="lastLogin">Last login: --</div>
+  </div>
+
+  <!-- RIGHT: Live Status -->
+  <div class="account-live" id="accountLive">
+    <span class="live-dot"></span>
+    <span class="live-text">Account Live</span>
+  </div>
+
+</div>
+
+<!-- 🔹 ACCOUNT STATS -->
+<div class="stats-grid">
+
+  <div class="stat-box">
+    <i class='bx bx-download'></i>
+    <span class="stat-label">Total Deposit</span>
+    <strong class="stat-value" id="totalDeposit">0</strong>
+  </div>
+
+  <div class="stat-box">
+    <i class='bx bx-upload'></i>
+    <span class="stat-label">Total Withdrawal</span>
+    <strong class="stat-value" id="totalWithdraw">0</strong>
+  </div>
+
+  <div class="stat-box">
+    <i class='bx bx-wallet'></i>
+    <span class="stat-label">Available Balance</span>
+    <strong class="stat-value" id="availableBalance">0</strong>
+  </div>
+
+  <div class="stat-box vip">
+    <i class='bx bx-crown'></i>
+    <span class="stat-label"> Level</span>
+    <strong class="stat-value" id="accountLevel">VIP</strong>
+  </div>
+
+</div>
+
+<div class="action-grid">
+  <div class="action-item"><i class='bx bx-wallet'></i><span>Paytm</span></div>
+  <div class="action-item"><i class='bx bx-download'></i><span>Deposit</span></div>
+  <div class="action-item"><i class='bx bx-upload'></i><span>Withdraw</span></div>
+  <div class="action-item"><i class='bx bx-crown'></i><span>VIP</span></div>
+</div>
+
+<!-- 🔹 HISTORY SECTION -->
+<div class="section">
+  <div class="section-title">History</div>
+  <div class="section-row" id="txnLink"><i class='bx bx-history'></i><span>Transaction History</span></div>
+  <div class="section-row" id="depHist"><i class='bx bx-file'></i><span>Deposit History</span></div>
+  <div class="section-row" id="withHist"><i class='bx bx-up-arrow-circle'></i><span>Withdraw History</span></div>
+</div>
+
+<!-- 🔹 MORE SECTION -->
+<div class="section">
+  <div class="section-title">More</div>
+  <div class="section-row" id="notifyLink"><i class='bx bx-bell'></i><div id="notifyDot"></div><span>Notifications</span></div>
+    <div class="section-row" id="giftLink"><i class='bx bx-gift'></i><span>Gifts</span></div>
+  <div class="section-row" id="langLink"><i class='bx bx-globe'></i><span>English </span></div>
+</div>
+
+<!-- 🔹 SERVICE CENTER SECTION -->
+<div class="section">
+  <div class="section-title">Service Center</div>
+  <div class="service-grid">
+    <div id="settingsLink"><i class='bx bx-cog'></i><br>Settings</div>
+    <div id="feedbackLink"><i class='bx bx-message-dots'></i><br>Feedback</div>
+    <div id="announceLink"><i class='bx bx-megaphone'></i><br>Announcement</div>
+    <div id="supportLink"><i class='bx bx-support'></i><br>Live Support</div>
+    <div id="guideLink"><i class='bx bx-book'></i><br>Guide</div>
+    <div id="aboutLink"><i class='bx bx-info-circle'></i><br>About</div>
+  </div>
+</div>
+
+
+
 
 <!-- ✅ HTML Navbar -->
 <div class="bottom-nav" id="mainNav">
@@ -599,73 +1012,41 @@ body {
   </a>
 </div>
 
-<script>
-/* 🌗 Auto theme detect */
-function detectTheme() {
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  document.documentElement.setAttribute("data-theme", prefersDark ? "dark" : "light");
-}
-detectTheme();
-window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", detectTheme);
-
-/* 💡 Auto highlight based on page URL */
-const currentPage = window.location.pathname.split("/").pop().toLowerCase();
-document.querySelectorAll(".bottom-nav .nav-item").forEach(item => {
-  const href = item.getAttribute("href")?.toLowerCase();
-  if (currentPage === href) item.classList.add("active");
-});
-
-/* 🌊 Ripple effect + manual highlight */
-document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
-  item.addEventListener("click", (e) => {
-    // highlight
-    document.querySelector(".bottom-nav .nav-item.active")?.classList.remove("active");
-    item.classList.add("active");
-
-    // ripple
-    const ripple = document.createElement("span");
-    ripple.classList.add("ripple");
-    const rect = item.getBoundingClientRect();
-    ripple.style.left = `${e.clientX - rect.left}px`;
-    ripple.style.top = `${e.clientY - rect.top}px`;
-    item.appendChild(ripple);
-    setTimeout(() => ripple.remove(), 500);
-  });
-});
-</script>
 
 
+<!-- 🔴 Logout Confirmation Modal -->
+<div class="logout-modal" id="logoutModal">
+  <div class="logout-box">
+    <h3>Confirm Logout</h3>
+    <p>Are you sure you want to log out from your account?</p>
 
+    <div class="logout-actions">
+      <button class="btn-no" id="cancelLogout">No</button>
+      <button class="btn-yes" id="confirmLogout">Yes, Logout</button>
+    </div>
+  </div>
+</div>
 
-<script>
-  // 🔥 Bottom nav auto-active highlight logic
-  const navLinks = document.querySelectorAll(".bottom-nav a");
+<!-- ⚠️ Account Warnings -->
+<div class="account-warning-box">
+  <div class="warning-title">
+    <i class='bx bx-error-circle'></i>
+    Important Account Notices
+  </div>
 
-  // current page ka URL filename nikalta hai (e.g., mining.html)
-  const currentPage = window.location.pathname.split("/").pop();
-
-  navLinks.forEach(link => {
-    const linkPage = link.getAttribute("href");
-
-    if (linkPage === currentPage) {
-      link.classList.add("active"); // ✅ Active highlight add karega
-    } else {
-      link.classList.remove("active");
-    }
-
-    // Optional: click par bhi active ho turant
-    link.addEventListener("click", () => {
-      navLinks.forEach(nav => nav.classList.remove("active"));
-      link.classList.add("active");
-    });
-  });
-</script>
-
-
+  <ul class="warning-list">
+    <li>Do not share your login credentials with anyone.</li>
+    <li>Withdrawals and deposits may not be processed on weekends.</li>
+    <li>Always verify your account details before making transactions.</li>
+    <li>Suspicious activity may lead to temporary account suspension.</li>
+    <li>Ensure your registered email is active and accessible.</li>
+    <li>Logging in from multiple devices may affect account security.</li>
+  </ul>
+</div>
 
 <button class="logout-btn">Log Out</button>
 
-
+</div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { 
@@ -700,15 +1081,6 @@ const newNotifAlert = document.getElementById("newNotifAlert");
 profileImage.src = `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70) + 1}`;
 
 onAuthStateChanged(auth, async (user) => {
-  // ✅ Live indicator logic yahan hona chahiye
-  const liveStatus = document.querySelector(".live-status");
-  if (user) {
-    liveStatus.style.display = "flex";
-  } else {
-    liveStatus.style.display = "none";
-    location.href = "login.html";
-    return;
-  }
 
 
   // ✅ Create Notifications Subcollection Automatically
@@ -775,17 +1147,9 @@ onAuthStateChanged(auth, async (user) => {
     });
     notifyDot.style.display = "none";
   });
-});
 
-// ✅ Logout (safe listener)
-window.addEventListener("DOMContentLoaded", () => {
-  const logoutBtn = document.querySelector(".logout-btn");
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", async () => {
-      await signOut(auth);
-      location.href = "login.html";
-    });
-  }
+
+
 
   // ✅ All page navigations
   const pageLinks = {
@@ -808,54 +1172,47 @@ window.addEventListener("DOMContentLoaded", () => {
     if (el) el.addEventListener("click", () => (window.location.href = url));
   });
 });
-</script>
-<script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
+
+// ✅ LOGOUT POPUP – FINAL & WORKING
+window.addEventListener("DOMContentLoaded", () => {
+  const logoutBtn = document.querySelector(".logout-btn");
+  const logoutModal = document.getElementById("logoutModal");
+  const cancelLogout = document.getElementById("cancelLogout");
+  const confirmLogout = document.getElementById("confirmLogout");
+
+  if (!logoutBtn || !logoutModal) {
+    console.error("Logout elements missing");
+    return;
+  }
+
+  // 🔁 Refresh ke baad bhi popup rahe
+  if (localStorage.getItem("logout_pending") === "true") {
+    logoutModal.classList.add("show");
+  }
+
+  // 🔴 Logout click
+  logoutBtn.addEventListener("click", () => {
+    localStorage.setItem("logout_pending", "true");
+    logoutModal.classList.add("show");
   });
 
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
+  // ❌ NO
+  cancelLogout.addEventListener("click", () => {
+    localStorage.removeItem("logout_pending");
+    logoutModal.classList.remove("show");
+  });
 
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
+  // ✅ YES
+  confirmLogout.addEventListener("click", async () => {
+    localStorage.removeItem("logout_pending");
+    await signOut(auth);
+    location.href = "login.html";
+  });
+});
 
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
 </script>
+
 <script>
 // ⏳ Auto Logout After 5 Hours Inactivity
 
@@ -897,10 +1254,95 @@ setInterval(() => {
     }
   }, { passive: false });
 </script>
+<script>
+/* 🔁 Cover Auto Slider */
+const covers = document.querySelectorAll(".cover-img");
+let current = 0;
+
+setInterval(() => {
+  covers[current].classList.remove("active");
+  current = (current + 1) % covers.length;
+  covers[current].classList.add("active");
+}, 4000);
+
+/* 🖼 Fullscreen Viewer */
+const viewer = document.getElementById("imageViewer");
+const viewerImg = document.getElementById("viewerImg");
+
+/* Cover click */
+document.getElementById("coverSlider").addEventListener("click", () => {
+  viewerImg.src = covers[current].src;
+  viewer.classList.add("show");
+});
+
+/* Profile click */
+document.getElementById("profileAvatar").addEventListener("click", () => {
+  viewerImg.src = document.getElementById("profileImage").src;
+  viewer.classList.add("show");
+});
+
+/* Close on click */
+viewer.addEventListener("click", () => {
+  viewer.classList.remove("show");
+});
+</script>
+<script>
+/* 🌗 Auto theme detect */
+function detectTheme() {
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.setAttribute("data-theme", prefersDark ? "dark" : "light");
+}
+detectTheme();
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", detectTheme);
+
+/* 💡 Auto highlight based on page URL */
+const currentPage = window.location.pathname.split("/").pop().toLowerCase();
+document.querySelectorAll(".bottom-nav .nav-item").forEach(item => {
+  const href = item.getAttribute("href")?.toLowerCase();
+  if (currentPage === href) item.classList.add("active");
+});
+
+/* 🌊 Ripple effect + manual highlight */
+document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
+  item.addEventListener("click", (e) => {
+    // highlight
+    document.querySelector(".bottom-nav .nav-item.active")?.classList.remove("active");
+    item.classList.add("active");
+
+    // ripple
+    const ripple = document.createElement("span");
+    ripple.classList.add("ripple");
+    const rect = item.getBoundingClientRect();
+    ripple.style.left = `${e.clientX - rect.left}px`;
+    ripple.style.top = `${e.clientY - rect.top}px`;
+    item.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 500);
+  });
+});
+</script>
+
+<script>
+// 🔥 TEMP DEMO STATE (Pending Mode)
+function loadAccountStatsDemo() {
+
+  const pendingText = "Pending";
+
+  document.getElementById("totalDeposit").textContent =
+    "$ " + pendingText;
+
+  document.getElementById("totalWithdraw").textContent =
+    "$ " + pendingText;
+
+  document.getElementById("availableBalance").textContent =
+    "$ " + pendingText;
+
+  document.getElementById("accountLevel").textContent =
+    pendingText;
+}
+
+// page load pe run
+document.addEventListener("DOMContentLoaded", loadAccountStatsDemo);
+</script>
 
 </body>
 </html>
-
-
-
-
