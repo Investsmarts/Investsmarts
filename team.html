@@ -424,22 +424,25 @@ async function fetchTeamData(user) {
     return;
   }
 
+  // ✅ YE LINE ZAROORI HAI
+  const myCommission = await getMyCommission();
+
   const myCode = meSnap.data().referralCode;
 
-const q1 = query(
-  collection(db,"users"),
-  where("referredBy","==",myCode)
-);
+  const q1 = query(
+    collection(db,"users"),
+    where("referredBy","==",myCode)
+  );
 
-const q2 = query(
-  collection(db,"users"),
-  where("upline2","==",user.uid)
-);
+  const q2 = query(
+    collection(db,"users"),
+    where("upline2","==",user.uid)
+  );
 
-const q3 = query(
-  collection(db,"users"),
-  where("upline3","==",user.uid)
-);
+  const q3 = query(
+    collection(db,"users"),
+    where("upline3","==",user.uid)
+  );
 
   const [s1, s2, s3] = await Promise.all([
     getDocs(q1),
@@ -449,32 +452,31 @@ const q3 = query(
 
   allMembers = [];
 
-  s1.forEach(d => pushUser(d.data(), 1));
-  s2.forEach(d => pushUser(d.data(), 2));
-  s3.forEach(d => pushUser(d.data(), 3));
+  s1.forEach(d => pushUser(d.data(), 1, myCommission));
+  s2.forEach(d => pushUser(d.data(), 2, myCommission));
+  s3.forEach(d => pushUser(d.data(), 3, myCommission));
 
   allMembers.sort((a, b) => b.joinedTime - a.joinedTime);
 
-  emptyRendered = false;     // ✅ reset empty flag
   renderByCurrentLevel();
   saveCache(allMembers);
 }
 
 /* ================= NORMALIZE USER ================= */
-function pushUser(u, level) {
-  const lifetime   = Number(u.lifetimeDeposit || 0);
-  const commission = Number(u.commissionToUpline || 0);
+function pushUser(u, level, commission) {
+  const lifetime = Number(u.lifetimeDeposit || 0);
 
   allMembers.push({
     name: u.name || "No Name",
     level,
     lifetimeDeposit: lifetime,
-    commission,
+    commission, // ✅ AB YAHI USE HOGA
     status: lifetime > 0 ? "active" : "inactive",
     joined: parseJoinedDate(u),
     joinedTime: getJoinedTime(u)
   });
 }
+
 
 /* ================= RENDER ================= */
 function renderTeam(list){
@@ -601,6 +603,21 @@ document.getElementById("loaderVideo")
     if(user) await fetchTeamData(user);
     hideVideoLoader();
   });
+
+async function getMyCommission(){
+  let total = 0;
+
+  const snap = await getDocs(
+    collection(db, "users", auth.currentUser.uid, "commissions")
+  );
+
+  snap.forEach(d => {
+    total += Number(d.data().amount || 0);
+  });
+
+  return total;
+}
+
 
 /* ================= HELPERS ================= */
 function parseJoinedDate(u){
