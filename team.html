@@ -345,63 +345,83 @@ html,body{
 
 /* ================= CACHE ================= */
 const CACHE_KEY = "team_cache_v1";
-function saveCache(data){ localStorage.setItem(CACHE_KEY, JSON.stringify(data)); }
+
+function saveCache(data){
+  localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+}
+
 function loadCache(){
   const raw = localStorage.getItem(CACHE_KEY);
   if(!raw) return null;
-  try{ return JSON.parse(raw); }catch{ return null; }
+  try{
+    return JSON.parse(raw);
+  }catch(e){
+    return null;
+  }
 }
 
 /* ================= FIREBASE ================= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
-  getFirestore, collection, query, where,
-  getDocs, doc, getDoc
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+  limit
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+/* 🔥 FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
   authDomain: "btcinvest-c0e25.firebaseapp.com",
   projectId: "btcinvest-c0e25"
 };
 
-const app = initializeApp(firebaseConfig);
+const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
-/* ================= GLOBAL ================= */
-let allMembers = [];
-let currentLevel = "all";
-let emptyRendered = false;
+/* ================= GLOBAL STATE ================= */
+let allMembers     = [];
+let currentLevel   = "all";
+let emptyRendered  = false;   // ✅ FIXED: defined globally
 
 const teamList   = document.getElementById("teamList");
 const searchInput = document.getElementById("teamSearch");
 const refreshBtn  = document.getElementById("refreshTeam");
 
-/* ================= AUTH ================= */
-onAuthStateChanged(auth, async (user)=>{
-  if(!user){
-    teamList.innerHTML = "<p>Login required</p>";
+/* ================= AUTH + DATA LOAD ================= */
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    teamList.innerHTML = "<p>⚠️ Login required</p>";
     return;
   }
 
+  // ⚡ instant cache render
   const cached = loadCache();
-  if(cached){
-    allMembers = cached;
-    renderByCurrentLevel();
-  }
+if(cached){
+  allMembers = cached;
+  renderByCurrentLevel();
+}else{
+  updateCount([]); // 👈 safety
+}
 
+
+  // 🔄 silent fresh fetch
   await fetchTeamData(user);
 });
 
-/* ================= FETCH TEAM ================= */
+/* ================= FETCH TEAM DATA ================= */
 async function fetchTeamData(user){
 
-  const meSnap = await getDoc(doc(db,"users",user.uid));
-  if(!meSnap.exists()) return;
+  const meSnap = await getDoc(doc(db, "users", user.uid));
+  if (!meSnap.exists()) return;
 
-  /* 🔥 COMMISSION MAP (fromUid → amount) */
+  // ✅ YAHAN SE AAYEGA REAL DATA
   const commissionMap = await buildCommissionMap(user.uid);
 
   const myCode = meSnap.data().referralCode;
@@ -410,44 +430,283 @@ async function fetchTeamData(user){
   const q2 = query(collection(db,"users"), where("upline2","==",user.uid));
   const q3 = query(collection(db,"users"), where("upline3","==",user.uid));
 
-  const [s1,s2,s3] = await Promise.all([getDocs(q1),getDocs(q2),getDocs(q3)]);
+  const [s1, s2, s3] = await Promise.all([
+    getDocs(q1),
+    getDocs(q2),
+    getDocs(q3)
+  ]);
 
   allMembers = [];
 
-  s1.forEach(d=> pushUser(d.id, d.data(), 1, commissionMap));
-  s2.forEach(d=> pushUser(d.id, d.data(), 2, commissionMap));
-  s3.forEach(d=> pushUser(d.id, d.data(), 3, commissionMap));
+  s1.forEach(d => pushUser(d.id, d.data(), 1, commissionMap));
+  s2.forEach(d => pushUser(d.id, d.data(), 2, commissionMap));
+  s3.forEach(d => pushUser(d.id, d.data(), 3, commissionMap));
 
   allMembers.sort((a,b)=> b.joinedTime - a.joinedTime);
   renderByCurrentLevel();
   saveCache(allMembers);
 }
 
-/* ================= COMMISSION MAP ================= */
-async function buildCommissionMap(myUid){
+/* ================= NORMALIZE USER ================= */
+function renderTeam(list){
+
+  updateCount(list);
+
+  if(list.length === 0){
+
+    if(emptyRendered) return;
+    emptyRendered = true;
+
+    teamList.innerHTML = `
+      <div class="empty-state fade-in">
+        <img src="Promotion/ABCDEFGHI.jpeg">
+        <h3>You have no referrals yet</h3>
+        <p>
+          You haven’t invited anyone to your team.<br>
+          Share your referral link and start earning referral income.
+        </p>
+        <button class="invite-btn" onclick="goToInvite()">
+          <i class="ri-user-add-line"></i>
+          Invite & Earn
+        </button>
+      </div>
+    `;
+    setTimeout(startInviteTyping, 100);
+    return;
+  }
+
+  emptyRendered = false;
+
+  let html = "";
+  list.forEach(u => {
+    html += `
+      <div class="team-card">
+        <div class="team-row">
+          <strong>${u.name}</strong>
+          <span>Level ${u.level}</span>
+        </div>
+        <div class="team-row">
+          <span>Lifetime Deposit</span>
+          <span>${u.lifetimeDeposit}</span>
+        </div>
+        <div class="team-row">
+          <span>Your Commission</span>
+          <span>${u.commission}</span>
+        </div>
+        <div class="team-row">
+          <span>Status</span>
+          <span class="badge ${u.status}">${u.status}</span>
+        </div>
+        <div class="team-row">
+          <span>Joined</span>
+          <span>${u.joined}</span>
+        </div>
+      </div>
+    `;
+  });
+
+  teamList.innerHTML = html;
+}
+
+
+/* ================= PUSH USER ================= */
+function pushUser(uid, u, level, commissionMap){
+  const lifetime = Number(u.lifetimeDeposit || 0);
+
+  allMembers.push({
+    uid,
+    name: u.name || "No Name",
+    level,
+    lifetimeDeposit: lifetime,
+    commission: commissionMap[uid] || 0, // 🔥 yahin se real income
+    status: lifetime > 0 ? "active" : "inactive",
+    joined: parseJoinedDate(u),
+    joinedTime: getJoinedTime(u)
+  });
+}
+
+/* ================= FILTER ================= */
+window.filterLevel = function(level, btn){
+  currentLevel = level;
+  document.querySelectorAll(".team-filters button")
+    .forEach(b => b.classList.remove("active"));
+
+  btn.classList.add("active");
+  renderByCurrentLevel();
+};
+
+function renderByCurrentLevel(){
+  const list = currentLevel === "all"
+    ? allMembers
+    : allMembers.filter(u => u.level === currentLevel);
+
+  renderTeam(list); // 👈 count automatic
+}
+
+
+
+/* ================= SEARCH ================= */
+let searchTimer;
+
+searchInput.addEventListener("input", () => {
+  clearTimeout(searchTimer);
+
+  searchTimer = setTimeout(() => {
+    const keyword = searchInput.value.toLowerCase().trim();
+
+    const base = currentLevel === "all"
+      ? allMembers
+      : allMembers.filter(u => u.level === currentLevel);
+
+    const filtered = keyword
+      ? base.filter(u => u.name.toLowerCase().includes(keyword))
+      : base;
+
+    renderTeam(filtered);   // smooth render
+  }, 200); // 200ms debounce
+});
+
+
+
+/* ================= REFRESH ================= */
+refreshBtn.addEventListener("click", async () => {
+    
+  showVideoLoader();
+});
+
+
+/* ================= VIDEO LOADER ================= */
+
+function hideVideoLoader(){
+  document.getElementById("videoLoader").classList.add("hidden");
+}
+
+document.getElementById("loaderVideo")
+  .addEventListener("ended", async () => {
+    const user = auth.currentUser;
+    if(user) await fetchTeamData(user);
+    hideVideoLoader();
+  });
+
+async function getMyCommission(){
+  let total = 0;
+
   const snap = await getDocs(
-    query(
-      collection(db, "users", myUid, "commissions"),
-      orderBy("createdAt", "desc") // latest first
-    )
+    collection(db, "users", auth.currentUser.uid, "commissions")
   );
 
-  const map = {}; // userId → total commission
+  snap.forEach(d => {
+    total += Number(d.data().amount || 0);
+  });
+
+  return total;
+}
+
+
+/* ================= HELPERS ================= */
+function parseJoinedDate(u){
+  if(u.createdAt?.toDate) return u.createdAt.toDate().toLocaleDateString();
+  if(typeof u.createdAt === "string"){
+    const d = new Date(u.createdAt);
+    if(!isNaN(d)) return d.toLocaleDateString();
+  }
+  return "N/A";
+}
+
+function getJoinedTime(u){
+  if(u.createdAt?.toDate) return u.createdAt.toDate().getTime();
+  if(typeof u.createdAt === "string"){
+    const t = new Date(u.createdAt).getTime();
+    if(!isNaN(t)) return t;
+  }
+  return 0;
+}
+
+window.goToInvite = () => {
+  window.location.href = "promote.html";
+};
+async function showVideoLoader(){
+  const wrap = document.getElementById("videoLoader");
+  const vid  = document.getElementById("loaderVideo");
+
+  wrap.classList.remove("hidden");
+  vid.currentTime = 0;
+
+  try{
+    await vid.play();   // mobile + desktop dono me chalega
+  }catch(e){
+    console.log("Video play blocked:", e);
+  }
+}
+
+
+function updateCount(list){
+  const el = document.getElementById("teamCount");
+  el.textContent = list.length;
+  el.classList.add("bump");
+  setTimeout(()=>el.classList.remove("bump"),150);
+}
+
+
+function startInviteTyping(){
+  const inviteBtn = document.querySelector(".invite-btn");
+  if(!inviteBtn) return;
+
+  const fullText = "Invite & Earn Rewards";
+  let i = 0;
+
+  inviteBtn.innerHTML = `
+    <i class="ri-user-add-line"></i>
+    <span class="typing-cursor"></span>
+  `;
+
+  const span = inviteBtn.querySelector(".typing-cursor");
+
+  function type(){
+    if(i <= fullText.length){
+      span.textContent = fullText.slice(0, i);
+      i++;
+      setTimeout(type, 80);
+    }
+  }
+
+  type();
+}
+
+async function getCommissionBreakdown(){
+  const snap = await getDocs(
+    collection(db, "users", auth.currentUser.uid, "commissions")
+  );
+
+  const rows = [];
+  let levelTotal = {1:0, 2:0, 3:0};
 
   snap.forEach(d => {
     const c = d.data();
 
-    // 🔥 yahan apne REAL field names use karo
-    const fromUid =
-      c.fromUid ||
-      c.userId ||
-      c.referralUserId;   // 👈 jo bhi tumhare data me hai
+    rows.push({
+      fromName: c.fromName || "Unknown",
+      level: c.level || "-",
+      amount: Number(c.amount || 0)
+    });
 
-    const amount =
-      Number(c.amount) ||
-      Number(c.referralAmount) ||
-      Number(c.commission) ||
-      0;
+    if(c.level) levelTotal[c.level] += Number(c.amount || 0);
+  });
+
+  return { rows, levelTotal };
+}
+async function buildCommissionMap(myUid){
+  const snap = await getDocs(
+    collection(db, "users", myUid, "commissions")
+  );
+
+  const map = {}; // fromUid → total amount
+
+  snap.forEach(d => {
+    const c = d.data();
+
+    const fromUid = c.fromUid; // 👈 ye field Firestore me honi chahiye
+    const amount  = Number(c.amount || 0);
 
     if(!fromUid || !amount) return;
 
@@ -457,76 +716,14 @@ async function buildCommissionMap(myUid){
   return map;
 }
 
-/* ================= PUSH USER ================= */
-function pushUser(uid, u, level, commissionMap){
+</script>
+<script>
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("selectstart", e => e.preventDefault());
+document.addEventListener("dragstart", e => e.preventDefault());
+["copy","paste","cut"].forEach(evt =>
+  document.addEventListener(evt, e => e.preventDefault())
+);
 
-  const lifetime = Number(u.lifetimeDeposit||0);
-
-  allMembers.push({
-    uid,
-    name: u.name || "No Name",
-    level,
-    lifetimeDeposit: lifetime,
-    commission: commissionMap[uid] || 0, // 🔥 REAL FIX
-    status: lifetime>0 ? "active":"inactive",
-    joined: parseJoinedDate(u),
-    joinedTime: getJoinedTime(u)
-  });
-}
-
-/* ================= RENDER ================= */
-function renderTeam(list){
-
-  updateCount(list);
-
-  if(list.length===0){
-    if(emptyRendered) return;
-    emptyRendered = true;
-    teamList.innerHTML = `<p>No team members</p>`;
-    return;
-  }
-
-  emptyRendered=false;
-  let html="";
-
-  list.forEach(u=>{
-    html+=`
-      <div class="team-card">
-        <div class="team-row"><strong>${u.name}</strong><span>Level ${u.level}</span></div>
-        <div class="team-row"><span>Lifetime Deposit</span><span>${u.lifetimeDeposit}</span></div>
-        <div class="team-row"><span>Your Commission</span><span>${u.commission}</span></div>
-        <div class="team-row"><span>Status</span><span class="badge ${u.status}">${u.status}</span></div>
-        <div class="team-row"><span>Joined</span><span>${u.joined}</span></div>
-      </div>
-    `;
-  });
-
-  teamList.innerHTML = html;
-}
-
-/* ================= FILTER ================= */
-window.filterLevel=(lvl,btn)=>{
-  currentLevel=lvl;
-  document.querySelectorAll(".team-filters button").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  renderByCurrentLevel();
-};
-function renderByCurrentLevel(){
-  const list = currentLevel==="all"? allMembers : allMembers.filter(u=>u.level===currentLevel);
-  renderTeam(list);
-}
-
-/* ================= HELPERS ================= */
-function parseJoinedDate(u){
-  if(u.createdAt?.toDate) return u.createdAt.toDate().toLocaleDateString();
-  return "N/A";
-}
-function getJoinedTime(u){
-  if(u.createdAt?.toDate) return u.createdAt.toDate().getTime();
-  return 0;
-}
-function updateCount(list){
-  document.getElementById("teamCount").textContent = list.length;
-}
-
+setInterval(() => console.clear(), 1500);
 </script>
