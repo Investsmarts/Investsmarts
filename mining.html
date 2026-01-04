@@ -145,7 +145,7 @@
 
 
     /* Wallet Boxes */
-    .grid-boxes { display:flex; justify-content:space-between; gap:14px; margin-bottom:20px; }
+    .grid-boxes { display:flex; justify-content:space-between; gap:14px; margin-bottom:5px; }
     .box {
       
       border-radius: 5px; padding:16px;
@@ -1180,6 +1180,78 @@ button:active {
   color:#0f172a;
 }
 
+.grid-boxes{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:10px;
+}
+
+.box.compact{
+  background:#fff;
+  border-radius:5px;
+  padding:10px 12px;
+ 
+}
+
+.label{
+  font-size:11px;
+  color:#888;
+  margin-bottom:2px;
+}
+
+.value{
+  font-size:18px;
+  font-weight:600;
+  color:#111;
+  line-height:1.2;
+}
+
+.sub-value{
+  font-size:13px;
+  color:#1b8f5a;
+  margin-top:2px;
+}
+
+.sub-value{
+  font-size:12px;
+  color:#1b8f5a;
+  margin-top:5px;
+  line-height:1.1;
+}
+
+
+.soft-notice{
+  font-size:12px;
+  color:#555;
+  background:#f8f9fa;
+  border-left:3px solid #00c853;
+  padding:8px 10px;
+  border-radius:4px;
+  line-height:1.4;
+
+  /* animation defaults */
+  opacity:0;
+  transform:translateY(-6px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+}
+
+.soft-notice.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.soft-notice.hide{
+  opacity:0;
+  transform:translateY(-6px);
+}
+.soft-notice-wrap{
+  overflow: hidden;
+  transition: height 0.6s ease;
+  margin-bottom: 12px;   /* 👈 YE LINE ADD KARO */
+}
+
 </style>
 </head>
 <body>
@@ -1287,10 +1359,30 @@ button:active {
     <a href="">2.5%</a>
   </div>
 
-    <div class="grid-boxes">
-    <div class="box"><div class="label">Wallet</div><div class="value" id="wallet">$0.00</div></div>
-    <div class="box"><div class="label">Mining Fund</div><div class="value" id="miningFund">$0.00</div></div>
+<div class="grid-boxes">
+
+  <div class="box compact">
+    <div class="label">Wallet (USD)</div>
+    <div class="value" id="wallet">$0.00</div>
+    <div class="sub-value" id="walletINR">₹0</div>
   </div>
+
+  <div class="box compact">
+    <div class="label">Mining Fund (USD)</div>
+    <div class="value" id="miningFund">$0.00</div>
+    <div class="sub-value" id="miningFundINR">₹0</div>
+  </div>
+
+</div>
+
+<div class="soft-notice-wrap">
+  <div class="soft-notice" id="currencyNotice">
+    ℹ️ <strong>Notice:</strong><br>
+    You are viewing balances in <b>Indian Rupees (₹)</b> because your account is accessed from India.<br>
+    All calculations are processed in USD and converted for your convenience.
+  </div>
+</div>
+
 <div class="box" id="hashrateBox">
   <div class="label">Hashrate</div>
   <div class="value">
@@ -1428,6 +1520,26 @@ button:active {
     <span>Account</span>
   </a>
 </div>
+
+
+<script>
+(function () {
+  const SECRET_HASH =
+    "#Gghjhgh_GUHJH_HUHH_HHJJJ_HJHJH_HJJHJ_x92kMyMining_cvl_hcs";
+
+  // initial load
+  if (location.hash !== SECRET_HASH) {
+    location.hash = SECRET_HASH;
+  }
+
+  // block any manual change
+  window.addEventListener("hashchange", () => {
+    if (location.hash !== SECRET_HASH) {
+      location.hash = SECRET_HASH;
+    }
+  });
+})();
+</script>
 
 <script>
 /* 🌗 Auto theme detect */
@@ -1733,16 +1845,22 @@ function startLiveMiningGrowth(baseAmount, startedAt) {
     return baseAmount * DAILY_RATE * (elapsed / 86400000);
   }
 
-  function updateGrowth() {
-    const profit = calculateProfit();
-    const total = baseAmount + profit;
+function updateGrowth() {
+  const profit = calculateProfit();
+  const total = baseAmount + profit;
 
-    const current = Number(fundEl.innerText.replace(/[^0-9.-]+/g, "")) || baseAmount;
-    const diff = total - current;
+  const current =
+    Number(fundEl.innerText.replace(/[^0-9.-]+/g, "")) || baseAmount;
 
-    // smooth animation
-    fundEl.innerText = `$${(current + diff * 0.25).toFixed(4)}`;
-  }
+  const diff = total - current;
+  const newUSD = current + diff * 0.25;
+
+  fundEl.innerText = `$${newUSD.toFixed(4)}`;
+
+  // 🔥 INR bhi live badhega
+  syncINRFromUI();
+}
+
 
   // ✅ First update should show exact real-time value
   const initialProfit = calculateProfit();
@@ -1773,9 +1891,11 @@ async function loadUserData() {
   const startedAt = data.miningStartedAt || null;
 
   walletEl.innerText = `$${wallet.toFixed(2)}`;
-
   fundEl.innerText = `$${miningAmt.toFixed(2)}`;
 
+   // ✅ ADD THIS LINE
+    syncINRFromUI();
+   
   mining = !!startedAt;
   btn.innerText = mining ? "Stop Mining" : "Start Mining";
   toggleMiningSections(mining);
@@ -2373,6 +2493,7 @@ function speakCombo(text, rate = 0.74, pitch = 1.10) {
 
       walletEl.innerText = `$${(wallet - amt).toFixed(2)}`;
       fundEl.innerText = `$${amt.toFixed(2)}`;
+       syncINRFromUI();
 
       toggleMiningSections(true);
       startMiningTimer(startedNow);
@@ -2864,6 +2985,57 @@ function centerError(msg) {
 })();
 
 </script>
+
+<script>
+const USD_TO_INR = 91.5;
+
+function syncINRFromUI() {
+  const walletUSD =
+    Number(document.getElementById("wallet").innerText.replace(/[^0-9.-]/g,"")) || 0;
+
+  const miningUSD =
+    Number(document.getElementById("miningFund").innerText.replace(/[^0-9.-]/g,"")) || 0;
+
+  document.getElementById("walletINR").innerText =
+    "₹" + (walletUSD * USD_TO_INR).toLocaleString("en-IN");
+
+  document.getElementById("miningFundINR").innerText =
+    "₹" + (miningUSD * USD_TO_INR).toLocaleString("en-IN");
+}
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const notice = document.getElementById("currencyNotice");
+  const wrap = notice?.parentElement;
+  if (!notice || !wrap) return;
+
+  // 🔹 Reset state
+  notice.classList.remove("show","hide");
+
+  // 🔹 Measure natural height
+  wrap.style.height = "auto";
+  const fullHeight = notice.offsetHeight + "px";
+
+  // 🔹 Start collapsed
+  wrap.style.height = "0px";
+
+  // 🔹 Soft SHOW
+  requestAnimationFrame(() => {
+    wrap.style.height = fullHeight;
+    notice.classList.add("show");
+  });
+
+  // 🔹 Auto HIDE after 5s
+  setTimeout(() => {
+    notice.classList.remove("show");
+    notice.classList.add("hide");
+
+    // 🔹 Collapse space smoothly
+    wrap.style.height = "0px";
+  }, 8000);
+});
+</script>
 <script>
 document.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("selectstart", e => e.preventDefault());
@@ -2872,35 +3044,9 @@ document.addEventListener("dragstart", e => e.preventDefault());
   document.addEventListener(evt, e => e.preventDefault())
 );
 
-setInterval(() => console.clear(), 1500);
+setInterval(() => console.clear(), 500);
 </script>
 
-<script>
-(function () {
-  let open = false;
-  const limit = 160;
-  setInterval(() => {
-    if (
-      window.outerWidth - window.innerWidth > limit ||
-      window.outerHeight - window.innerHeight > limit
-    ) {
-      if (!open) console.warn("DevTools detected");
-      open = true;
-    } else {
-      open = false;
-    }
-  }, 1200);
-})();
-</script>
-
-<script>
-document.addEventListener("keydown", e => {
-  if (
-    e.key === "F12" ||
-    (e.ctrlKey && ["u","s"].includes(e.key.toLowerCase()))
-  ) e.preventDefault();
-});
-</script>
 
 </body>
 </html>
