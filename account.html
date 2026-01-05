@@ -387,7 +387,7 @@ body {
 .fb-avatar img {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+  border-radius: 5%;
   object-fit: cover;
 }
 
@@ -399,7 +399,7 @@ body {
   width: 14px;
   height: 14px;
   background: #16a34a;
-  border-radius: 50%;
+  border-radius: 5%;
   border: 3px solid #fff;
  
 }
@@ -470,7 +470,7 @@ body {
   height: 90px;
   background: #fff;
   padding: 4px;
-  border-radius: 50%;
+  border-radius: 5%;
  
   cursor: pointer;
 }
@@ -907,45 +907,50 @@ body {
   color: #0f172a;
 }
 
-/* Each line */
-.info-line {
+/* ===== CLEAN PROFESSIONAL INFO ROW ===== */
+
+.info-row {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 6px;
+  padding: 10px 0;
   font-size: 13px;
   color: #334155;
-  margin-bottom: 6px;
-  white-space: nowrap;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08); /* 👈 soft horizontal line */
 }
 
-.info-line:last-child {
-  margin-bottom: 0;
+.info-row:last-child {
+  border-bottom: none;
 }
 
-/* Label fixed width */
-.info-line .label {
-  width: 70px;
+/* Left label */
+.info-label {
   font-weight: 500;
+  color: #64748b;
 }
 
-/* ===== */
-.info-line .sep {
-  color: #94a3b8;
-  letter-spacing: 1px;
+/* Right value */
+.info-value {
+  font-weight: 600;
+  color: #0f172a;
+  text-align: right;
 }
 
-/* Value */
-.info-line .value {
-  font-weight: 500;
-}
-
-/* Live */
-.info-line.live .value {
+/* Live status */
+.info-row.live .info-value {
   display: flex;
   align-items: center;
   gap: 6px;
   color: #16a34a;
-  font-weight: 600;
+}
+
+/* Live dot (same as before) */
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background: #16a34a;
+  border-radius: 50%;
+  animation: pulseLive 1.2s infinite ease-in-out;
 }
 
 .live-dot {
@@ -959,6 +964,52 @@ body {
 @keyframes pulseLive {
   0%,100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.4); opacity: 0.5; }
+}
+
+/* ===== PROFILE INFO BOX ===== */
+
+.profile-info-card {
+  background: #ffffff;
+  margin: 12px 16px 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+}
+
+/* Rows */
+.profile-info-card .info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.profile-info-card .info-row:last-child {
+  border-bottom: none;
+}
+
+/* Label */
+.profile-info-card .info-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Value */
+.profile-info-card .info-value {
+  color: #0f172a;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Live */
+.profile-info-card .info-row.live .info-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #16a34a;
 }
 
 </style>
@@ -1009,37 +1060,31 @@ body {
 
 <div id="newNotifAlert" class="center-alert">🔔 You have a new notification!</div>
 
-<div class="user-info-box simple-info">
+<div class="profile-info-card">
 
-  <div class="user-name-center">
-    <span id="userName">Loading...</span>
+  <div class="info-row">
+    <span class="info-label">Joined</span>
+    <span class="info-value" id="joinDate">14/10/2025</span>
   </div>
 
-  <div class="info-line">
-    <span class="label">Joined</span>
-    <span class="sep">=====</span>
-    <span class="value" id="joinDate">--</span>
+  <div class="info-row">
+    <span class="info-label">Email</span>
+    <span class="info-value" id="userUID">trustdollarteam@gmail.com</span>
   </div>
 
-  <div class="info-line">
-    <span class="label">Email</span>
-    <span class="sep">=====</span>
-    <span class="value" id="userUID">--</span>
+  <div class="info-row">
+    <span class="info-label">Login</span>
+    <span class="info-value" id="lastLogin">5/1/2026, 4:08:27 pm</span>
   </div>
 
-  <div class="info-line">
-    <span class="label">Login</span>
-    <span class="sep">=====</span>
-    <span class="value" id="lastLogin">--</span>
-  </div>
-
-  <div class="info-line live">
-    <span class="label">Status</span>
-    <span class="sep">=====</span>
-    <span class="value">
+  <div class="info-row live">
+    <span class="info-label">Status</span>
+    <span class="info-value">
       <span class="live-dot"></span> Account Live
     </span>
   </div>
+
+</div>
 
 </div>
 
