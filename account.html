@@ -502,90 +502,67 @@ body {
 
 
 /* ===== USER INFO ATTACHED BOX (FINAL FIX) ===== */
+/* ===== USER INFO CARD (NEW LAYOUT) ===== */
 
 .user-info-box {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 14px;
-
-  margin: -12px 14px 14px;   /* header se chipka */
+  margin: -12px 14px 14px;
   padding: 16px 18px;
-
   background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  border-top: none;
   border-radius: 0 0 16px 16px;
-
- 
+  border: 1px solid rgba(15, 23, 42, 0.08);
 }
 
-/* Left info */
-.user-info-left {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+/* Name center */
+.user-name-center {
+  text-align: center;
+  margin-bottom: 14px;
 }
 
-/* Name + badges row */
-.name-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.name-row .name {
-  font-size: 16px;
+.user-name-center span {
+  font-size: 17px;
   font-weight: 600;
   color: #0f172a;
 }
 
-/* Info lines */
-.user-info-box .info-line {
-  font-size: 13px;
-  color: #334155;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* Grid for details */
+.user-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 16px;
 }
 
-.user-info-box .info-line.muted {
-  font-size: 12px;
+/* Each item */
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detail-item .label {
+  font-size: 11px;
   color: #64748b;
 }
 
-.user-info-box .info-line::before {
-  content: "•";
-  color: #22c55e;
-  font-size: 18px;
-  line-height: 1;
+.detail-item .value {
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
 }
 
-/* ===== LIVE STATUS (RIGHT SIDE) ===== */
-
-.account-live {
+/* Live status */
+.detail-item.live .value {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 14px;
-  border-radius: 5px;
-
-  background: rgba(22, 163, 74, 0.12);
-  border: 1px solid rgba(22, 163, 74, 0.3);
   color: #16a34a;
-
-  font-size: 13px;
   font-weight: 600;
-  white-space: nowrap;
 }
 
-.account-live .live-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+.live-dot {
+  width: 8px;
+  height: 8px;
   background: #16a34a;
- 
+  border-radius: 50%;
   animation: pulseLive 1.2s infinite ease-in-out;
 }
 
@@ -594,18 +571,12 @@ body {
   50% { transform: scale(1.4); opacity: 0.5; }
 }
 
-/* Mobile */
-@media (max-width: 520px) {
-  .user-info-box {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .account-live {
-    margin-top: 6px;
+/* Mobile safety */
+@media (max-width: 480px) {
+  .user-details-grid {
+    grid-template-columns: 1fr;
   }
 }
-
 
 
 /* ===== LOGOUT MODAL OVERLAY ===== */
@@ -917,6 +888,78 @@ body {
   background: #f9fafb;
   font-family: 'Poppins', sans-serif;
 }
+.simple-info {
+  padding: 16px 18px;
+  background: #ffffff;
+  border-radius: 0 0 16px 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+/* Name */
+.user-name-center {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.user-name-center span {
+  font-size: 17px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* Each line */
+.info-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #334155;
+  margin-bottom: 6px;
+  white-space: nowrap;
+}
+
+.info-line:last-child {
+  margin-bottom: 0;
+}
+
+/* Label fixed width */
+.info-line .label {
+  width: 70px;
+  font-weight: 500;
+}
+
+/* ===== */
+.info-line .sep {
+  color: #94a3b8;
+  letter-spacing: 1px;
+}
+
+/* Value */
+.info-line .value {
+  font-weight: 500;
+}
+
+/* Live */
+.info-line.live .value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background: #16a34a;
+  border-radius: 50%;
+  animation: pulseLive 1.2s infinite ease-in-out;
+}
+
+@keyframes pulseLive {
+  0%,100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.5; }
+}
 
 </style>
 
@@ -966,25 +1009,36 @@ body {
 
 <div id="newNotifAlert" class="center-alert">🔔 You have a new notification!</div>
 
-<div class="user-info-box">
+<div class="user-info-box simple-info">
 
-  <!-- LEFT: User Information -->
-  <div class="user-info-left">
-
-    <!-- Name + Badges -->
-    <div class="name-row">
-      <span class="name" id="userName">Loading...</span>
-
-</div>
-    <div class="info-line" id="joinDate">Joined: --</div>
-    <div class="info-line" id="userUID">Email: --</div>
-    <div class="info-line muted" id="lastLogin">Last login: --</div>
+  <div class="user-name-center">
+    <span id="userName">Loading...</span>
   </div>
 
-  <!-- RIGHT: Live Status -->
-  <div class="account-live" id="accountLive">
-    <span class="live-dot"></span>
-    <span class="live-text">Account Live</span>
+  <div class="info-line">
+    <span class="label">Joined</span>
+    <span class="sep">=====</span>
+    <span class="value" id="joinDate">--</span>
+  </div>
+
+  <div class="info-line">
+    <span class="label">Email</span>
+    <span class="sep">=====</span>
+    <span class="value" id="userUID">--</span>
+  </div>
+
+  <div class="info-line">
+    <span class="label">Login</span>
+    <span class="sep">=====</span>
+    <span class="value" id="lastLogin">--</span>
+  </div>
+
+  <div class="info-line live">
+    <span class="label">Status</span>
+    <span class="sep">=====</span>
+    <span class="value">
+      <span class="live-dot"></span> Account Live
+    </span>
   </div>
 
 </div>
@@ -1116,6 +1170,8 @@ body {
 
 </div>
 <script type="module">
+
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { 
   getFirestore, doc, getDoc, collection, getDocs, addDoc, serverTimestamp, updateDoc, onSnapshot 
@@ -1150,8 +1206,34 @@ profileImage.src = `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 7
 
 onAuthStateChanged(auth, async (user) => {
 
+// 🔥 LIVE LIFETIME STATS (ACCOUNT PAGE)
 
-  // ✅ Create Notifications Subcollection Automatically
+const totalDepositEl = document.getElementById("totalDeposit");
+const totalWithdrawEl = document.getElementById("totalWithdraw");
+const availableBalanceEl = document.getElementById("availableBalance");
+const accountLevelEl = document.getElementById("accountLevel");
+
+const userRef = doc(db, "users", user.uid);
+
+onSnapshot(userRef, (snap) => {
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+
+  totalDepositEl.textContent =
+    "$ " + Number(data.lifetimeDeposit ?? 0).toLocaleString();
+
+  totalWithdrawEl.textContent =
+    "$ " + Number(data.lifetimeWithdrawal ?? 0).toLocaleString();
+
+  // ✅ EXACT FIELD NAME (from your screenshot)
+  availableBalanceEl.textContent =
+    "$ " + Number(data.walletBalance ?? 0).toFixed(2);
+
+  accountLevelEl.textContent =
+    data.level ?? "Normal";
+});
+ // ✅ Create Notifications Subcollection Automatically
   try {
     const notifRef = collection(db, "users", user.uid, "notifications");
     const notifSnap = await getDocs(notifRef);
@@ -1167,25 +1249,36 @@ onAuthStateChanged(auth, async (user) => {
     console.error("⚠️ Notification subcollection creation failed:", err);
   }
 
-  // ✅ Fetch user details
-  const createdAt = new Date(user.metadata.creationTime);
-  joinDateEl.textContent = "Joined: " + createdAt.toLocaleDateString();
+// ✅ Fetch user details (FIXED – NO DUPLICATE)
 
-  try {
-    const userRef = doc(db, "users", user.uid);
-    const snap = await getDoc(userRef);
-    if (snap.exists()) {
-      const data = snap.data();
-      userNameEl.textContent = data.name || user.displayName || "User";
-      userUIDEl.textContent = `Email: ${user.email}`;
-      lastLoginEl.textContent = "Last login: " + new Date().toLocaleString();
-      const balanceValue = data.walletBalance ?? data.balance ?? data.wallet ?? data.amount ?? 0;
-      
-      profileImage.src = user.photoURL || profileImage.src;
-    }
-  } catch (error) {
-    console.error("🔥 Firestore fetch error:", error);
+const createdAt = new Date(user.metadata.creationTime);
+
+// 🔹 Joined (sirf date)
+joinDateEl.textContent = createdAt.toLocaleDateString("en-IN");
+
+// 🔹 Email (sirf email)
+userUIDEl.textContent = user.email;
+
+// 🔹 Last login (sirf date+time)
+lastLoginEl.textContent = new Date().toLocaleString("en-IN");
+
+try {
+  const userRef = doc(db, "users", user.uid);
+  const snap = await getDoc(userRef);
+  if (snap.exists()) {
+    const data = snap.data();
+
+    // 🔹 Name upar
+    userNameEl.textContent =
+      data.name || user.displayName || "User";
+
+    profileImage.src =
+      user.photoURL || profileImage.src;
   }
+} catch (error) {
+  console.error("🔥 Firestore fetch error:", error);
+}
+
 
   // ✅ Real-time Notification Listener (no refresh needed)
   const notifRef = collection(db, "users", user.uid, "notifications");
@@ -1411,6 +1504,7 @@ function loadAccountStatsDemo() {
 // page load pe run
 document.addEventListener("DOMContentLoaded", loadAccountStatsDemo);
 </script>
+
 <script>
 document.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("selectstart", e => e.preventDefault());
