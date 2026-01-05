@@ -1170,6 +1170,7 @@ body {
 
 </div>
 <script type="module">
+let totalWithdrawEl;
 
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -1205,34 +1206,37 @@ const newNotifAlert = document.getElementById("newNotifAlert");
 profileImage.src = `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70) + 1}`;
 
 onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
 
-// 🔥 LIVE LIFETIME STATS (ACCOUNT PAGE)
+  // ✅ EK HI BAAR assign
+  totalWithdrawEl = document.getElementById("totalWithdraw");
 
-const totalDepositEl = document.getElementById("totalDeposit");
-const totalWithdrawEl = document.getElementById("totalWithdraw");
-const availableBalanceEl = document.getElementById("availableBalance");
-const accountLevelEl = document.getElementById("accountLevel");
+  const totalDepositEl = document.getElementById("totalDeposit");
+  const availableBalanceEl = document.getElementById("availableBalance");
+  const accountLevelEl = document.getElementById("accountLevel");
 
-const userRef = doc(db, "users", user.uid);
+  const userRef = doc(db, "users", user.uid);
 
-onSnapshot(userRef, (snap) => {
-  if (!snap.exists()) return;
+  onSnapshot(userRef, (snap) => {
+    if (!snap.exists()) return;
 
-  const data = snap.data();
+    const data = snap.data();
 
-  totalDepositEl.textContent =
-    "$ " + Number(data.lifetimeDeposit ?? 0).toLocaleString();
+    totalDepositEl.textContent =
+      "$ " + Number(data.lifetimeDeposit ?? 0).toLocaleString();
 
-  totalWithdrawEl.textContent =
-    "$ " + Number(data.lifetimeWithdrawal ?? 0).toLocaleString();
+    availableBalanceEl.textContent =
+      "$ " + Number(data.walletBalance ?? 0).toFixed(2);
 
-  // ✅ EXACT FIELD NAME (from your screenshot)
-  availableBalanceEl.textContent =
-    "$ " + Number(data.walletBalance ?? 0).toFixed(2);
+    accountLevelEl.textContent =
+      data.level ?? "Normal";
 
-  accountLevelEl.textContent =
-    data.level ?? "Normal";
-});
+    // 🔥 TOTAL WITHDRAWAL (FROM SUBCOLLECTION)
+    loadTotalWithdrawalLikeWithdrawPage(user.uid);
+  });
+
+
+
  // ✅ Create Notifications Subcollection Automatically
   try {
     const notifRef = collection(db, "users", user.uid, "notifications");
@@ -1372,6 +1376,31 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+
+async function loadTotalWithdrawalLikeWithdrawPage(uid) {
+  try {
+    const snap = await getDocs(
+      collection(db, "users", uid, "withdrawals")
+    );
+
+    let totalWithdraw = 0;
+
+    snap.forEach(docSnap => {
+      const wd = docSnap.data();
+      if ((wd.status || "").toLowerCase() === "completed") {
+        totalWithdraw += Number(wd.amount || 0);
+      }
+    });
+
+    totalWithdrawEl.textContent =
+      "$ " + totalWithdraw.toFixed(2);
+
+  } catch (err) {
+    console.error("❌ Total withdrawal fetch error:", err);
+    totalWithdrawEl.textContent = "$ 0.00";
+  }
+}
+
 </script>
 
 <script>
@@ -1483,26 +1512,21 @@ document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
 </script>
 
 <script>
-// 🔥 TEMP DEMO STATE (Pending Mode)
-function loadAccountStatsDemo() {
+(function () {
+  const PAGE_HASH = "account/-account/#account #account";
 
-  const pendingText = "Pending";
+  // page load par check
+  if (!location.hash || location.hash !== PAGE_HASH) {
+    location.hash = PAGE_HASH;
+  }
 
-  document.getElementById("totalDeposit").textContent =
-    "$ " + pendingText;
-
-  document.getElementById("totalWithdraw").textContent =
-    "$ " + pendingText;
-
-  document.getElementById("availableBalance").textContent =
-    "$ " + pendingText;
-
-  document.getElementById("accountLevel").textContent =
-    pendingText;
-}
-
-// page load pe run
-document.addEventListener("DOMContentLoaded", loadAccountStatsDemo);
+  // hash change listener
+  window.addEventListener("hashchange", () => {
+    if (location.hash !== PAGE_HASH) {
+      location.hash = PAGE_HASH;
+    }
+  });
+})();
 </script>
 
 <script>
