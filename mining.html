@@ -1252,6 +1252,127 @@ button:active {
   margin-bottom: 12px;   /* 👈 YE LINE ADD KARO */
 }
 
+/* 🚫 REMOVE BLUR ONLY FOR PRO POPUP */
+#proPopup,
+#proPopup * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+}
+
+
+/* 🔹 History clean row with icon */
+/* 🔹 Perfect aligned history rows */
+.h-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;          /* 🔥 vertical alignment fix */
+  padding: 6px 0;
+  line-height: 1.2;
+}
+
+/* Left side: icon + label */
+.h-left {
+  display: flex;
+  align-items: center;          /* 🔥 icon & text same baseline */
+  gap: 10px;
+  min-width: 0;
+}
+
+/* Icons: uniform & calm */
+.h-left i {
+  width: 18px;                  /* 🔥 fixed width = no jump */
+  height: 18px;
+  font-size: 16px;              /* 🔥 same size for all */
+  color: #28a745;               /* clean green */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;               /* icon kabhi compress nahi hoga */
+}
+
+/* Labels: soft & readable */
+.h-label {
+  font-size: 13px;
+  color: #6b7280;               /* soft gray */
+  white-space: nowrap;
+}
+
+/* Values: right side perfectly aligned */
+.h-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+  white-space: nowrap;
+}
+
+/* Green numbers */
+.h-value.green {
+  color: #16a34a;
+}
+
+/* Divider: clean & consistent */
+.h-divider {
+  height: 1px;
+  background: #eaeaea;
+  margin: 8px 0;
+}
+#incomeHistoryList li {
+  border: 2px solid rgba(22, 163, 74, 0.25); /* soft green */
+  border-radius: 5px;
+  background: #ffffff;
+}
+.h-sub {
+  font-size: 11px;
+  color: #9ca3af;      /* soft gray */
+  margin-top: 2px;
+  text-align: right;
+  line-height: 1.1;
+}
+/* 🔴 Mining Active Box */
+.mining-active-box {
+  display: none;
+  background: #fff;
+  border: 2px solid rgba(220, 38, 38, 0.35);
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin: 10px 0 14px;
+  font-size: 13.5px;
+  color: #1f2937;
+}
+
+/* Header */
+.mining-active-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14.5px;
+  margin-bottom: 6px;
+}
+
+/* 🔴 Blinking Dot */
+.red-dot {
+  width: 10px;
+  height: 10px;
+  background: #dc2626;
+  border-radius: 50%;
+  animation: blinkDot 1.2s infinite;
+}
+
+/* Footer note */
+.mining-active-footer {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Blink animation */
+@keyframes blinkDot {
+  0% { opacity: 1; }
+  50% { opacity: 0.35; }
+  100% { opacity: 1; }
+}
+
 </style>
 </head>
 <body>
@@ -1431,7 +1552,25 @@ button:active {
 </div>
 
 
- 
+ <!-- 🔴 Mining Active Notice -->
+<div id="miningActiveNotice" class="mining-active-box">
+  <div class="mining-active-header">
+    <span class="red-dot"></span>
+    <strong>Mining Session Active</strong>
+  </div>
+
+  <p>Your funds are securely allocated to an active mining session.</p>
+  <p>They remain fully protected and continue to generate returns in real time.</p>
+
+  <div class="mining-active-footer">
+    📄 To finalize this session and record results, please stop mining.
+  </div>
+
+  <!-- 🔹 MICRO TRUST LINE (ADD HERE) -->
+  <small style="display:block;margin-top:6px;color:#9ca3af;font-size:11px;">
+    Earnings are calculated continuously during the active session.
+  </small>
+</div>
 
     <ul id="incomeHistoryList">
       <!-- items appear here -->
@@ -2093,6 +2232,28 @@ async function loadMiningHistory(user) {
     renderMiningList(todayDocs);
   });
 }
+const USD_TO_INR = 91.5;
+
+function usdToInr(val) {
+  return "₹" + (val * USD_TO_INR).toLocaleString("en-IN");
+}
+
+     
+                                                             //halper 
+function formatDuration(ms) {
+  const totalSeconds = Math.floor(ms / 1000);
+
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  let parts = [];
+  if (hours > 0) parts.push(`${hours}h`);
+  if (minutes > 0 || hours > 0) parts.push(`${minutes}m`);
+  parts.push(`${seconds}s`);
+
+  return parts.join(" ");
+}
 
 /* 🎨 Render Mining Cards (Smooth + Animated) */
 function renderMiningList(list) {
@@ -2107,16 +2268,121 @@ function renderMiningList(list) {
   }
 
   list.forEach((d) => {
-    const durMin = (d.duration / 60000).toFixed(1);
+const durationText = formatDuration(d.duration);
     const date = new Date(d.time).toLocaleString();
 
     const li = document.createElement("li");
-    li.innerHTML = `
-      <div class="amount"><i class="fa-solid fa-coins"></i> $${Number(d.amount).toFixed(2)} mined</div>
-      <div class="duration"><i class="fa-regular fa-clock"></i> ${durMin} min</div>
-      <div class="profit"><i class="fa-solid fa-arrow-trend-up"></i> +$${Number(d.earned).toFixed(4)}</div>
-      <span class="time"><i class="fa-regular fa-calendar"></i> ${date}</span>
-    `;
+
+li.innerHTML = `
+  <!-- ✅ STATUS FIRST -->
+  <div class="h-row">
+    <div class="h-left">
+      <i class="fa-solid fa-circle-check"></i>
+      <span class="h-label">Status</span>
+    </div>
+    <span class="h-value green">Completed</span>
+  </div>
+
+  <div class="h-divider"></div>
+
+  <!-- Mined Amount -->
+  <div class="h-row">
+    <div class="h-left">
+      <i class="fa-solid fa-coins"></i>
+      <span class="h-label">Mined Amount</span>
+    </div>
+    <span class="h-value">
+      $${Number(d.amount).toFixed(2)}
+      <div class="h-sub">${usdToInr(Number(d.amount))}</div>
+    </span>
+  </div>
+
+  <!-- Duration -->
+  <div class="h-row">
+    <div class="h-left">
+      <i class="fa-regular fa-clock"></i>
+      <span class="h-label">Duration</span>
+    </div>
+    <span class="h-value">${durationText}</span>
+  </div>
+
+  <div class="h-divider"></div>
+
+  <!-- Total Profit -->
+  <div class="h-row">
+    <div class="h-left">
+      <i class="fa-solid fa-arrow-trend-up"></i>
+      <span class="h-label">Total Profit</span>
+    </div>
+    <span class="h-value green">
+      +$${Number(d.earned).toFixed(4)}
+      <div class="h-sub">${usdToInr(Number(d.earned))}</div>
+    </span>
+  </div>
+
+  <!-- Your Income -->
+  <div class="h-row">
+    <div class="h-left">
+      <i class="fa-solid fa-user"></i>
+      <span class="h-label">Your Income (70%)</span>
+    </div>
+    <span class="h-value green">
+      +$${(Number(d.earned) * 0.7).toFixed(4)}
+      <div class="h-sub">${usdToInr(Number(d.earned) * 0.7)}</div>
+    </span>
+  </div>
+
+  <!-- Team Distribution -->
+  <div class="h-row">
+    <div class="h-left">
+      <i class="fa-solid fa-users"></i>
+      <span class="h-label">Team Distribution (30%)</span>
+    </div>
+    <span class="h-value">
+      $${(Number(d.earned) * 0.3).toFixed(4)}
+      <div class="h-sub">${usdToInr(Number(d.earned) * 0.3)}</div>
+    </span>
+  </div>
+
+  <div class="h-divider"></div>
+
+  <!-- Direct Referral -->
+  <div class="h-row">
+    <div class="h-left">
+      <i class="fa-solid fa-user-check"></i>
+      <span class="h-label">Direct Referral Share</span>
+    </div>
+    <span class="h-value">
+      $${(Number(d.earned) * 0.17).toFixed(4)}
+      <div class="h-sub">${usdToInr(Number(d.earned) * 0.17)}</div>
+    </span>
+  </div>
+
+  <!-- Indirect Referral -->
+  <div class="h-row">
+    <div class="h-left">
+      <i class="fa-solid fa-user-group"></i>
+      <span class="h-label">Indirect Referral Share</span>
+    </div>
+    <span class="h-value">
+      $${(Number(d.earned) * 0.08).toFixed(4)}
+      <div class="h-sub">${usdToInr(Number(d.earned) * 0.08)}</div>
+    </span>
+  </div>
+
+  <!-- Network Referral -->
+  <div class="h-row">
+    <div class="h-left">
+      <i class="fa-solid fa-network-wired"></i>
+      <span class="h-label">Network Referral Share</span>
+    </div>
+    <span class="h-value">
+      $${(Number(d.earned) * 0.05).toFixed(4)}
+      <div class="h-sub">${usdToInr(Number(d.earned) * 0.05)}</div>
+    </span>
+  </div>
+`;
+
 
     miningHistoryEl.appendChild(li);
 
@@ -2202,13 +2468,38 @@ async function renderReferralList(list, clear = true) {
       } catch {}
     }
 
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <div class="amount"><i class="fa-solid fa-user-group"></i> ${fromName}</div>
-      <div class="duration">Level ${d.level}</div>
-      <div class="profit"><i class="fa-solid fa-arrow-trend-up"></i> +$${Number(d.amount).toFixed(4)}</div>
-      <span class="time"><i class="fa-regular fa-calendar"></i> ${date}</span>
-    `;
+  const li = document.createElement("li");
+li.innerHTML = `
+  <div class="h-row">
+    <div class="h-left">
+      <i class="fa-solid fa-user-group"></i>
+      <span class="h-label">${fromName}</span>
+    </div>
+    <span class="h-value">
+      Level ${d.level}
+    </span>
+  </div>
+
+  <div class="h-row">
+    <div class="h-left">
+      <i class="fa-solid fa-arrow-trend-up"></i>
+      <span class="h-label">Referral Income</span>
+    </div>
+    <span class="h-value green">
+      +$${Number(d.amount).toFixed(4)}
+      <div class="h-sub">${usdToInr(Number(d.amount))}</div>
+    </span>
+  </div>
+
+  <div class="h-row">
+    <div class="h-left">
+      <i class="fa-regular fa-calendar"></i>
+      <span class="h-label">Time</span>
+    </div>
+    <span class="h-value">${date}</span>
+  </div>
+`;
+
 
     fragment.appendChild(li);
 
@@ -2477,6 +2768,8 @@ function speakCombo(text, rate = 0.74, pitch = 1.10) {
       });
 
       mining = true;
+      showMiningActiveNotice();
+
       window.miningStarting = false;
 
       showProPopup(
@@ -2613,11 +2906,15 @@ speakSequence([
       );
     }
 
+const profitINR = profit * USD_TO_INR;
+const totalReturnINR = totalReturn * USD_TO_INR;
+
     showProPopup(
-      "Mining Completed 💰",
-      `You earned $${profit.toFixed(4)} profit. Returned $${totalReturn.toFixed(2)} to wallet.`,
-      "https://cdn-icons-png.flaticon.com/512/190/190411.png"
-    );
+  "Mining Completed 💰",
+  `You earned $${profit.toFixed(4)} (₹${profitINR.toLocaleString("en-IN")}) profit.
+ Returned $${totalReturn.toFixed(2)} (₹${totalReturnINR.toLocaleString("en-IN")}) to wallet.`,
+  "https://cdn-icons-png.flaticon.com/512/190/190411.png"
+);
 
     speakMessage("Mining completed successfully.");
 
@@ -2627,6 +2924,8 @@ speakSequence([
     setTimeout(loadUserData, 600);
 
     mining = false;
+    hideMiningActiveNotice();
+
     stopHashrate(); // 👈 YAHI ADD KARNA HAI
     stopShareLog();
 
@@ -2641,6 +2940,12 @@ speakSequence([
     window.miningStarting = false;
   }
 };
+
+if (mining === true) {
+  showMiningActiveNotice();
+} else {
+  hideMiningActiveNotice();
+}
 
 async function updateIncomeBoxes() {
   if (!currentUser) return;
@@ -2865,6 +3170,17 @@ function speakMessage(text) {
 }
 
 
+// 🔴 Mining active box show
+function showMiningActiveNotice() {
+  const box = document.getElementById("miningActiveNotice");
+  if (box) box.style.display = "block";
+}
+
+// ❌ Mining active box hide
+function hideMiningActiveNotice() {
+  const box = document.getElementById("miningActiveNotice");
+  if (box) box.style.display = "none";
+}
 
 
 </script>
@@ -3044,8 +3360,9 @@ document.addEventListener("dragstart", e => e.preventDefault());
   document.addEventListener(evt, e => e.preventDefault())
 );
 
-setInterval(() => console.clear(), 500);
+setInterval(() => console.clear(), 1500);
 </script>
+
 
 
 </body>
