@@ -846,6 +846,13 @@
   line-height:1.5;
   word-break:break-word;
 }
+.inr-sub{
+  font-size: 12px;
+  margin-top: 4px;
+  color: rgba(255,255,255,0.85);
+  font-weight: 500;
+}
+
 
   </style>
 <style>
@@ -887,6 +894,7 @@
       ₮ <span id="walletBalance">0.00</span>
       <i class='bx bx-hide' id="toggleBalance"></i>
     </div>
+    <div class="inr-sub" id="walletBalanceINR">₹0.00 INR</div>
     <div class="trust-note">Tap to hide balance</div>
   </div>
 <p class="trust-note">
@@ -908,10 +916,19 @@
   </div>
 </div>
 
+<div id="trustdollar-dashboard" class="page-section">
+  Dashboard  content
+</div>
+
+<div id="cvl" class="page-section">
+  CVL  content
+</div>
+
 <!-- 👁 Hide/Show Balance JS -->
 <script>
 const walletEl = document.getElementById("walletBalance");
 const toggleEl = document.getElementById("toggleBalance");
+const inrEl = document.getElementById("walletBalanceINR");
 
 // agar user click area alag banana chahe to ye optional hai
 let hidden = false;
@@ -919,20 +936,28 @@ let realValue = walletEl.textContent.trim(); // 🔹 store current balance
 
 function toggleBalance() {
   if (!hidden) {
-    // 🔒 Hide balance
-    realValue = walletEl.textContent.trim();
+    // 🔒 HIDE MODE
+    realValue = walletEl.textContent.trim(); // USDT store
     walletEl.textContent = "••••••";
+    inrEl.textContent = "₹•••••• INR";
+
     toggleEl.classList.remove("bx-hide");
     toggleEl.classList.add("bx-show");
     hidden = true;
+
   } else {
-    // 👁 Show balance again
+    // 👁 SHOW MODE
     walletEl.textContent = realValue;
+
+    const inrRate = 91.5;
+    inrEl.textContent = `₹${(parseFloat(realValue) * inrRate).toFixed(2)} INR`;
+
     toggleEl.classList.remove("bx-show");
     toggleEl.classList.add("bx-hide");
     hidden = false;
   }
 }
+
 
 // ✅ Click event for hide/show
 toggleEl.addEventListener("click", toggleBalance);
@@ -1405,10 +1430,25 @@ We’re here to keep you informed every step of the way.&#10;&#10;
       onSnapshot(userRef, async (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
+        
+
+
+
 
           // 🟢 Wallet Balance + Name
           walletBalanceEl.textContent = parseFloat(data.walletBalance || 0).toFixed(2);
           userNameEl.textContent = data.name || data.username || "User";
+// 🔹 Elements (upar hi define karo)
+const walletBalanceINREl = document.getElementById("walletBalanceINR");
+
+// 🔹 USDT balance
+const usdtAmount = parseFloat(data.walletBalance || 0);
+walletBalanceEl.textContent = usdtAmount.toFixed(2);
+
+// 🔹 USDT → INR
+const inrRate = 91.5;
+const inrAmount = (usdtAmount * inrRate).toFixed(2);
+walletBalanceINREl.textContent = `₹${inrAmount} INR`;
 
 
           // 🟢 Level Logic
@@ -1689,6 +1729,7 @@ document.addEventListener("click", function (e) {
   setTimeout(() => ripple.remove(), 600);
 });
 
+
 </script>
 <script>
 (() => {
@@ -1753,6 +1794,34 @@ document.addEventListener("click", function (e) {
   startTyping();
 })();
 </script>
+
+
+<script>
+/* 🔁 Simple Hash Router */
+
+const sections = document.querySelectorAll(".page-section");
+
+function showSection(hash) {
+  sections.forEach(sec => sec.style.display = "none");
+
+  if (!hash || hash === "#dashboard") {
+    document.getElementById("trustdollar-dashboard").style.display = "block";
+  } else {
+    const target = document.querySelector(hash);
+    if (target) target.style.display = "block";
+  }
+}
+
+// page load pe
+window.addEventListener("load", () => {
+  showSection(location.hash);
+});
+
+// hash change pe
+window.addEventListener("hashchange", () => {
+  showSection(location.hash);
+});
+</script>
 <script>
 document.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("selectstart", e => e.preventDefault());
@@ -1761,35 +1830,9 @@ document.addEventListener("dragstart", e => e.preventDefault());
   document.addEventListener(evt, e => e.preventDefault())
 );
 
-setInterval(() => console.clear(), 1500);
+setInterval(() => console.clear(), 500);
 </script>
 
-<script>
-(function () {
-  let open = false;
-  const limit = 160;
-  setInterval(() => {
-    if (
-      window.outerWidth - window.innerWidth > limit ||
-      window.outerHeight - window.innerHeight > limit
-    ) {
-      if (!open) console.warn("DevTools detected");
-      open = true;
-    } else {
-      open = false;
-    }
-  }, 1200);
-})();
-</script>
-
-<script>
-document.addEventListener("keydown", e => {
-  if (
-    e.key === "F12" ||
-    (e.ctrlKey && ["u","s"].includes(e.key.toLowerCase()))
-  ) e.preventDefault();
-});
-</script>
 
 </body>
 </html>
