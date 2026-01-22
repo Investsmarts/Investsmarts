@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -528,15 +528,16 @@ document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
 
 
 
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
 import {
-  getFirestore, doc, getDoc, updateDoc, collection, query, where, getDocs,
-  addDoc, serverTimestamp, orderBy
+  getFirestore, doc, getDoc, updateDoc, collection, query, where,
+  addDoc, serverTimestamp, orderBy, onSnapshot, increment
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 
-// 🔥 Firebase Config
+/* 🔥 Firebase Config */
 const firebaseConfig = {
   apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
   authDomain: "btcinvest-c0e25.firebaseapp.com",
@@ -551,360 +552,201 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const bell = document.getElementById("bellSound");
 
-// 🧮 Calculate Total Referral Income (All Levels)
-async function calculateTotalReferralIncome(user) {
-  const q = query(
-    collection(db, "users", user.uid, "buyhashrefarl"),
-    orderBy("timestamp", "desc")
-  );
-  const res = await getDocs(q);
+let countdownInterval;
 
-  if (res.empty) {
-    document.getElementById("totalReferralIncome").textContent = "$0.00";
-    return;
-  }
-
-  let total = 0;
-  res.forEach((doc) => {
-    const d = doc.data();
-    total += d.amount || 0;
-  });
-
-  document.getElementById("totalReferralIncome").textContent = `$${total.toFixed(2)}`;
-}
-
-// 🧾 Referral History Loader
-async function loadReferralHistory(user) {
-  const historyBox = document.getElementById("referralHistoryBox");
-  const q = query(
-    collection(db, "users", user.uid, "buyhashrefarl"),
-    orderBy("timestamp", "desc")
-  );
-  const res = await getDocs(q);
-
-  if (res.empty) {
-    historyBox.innerHTML = `<p style="text-align:center;color:#999;">No referral income yet.</p>`;
-    return;
-  }
-
-  let html = `
-    <table style="width:100%; border-collapse:collapse;">
-      <thead>
-        <tr style="background:#d1fae5; color:#065f46;">
-          <th style="padding:6px;">From</th>
-          <th style="padding:6px;">Level</th>
-          <th style="padding:6px;">Amount</th>
-          <th style="padding:6px;">Date</th>
-        </tr>
-      </thead>
-      <tbody>
+/* 🔔 Toast */
+function showToast(msg) {
+  const t = document.createElement("div");
+  t.innerText = msg;
+  t.style.cssText = `
+    position:fixed;bottom:90px;left:50%;transform:translateX(-50%);
+    background:rgba(0,0,0,.8);color:#fff;padding:10px 18px;
+    border-radius:14px;font-size:14px;z-index:9999;
   `;
-
-  res.forEach(docSnap => {
-    const d = docSnap.data();
-    const date = d.timestamp?.toDate?.()?.toLocaleDateString() || "N/A";
-    html += `
-      <tr style="border-bottom:1px solid #bbf7d0;">
-        <td style="padding:6px;">${d.fromUser || "Unknown"}</td>
-        <td style="padding:6px; text-align:center;">${d.level}</td>
-        <td style="padding:6px; text-align:right;">$${(d.amount || 0).toFixed(2)}</td>
-        <td style="padding:6px; text-align:center;">${date}</td>
-      </tr>
-    `;
-  });
-
-  html += "</tbody></table>";
-  historyBox.innerHTML = html;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2000);
 }
 
-// 🧠 User Login Listener
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    document.getElementById("planSection").innerHTML = `<p style="text-align:center;color:#888;">Please login first.</p>`;
-    return;
-  }
+/* 🧠 Auth */
+onAuthStateChanged(auth, (user) => {
+  if (!user) return;
 
   const userRef = doc(db, "users", user.uid);
-  const userSnap = await getDoc(userRef);
-  if (!userSnap.exists()) return;
 
-  const u = userSnap.data();
-  document.getElementById("walletBalance").textContent = `$${(u.walletBalance || 0).toFixed(2)}`;
-  document.getElementById("lockedBalance").textContent = `$${(u.lockedBalance || 0).toFixed(2)}`;
-  document.getElementById("totalIncome").textContent = `$${(u.totalIncome || 0).toFixed(2)}`;
-  document.getElementById("hashIncome").textContent = `$${(u.hashIncome || 0).toFixed(2)}`;
+  /* 🔁 LIVE USER DATA */
+  onSnapshot(userRef, (snap) => {
+    if (!snap.exists()) return;
+    const u = snap.data();
+    walletBalance.textContent = `$${(u.walletBalance || 0).toFixed(2)}`;
+    lockedBalance.textContent = `$${(u.lockedBalance || 0).toFixed(2)}`;
+    totalIncome.textContent = `$${(u.totalIncome || 0).toFixed(2)}`;
+    hashIncome.textContent = `$${(u.hashIncome || 0).toFixed(2)}`;
+  });
 
-  await calculateTotalReferralIncome(user);
-  await loadReferralHistory(user);
+  /* 📦 LIVE PLAN */
+  const planQ = query(collection(db, "buyhashrate"), where("userId", "==", user.uid));
+  onSnapshot(planQ, (res) => {
+    if (res.empty) {
+      planSection.innerHTML = `<p style="text-align:center;color:#888;">No active plans.</p>`;
+      return;
+    }
+    const docSnap = res.docs.find(d => d.data().status === "running") || res.docs[0];
+    renderPlan({ id: docSnap.id, ...docSnap.data() }, userRef);
+  });
 
-  // 🔍 Load active plan
-  const q = query(collection(db, "buyhashrate"), where("userId", "==", user.uid));
-  const res = await getDocs(q);
-  if (res.empty) {
-    document.getElementById("planSection").innerHTML = `<p style="text-align:center;color:#888;">No active plans.</p>`;
-    return;
-  }
+  /* 👥 LIVE REFERRAL */
+  const refQ = query(
+    collection(db, "users", user.uid, "buyhashrefarl"),
+    orderBy("timestamp", "desc")
+  );
 
-  let plan;
-  res.forEach((doc) => { if (doc.data().status === "running") plan = { id: doc.id, ...doc.data() }; });
-  if (!plan) plan = { id: res.docs[0].id, ...res.docs[0].data() };
+  onSnapshot(refQ, (res) => {
+    const box = document.getElementById("referralHistoryBox");
+    let total = 0;
 
-  const start = plan.startTime?.toDate?.()?.toLocaleDateString() || "N/A";
-  const end = plan.endTime?.toDate?.()?.toLocaleDateString() || "N/A";
-  const next = plan.nextPayout?.toDate?.()?.getTime() || null;
-  const earned = (plan.earnedProfit || 0).toFixed(2);
-
-// ✅ Render Active Plan Card
-document.getElementById("planSection").innerHTML = `
-  <div class="plan-card">
-    
-<!-- ✅ Animation / Video Section -->
-<div class="plan-animation">
-  <video autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;border-radius:5px;">
-    <source src="./images/trust.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-</div>
-
-
-    <!-- ✅ Dynamic Plan Title -->
-    <div class="plan-title">${plan.planName || 'Mining Plan'}</div>
-
-    <!-- ✅ Status Badge -->
-    <span class="status-badge">${plan.status}</span>
-
-    <!-- ✅ Plan Details Table -->
-    <table class="plan-table">
-      <tr>
-        <td>Investment Amount</td>
-        <td>$${plan.planCost}</td>
-      </tr>
-      <tr>
-        <td>Accrued Income</td>
-        <td id="earnedProfit">$${earned}</td>
-      </tr>
-      <tr>
-        <td>Possible Income</td>
-        <td>$${(plan.dailyProfitPercent * plan.planCost / 100).toFixed(2)}</td>
-      </tr>
-      <tr>
-        <td>Remaining Days</td>
-        <td>${plan.remainingDays || plan.durationDays}</td>
-      </tr>
-      <tr>
-        <td>Start Date</td>
-        <td>${start}</td>
-      </tr>
-      <tr>
-        <td>End Date</td>
-        <td>${end}</td>
-      </tr>
-    </table>
-
-    <!-- ✅ Countdown + Button -->
-    <div class="countdown" id="countdown">--:--:--</div>
-    <button id="collectBtn" class="collect-btn" disabled>Collect</button>
-  </div>
-`;
-
-
-
-// ✅ Attach countdown + button functionality
-const btn = document.getElementById("collectBtn");
-const display = document.getElementById("countdown");
-startCountdown(next, btn, display, plan, userRef, plan.id);
-
-});
-
-// ⏱ Countdown Timer with Live Earning + Smooth Increment Animation
-function startCountdown(target, btn, display, plan, userRef, planId) {
-  const earnedEl = document.getElementById("earnedProfit");
-  let localEarned = plan.earnedProfit || 0;
-  const dailyProfit = (plan.planCost * plan.dailyProfitPercent) / 100;
-  const perSecondProfit = dailyProfit / 86400; // daily profit divided by seconds in a day
-
-  const interval = setInterval(() => {
-    const now = Date.now();
-    const diff = target - now;
-
-    // countdown timer
-    if (diff <= 0) {
-      display.textContent = "Ready!";
-      display.style.color = "#dc2626";
-      btn.disabled = false;
-      clearInterval(interval);
-      bell.play().catch(() => {});
-      btn.onclick = () => collectProfit(plan, userRef, planId, btn, display);
+    if (res.empty) {
+      totalReferralIncome.textContent = "$0.00";
+      box.innerHTML = `<p style="text-align:center;color:#999;">No referral income yet.</p>`;
       return;
     }
 
-    // time left
-    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const m = Math.floor((diff / (1000 * 60)) % 60);
-    const s = Math.floor((diff / 1000) % 60);
-    display.textContent = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    let html = `<table style="width:100%">
+      <tr><th>From</th><th>Lvl</th><th>Amt</th><th>Date</th></tr>`;
 
-    // live earning (visual only)
-    localEarned += perSecondProfit; 
-    earnedEl.textContent = `$${localEarned.toFixed(4)}`;
+    res.forEach(d => {
+      const r = d.data();
+      total += r.amount || 0;
+      html += `<tr>
+        <td>${r.fromUser}</td>
+        <td>${r.level}</td>
+        <td>$${r.amount.toFixed(2)}</td>
+        <td>${r.timestamp?.toDate()?.toLocaleDateString()}</td>
+      </tr>`;
+    });
+
+    html += `</table>`;
+    totalReferralIncome.textContent = `$${total.toFixed(2)}`;
+    box.innerHTML = html;
+  });
+});
+
+/* 🎨 Render Plan */
+function renderPlan(plan, userRef) {
+  const start = plan.startTime?.toDate()?.toLocaleDateString() || "N/A";
+  const end = plan.endTime?.toDate()?.toLocaleDateString() || "N/A";
+
+  planSection.innerHTML = `
+  <div class="plan-card">
+    <div class="plan-animation">
+      <video autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover">
+        <source src="./images/trust.mp4">
+      </video>
+    </div>
+
+    <div class="plan-title">${plan.planName}</div>
+    <span class="status-badge">${plan.status}</span>
+
+    <table class="plan-table">
+      <tr><td>Investment</td><td>$${plan.planCost}</td></tr>
+      <tr><td>Accrued</td><td id="earnedProfit">$${(plan.earnedProfit||0).toFixed(2)}</td></tr>
+      <tr><td>Remaining Days</td><td>${plan.remainingDays}</td></tr>
+      <tr><td>Start</td><td>${start}</td></tr>
+      <tr><td>End</td><td>${end}</td></tr>
+    </table>
+
+    <div class="countdown" id="countdown">--:--:--</div>
+    <button id="collectBtn" class="collect-btn" disabled>Collect</button>
+  </div>`;
+
+  startCountdown(
+    plan.nextPayout?.toDate()?.getTime(),
+    collectBtn,
+    countdown,
+    plan,
+    userRef
+  );
+}
+
+/* ⏱ Countdown */
+function startCountdown(target, btn, display, plan, userRef) {
+  clearInterval(countdownInterval);
+  let earned = plan.earnedProfit || 0;
+  const perSec = ((plan.planCost * plan.dailyProfitPercent) / 100) / 86400;
+
+  countdownInterval = setInterval(() => {
+    const diff = target - Date.now();
+    if (diff <= 0) {
+      display.textContent = "Ready!";
+      btn.disabled = false;
+      bell.play().catch(()=>{});
+      btn.onclick = () => collectProfit(plan, userRef);
+      clearInterval(countdownInterval);
+      return;
+    }
+
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor(diff % 3600000 / 60000);
+    const s = Math.floor(diff % 60000 / 1000);
+    display.textContent = `${h.toString().padStart(2,"0")}:${m.toString().padStart(2,"0")}:${s.toString().padStart(2,"0")}`;
+
+    earned += perSec;
+    earnedProfit.textContent = `$${earned.toFixed(4)}`;
   }, 1000);
 }
 
+/* 💰 Collect */
+async function collectProfit(plan, userRef) {
+  const total = (plan.planCost * plan.dailyProfitPercent) / 100;
+  const self = total * 0.7;
 
-// 💰 Profit Collection + Upline Distribution
-async function collectProfit(plan, userRef, planId, btn, display) {
-  btn.disabled = true;
-  bell.pause(); bell.currentTime = 0;
-
-  const totalProfit = (plan.planCost * plan.dailyProfitPercent) / 100;
-  const selfProfit = totalProfit * 0.7;
-  const next = new Date(Date.now() + 86400000);
-  const newDays = (plan.remainingDays || plan.durationDays) - 1;
-
-  const userSnap = await getDoc(userRef);
-  const user = userSnap.data();
-
-  const newWallet = (user.walletBalance || 0) + selfProfit;
-  const newIncome = (user.totalIncome || 0) + selfProfit;
-  const newHashIncome = (user.hashIncome || 0) + selfProfit;
-
-  await updateDoc(userRef, { 
-    walletBalance: newWallet, 
-    totalIncome: newIncome, 
-    hashIncome: newHashIncome 
+  await updateDoc(userRef, {
+    walletBalance: increment(self),
+    totalIncome: increment(self),
+    hashIncome: increment(self)
   });
 
-  await distributeReferralIncome(user, totalProfit, plan.planCost); // ✅ pass planCost
+  await distributeReferralIncome((await getDoc(userRef)).data(), total, plan.planCost);
 
-  const planRef = doc(db, "buyhashrate", planId);
-  const planUpdate = {
-    earnedProfit: (plan.earnedProfit || 0) + totalProfit,
-    nextPayout: next,
-    remainingDays: newDays,
-    updatedAt: serverTimestamp(),
-  };
+  await updateDoc(doc(db, "buyhashrate", plan.id), {
+    earnedProfit: increment(total),
+    remainingDays: plan.remainingDays - 1,
+    nextPayout: new Date(Date.now() + 86400000),
+    updatedAt: serverTimestamp()
+  });
 
-  if (newDays <= 0) {
-    planUpdate.status = "completed";
-    await updateDoc(userRef, {
-      walletBalance: newWallet + plan.planCost,
-      lockedBalance: (user.lockedBalance || 0) - plan.planCost
-    });
-    alert("🎉 Plan Completed! Investment Returned.");
-  }
-
-  await updateDoc(planRef, planUpdate);
-
-  document.getElementById("walletBalance").textContent = `$${newWallet.toFixed(2)}`;
-  document.getElementById("totalIncome").textContent = `$${newIncome.toFixed(2)}`;
-  document.getElementById("earnedProfit").textContent = `$${((plan.earnedProfit || 0) + totalProfit).toFixed(2)}`;
-  document.getElementById("remainingDays").textContent = `${newDays} days`;
-
-  await calculateTotalReferralIncome({ uid: userRef.id });
-  await loadReferralHistory({ uid: userRef.id });
-
-  if (newDays > 0) startCountdown(next.getTime(), btn, display, { ...plan, remainingDays: newDays }, userRef, planId);
-
-  alert(`✅ Collected $${totalProfit.toFixed(2)} — You received $${selfProfit.toFixed(2)}`);
+  showToast(`✅ Collected $${self.toFixed(2)}`);
 }
 
-// 👥 Distribute Referral Income to Uplines (with lifetimeDeposit check + console logs)
-async function distributeReferralIncome(user, totalProfit, planCost) {
-  const uplines = [
-    { id: user.upline1, percent: 0.17, level: 1 },
-    { id: user.upline2, percent: 0.08, level: 2 },
-    { id: user.upline3, percent: 0.05, level: 3 },
+/* 👥 Referral */
+async function distributeReferralIncome(user, total, planCost) {
+  const levels = [
+    { id: user.upline1, p: 0.17, l: 1 },
+    { id: user.upline2, p: 0.08, l: 2 },
+    { id: user.upline3, p: 0.05, l: 3 }
   ];
 
-  for (const u of uplines) {
+  for (const u of levels) {
     if (!u.id) continue;
-    try {
-      const refRef = doc(db, "users", u.id);
-      const refSnap = await getDoc(refRef);
-      if (!refSnap.exists()) continue;
+    const ref = doc(db, "users", u.id);
+    const s = await getDoc(ref);
+    if (!s.exists() || (s.data().lifetimeDeposit||0) < planCost) continue;
 
-      const refUser = refSnap.data();
+    const amt = total * u.p;
+    await updateDoc(ref, {
+      walletBalance: increment(amt),
+      lifetimeReferralIncome: increment(amt),
+      totalIncome: increment(amt)
+    });
 
-      // 🧩 Condition: Upline must have lifetimeDeposit >= planCost
-      if ((refUser.lifetimeDeposit || 0) < planCost) {
-        console.log(`⛔ Level ${u.level} (${u.id}) skipped — lifetimeDeposit $${refUser.lifetimeDeposit || 0} < planCost $${planCost}`);
-        continue;
-      }
-
-      const commission = totalProfit * u.percent;
-      const newWallet = (refUser.walletBalance || 0) + commission;
-      const newReferral = (refUser.lifetimeReferralIncome || 0) + commission;
-      const newTotal = (refUser.totalIncome || 0) + commission;
-
-      await updateDoc(refRef, {
-        walletBalance: newWallet,
-        lifetimeReferralIncome: newReferral,
-        totalIncome: newTotal,
-      });
-
-      await addDoc(collection(db, "users", u.id, "buyhashrefarl"), {
-        receiverId: u.id,
-        fromUser: user.username || "Unknown",
-        amount: commission,
-        level: u.level,
-        timestamp: serverTimestamp(),
-      });
-
-      console.log(`✅ Paid Level ${u.level} (${u.id}): $${commission.toFixed(2)} — lifetimeDeposit $${refUser.lifetimeDeposit || 0}`);
-
-    } catch (err) {
-      console.error(`❌ Error paying level ${u.level}:`, err);
-    }
+    await addDoc(collection(db, "users", u.id, "buyhashrefarl"), {
+      fromUser: user.username || "Unknown",
+      amount: amt,
+      level: u.l,
+      timestamp: serverTimestamp()
+    });
   }
 }
 </script>
-<script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  });
-
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
-
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
-
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
-</script>
 </body>
 </html>
-
