@@ -697,6 +697,30 @@ onAuthStateChanged(auth, (user) => {
     hashIncome.textContent = `$${(u.hashIncome || 0).toFixed(2)}`;
   });
 
+// 🔥 LOAD ACTIVE PLAN
+const planQ = query(
+  collection(db, "buyhashrate"),
+  where("uid", "==", user.uid),
+  where("status", "==", "Active"),
+  orderBy("startTime", "desc")
+);
+
+onSnapshot(planQ, async (snap) => {
+  if (snap.empty) {
+    document.getElementById("planSection").innerHTML =
+      `<p style="text-align:center;color:#999;">No active plan found</p>`;
+    return;
+  }
+
+  // Latest active plan
+  const planDoc = snap.docs[0];
+  const planData = planDoc.data();
+  planData.id = planDoc.id;
+
+  renderPlan(planData, userRef);
+});
+
+
 // ✅ LIVE COLLECT HISTORY
 const historyQ = query(
   collection(db, "users", user.uid, "collectHistory"),
