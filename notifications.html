@@ -55,7 +55,7 @@ body {
   width: 10px;
   height: 10px;
   background: red;
-  border-radius: 50%;
+  border-radius: 5%;
   display: none;
   animation: blinkDot 1s infinite ease-in-out;
 }
@@ -72,71 +72,109 @@ body {
 }
 
 /* STATUS CARD */
-.status-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 16px 18px;
-  margin-bottom: 18px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-  border-left: 5px solid var(--green);
+.status-card{
+  background:#ffffff;
+  border-radius:5px;
+  padding:14px 16px;
+  margin-bottom:16px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.05);
+  border-left:3px solid var(--green);
 }
-.status-card h3 {
-  color: var(--green);
-  font-size: 16px;
-  margin-bottom: 8px;
+
+.status-card h3{
+  color:var(--green);
+  font-size:15px;
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-weight:600;
 }
-.status-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  margin-bottom: 4px;
-  color: var(--muted);
+
+.status-row{
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
+  margin:6px 0;
+  color:#6f7782;
 }
-.status-row span.value {
-  color: #000;
-  font-weight: 600;
+
+.status-row span.value{
+  color:#222;
+  font-weight:500;
 }
-.online { color: var(--green); font-weight: 600; }
-.offline { color: var(--red); font-weight: 600; }
+
+.online{
+  color:var(--green);
+  font-weight:600;
+}
+
+.offline{
+  color:#f44336;
+  font-weight:600;
+}
 
 /* NOTIFICATION LIST */
-.notification-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+/* ---------- NOTIFICATIONS ---------- */
+.notification-list{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
 }
-.notification-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 14px 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  border: 1px solid #f0f0f0;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  transition: all 0.25s ease;
+
+/* Card */
+.notification-card{
+  background:#f7f8fa;
+  border-radius:5px;
+  padding:14px 14px 16px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.05);
+  border:1px solid #eee;
 }
-.notification-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+/* top row */
+.notif-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
 }
-.notification-card h4 {
-  font-size: 15px;
-  color: var(--green);
-  margin: 0 0 6px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+
+.notif-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-weight:600;
+  font-size:15px;
+  color:#222;
 }
-.notification-card p {
-  font-size: 14px;
-  color: #444;
-  margin: 0 0 6px;
-  line-height: 1.4;
+
+.notif-title i{
+  font-size:18px;
+  color:var(--green);
 }
-.notification-card small {
-  font-size: 12px;
-  color: #999;
+
+.delete-btn{
+  color:#f44336;
+  font-size:20px;
+  cursor:pointer;
+  opacity:.85;
 }
+
+/* time */
+.notif-time{
+  font-size:13px;
+  color:#8a8f98;
+  margin-bottom:8px;
+}
+
+/* message */
+.notification-card p{
+  margin:0;
+  font-size:14px;
+  line-height:1.45;
+  color:#555;
+}
+
 
 /* ALERT CENTER POPUP */
 .alert {
@@ -147,7 +185,7 @@ body {
   background: var(--green);
   color: #fff;
   padding: 14px 26px;
-  border-radius: 12px;
+  border-radius: 5px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.2);
   font-size: 15px;
   opacity: 0;
@@ -197,6 +235,8 @@ import {
   getFirestore, doc, updateDoc, getDoc, serverTimestamp, collection, getDocs, orderBy, query 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { deleteDoc } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
@@ -240,21 +280,45 @@ function showAlert(msg, color = "#00c853") {
   setTimeout(() => alertBox.classList.remove("show"), 2500);
 }
 
-// ✅ Create notification card
-function createCard(data) {
+// ✅ Create notification card (logic same, UI improved)
+function createCard(data, docId, userId) {
   const card = document.createElement("div");
   card.classList.add("notification-card");
 
-  const icon = data.type === "admin" ? "<i class='bx bx-user-voice'></i>" : "<i class='bx bx-bell'></i>";
-  const time = data.createdAt?.toDate ? data.createdAt.toDate().toLocaleString() : "Now";
+  const iconClass = data.type === "admin"
+    ? "bx-user-voice"
+    : "bx-bell";
+
+  const title = data.type === "admin"
+    ? "Admin Message"
+    : "Notification";
+
+  const time = data.createdAt?.toDate
+    ? data.createdAt.toDate().toLocaleString()
+    : "Now";
 
   card.innerHTML = `
-    <h4>${icon} ${data.type === "admin" ? "Admin Message" : "Notification"}</h4>
+    <div class="notif-head">
+      <div class="notif-title">
+        <i class='bx ${iconClass}'></i>
+        ${title}
+      </div>
+      <i class='bx bx-trash delete-btn'></i>
+    </div>
+
+    <div class="notif-time">${time}</div>
     <p>${data.message}</p>
-    <small>${time}</small>
   `;
+
+  // 🔥 Delete from Firebase
+  card.querySelector(".delete-btn").addEventListener("click", async () => {
+    await deleteDoc(doc(db, "users", userId, "notifications", docId));
+    card.remove();
+  });
+
   return card;
 }
+
 
 // ✅ Login + Activity Tracker
 onAuthStateChanged(auth, async (user) => {
@@ -292,16 +356,19 @@ if (notifSnap.empty) {
   container.innerHTML = `
     <div class="notification-card">
       <h4><i class='bx bx-bell'></i> No Notifications</h4>
-      <p>Once admin sends updates, you'll see them here.</p>
+      <p id="typingText"></p>
     </div>`;
+
+  startTyping();
 }
 
   let unseen = 0;
-  notifSnap.forEach((n) => {
-    const data = n.data();
-    container.appendChild(createCard(data));
-    if (!data.seen) unseen++;
-  });
+notifSnap.forEach((n) => {
+  const data = n.data();
+  container.appendChild(createCard(data, n.id, user.uid));
+  
+  if (!data.seen) unseen++;
+});
 
   if (unseen > 0) {
     notifyDot.style.display = "inline-block";
@@ -322,6 +389,32 @@ if (notifSnap.empty) {
     await updateDoc(userRef, { online: false, lastLogout: serverTimestamp() });
   });
 });
+
+function startTyping() {
+const text = "Updates from TrustDollar will appear here.";
+
+  const el = document.getElementById("typingText");
+
+  let i = 0;
+  el.textContent = "";
+
+  function type() {
+    if (i < text.length) {
+      el.textContent += text.charAt(i);
+      i++;
+      setTimeout(type, 35);
+    } else {
+      setTimeout(() => {
+        el.textContent = "";
+        i = 0;
+        type(); // repeat typing
+      }, 1800);
+    }
+  }
+
+  type();
+}
+
 </script>
 </body>
 </html>
