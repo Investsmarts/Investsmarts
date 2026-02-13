@@ -194,6 +194,10 @@ Yes, all details are correct
 ✔ Verification Sent Successfully
 </div>
 
+<div class="success" id="errorPopup" style="color:#dc2626;">
+  ❌ Invalid data. Please try again.
+</div>
+
 </div>
 
 
@@ -232,18 +236,67 @@ const db = getFirestore(app);
 
 onAuthStateChanged(auth, async (user) => {
 
-if(!user){
-  document.body.innerHTML =
-    "<p style='text-align:center;font-size:18px;font-weight:600;padding:20px;'>Please login first to verify withdrawal.</p>";
-  return;
-}
+  if(!user){
+    document.body.innerHTML =
+      "<p style='text-align:center;font-size:18px;font-weight:600;padding:20px;'>Please login first to verify withdrawal.</p>";
+    return;
+  }
 
-const box = document.getElementById("box");
-const nameEl = document.getElementById("name");
-const emailEl = document.getElementById("email");
-const walletEl = document.getElementById("wallet");
-const amountEl = document.getElementById("amount");
-const orderEl = document.getElementById("orderId");
+  const box = document.getElementById("box");
+  const nameEl = document.getElementById("name");
+  const emailEl = document.getElementById("email");
+  const walletEl = document.getElementById("wallet");
+  const amountEl = document.getElementById("amount");
+  const orderEl = document.getElementById("orderId");
+
+  const f_name = document.getElementById("f_name");
+  const f_email = document.getElementById("f_email");
+  const f_wallet = document.getElementById("f_wallet");
+  const f_amount = document.getElementById("f_amount");
+  const f_order = document.getElementById("f_order");
+
+  /* User profile */
+  const userDoc = await getDoc(doc(db,"users",user.uid));
+  const u = userDoc.data() || {};
+
+  /* Withdrawal fetch */
+  const q = query(
+    collection(db,"users",user.uid,"withdrawals"),
+    where("status","in",["Pending","Processing"]),
+    orderBy("date","desc"),
+    limit(1)
+  );
+
+  const snap = await getDocs(q);
+
+  if(snap.empty){
+    box.innerHTML = "<div class='title'>No withdrawal in processing</div>";
+    return;
+  }
+
+  const wd = snap.docs[0].data();
+
+  /* Fill UI */
+  nameEl.textContent = u.name || "-";
+  emailEl.textContent = u.email || "-";
+  walletEl.textContent = wd.address || "-";
+  amountEl.textContent = wd.amount || "0";
+  orderEl.textContent = wd.orderId || "-";
+
+  /* Fill form */
+  f_name.value = u.name || "";
+  f_email.value = u.email || "";
+  f_wallet.value = wd.address || "";
+  f_amount.value = wd.amount || "";
+  f_order.value = wd.orderId || "";
+
+});
+
+
+/* Submit handling */
+const confirmForm = document.getElementById("confirmForm");
+const success = document.getElementById("success");
+const errorPopup = document.getElementById("errorPopup");
 
 const f_name = document.getElementById("f_name");
 const f_email = document.getElementById("f_email");
@@ -251,62 +304,35 @@ const f_wallet = document.getElementById("f_wallet");
 const f_amount = document.getElementById("f_amount");
 const f_order = document.getElementById("f_order");
 
-/* User profile */
-const userDoc = await getDoc(doc(db,"users",user.uid));
-const u = userDoc.data() || {};
-
-/* Withdrawal fetch */
-const q = query(
-  collection(db,"users",user.uid,"withdrawals"),
-  where("status","in",["Pending","Processing"]),
-  orderBy("date","desc"),
-  limit(1)
-);
-
-const snap = await getDocs(q);
-
-if(snap.empty){
-  box.innerHTML = "<div class='title'>No withdrawal in processing</div>";
-  return;
-}
-
-const wd = snap.docs[0].data();
-
-/* Fill UI */
-nameEl.textContent = u.name || "-";
-emailEl.textContent = u.email || "-";
-walletEl.textContent = wd.address || "-";
-amountEl.textContent = wd.amount || "0";
-orderEl.textContent = wd.orderId || "-";
-
-/* Fill form */
-f_name.value = u.name || "";
-f_email.value = u.email || "";
-f_wallet.value = wd.address || "";
-f_amount.value = wd.amount || "";
-f_order.value = wd.orderId || "";
-
-});
-
-/* Submit handling */
-const confirmForm = document.getElementById("confirmForm");
-const success = document.getElementById("success");
-
 confirmForm.addEventListener("submit", (e)=>{
   e.preventDefault();
 
+  const name = f_name.value.trim();
+  const email = f_email.value.trim();
+  const wallet = f_wallet.value.trim();
+  const amount = f_amount.value.trim();
+  const order = f_order.value.trim();
+
+  if (!name || !email || !wallet || !amount || !order || amount === "0") {
+
+    errorPopup.style.display = "block";
+
+    setTimeout(()=>{
+      errorPopup.style.display = "none";
+    },2000);
+
+    return;
+  }
+
   success.innerHTML = "✔ Your withdrawal verification successful";
   success.style.display = "block";
-
   confirmForm.querySelector("button").disabled = true;
 
-  // 2 sec baad form submit hoga
   setTimeout(()=>{
     confirmForm.submit();
   },2000);
+
 });
-
 </script>
-
 </body>
 </html>
