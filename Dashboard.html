@@ -7,7 +7,8 @@
 
   <title>User Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
- 
+ <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 <!-- ⚡ Fast Alternative CDN -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
 
@@ -71,17 +72,6 @@
       margin-bottom: 12px;
       font-weight: 600;
       color: #555;
-    }
-    .income-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
-      font-size: 14px;
-    }
-    .income-row:last-child {
-      border-bottom: none;
-      font-weight: 600;
     }
 
 
@@ -854,8 +844,53 @@
 }
 
 
-  </style>
-<style>
+/* 🔥 PERFECT STRAIGHT INCOME ROW */
+.income-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:7px 0;
+  border-bottom:1px solid #f1f1f1;
+  font-size:13px;
+}
+
+.income-row:last-child{
+  border-bottom:none;
+  font-weight:600;
+}
+
+/* LEFT SIDE */
+.income-row > span:first-child{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex:1;
+  min-width:0;
+  color:#333;
+}
+
+/* INR green inline */
+.inr-text{
+  font-size:11px;
+  color:#16a34a;
+  font-weight:500;
+  white-space:nowrap;
+}
+
+/* RIGHT SIDE (Fixed width for alignment) */
+.income-row > span:last-child{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:4px;
+  min-width:90px;   /* 🔥 fixed column width */
+  text-align:right;
+  font-size:14px;
+  font-weight:600;
+  color:#111;
+}
+
+
 .username-box {
   display: inline-block;
   padding: 4px 10px;
@@ -874,8 +909,88 @@
   transform: scale(1.05);
   background: rgba(255, 255, 255, 0.25);
 }
-</style>
 
+
+/* 🔥 Custom Modal */
+.custom-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.4);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  visibility:hidden;
+  opacity:0;
+  transition:0.3s ease;
+  z-index:99999;
+}
+
+.custom-modal.active{
+  visibility:visible;
+  opacity:1;
+}
+
+.modal-box{
+  background:#fff;
+  padding:20px;
+  border-radius:8px;
+  width:85%;
+  max-width:300px;
+  text-align:center;
+  animation:popIn 0.2s ease;
+}
+
+@keyframes popIn{
+  from{transform:scale(0.9); opacity:0;}
+  to{transform:scale(1); opacity:1;}
+}
+
+.modal-box p{
+  font-size:14px;
+  margin-bottom:18px;
+  color:#333;
+}
+
+.modal-buttons{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.modal-buttons button{
+  flex:1;
+  padding:8px 0;
+  border:none;
+  border-radius:5px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.btn-cancel{
+  background:#ef4444;
+  color:#fff;
+}
+
+.btn-ok{
+  background:#16a34a;
+  color:#fff;
+}
+
+.btn-cancel:hover{ background:#dc2626; }
+.btn-ok:hover{ background:#15803d; }
+
+
+.download-note{
+  max-width:480px;
+  margin:0 auto 8px;
+  font-size:12px;
+  color:#16a34a;
+  text-align:center;
+  font-weight:500;
+  letter-spacing:.3px;
+}
+
+</style>
 
   <!-- Header -->
   <div class="trust-header">
@@ -916,13 +1031,7 @@
   </div>
 </div>
 
-<div id="trustdollar-dashboard" class="page-section">
-  Dashboard  content
-</div>
 
-<div id="cvl" class="page-section">
-  CVL  content
-</div>
 
 <!-- 👁 Hide/Show Balance JS -->
 <script>
@@ -1003,17 +1112,55 @@ document.querySelector(".btn-add").addEventListener("click", () => {
   </a>
 </div>
 
+<div class="download-note">
+  ⬇ Click income box to download image 👇
+</div>
 
   <!-- Income Card -->
-  <div class="income-card"><h3>My Income (USDT)</h3>
+<!-- Income Card -->
+<div class="income-card" id="incomeCard"><h3>My Income (USDT)</h3>
 
-  <div class="income-row"><span>Mining Profit</span><span id="miningIncome">0.00</span></div>
-  <div class="income-row"><span>Team Income</span><span id="teamIncome">0.00</span></div>
-  <div class="income-row"><span>Commission Income</span><span id="commissionIncome">0.00</span></div>
-  <div class="income-row"><span>Staking Income</span><span id="stakingIncome">0.00</span></div>
-  <div class="income-row"><span>Hash Income</span><span id="hashIncome">0.00</span></div>
-  <div class="income-row"><span>Release Income</span><span id="releaseIncome">0.00</span></div>
-  <div class="income-row"><span>Total Income</span><span id="totalIncome">0.00</span></div></div>
+<div class="income-row">
+  <span>Mining Profit <span class="inr-text" id="miningIncomeINR">₹0.00</span></span>
+  <span>₮ <span id="miningIncome">0.00</span></span>
+</div>
+
+<div class="income-row">
+  <span>Team Income <span class="inr-text" id="teamIncomeINR">₹0.00</span></span>
+  <span>₮ <span id="teamIncome">0.00</span></span>
+</div>
+
+<div class="income-row">
+  <span>Commission Income <span class="inr-text" id="commissionIncomeINR">₹0.00</span></span>
+  <span>₮ <span id="commissionIncome">0.00</span></span>
+</div>
+
+<div class="income-row">
+  <span>Staking Income <span class="inr-text" id="stakingIncomeINR">₹0.00</span></span>
+  <span>₮ <span id="stakingIncome">0.00</span></span>
+</div>
+
+<div class="income-row">
+  <span>Hash Income <span class="inr-text" id="hashIncomeINR">₹0.00</span></span>
+  <span>₮ <span id="hashIncome">0.00</span></span>
+</div>
+
+<div class="income-row">
+  <span>Release Income <span class="inr-text" id="releaseIncomeINR">₹0.00</span></span>
+  <span>₮ <span id="releaseIncome">0.00</span></span>
+</div>
+
+<div class="income-row">
+  <span><strong>Total Income</strong> <span class="inr-text" id="totalIncomeINR">₹0.00</span></span>
+  <span><strong>₮ <span id="totalIncome">0.00</span></strong></span>
+</div>
+
+<div class="income-row">
+  <span><strong>After Team Distributed</strong> <span class="inr-text" id="afterTeamIncomeINR">₹0.00</span></span>
+  <span><strong>₮ <span id="afterTeamIncome">0.00</span></strong></span>
+</div>
+
+</div>
 
   <!-- Project Features Card -->
   <div class="card features-card"><h3>Project Features</h3>
@@ -1391,6 +1538,17 @@ We’re here to keep you informed every step of the way.&#10;&#10;
      font-size:16px; font-weight:600; z-index:9999; box-shadow:0 3px 8px rgba(0,0,0,0.25);">
 </div>
 
+<!-- 🔥 Download Confirm Modal -->
+<div id="downloadModal" class="custom-modal">
+  <div class="modal-box">
+    <p>Do you want to download income image?</p>
+    <div class="modal-buttons">
+      <button id="cancelDownload" class="btn-cancel">Cancel</button>
+      <button id="confirmDownload" class="btn-ok">OK</button>
+    </div>
+  </div>
+</div>
+
 <!-- Firebase Logic -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -1515,8 +1673,28 @@ const releaseIncome = parseFloat(data.releaseIncome || 0);
 document.getElementById("releaseIncome").textContent = releaseIncome.toFixed(2);
 
 // 🟢 Total income = sum of all incomes
+// 🟢 Total income
 const total = miningIncome + teamIncome + commissionIncome + stakingIncome + hashIncome + releaseIncome;
 document.getElementById("totalIncome").textContent = total.toFixed(2);
+
+// 🔻 30% deduction
+const TEAM_PERCENT = 30; 
+const afterTeam = total * ((100 - TEAM_PERCENT) / 100);
+document.getElementById("afterTeamIncome").textContent = afterTeam.toFixed(2);
+
+// 🔹 INR conversion
+const INR_RATE = 91.5;
+
+document.getElementById("miningIncomeINR").textContent = "₹" + (miningIncome * INR_RATE).toFixed(2);
+document.getElementById("teamIncomeINR").textContent = "₹" + (teamIncome * INR_RATE).toFixed(2);
+document.getElementById("commissionIncomeINR").textContent = "₹" + (commissionIncome * INR_RATE).toFixed(2);
+document.getElementById("stakingIncomeINR").textContent = "₹" + (stakingIncome * INR_RATE).toFixed(2);
+document.getElementById("hashIncomeINR").textContent = "₹" + (hashIncome * INR_RATE).toFixed(2);
+document.getElementById("releaseIncomeINR").textContent = "₹" + (releaseIncome * INR_RATE).toFixed(2);
+document.getElementById("totalIncomeINR").textContent = "₹" + (total * INR_RATE).toFixed(2);
+document.getElementById("afterTeamIncomeINR").textContent = "₹" + (afterTeam * INR_RATE).toFixed(2);
+
+
 
 console.log("✅ Dashboard Auto Updated for:", data.name || user.email);
 
@@ -1821,6 +1999,92 @@ window.addEventListener("load", () => {
 window.addEventListener("hashchange", () => {
   showSection(location.hash);
 });
+
+
+
+</script>
+<script>
+const incomeCard = document.getElementById("incomeCard");
+const modal = document.getElementById("downloadModal");
+const cancelBtn = document.getElementById("cancelDownload");
+const okBtn = document.getElementById("confirmDownload");
+
+function showModal(){
+  modal.classList.add("active");
+}
+
+function hideModal(){
+  modal.classList.remove("active");
+}
+
+function downloadIncomeImage(){
+
+  const card = document.getElementById("incomeCard");
+  const userName = document.getElementById("userName").innerText;
+
+ const header = document.createElement("div");
+header.style.textAlign = "center";
+header.style.marginBottom = "15px";
+header.style.padding = "10px 0";
+
+header.innerHTML = `
+  <div style="
+      border-top:2px solid #16a34a;
+      margin-bottom:8px;">
+  </div>
+
+  <div style="
+      font-size:18px;
+      font-weight:700;
+      color:#111;
+      letter-spacing:0.5px;">
+      TrustDollar Income Report
+  </div>
+
+  <div style="
+      font-size:13px;
+      color:#555;
+      margin-top:4px;">
+      User: ${userName}
+  </div>
+
+  <div style="
+      font-size:11px;
+      color:#888;
+      margin-top:2px;">
+      Generated on ${new Date().toLocaleDateString()}
+  </div>
+
+  <div style="
+      border-bottom:2px solid #16a34a;
+      margin-top:8px;">
+  </div>
+`;
+
+  card.prepend(header);
+
+  html2canvas(card,{scale:2}).then(canvas=>{
+    const link=document.createElement("a");
+    link.download=userName+"_income.png";
+    link.href=canvas.toDataURL("image/png");
+    link.click();
+    header.remove();
+  });
+}
+
+// click anywhere on income card
+const downloadBtn = document.getElementById("downloadBtn");
+incomeCard.addEventListener("click", showModal);
+incomeCard.addEventListener("touchstart", showModal);
+
+// cancel
+cancelBtn.addEventListener("click", hideModal);
+
+// ok
+okBtn.addEventListener("click", ()=>{
+  hideModal();
+  downloadIncomeImage();
+});
 </script>
 <script>
 document.addEventListener("contextmenu", e => e.preventDefault());
@@ -1832,7 +2096,6 @@ document.addEventListener("dragstart", e => e.preventDefault());
 
 setInterval(() => console.clear(), 500);
 </script>
-
 
 </body>
 </html>
