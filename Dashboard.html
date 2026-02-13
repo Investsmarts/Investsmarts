@@ -1113,7 +1113,7 @@ document.querySelector(".btn-add").addEventListener("click", () => {
 </div>
 
 <div class="download-note">
-  ⬇ Click income box to download image 👇
+  ⬇ Click-2 income box to download image 👇
 </div>
 
   <!-- Income Card -->
@@ -2009,6 +2009,8 @@ const modal = document.getElementById("downloadModal");
 const cancelBtn = document.getElementById("cancelDownload");
 const okBtn = document.getElementById("confirmDownload");
 
+let lastTap = 0; // 🔥 double tap detect
+
 function showModal(){
   modal.classList.add("active");
 }
@@ -2022,44 +2024,28 @@ function downloadIncomeImage(){
   const card = document.getElementById("incomeCard");
   const userName = document.getElementById("userName").innerText;
 
- const header = document.createElement("div");
-header.style.textAlign = "center";
-header.style.marginBottom = "15px";
-header.style.padding = "10px 0";
+  const header = document.createElement("div");
+  header.style.textAlign = "center";
+  header.style.marginBottom = "15px";
+  header.style.padding = "10px 0";
 
-header.innerHTML = `
-  <div style="
-      border-top:2px solid #16a34a;
-      margin-bottom:8px;">
-  </div>
+  header.innerHTML = `
+    <div style="border-top:2px solid #16a34a;margin-bottom:8px;"></div>
 
-  <div style="
-      font-size:18px;
-      font-weight:700;
-      color:#111;
-      letter-spacing:0.5px;">
+    <div style="font-size:18px;font-weight:700;color:#111;letter-spacing:0.5px;">
       TrustDollar Income Report
-  </div>
+    </div>
 
-  <div style="
-      font-size:13px;
-      color:#555;
-      margin-top:4px;">
+    <div style="font-size:13px;color:#555;margin-top:4px;">
       User: ${userName}
-  </div>
+    </div>
 
-  <div style="
-      font-size:11px;
-      color:#888;
-      margin-top:2px;">
+    <div style="font-size:11px;color:#888;margin-top:2px;">
       Generated on ${new Date().toLocaleDateString()}
-  </div>
+    </div>
 
-  <div style="
-      border-bottom:2px solid #16a34a;
-      margin-top:8px;">
-  </div>
-`;
+    <div style="border-bottom:2px solid #16a34a;margin-top:8px;"></div>
+  `;
 
   card.prepend(header);
 
@@ -2072,10 +2058,21 @@ header.innerHTML = `
   });
 }
 
-// click anywhere on income card
-const downloadBtn = document.getElementById("downloadBtn");
-incomeCard.addEventListener("click", showModal);
-incomeCard.addEventListener("touchstart", showModal);
+/* 🔥 DOUBLE CLICK (Desktop) */
+incomeCard.addEventListener("dblclick", showModal);
+
+/* 🔥 DOUBLE TAP (Mobile) */
+incomeCard.addEventListener("touchend", function(e){
+  const currentTime = new Date().getTime();
+  const tapLength = currentTime - lastTap;
+
+  if (tapLength < 300 && tapLength > 0) {
+    showModal();
+    e.preventDefault();
+  }
+
+  lastTap = currentTime;
+});
 
 // cancel
 cancelBtn.addEventListener("click", hideModal);
@@ -2086,6 +2083,7 @@ okBtn.addEventListener("click", ()=>{
   downloadIncomeImage();
 });
 </script>
+
 <script>
 document.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("selectstart", e => e.preventDefault());
