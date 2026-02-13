@@ -989,6 +989,26 @@
   font-weight:500;
   letter-spacing:.3px;
 }
+.download-note{
+  max-width:480px;
+  margin:0 auto 12px;
+  text-align:center;
+  font-size:14px;          /* 👈 thoda bada */
+  font-weight:600;         /* 👈 clear visible */
+  color:#16a34a;           /* green highlight */
+  letter-spacing:.4px;
+  padding:6px 0;
+}
+.income-card h3{
+  font-size:16px;
+  font-weight:600;
+  color:#444;
+  margin-bottom:14px;
+  
+  white-space:nowrap;        /* 🔥 line break nahi hone dega */
+  overflow:hidden;
+  text-overflow:ellipsis;    /* agar space kam ho to ... */
+}
 
 </style>
 
@@ -1118,7 +1138,7 @@ document.querySelector(".btn-add").addEventListener("click", () => {
 
   <!-- Income Card -->
 <!-- Income Card -->
-<div class="income-card" id="incomeCard"><h3>My Income (USDT)</h3>
+<div class="income-card" id="incomeCard"><h3>Income Overview (INR.₹/₮.USDT)</h3>
 
 <div class="income-row">
   <span>Mining Profit <span class="inr-text" id="miningIncomeINR">₹0.00</span></span>
