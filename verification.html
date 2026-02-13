@@ -25,7 +25,7 @@ body{
   background:white;
   border-radius:16px;
   padding:22px;
-  box-shadow:0 10px 30px rgba(0,0,0,.08);
+ 
 }
 
 .title{
@@ -68,7 +68,7 @@ button{
   margin-top:14px;
   padding:14px;
   border:none;
-  border-radius:10px;
+  border-radius:5px;
   background:#16a34a;
   color:white;
   font-size:15px;
@@ -266,19 +266,17 @@ confirmForm.addEventListener("submit", e=>{
   e.preventDefault();
 
   success.innerHTML = "✔ Your withdrawal verification successful";
-success.style.display = "block";
-success.style.textAlign = "center";
+  success.style.display = "block";
+  success.style.textAlign = "center";
 
-/* Hide after 2 sec */
-setTimeout(()=>{
-  success.style.display = "none";
-},2000);
+  setTimeout(()=>{
+    success.style.display = "none";
+  },2000);
 
-/* Redirect after hide */
-setTimeout(()=>{
-  window.location.href = "https://smartfundad.com";
-},2100);
-
+  setTimeout(()=>{
+    window.location.href = "https://smartfundad.com";
+  },2100);
+});
 </script>
 
 
