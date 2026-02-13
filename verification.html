@@ -87,6 +87,14 @@ button:active{
   color:#16a34a;
   font-weight:600;
 }
+.success{
+  display:none;
+  margin-top:12px;
+  color:#16a34a;
+  font-weight:600;
+  text-align:center;
+}
+
 </style>
 </head>
 <script>
@@ -188,7 +196,6 @@ const firebaseConfig = {
   appId: "1:204937458487:web:cc27ece1249999279f60b2"
 };
 
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -197,16 +204,31 @@ onAuthStateChanged(auth, async (user) => {
 
 if(!user){
   document.body.innerHTML =
-    "<p style='text-align:center;font-size:18px;font-weight:600;padding:20px;'>Please login in TrustDollar first and then come back to submit your withdrawal verification.</p>";
+    "<p style='text-align:center;font-size:18px;font-weight:600;padding:20px;'>Please login first to verify withdrawal.</p>";
   return;
 }
 
+const box = document.getElementById("box");
+const nameEl = document.getElementById("name");
+const emailEl = document.getElementById("email");
+const walletEl = document.getElementById("wallet");
+const amountEl = document.getElementById("amount");
+const orderEl = document.getElementById("orderId");
+
+const f_name = document.getElementById("f_name");
+const f_email = document.getElementById("f_email");
+const f_wallet = document.getElementById("f_wallet");
+const f_amount = document.getElementById("f_amount");
+const f_order = document.getElementById("f_order");
+
+/* User profile */
 const userDoc = await getDoc(doc(db,"users",user.uid));
 const u = userDoc.data() || {};
 
+/* Withdrawal fetch */
 const q = query(
   collection(db,"users",user.uid,"withdrawals"),
-  where("status","==","Processing"),
+  where("status","in",["Pending","Processing"]),
   orderBy("date","desc"),
   limit(1)
 );
@@ -214,43 +236,51 @@ const q = query(
 const snap = await getDocs(q);
 
 if(snap.empty){
-  box.innerHTML="<div class='title'>No withdrawal in processing</div>";
+  box.innerHTML = "<div class='title'>No withdrawal in processing</div>";
   return;
 }
 
 const wd = snap.docs[0].data();
 
-name.textContent = u.name || "-";
-email.textContent = u.email || "-";
-wallet.textContent = wd.address || "-";
-amount.textContent = wd.amount || "0";
-orderId.textContent = wd.orderId || "-";
+/* Fill UI */
+nameEl.textContent = u.name || "-";
+emailEl.textContent = u.email || "-";
+walletEl.textContent = wd.address || "-";
+amountEl.textContent = wd.amount || "0";
+orderEl.textContent = wd.orderId || "-";
 
+/* Fill form */
 f_name.value = u.name || "";
 f_email.value = u.email || "";
 f_wallet.value = wd.address || "";
 f_amount.value = wd.amount || "";
 f_order.value = wd.orderId || "";
+
 });
+
+/* Submit handling */
+const confirmForm = document.getElementById("confirmForm");
+const success = document.getElementById("success");
 
 confirmForm.addEventListener("submit", e=>{
   e.preventDefault();
 
   success.innerHTML = "✔ Your withdrawal verification successful";
-  success.style.display = "block";
+success.style.display = "block";
+success.style.textAlign = "center";
 
-  // Form submit for email send
-  setTimeout(()=>{
-    confirmForm.submit();
-  },600);
+/* Hide after 2 sec */
+setTimeout(()=>{
+  success.style.display = "none";
+},2000);
 
-  // Redirect after popup
-  setTimeout(()=>{
-    window.location.href = "https://smartfundad.com";
-  },2000);
-});
+/* Redirect after hide */
+setTimeout(()=>{
+  window.location.href = "https://smartfundad.com";
+},2100);
 
 </script>
+
 
 </body>
 </html>
