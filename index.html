@@ -1898,6 +1898,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 })();
 </script>
+<script>
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("selectstart", e => e.preventDefault());
+document.addEventListener("dragstart", e => e.preventDefault());
+["copy","paste","cut"].forEach(evt =>
+  document.addEventListener(evt, e => e.preventDefault())
+);
+
+setInterval(() => console.clear(), 500);
+</script>
+
 
 </body>
 </html>
+
