@@ -475,6 +475,14 @@
     </div>
   </div>
 
+<!-- ✅ EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<script>
+  (function(){
+    emailjs.init("XykfCeSa7ZDFdloTk"); 
+  })();
+</script>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
@@ -758,6 +766,18 @@ await new Promise(res => setTimeout(res, 1000)); // 🔥 token sync delay fix
 
 // ✅ Bas ek hi baar Firestore me save karo
 await setDoc(doc(db, "users", user.uid), userDocData);
+
+// ✅ SEND WELCOME EMAIL
+try {
+  await emailjs.send("service_e5dn4rn", "template_klplqu6", {
+    name: name,
+    email: normEmail
+  });
+
+  console.log("✅ Welcome email sent successfully!");
+} catch (error) {
+  console.error("❌ Email sending failed:", error);
+}
 
 
 // ✅ 3-way login lookup entries banao (email / username / mobile)
