@@ -1201,6 +1201,194 @@ Please login to continue managing your earnings safely and transparently.
       <div class="block">Block 4</div>
     </div>
   </div>
+
+ 
+
+<!-- ===== WEB3 MINING NETWORK ===== -->
+
+<style>
+.web3-mining-box{
+  background:#fff;
+  padding:30px 15px;
+  border-radius:8px;
+  text-align:center;
+ 
+  margin:20px;
+}
+
+.web3-mining-box h3{
+  color:#00c853;
+  margin-bottom:20px;
+  font-size:16px;
+  font-weight:700;
+}
+
+/* NETWORK WRAPPER */
+.web3-network{
+  position:relative;
+  width:240px;
+  height:240px;
+  margin:0 auto;
+}
+
+/* ROTATING RING */
+.web3-ring{
+  position:absolute;
+  width:200px;
+  height:200px;
+  border:2px dashed rgba(0,200,83,0.4);
+  border-radius:50%;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  animation:rotateRing 12s linear infinite;
+}
+
+/* CENTER CORE */
+.web3-core{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:90px;
+  height:90px;
+  transform:translate(-50%,-50%);
+  background:linear-gradient(135deg,#00c853,#00e676);
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-weight:700;
+  font-size:13px;
+  box-shadow:0 0 20px rgba(0,200,83,0.4);
+  animation:pulseCore 2.5s infinite;
+}
+
+/* USERS */
+.web3-user{
+  position:absolute;
+  width:50px;
+  height:50px;
+  background:#fff;
+  border:2px solid #00c853;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.web3-user img{
+  width:26px;
+}
+
+/* POSITIONS */
+.wu1{ top:0; left:50%; transform:translateX(-50%); }
+.wu2{ bottom:0; left:50%; transform:translateX(-50%); }
+.wu3{ left:0; top:50%; transform:translateY(-50%); }
+.wu4{ right:0; top:50%; transform:translateY(-50%); }
+
+
+.wl1{ top:50%; left:50%; transform:translate(-50%,-85px) rotate(90deg); }
+.wl2{ bottom:50%; left:50%; transform:translate(-50%,85px) rotate(90deg); }
+.wl3{ left:50%; top:50%; transform:translate(-85px,-50%); }
+.wl4{ right:50%; top:50%; transform:translate(85px,-50%); }
+
+/* ANIMATIONS */
+@keyframes rotateRing{
+  from{ transform:translate(-50%,-50%) rotate(0deg); }
+  to{ transform:translate(-50%,-50%) rotate(360deg); }
+}
+
+@keyframes pulseCore{
+  0%{ transform:translate(-50%,-50%) scale(1); }
+  50%{ transform:translate(-50%,-50%) scale(1.08); }
+  100%{ transform:translate(-50%,-50%) scale(1); }
+}
+
+/* ===== FIXED ANIMATED DATA LINES ===== */
+
+.web3-line{
+  position:absolute;
+  width:80px;      /* IMPORTANT */
+  height:2px;      /* IMPORTANT */
+  overflow:hidden;
+}
+
+/* animated dots */
+.web3-line::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  width:200%;
+  height:100%;
+  background:repeating-linear-gradient(
+    90deg,
+    #00c853 0px,
+    #00c853 6px,
+    transparent 6px,
+    transparent 14px
+  );
+  animation:dataFlowMove 3.4s linear infinite;
+  opacity:.9;
+}
+
+/* reverse direction for variety */
+.wl2::before,
+.wl4::before{
+  animation-direction:reverse;
+}
+
+@keyframes dataFlowMove{
+  from{ transform:translateX(0); }
+  to{ transform:translateX(-50%); }
+}
+
+</style>
+
+<div class="web3-mining-box">
+
+  <h3>Each Mining Machine Connects 4 Active Users</h3>
+
+  <div class="web3-network">
+
+    <div class="web3-ring"></div>
+
+    <div class="web3-core">
+      MINING<br>CORE
+    </div>
+
+    <div class="web3-user wu1">
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png">
+    </div>
+
+    <div class="web3-user wu2">
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png">
+    </div>
+
+    <div class="web3-user wu3">
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140037.png">
+    </div>
+
+    <div class="web3-user wu4">
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140061.png">
+    </div>
+
+    <div class="web3-line wl1"></div>
+    <div class="web3-line wl2"></div>
+    <div class="web3-line wl3"></div>
+    <div class="web3-line wl4"></div>
+
+  </div>
+
+  <p style="font-size:13px;color:#555;margin-top:20px;">
+    Each mining machine operates through a structured group of four users. These four participants are connected to a single mining unit, and rewards are generated collectively through the system’s automated blockchain process.
+  </p>
+
+</div>
+
+
 <section style="
   max-width:1100px;
   margin:40px auto;
@@ -1574,16 +1762,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-</script>
-<script>
-document.addEventListener("contextmenu", e => e.preventDefault());
-document.addEventListener("selectstart", e => e.preventDefault());
-document.addEventListener("dragstart", e => e.preventDefault());
-["copy","paste","cut"].forEach(evt =>
-  document.addEventListener(evt, e => e.preventDefault())
-);
-
-setInterval(() => console.clear(), 1500);
 </script>
 
 <script>
