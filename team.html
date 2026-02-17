@@ -695,23 +695,30 @@ async function getCommissionBreakdown(){
 
   return { rows, levelTotal };
 }
+
 async function buildCommissionMap(myUid){
   const snap = await getDocs(
     collection(db, "users", myUid, "commissions")
   );
 
-  const map = {}; // fromUid → total amount
+  console.log("Commission docs count:", snap.size); // 👈 add this
+
+  const map = {};
 
   snap.forEach(d => {
     const c = d.data();
 
-    const fromUid = c.fromUid; // 👈 ye field Firestore me honi chahiye
+    console.log("Commission Doc:", c); // 👈 add this
+
+    const fromUid = c.fromUser;
     const amount  = Number(c.amount || 0);
 
     if(!fromUid || !amount) return;
 
     map[fromUid] = (map[fromUid] || 0) + amount;
   });
+
+  console.log("Final Commission Map:", map); // 👈 add this
 
   return map;
 }
