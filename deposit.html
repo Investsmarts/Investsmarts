@@ -204,73 +204,96 @@
 /* Popup alerts */
 .thankyou-popup,.error-popup {position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);padding:12px 20px;border-radius:10px;font-weight:bold;box-shadow:0 6px 20px rgba(0,0,0,0.3);z-index:3000;display:none;animation:fadeInOut 1.5s ease forwards;}
 
-/* ✅ Soft Professional Loading Popup */
-/* ✅ Overlay (important for perfect centering on all devices) */
-.verify-overlay {
-  position: fixed;
-  inset: 0;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 3000;
-  padding: 20px;
-}
 
-/* ✅ Soft Professional Loading Popup */
+/* 🔄 3D Verifying Payment Popup */
 .verify-popup {
-  background: #ffffff;
-  color: #333;
-  padding: 22px 24px;
-  border-radius: 14px;
-  width: 100%;
-  max-width: 340px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: linear-gradient(135deg, #1b5e20, #2ecc71);
+  color: #fff;
+  padding: 30px 45px;
+  border-radius: 18px;
+  border: 3px solid #0f3d14;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4),
+              inset 0 3px 8px rgba(255,255,255,0.15),
+              inset 0 -4px 10px rgba(0,0,0,0.25);
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  border: 1px solid #eaeaea;
-  animation: popupFade 0.2s ease;
+  display: none;
+  z-index: 3000;
+  perspective: 1000px;
+  animation: popupIn 0.4s ease forwards;
 }
 
-/* Text */
+/* Title Text */
 .verify-popup p {
-  margin-top: 12px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #555;
-  line-height: 1.4;
+  margin-top: 14px;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
-/* Spinner */
+/* ✅ 3D Rotating Progress Ring */
 .verify-ring {
-  width: 34px;
-  height: 34px;
-  border: 3px solid #e5e5e5;
-  border-top: 3px solid #28a745;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
-  margin: 0 auto;
-  animation: spin 0.8s linear infinite;
-}
-
-/* Smooth fade animation */
-@keyframes popupFade {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  border: 6px solid rgba(255,255,255,0.2);
+  border-top-color: #fff;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px;
+  box-shadow: 0 0 15px rgba(255,255,255,0.3),
+              inset 0 0 10px rgba(255,255,255,0.1);
 }
 
 @keyframes spin {
+  0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-/* Extra small devices fix */
-@media (max-width: 360px) {
-  .verify-popup {
-    padding: 18px 16px;
-    border-radius: 12px;
-  }
-
-  .verify-popup p {
-    font-size: 14px;
-  }
+@keyframes popupIn {
+  0% {opacity: 0; transform: translate(-50%, -50%) scale(0.6) rotateX(40deg);}
+  60% {opacity: 1; transform: translate(-50%, -50%) scale(1.05) rotateX(0);}
+  100% {transform: translate(-50%, -50%) scale(1) rotateX(0);}
 }
+
+/* 💫 Outer glow effect */
+.verify-popup::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 20px;
+  border: 2px solid rgba(255,255,255,0.25);
+  box-shadow: 0 0 12px rgba(255,255,255,0.25),
+              0 0 30px rgba(40,167,69,0.6);
+  animation: borderGlow 2s infinite alternate ease-in-out;
+}
+
+@keyframes borderGlow {
+  0% { box-shadow: 0 0 15px rgba(40,167,69,0.4), 0 0 25px rgba(32,201,151,0.3); }
+  100% { box-shadow: 0 0 25px rgba(40,167,69,0.8), 0 0 50px rgba(32,201,151,0.6); }
+}
+
+/* ✅ Verified Message Transition */
+.verify-popup.done .verify-ring {
+  border-color: #fff;
+  border-top-color: #fff;
+  animation: none;
+  position: relative;
+}
+.verify-popup.done .verify-ring::after {
+  content: "✔";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -52%);
+  font-size: 32px;
+  font-weight: bold;
+  color: #fff;
+}
+
+
 
 /* Refresh Button */
 
@@ -701,11 +724,6 @@
   box-shadow: 0 0 0 4px rgba(211,47,47,0.18);
 }
 
-.error-popup {
-  background: #ff3b30;   /* 🔥 Red background */
-  color: #fff;           /* White text */
-}
-
 
 </style>
 </head>
@@ -804,22 +822,15 @@ function scanFeature() {
       <button class="copy-btn" onclick="copyAddress()">Copy Address</button>
       <div class="action-buttons">
         <button class="close-btn" onclick="cancelDeposit()">Cancel</button>
-        <button class="paid-btn" onclick="createInvoice()">Generate Payment</button>
-
+        <button class="paid-btn" onclick="markPaid()">I Have Paid</button>
       </div>
     </div>
    </div>
 
-<div class="verify-overlay" id="verifyOverlay">
-  <div class="verify-popup">
-    <div class="verify-ring"></div>
-    <p id="verifyText">
-      Creating your payment invoice...<br>
-      Please wait
-    </p>
-  </div>
+<div class="verify-popup" id="verifyPopup">
+  <div class="verify-ring"></div>
+  <p id="verifyText">Verifying your payment<br>Please wait patiently...</p>
 </div>
-
 
   <div class="error-popup" id="errorPopup">Enter valid amount</div>
 
@@ -897,210 +908,520 @@ document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
 
 
 
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, getDoc, serverTimestamp, query, orderBy, doc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
-  authDomain: "btcinvest-c0e25.firebaseapp.com",
-  projectId: "btcinvest-c0e25",
-  storageBucket: "btcinvest-c0e25.appspot.com",
-  messagingSenderId: "204937458487",
-  appId: "1:204937458487:web:cc27ece1249999279f60b2",
-  measurementId: "G-HG0Q8ZHT6G"
-};
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <!-- ✅ Firebase + Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, getDoc, serverTimestamp, query, orderBy, doc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+    const firebaseConfig = {
+      apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+      authDomain: "btcinvest-c0e25.firebaseapp.com",
+      projectId: "btcinvest-c0e25",
+      storageBucket: "btcinvest-c0e25.appspot.com",
+      messagingSenderId: "204937458487",
+      appId: "1:204937458487:web:cc27ece1249999279f60b2",
+      measurementId: "G-HG0Q8ZHT6G"
+    };
 
-let currentDepositAddress = "";
-let currentUserId = null;
-let currentDepositId = null;
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-const popupOverlay = document.getElementById("popupOverlay");
-const depositAddressEl = document.getElementById("depositAddress");
-const qrCodeEl = document.getElementById("qrcode");
-const errorPopup = document.getElementById("errorPopup");
+    const popupOverlay = document.getElementById("popupOverlay");
+    const depositAddressEl = document.getElementById("depositAddress");
+    const qrCodeEl = document.getElementById("qrcode");
+    const historyList = document.getElementById("historyList");
+    const thankyouPopup = document.getElementById("thankyouPopup");
+    const errorPopup = document.getElementById("errorPopup");
+    const instructionEl = document.getElementById("amountInstruction");
 
-function showError(msg){
-  errorPopup.textContent = msg;
-  errorPopup.style.display = "block";
-  setTimeout(()=> errorPopup.style.display="none",1500);
-}
-
-function showVerificationPopup(){
-  const el = document.getElementById("verifyOverlay");
-  if(el) el.style.display = "flex";
-}
-
-function hideVerificationPopup(){
-  const el = document.getElementById("verifyOverlay");
-  if(el) el.style.display = "none";
-}
-
-
-/* ---------------- POPUP ---------------- */
-
-window.openPopup = function(){
-
-  localStorage.setItem("deposit_popup_open","yes");
-  popupOverlay.style.display="flex";
-
-  const amountInput = document.getElementById("depositAmount");
-  amountInput.value = localStorage.getItem("deposit_amount") || "";
-  amountInput.style.border="1px solid #ccc";
-
-  amountInput.oninput = ()=>{
-    localStorage.setItem("deposit_amount", amountInput.value);
-    const amount=parseFloat(amountInput.value);
-    if(amount && amount>=200){
-      amountInput.style.border="2px solid green";
-    } else {
-      amountInput.style.border="1px solid #ccc";
+    function generateOrderId() {
+      const randomNum = Math.floor(1000000000 + Math.random() * 9000000000);
+      return "DPBHGR" + randomNum + "G";
     }
-  };
 
-  qrCodeEl.innerHTML="";
-  depositAddressEl.textContent="Click Generate Payment to get address";
+    const depositAddresses = [
+      "0x6cf5f8F9564205C6AB3dE1694F54374e70dD135A",
+      "0x9ad288c9835Cfe30141677444A0A637a434Cd9bC",
+      "0x9d6Dc16a1E5aC1CC3b4e7F500f4BdB51D8fBc301",
+      "0x1E807c2AeC3165C37A8b47034839654033bD8cf2"
+      ];
 
-  currentDepositId=null;
+    let currentDepositAddress = "";
+    let currentUserId = null;
+    let currentDepositId = null;
+
+    function showError(msg) {
+      errorPopup.textContent = msg;
+      errorPopup.style.display = "block";
+      setTimeout(() => { errorPopup.style.display = "none"; }, 1500);
+    }
+
+    // ✅ QR Code ko update karne ka function
+    function updateQRCode() {
+      const amountInput = document.getElementById("depositAmount");
+      const amount = parseFloat(amountInput.value) || 0;
+      let qrText = `${currentDepositAddress}`;
+
+
+      if (amount > 0) {
+        if (amount < 200) {
+      // ❌ Agar 200 se kam hai → red border + error
+          amountInput.style.border = "2px solid red";
+      qrCodeEl.innerHTML = ""; // QR mat banao
+      return;
+    } else {
+      // ✅ Agar 200 ya zyada hai → green border + QR with amount
+      amountInput.style.border = "2px solid green";
+      qrText += `?value=${amount}`;
+    }
+  } else {
+    // Default border grey
+    amountInput.style.border = "1px solid #ccc";
+  }
+
+  qrCodeEl.innerHTML = ""; // purana QR clear karo
+  new QRCode(qrCodeEl, {text: qrText, width: 160,height: 160});
+
+}
+
+
+window.openPopup = function() {
+  localStorage.setItem("deposit_popup_open", "yes");
+  popupOverlay.style.display = "flex";
+  const amountInput = document.getElementById("depositAmount");
+  amountInput.value = "";
+  amountInput.disabled = false;
+  amountInput.style.border = "1px solid #ccc"; // reset border
+  instructionEl.style.display = "none";
+
+  const savedAmount = localStorage.getItem("deposit_amount");
+if (savedAmount) {
+  amountInput.value = savedAmount;
+  updateQRCode(); // QR bhi restore
+}
+
+// 👇 YE ADD KARO
+amountInput.oninput = () => {
+  localStorage.setItem("deposit_amount", amountInput.value);
+  updateQRCode();
 };
 
-window.cancelDeposit=function(){
-  popupOverlay.style.display="none";
-  qrCodeEl.innerHTML="";
-  currentDepositId=null;
+  // ✅ Random deposit address set karo
+  currentDepositAddress = depositAddresses[Math.floor(Math.random() * depositAddresses.length)];
+  depositAddressEl.textContent = currentDepositAddress;
+
+  // ✅ Default QR (sirf address)
+  updateQRCode();
+
+
+  // ❌ Yahan ab koi entry Firestore me create nahi hogi
+  currentDepositId = null; // reset kar do, jab tak user pay na kare
+};
+
+// ❌ Cancel: kuch bhi Firebase me save mat karo
+
+window.cancelDeposit = function() {
+  popupOverlay.style.display = "none";
+  qrCodeEl.innerHTML = "";
+  currentDepositId = null; // clear current deposit id
+  
   localStorage.removeItem("deposit_popup_open");
   localStorage.removeItem("deposit_amount");
+
 };
 
-/* ---------------- CREATE INVOICE ---------------- */
+// ✅ Copy address as usual
+window.copyAddress = function () {
+  const amountInput = document.getElementById("depositAmount");
+  const amount = parseFloat(amountInput.value);
 
-async function createInvoice(){
+  // ❌ Amount missing
+  if (!amount || amount <= 0) {
+    const popup = document.getElementById("amountAlert");
+    const sound = document.getElementById("alertSound");
 
-  const amountInput=document.getElementById("depositAmount");
-  const amount=parseFloat(amountInput.value);
+    // 🔔 play google beep
+    sound.currentTime = 0;
+    sound.play().catch(()=>{});
 
-  if(!amount || amount<200){
-    amountInput.style.border="2px solid red";
-    showError("Minimum deposit is $200");
+    // 🔁 shake input
+    amountInput.classList.remove("attention");
+    void amountInput.offsetWidth; // reflow
+    amountInput.classList.add("attention");
+
+    // 🚨 show popup
+    popup.style.display = "block";
+
+    setTimeout(() => {
+      popup.style.display = "none";
+      amountInput.classList.remove("attention");
+    }, 1800);
+
+    // 👀 focus input
+    amountInput.focus();
+
+    return; // ❌ STOP COPY
+  }
+
+  // ✅ Amount present → copy
+  navigator.clipboard.writeText(currentDepositAddress);
+
+  const box = document.getElementById("copySuccess");
+  box.style.display = "block";
+
+  setTimeout(() => {
+    box.style.display = "none";
+  }, 1800);
+};
+
+
+// ✅ Entry tabhi create karo jab user "I Have Paid" dabaye
+window.markPaid = async function () {
+  const amountInput = document.getElementById("depositAmount");
+  const amount = parseFloat(amountInput.value) || 0;
+  
+  localStorage.removeItem("deposit_popup_open");
+  localStorage.removeItem("deposit_amount");
+
+ 
+
+  if (amount <= 0) {
+    showError("Enter valid amount");
     return;
   }
+  if (amount < 200) {
+    showError("Minimum is $200");
+    amountInput.style.border = "2px solid red";
+    return;
+  }
+    // ✅ Instead of thankyouPopup, call verifying popup
+  showVerificationPopup();
 
-  try{
-    showVerificationPopup();
+  amountInput.disabled = true;
+  instructionEl.style.display = "block";
+  instructionEl.textContent = `Send the exact amount you entered: $${amount}`;
 
-   const res = await fetch("https://us-central1-btcinvest-c0e25.cloudfunctions.net/createInvoice", {
+  popupOverlay.style.display = "none";
+  qrCodeEl.innerHTML = "";
 
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({
-        userId:currentUserId,
-        amount:amount
-      })
+  if (currentUserId) {
+    const orderId = generateOrderId();
+
+    const ref = await addDoc(collection(db, "users", currentUserId, "deposits"), {
+      amount: amount,
+      address: currentDepositAddress,
+      date: serverTimestamp(),
+      status: "I Have Paid",
+      orderId: orderId
     });
 
-    const data=await res.json();
-
-    if(!data.success){
-      hideVerificationPopup();
-showError("All deposits are completed. Please wait 1 hours.");
-return;
-}
-    currentDepositAddress=data.address;
-    currentDepositId=data.depositId; // backend must send this
-
-    depositAddressEl.textContent=data.address;
-
-    qrCodeEl.innerHTML="";
-    new QRCode(qrCodeEl,{
-      text:data.qr,
-      width:160,
-      height:160
-    });
-
-    hideVerificationPopup();
-
-  }catch(err){
-    hideVerificationPopup();
-    console.error(err);
-    showError("All investments are currently full. Please wait. You will be notified immediately as soon as investments reopen.");
-
+    currentDepositId = ref.id;
+    watchDepositStatus(currentUserId, currentDepositId);
+    loadDepositHistory(currentUserId);
   }
+} // ← ye closing bracket zaroor lagani hai yahaan
+
+// 👇 iske baad likh showVerificationPopup() function
+function showVerificationPopup() {
+  const popup = document.getElementById("verifyPopup");
+  const text = document.getElementById("verifyText");
+
+  popup.style.display = "block";
+  popup.classList.remove("done");
+  text.innerHTML = "Verifying your payment<br>Please wait patiently...";
+
+  setTimeout(() => {
+    popup.classList.add("done");
+    text.textContent = "Payment crediting soon...";
+  }, 4000);
+
+  setTimeout(() => {
+    popup.style.display = "none";
+  }, 8000);
 }
 
-window.createInvoice=createInvoice;
+    // ✅ Referral Commission + Wallet Reward Logic (Fixed Double Reward Issue)
+   const rewardLock = {}; // global lock to stop duplicate triggers
 
-/* ---------------- AUTH ---------------- */
+   async function giveReferralCommission(userId, depositAmount, depositId) {
+  try {
+    // 🧠 Lock check - agar ye depositId already process ho raha hai, skip karo
+    if (rewardLock[depositId]) {
+      console.log(`⚠️ Skipping duplicate trigger for ${depositId}`);
+      return;
+    }
+    rewardLock[depositId] = true; // lock set
 
-onAuthStateChanged(auth,(user)=>{
-  if(!user){
-    window.location.href="login.html";
-  }else{
-    currentUserId=user.uid;
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) return;
 
-    // 🔥 Start everything after login
-    loadDepositHistory(user.uid);
-    watchTotalDeposit(user.uid);
-    watchAllDeposits(user.uid);
-  }
+    const userData = userSnap.data();
+
+    // ✅ Uplines fetch
+    const uplines = [
+      userData.upline1 || null,
+      userData.upline2 || null,
+      userData.upline3 || null,
+    ].filter(Boolean);
+
+    console.log("🧩 Uplines found for", userId, "→", uplines);
+
+    // ✅ Commission percentage (3%, 2%, 1%)
+    const commissionRates = [0.03, 0.02, 0.01];
+
+    for (let level = 0; level < uplines.length; level++) {
+      const refUID = uplines[level];
+      if (!refUID) continue;
+
+      const refUserRef = doc(db, "users", refUID);
+      const refUserSnap = await getDoc(refUserRef);
+      if (!refUserSnap.exists()) continue;
+
+      const refData = refUserSnap.data();
+      const refLifetime = parseFloat(refData.lifetimeDeposit || 0);
+
+      // 🧠 Qualification check: upline must have lifetime >= user deposit
+      if (refLifetime < depositAmount) {
+    console.log(
+    `⚠️ Level ${level + 1}: Upline ${refUID} not qualified (lifetimeDeposit=${refLifetime}, required=${depositAmount})`
+   );
+
+   // 🧩 Get depositor's name for better message
+const depositorRef = doc(db, "users", userId);
+const depositorSnap = await getDoc(depositorRef);
+const depositorName = depositorSnap.exists() && depositorSnap.data().name
+  ? depositorSnap.data().name
+  : userId; // fallback to UID if no name
+
+// 📨 Create notification with actual name
+await addDoc(collection(db, "users", refUID, "rewardNotifications"), {
+  fromUser: userId,
+  fromName: depositorName, // ✅ Added
+  depositAmount: depositAmount,
+  requiredDeposit: depositAmount,
+  currentDeposit: refLifetime,
+  message: `You missed a referral reward from ${depositorName} because your lifetime deposit ($${refLifetime}) is lower than their deposit ($${depositAmount}).`,
+  level: level + 1,
+  date: serverTimestamp(),
+  status: "pending"
 });
 
+   continue; // skip reward
+  }
 
-function loadDepositHistory(userId) {
-  const historyList = document.getElementById("historyList");
+
+      const commission = depositAmount * commissionRates[level];
+      const commissionFixed = parseFloat(commission.toFixed(2));
+
+      // ✅ Check agar ye depositId se reward already diya gaya hai
+      const commSnap = await getDocs(collection(db, "users", refUID, "commissions"));
+      const alreadyGiven = commSnap.docs.some(
+        (d) => d.data().fromUser === userId && d.data().depositId === depositId
+      );
+      if (alreadyGiven) {
+        console.log(`⚠️ Level ${level + 1}: Commission already given for ${depositId}`);
+        continue;
+      }
+
+      // ✅ Add commission record (proof)
+      await addDoc(collection(db, "users", refUID, "commissions"), {
+        fromUser: userId,
+        depositId: depositId,
+        level: level + 1,
+        amount: commissionFixed,
+        date: serverTimestamp(),
+        note: `Level ${level + 1} reward from ${userId}'s first deposit (qualified)`,
+      });
+
+      // ✅ Wallet update
+      const newWallet = parseFloat(refData.walletBalance || 0) + commissionFixed;
+      const newLifetime = parseFloat(refData.lifetimeReferralIncome || 0) + commissionFixed;
+
+      await updateDoc(refUserRef, {
+        walletBalance: newWallet,
+        lifetimeReferralIncome: newLifetime,
+      });
+
+      console.log(`✅ Level ${level + 1}: $${commissionFixed} given to ${refUID}`);
+    }
+
+    console.log(`🎯 Referral reward successfully processed for ${depositId}`);
+
+  } catch (err) {
+    console.error("❌ Error in giveReferralCommission:", err);
+  } finally {
+    delete rewardLock[depositId]; // unlock after done
+  }
+ }
+
+
+
+
+   // ✅ Watch deposit status and give commission only on first approved deposit
+function watchDepositStatus(userId, depositId) {
+  const depositRef = doc(db, "users", userId, "deposits", depositId);
+
+  onSnapshot(depositRef, async (snap) => {
+    const data = snap.data();
+    if (!data) return;
+
+    const status = (data.status || "").toLowerCase();
+
+    // 🔒 already processed → stop immediately
+    if (data.rewardGiven) return;
+
+    // ✅ Trigger only when deposit is approved/completed
+    if (["completed", "approved", "success", "done"].includes(status)) {
+
+      try {
+        const amount = parseFloat(data.amount || 0);
+        if (amount < 200) return;
+
+        // 🧠 Fetch all deposits of this user
+        const depositsRef = collection(db, "users", userId, "deposits");
+        const allDeposits = await getDocs(depositsRef);
+
+        // 🔍 Check if user has any previous completed deposits
+        const completedBefore = allDeposits.docs.some(
+          (d) =>
+            d.id !== depositId &&
+            ["completed", "approved", "done", "success"].includes(
+              (d.data().status || "").toLowerCase()
+            )
+        );
+
+        if (completedBefore) {
+          console.log("⚠️ Not first deposit. No referral commission.");
+          return;
+        }
+
+        // 🔐 VERY IMPORTANT → lock first
+        await updateDoc(depositRef, { rewardGiven: true });
+
+        // ✅ Now give commission
+        await giveReferralCommission(userId, amount, depositId);
+
+        console.log("🎉 Referral commission given successfully");
+      } catch (err) {
+        console.error("❌ Error in watchDepositStatus:", err);
+      }
+    }
+  });
+}
+
+
+// ✅ Prevent duplicate listeners in same session
+const activeWatchers = {};
+
+async function watchAllDeposits(userId) {
+  const depositsRef = collection(db, "users", userId, "deposits");
+
+  onSnapshot(depositsRef, (snapshot) => {
+    snapshot.docs.forEach(docSnap => {
+      const depositId = docSnap.id;
+      if (!activeWatchers[depositId])  {
+
+        activeWatchers[depositId] = true;
+        watchDepositStatus(userId, depositId);
+      }
+    });
+  });
+}
+
+
+  window.manualRefresh = function() {
+  if (currentUserId) loadDepositHistory(currentUserId);
+  };
+
+  // ✅ Real-time Deposit History Loader
+  function loadDepositHistory(userId) {
   const depositsRef = collection(db, "users", userId, "deposits");
   const q = query(depositsRef, orderBy("date", "desc"));
 
-  onSnapshot(q, (snapshot) => {
-    if (snapshot.empty) {
-      historyList.innerHTML = "<p style='text-align:center;color:#666;'>No deposits yet.</p>";
+   historyList.innerHTML = "<p style='text-align:center; color:#666;'>Loading...</p>";
+
+   // Real-time listener for history updates
+    onSnapshot(q, (querySnapshot) => {
+    if (querySnapshot.empty) {
+      historyList.innerHTML = "<p style='text-align:center; color:#666;'>No deposits yet.</p>";
       return;
     }
 
-    historyList.innerHTML = "";
+    historyList.innerHTML = ""; // Clear old list
 
-    snapshot.forEach((docSnap) => {
+    querySnapshot.forEach((docSnap) => {
       const data = docSnap.data();
-      const dateStr = data.date
-        ? new Date(data.date.seconds * 1000).toLocaleString()
-        : "-";
-
-      const status = (data.status || "pending").toLowerCase();
+      const dateStr = data.date ? new Date(data.date.seconds * 1000).toLocaleString() : "-";
+      const statusClass = (data.status || "Pending").toLowerCase();
 
       historyList.innerHTML += `
         <div class="history-card">
           <div class="history-card-header">
             <span class="badge">Deposit</span>
-            <span class="status ${status}">${status}</span>
+            <span class="status ${statusClass}">${data.status || "Pending"}</span>
           </div>
-          <div class="history-card-row">
-            <span class="label">Amount</span>
-            <span class="value">$${data.amount || 0}</span>
-          </div>
-          <div class="history-card-row">
-            <span class="label">Type</span>
-            <span>BEP20</span>
-          </div>
-          <div class="history-card-row">
-            <span class="label">Time</span>
-            <small>${dateStr}</small>
-          </div>
+          <div class="history-card-row"><span class="label">Balance</span><span class="value">$${data.amount || 0}</span></div>
+          <div class="history-card-row"><span class="label">Type</span><span>BEP20</span></div>
+          <div class="history-card-row"><span class="label">Time</span><small>${dateStr}</small></div>
           <div class="history-card-row">
             <span class="label">ID</span>
-            <small>${data.invoiceId || docSnap.id}</small>
+            <span><small id="order-${docSnap.id}">${data.orderId || docSnap.id}</small>
+            <button onclick="copyOrderId('${data.orderId || docSnap.id}')">Copy</button></span>
           </div>
-        </div>
-      `;
+        </div>`;
     });
+  }, (error) => {
+    console.error("❌ Error loading history:", error);
+    historyList.innerHTML = "<p style='text-align:center; color:red;'>Error loading history</p>";
   });
-}
+ }
+
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "login.html";
+  } else {
+    currentUserId = user.uid;
+    loadDepositHistory(user.uid);
+    watchTotalDeposit(user.uid);
+    watchAllDeposits(user.uid);
+
+    // ✅ RESTORE POPUP AFTER AUTH
+    const popupOpen = localStorage.getItem("deposit_popup_open");
+    const savedAmount = localStorage.getItem("deposit_amount");
+
+    if (popupOpen === "yes") {
+      openPopup();
+
+      if (savedAmount) {
+        const amountInput = document.getElementById("depositAmount");
+        amountInput.value = savedAmount;
+        updateQRCode();
+      }
+    }
+  }
+});
+
+
+window.copyOrderId = function(orderId) {
+  navigator.clipboard.writeText(orderId);
+  showError("Order ID copied!");
+};
+      // ✅ Navbar Highlight Logic
+document.querySelectorAll(".wave-nav a").forEach(link => {
+  if (link.href === window.location.href) {
+    link.classList.add("active");
+  } else {
+    link.classList.remove("active");
+  }
+});
+
+// ✅ Real-time Total + Lifetime Deposit + Level Updater
 function watchTotalDeposit(userId) {
   const depositsRef = collection(db, "users", userId, "deposits");
   const userRef = doc(db, "users", userId);
@@ -1112,64 +1433,49 @@ function watchTotalDeposit(userId) {
       const data = docSnap.data();
       const status = (data.status || "").toLowerCase();
 
-      if (["completed", "approved", "success", "done"].includes(status)) {
-        total += parseFloat(data.amount || 0);
+      // ✅ Count only completed / approved / success deposits
+      if (
+        (status === "completed" || status === "approved" || status === "success") &&
+        data.amount
+      ) {
+        total += parseFloat(data.amount);
       }
     });
 
+    // 🧠 Update UI live
     document.getElementById("totalDeposit").textContent = total.toFixed(2);
 
-    // 🔥 Update lifetimeDeposit + level
+    // 🧠 Fetch existing lifetimeDeposit
     const userSnap = await getDoc(userRef);
     const userData = userSnap.exists() ? userSnap.data() : {};
-
     const currentLifetime = parseFloat(userData.lifetimeDeposit || 0);
+
+    // 🔄 Update lifetimeDeposit only if it increased
     const updatedLifetime = Math.max(currentLifetime, total);
 
+    // 🏅 Determine Level
     let level = "No Level";
     if (updatedLifetime >= 1000) level = "Gold";
     else if (updatedLifetime >= 500) level = "Silver";
     else if (updatedLifetime >= 200) level = "Bronze";
 
+    // 🧩 Firestore Update
     await updateDoc(userRef, {
       totalDeposit: total,
       lifetimeDeposit: updatedLifetime,
-      userLevel: level
+      userLevel: level,
     });
 
+    // 🧠 Update level in UI
     document.getElementById("userLevel").textContent = `My Level: ${level}`;
-  });
-}
-function watchDepositStatus(userId, depositId) {
-  const depositRef = doc(db, "users", userId, "deposits", depositId);
 
-  onSnapshot(depositRef, async (snap) => {
-    const data = snap.data();
-    if (!data) return;
+    // ✅ (optional) If you have a lifetimeDeposit span in HTML:
+    const lifeEl = document.getElementById("lifetimeDeposit");
+    if (lifeEl) lifeEl.textContent = updatedLifetime.toFixed(2);
 
-    const status = (data.status || "").toLowerCase();
-
-    if (["completed", "approved", "success", "done"].includes(status)) {
-      console.log("Deposit completed:", depositId);
-
-      // 🔥 Yahan future me referral trigger laga sakte ho
-    }
-  });
-}
-const activeWatchers = {};
-
-function watchAllDeposits(userId) {
-  const depositsRef = collection(db, "users", userId, "deposits");
-
-  onSnapshot(depositsRef, (snapshot) => {
-    snapshot.docs.forEach((docSnap) => {
-      const depositId = docSnap.id;
-
-      if (!activeWatchers[depositId]) {
-        activeWatchers[depositId] = true;
-        watchDepositStatus(userId, depositId);
-      }
-    });
+    console.log(
+      `✅ Live Update: Total=$${total}, Lifetime=$${updatedLifetime}, Level=${level}`
+    );
   });
 }
 
@@ -1177,4 +1483,3 @@ function watchAllDeposits(userId) {
 
 </body>
 </html>
-
