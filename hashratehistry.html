@@ -711,11 +711,12 @@ onAuthStateChanged(auth, (user) => {
  
 
 }); // ✅ CLOSE YAHI HOGA (sab ke baad)
+  
 // 🔥 LOAD ACTIVE PLAN
 const planQ = query(
   collection(db, "buyhashrate"),
-  where("uid", "==", user.uid),
-  where("status", "==", "Active"),
+  where("userId", "==", user.uid),
+  where("status", "==", "running"),
   orderBy("startTime", "desc")
 );
 
