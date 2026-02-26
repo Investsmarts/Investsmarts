@@ -711,7 +711,7 @@ onAuthStateChanged(auth, (user) => {
  
 
 }); // ✅ CLOSE YAHI HOGA (sab ke baad)
-  
+
 // 🔥 LOAD ACTIVE PLAN
 const planQ = query(
   collection(db, "buyhashrate"),
@@ -857,32 +857,45 @@ function renderPlan(plan, userRef) {
 /* ⏱ Countdown */
 function startCountdown(target, btn, display, plan, userRef) {
   clearInterval(countdownInterval);
-  let earned = plan.earnedProfit || 0;
-  const perSec = ((plan.planCost * plan.dailyProfitPercent) / 100) / 86400;
+
+  const totalDaily = (plan.planCost * plan.dailyProfitPercent) / 100;
+  const perSec = totalDaily / 86400;
+
+  const startTime = plan.startTime?.toDate()?.getTime() || Date.now();
 
   countdownInterval = setInterval(() => {
-    const diff = target - Date.now();
+
+    const now = Date.now();
+
+    /* 🔥 PROFIT CALCULATION (Refresh Safe) */
+    const secondsPassed = Math.floor((now - startTime) / 1000);
+    const earned = secondsPassed * perSec;
+
+    const earnedEl = document.querySelector(".earnedProfit");
+    if (earnedEl) {
+      earnedEl.textContent = `$${earned.toFixed(4)}`;
+    }
+
+    /* ⏳ Countdown Logic */
+    const diff = target - now;
+
     if (diff <= 0) {
       display.textContent = "Ready!";
       btn.disabled = false;
-      bell.play().catch(()=>{});
-
+      bell.play().catch(() => {});
       btn.onclick = () => collectProfit(plan, userRef);
       clearInterval(countdownInterval);
       return;
     }
 
     const h = Math.floor(diff / 3600000);
-    const m = Math.floor(diff % 3600000 / 60000);
-    const s = Math.floor(diff % 60000 / 1000);
-    display.textContent = `${h.toString().padStart(2,"0")}:${m.toString().padStart(2,"0")}:${s.toString().padStart(2,"0")}`;
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
 
-earned += perSec;
-
-const earnedEl = document.querySelector(".earnedProfit");
-if (earnedEl) {
-  earnedEl.textContent = `$${earned.toFixed(4)}`;
-}
+    display.textContent =
+      `${h.toString().padStart(2, "0")}:` +
+      `${m.toString().padStart(2, "0")}:` +
+      `${s.toString().padStart(2, "0")}`;
 
   }, 1000);
 }
