@@ -683,20 +683,34 @@ function showToast(msg) {
 
 /* 🧠 Auth */
 onAuthStateChanged(auth, (user) => {
+
   if (!user) return;
 
+  /* 👥 LIVE REFERRAL HISTORY */
+  const refQ = query(
+    collection(db, "users", user.uid, "buyhashrefarl"),
+    orderBy("timestamp", "desc")
+  );
+
+  onSnapshot(refQ, (res) => {
+    console.log("Referral data:", res.docs.length);
+  });
+
+  /* 👤 USER DOCUMENT */
   const userRef = doc(db, "users", user.uid);
 
   /* 🔁 LIVE USER DATA */
   onSnapshot(userRef, (snap) => {
     if (!snap.exists()) return;
+
     const u = snap.data();
     walletBalance.textContent = `$${(u.walletBalance || 0).toFixed(2)}`;
     lockedBalance.textContent = `$${(u.lockedBalance || 0).toFixed(2)}`;
     totalIncome.textContent = `$${(u.totalIncome || 0).toFixed(2)}`;
     hashIncome.textContent = `$${(u.hashIncome || 0).toFixed(2)}`;
-  });
+ 
 
+}); // ✅ CLOSE YAHI HOGA (sab ke baad)
 // 🔥 LOAD ACTIVE PLAN
 const planQ = query(
   collection(db, "buyhashrate"),
@@ -748,17 +762,23 @@ onSnapshot(historyQ, (res) => {
       </tr>
   `;
 
-  res.forEach(d => {
-    const h = d.data();
-    html += `
-      <tr>
-        <td>${h.planName}</td>
-        <td style="color:#16a34a;font-weight:600;">+$${h.amount.toFixed(2)}</td>
-        <td>${h.date?.toDate()?.toLocaleDateString()}</td>
-      </tr>
-    `;
-  });
+res.forEach(d => {
+  const h = d.data();
 
+  const planName = h.planName || "N/A";
+  const amount = typeof h.amount === "number" ? h.amount : 0;
+  const date = h.date && h.date.toDate
+    ? h.date.toDate().toLocaleDateString()
+    : "-";
+
+  html += `
+    <tr>
+      <td>${planName}</td>
+      <td style="color:#16a34a;font-weight:600;">+$${amount.toFixed(2)}</td>
+      <td>${date}</td>
+    </tr>
+  `;
+});
   html += `</table>`;
   box.innerHTML = html;
 });
@@ -902,6 +922,7 @@ await addDoc(
 
   showToast(`✅ Collected $${self.toFixed(2)}`);
 }
+
 
 /* 👥 Referral */
 async function distributeReferralIncome(user, total, planCost) {
