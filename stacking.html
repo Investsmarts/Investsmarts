@@ -272,19 +272,25 @@
   background:rgba(0,0,0,0.55);
   z-index:9999;
 
-  display:flex;
+  display:none; /* ✅ IMPORTANT FIX */
+
   justify-content:center;
-
-  align-items:flex-start;   /* 🔥 center ❌ → top ✅ */
-  padding-top:60px;         /* 🔥 popup upar shift */
-  padding-bottom:100px;     /* 🔥 bottom navbar space */
-
+  align-items:flex-start;
+  padding-top:60px;
+  padding-bottom:100px;
   overflow-y:auto;
 }
   </style>
 </head>
 <body>
+<script>
+const HASH = "hsjdsadkjasdhajkdahdjsiodueyeiqwueioq";
 
+// agar hash already nahi hai tab add karo
+if (!location.hash) {
+  history.replaceState(null, "", location.pathname + "#" + HASH);
+}
+</script>
   <!-- Top Navigation -->
   <div class="nav">
     <a class="active" onclick="showSection('staking')">Staking</a>
@@ -692,21 +698,31 @@ document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
   }
 
   // ✅ Auth listener
-  onAuthStateChanged(auth, user => {
-    if(!user){
-      showPopup("Not signed in. Redirect to login.");
+ let authChecked = false;
+
+onAuthStateChanged(auth, user => {
+
+  // first auth check ignore karo (refresh issue fix)
+  if (!authChecked) {
+    authChecked = true;
+    if (!user) {
+      window.location.href = "login.html"; // direct redirect
       return;
     }
-    currentUserId = user.uid;
-    listenWallet();
-    listenInvestments();
-    listenUserSummary();
+  }
 
-    setInterval(()=>processMatured(currentUserId), 60000);
-    processMatured(currentUserId).catch(e=>console.error(e));
+  if (!user) return;
 
-    setInterval(()=>processAccrual(currentUserId), 5*60*1000);
-  });
+  currentUserId = user.uid;
+  listenWallet();
+  listenInvestments();
+  listenUserSummary();
+
+  setInterval(()=>processMatured(currentUserId), 60000);
+  processMatured(currentUserId).catch(e=>console.error(e));
+
+  setInterval(()=>processAccrual(currentUserId), 5*60*1000);
+});
 
  window.openModal = function(planName, minAmount, maxAmount, dailyRate, imgSrc){
   // modal me choose kiya gaya plan object me store karenge
@@ -969,54 +985,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </script>
 <script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("selectstart", e => e.preventDefault());
+document.addEventListener("dragstart", e => e.preventDefault());
+["copy","paste","cut"].forEach(evt =>
+  document.addEventListener(evt, e => e.preventDefault())
+);
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  });
-
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
-
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
-
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
+setInterval(() => console.clear(), 1500);
 </script>
+
 
 </body>
 </html>
-
 
