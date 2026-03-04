@@ -66,17 +66,20 @@ if (!location.hash) {
 
 <style>
 /* ================= BASE ================= */
-html,body{
+html, body {
   margin:0;
-  overflow-x:hidden;
+  height:100%;
+  overflow:hidden;   /* 👈 full page scroll band */
   font-family:Inter,system-ui,sans-serif;
-  
 }
 
 .team-page{
   max-width:420px;
   margin:0 auto;
   padding:0 12px;
+  height:100dvh;     /* 👈 mobile safe viewport */
+  display:flex;
+  flex-direction:column;
 }
 
 /* ================= HEADER ================= */
@@ -190,7 +193,11 @@ html,body{
 .team-list{
   padding-top:10px;
 }
-
+.team-list{
+  flex:1;
+  overflow-y:auto;
+  padding-top:10px;
+}
 .team-card{
   background:#fff;
   border-radius:10px;
@@ -338,6 +345,38 @@ html,body{
   51%,100%{opacity:0}
 }
 
+.live-mining.running{
+  color:#16a34a;
+  font-weight:600;
+}
+
+.not-running{
+  color:#dc2626;
+  font-weight:600;
+}
+
+
+.team-row{
+  display:flex;
+  justify-content:space-between;
+  margin:4px 0;
+  padding:6px 0;
+  position:relative;
+}
+
+.team-row::after{
+  content:"";
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:1px;
+  background:linear-gradient(to right, transparent, rgba(0,0,0,0.08), transparent);
+}
+
+.team-row:last-child::after{
+  display:none;
+}
 </style>
 
 
@@ -477,51 +516,85 @@ function renderTeam(list){
 
   emptyRendered = false;
 
-  let html = "";
-  list.forEach(u => {
-    html += `
-      <div class="team-card">
-        <div class="team-row">
-          <strong>${u.name}</strong>
-          <span>Level ${u.level}</span>
-        </div>
-        <div class="team-row">
-          <span>Lifetime Deposit</span>
-          <span>${u.lifetimeDeposit}</span>
-        </div>
-        <div class="team-row">
-          <span>Your Commission</span>
-          <span>${u.commission}</span>
-        </div>
-        <div class="team-row">
-          <span>Status</span>
-          <span class="badge ${u.status}">${u.status}</span>
-        </div>
-        <div class="team-row">
-          <span>Joined</span>
-          <span>${u.joined}</span>
-        </div>
+let html = "";
+
+list.forEach(u => {
+
+  const miningAmount = Number(u.miningAmount || 0);
+  const miningStartedAt = Number(u.miningStartedAt || 0);
+
+  html += `
+    <div class="team-card">
+
+      <div class="team-row">
+        <strong>${u.name}</strong>
+        <span>Level ${u.level}</span>
       </div>
-    `;
-  });
 
-  teamList.innerHTML = html;
-}
+      <div class="team-row">
+        <span>Lifetime Deposit</span>
+        <span>${Number(u.lifetimeDeposit || 0).toLocaleString()}</span>
+      </div>
 
+      <div class="team-row">
+        <span>Your Commission</span>
+        <span>${Number(u.commission || 0).toLocaleString()}</span>
+      </div>
 
+      <div class="team-row">
+        <span>Status</span>
+        <span class="badge ${u.status}">${u.status}</span>
+      </div>
+
+      <div class="team-row">
+        <span>Joined</span>
+        <span>${u.joined}</span>
+      </div>
+
+      <div class="team-row">
+        <span>Mining Invested</span>
+        <span>$ ${miningAmount.toLocaleString()}</span>
+      </div>
+
+      <div class="team-row">
+        <span>Mining Running</span>
+        ${
+          miningAmount > 0
+            ? `<span class="live-mining running" data-start="${miningStartedAt}">
+                 ${getUserMiningTime(miningStartedAt)}
+               </span>`
+            : `<span class="not-running">Not Running</span>`
+        }
+      </div>
+
+    </div>
+  `;
+});
+
+teamList.innerHTML = html;
+}   // 👈 YE CLOSE KARNA THA renderTeam FUNCTION
 /* ================= PUSH USER ================= */
 function pushUser(uid, u, level, commissionMap){
+
   const lifetime = Number(u.lifetimeDeposit || 0);
+
+  // ✅ define first
+  const miningAmount = Number(u.miningAmount || 0);
+  const miningStartedAt = Number(u.miningStartedAt || 0);
 
   allMembers.push({
     uid,
     name: u.name || "No Name",
     level,
     lifetimeDeposit: lifetime,
-    commission: commissionMap[uid] || 0, // 🔥 yahin se real income
+    commission: commissionMap[uid] || 0,
     status: lifetime > 0 ? "active" : "inactive",
     joined: parseJoinedDate(u),
-    joinedTime: getJoinedTime(u)
+    joinedTime: getJoinedTime(u),
+
+    // 👇 properly added
+    miningAmount: miningAmount,
+    miningStartedAt: miningStartedAt
   });
 }
 
@@ -723,6 +796,32 @@ async function buildCommissionMap(myUid){
   return map;
 }
 
+function getUserMiningTime(startTime){
+
+  if(!startTime) return "00:00:00";
+
+  const diff = Date.now() - startTime;
+
+  const hours = Math.floor(diff / 3600000);
+  const minutes = Math.floor((diff % 3600000) / 60000);
+  const seconds = Math.floor((diff % 60000) / 1000);
+
+  return `${String(hours).padStart(2,'0')}:` +
+         `${String(minutes).padStart(2,'0')}:` +
+         `${String(seconds).padStart(2,'0')}`;
+}
+
+setInterval(() => {
+
+  document.querySelectorAll(".live-mining").forEach(el => {
+
+    const start = Number(el.dataset.start);
+
+    el.textContent = getUserMiningTime(start);
+
+  });
+
+}, 1000);
 </script>
 <script>
 document.addEventListener("contextmenu", e => e.preventDefault());
