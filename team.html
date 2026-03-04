@@ -49,6 +49,10 @@ if (!location.hash) {
 
 
 <div id="teamList" class="team-list">
+  <div class="pull-indicator" id="pullIndicator">
+    ⬇ Pull to refresh
+  </div>
+
   <p style="padding:16px; text-align:center; color:#64748b;">
     Loading… please wait
   </p>
@@ -62,7 +66,7 @@ if (!location.hash) {
   </video>
 </div>
 
-</div>
+
 
 <style>
 /* ================= BASE ================= */
@@ -190,14 +194,7 @@ html, body {
 }
 
 /* ================= LIST ================= */
-.team-list{
-  padding-top:10px;
-}
-.team-list{
-  flex:1;
-  overflow-y:auto;
-  padding-top:10px;
-}
+
 .team-card{
   background:#fff;
   border-radius:10px;
@@ -348,6 +345,7 @@ html, body {
 .live-mining.running{
   color:#16a34a;
   font-weight:600;
+  text-shadow:0 0 6px rgba(22,163,74,.4);
 }
 
 .not-running{
@@ -376,6 +374,33 @@ html, body {
 
 .team-row:last-child::after{
   display:none;
+}
+/* ================= PULL TO REFRESH ================= */
+
+.team-list{
+  flex:1;
+  overflow-y:auto;
+  padding-top:10px;
+  position:relative;
+}
+
+.pull-indicator{
+  position:absolute;
+  top:-60px;
+  left:0;
+  width:100%;
+  text-align:center;
+  font-size:13px;
+  color:#64748b;
+  transition:all .3s ease;
+}
+
+.pull-indicator.active{
+  top:10px;
+}
+
+.team-list{
+  transition: transform .25s ease;
 }
 </style>
 
@@ -571,8 +596,15 @@ list.forEach(u => {
   `;
 });
 
-teamList.innerHTML = html;
-}   // 👈 YE CLOSE KARNA THA renderTeam FUNCTION
+teamList.innerHTML = `
+  <div class="pull-indicator" id="pullIndicator">
+    ⬇ Pull to refresh
+  </div>
+` + html;
+
+
+}   
+// 👈 YE CLOSE KARNA THA renderTeam FUNCTION
 /* ================= PUSH USER ================= */
 function pushUser(uid, u, level, commissionMap){
 
@@ -822,6 +854,61 @@ setInterval(() => {
   });
 
 }, 1000);
+
+/* ================= PULL TO REFRESH LOGIC ================= */
+
+let startY = 0;
+let isPulling = false;
+
+const teamScroll = document.getElementById("teamList");
+function getIndicator(){
+  return document.getElementById("pullIndicator");
+}
+
+teamScroll.addEventListener("touchstart", e => {
+  if(teamScroll.scrollTop === 0){
+    startY = e.touches[0].clientY;
+    isPulling = true;
+  }
+});
+
+teamScroll.addEventListener("touchmove", e => {
+  if(!isPulling) return;
+
+  let currentY = e.touches[0].clientY;
+  let diff = currentY - startY;
+
+  if(diff > 0 && diff < 120){
+    teamScroll.style.transform = `translateY(${diff}px)`;
+  }
+
+  if(diff > 80){
+   const indicator = getIndicator();
+indicator.classList.add("active");
+indicator.textContent = "🔄 Release to refresh";
+  }
+});
+
+teamScroll.addEventListener("touchend", async e => {
+
+  if(!isPulling) return;
+
+  teamScroll.style.transform = "translateY(0px)";
+  isPulling = false;
+
+ const indicator = getIndicator();
+
+if(indicator.classList.contains("active")){
+
+    indicator.textContent = "Refreshing...";
+
+    const user = auth.currentUser;
+    if(user) await fetchTeamData(user);
+
+    indicator.classList.remove("active");
+indicator.textContent = "⬇ Pull to refresh";
+  }
+});
 </script>
 <script>
 document.addEventListener("contextmenu", e => e.preventDefault());
