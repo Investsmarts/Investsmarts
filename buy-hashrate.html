@@ -3,8 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="stylesheet" href="style.css?v=2">
+<script src="script.js?v=2"></script>
 <title>TrustDollar — Cloud Mining</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
 <style>
 :root {
   --green: #16a34a;
@@ -64,7 +72,6 @@ body {
   border-radius: 5px;
   text-align: center;
   padding: 18px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .plan:hover {
@@ -259,7 +266,6 @@ body {
   font-size: 16px;
   font-weight: 600;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(22, 163, 74, 0.4);
   opacity: 0;
   z-index: 9999;
   transition: all 0.4s ease;
@@ -440,7 +446,6 @@ body {
   border-radius: 5px;
   padding: 18px;
   margin-top: 10px;
-  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.15);
   transition: all 0.4s ease;
 }
 
@@ -466,7 +471,6 @@ body {
 .countdown-timer.ready {
   background: #fee2e2;
   color: #dc2626;
-  box-shadow: inset 0 0 5px rgba(220,38,38,0.25);
   animation: pulseReady 1.5s infinite;
 }
 
@@ -481,141 +485,129 @@ body {
   text-shadow: 0 1px 1px rgba(0,0,0,0.05);
 }
 
-/* 🔹 Header layout fix for inline icon */
-.header {
-  display: flex;
-  align-items: center;        /* vertical centering */
-  justify-content: center;    /* center horizontally */
-  gap: 10px;                  /* space between text and icon */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: #ffffff00;
-   color: #21d82b; text-align: center;
-   padding: 10px; font-size: 18px; font-weight: bold;          /* was too thick, now balanced */
-  font-size: 18px;
-  font-weight: bold;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
+.header{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  background:#fff;
+  border-bottom:1px solid #e2e8f0;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+
+  padding:14px;
+  font-weight:600;
+  font-size:18px;
+  z-index:1000;
 }
 
+.guide-icon-btn{
+  background:#d41d1d;
+  border-radius:6px;
+  width:28px;
+  height:28px;
 
-/* 🔴 Header Info Button */
-.guide-icon-btn {
-  background: rgb(212 29 29);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 5px;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  margin-top: 1px;            /* 👈 just to align perfectly */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
-.guide-icon-btn i {
-  color: #ffffff;
-  font-size: 15px;
-}
-
-.guide-icon-btn:hover {
-  background: #fff;
-  border-color: #fff;
-}
-
-.guide-icon-btn:hover i {
-  color: #28a745;
-  transform: scale(1.1);
-}
-
-
-/* ===== MOBILE FIX ===== */
-@media (max-width: 480px) {
-  .guide-icon-btn {
-    width: 28px;
-    height: 28px;
-  }
-  .guide-icon-btn i {
-    font-size: 15px;
-  }
+  cursor:pointer;
 }
 
 /* 🔹 Guide Popup Fullscreen Responsive */
-.guide-popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.55);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
+/* 🔹 Guide Popup Overlay */
+.guide-popup{
+  position:fixed;
+  inset:0;                /* full screen */
+  display:none;
+  justify-content:center;
+  align-items:center;
+
+  background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(4px);
+
+  padding:20px;
+  z-index:99999;
 }
 
-/* Show Popup */
-.guide-popup.show {
-  display: flex;
-  opacity: 1;
+/* show popup */
+.guide-popup.show{
+  display:flex;
 }
 
-/* Popup Card */
-.guide-content {
-  position: relative;
-  background: #ffffff;
-  border-radius: 5px;
-  padding: 25px;
-  width: 90%;
-  max-width: 750px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
-  animation: popupZoom 0.35s ease;
+/* 🔹 Popup Card */
+.guide-content{
+  position:relative;
+  background:#fff;
+  border-radius:10px;
+
+  width:100%;
+  max-width:720px;
+
+  max-height:85vh;
+  overflow-y:auto;
+
+  padding:26px 28px;
+
+  box-shadow:0 15px 40px rgba(0,0,0,0.35);
+
+  animation:popupZoom .35s ease;
 }
 
-/* Hide vertical scrollbar */
-.guide-content::-webkit-scrollbar {
-  display: none;
+/* scroll bar hide */
+.guide-content::-webkit-scrollbar{
+  width:0;
 }
 
-/* Animation */
-@keyframes popupZoom {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* Close Button */
-.close-btn {
-  position: absolute;
-  top: 12px;
-  right: 18px;
-  border: none;
-  background: none;
-  color: #333;
-  font-size: 24px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.close-btn:hover {
-  color: #dc2626;
-  transform: scale(1.2);
-}
-
-/* Responsive Fix */
-@media (max-width: 600px) {
-  .guide-content {
-    width: 80%;
-    padding: 18px;
-    font-size: 14px;
+/* animation */
+@keyframes popupZoom{
+  from{
+    transform:scale(.9);
+    opacity:0;
   }
-  .close-btn { top: 10px; right: 15px; font-size: 22px; }
+  to{
+    transform:scale(1);
+    opacity:1;
+  }
+}
+
+/* close button */
+.close-btn{
+  position:absolute;
+  top:14px;
+  right:18px;
+  border:none;
+  background:none;
+
+  font-size:22px;
+  cursor:pointer;
+
+  color:#ef4444;
+  transition:.25s;
+}
+
+.close-btn:hover{
+  transform:scale(1.15);
+}
+
+/* 📱 mobile fix */
+@media(max-width:600px){
+
+.guide-content{
+  width:100%;
+  max-height:88vh;
+  padding:20px;
+  font-size:14px;
+}
+
+.close-btn{
+  top:10px;
+  right:14px;
+}
+
 }
 /* Header fixed position ka compensation */
 body {
@@ -651,26 +643,45 @@ body {
     transform: translateY(-3px);
   }
 
+/* Guide Hint Tooltip */
+.guide-hint{
+position:absolute;
+top:55px;
+right:20px;
+
+background:#111;
+color:#fff;
+
+padding:8px 12px;
+border-radius:6px;
+font-size:13px;
 
 
-</style>
-</head>
+opacity:0;
+transform:translateY(-10px);
+transition:0.3s;
 
-<body>
-  <!-- 🌟 3D Auto-Hide Alert Box -->
-<div id="customAlert" class="alert-box"></div>
+z-index:9999;
+}
 
-<!-- 🌟 Glass 3D Alert Box -->
-<div id="glassAlert" class="glass-alert">
-  <div class="alert-content">
-    <span id="closeAlert" class="close-btn">×</span>
-    <h2 id="alertTitle">ERROR</h2>
-    <p id="alertMessage">Ready to Start</p>
-    <button id="alertOk">OK</button>
-  </div>
-</div>
+/* arrow */
+.guide-hint::after{
+content:"";
+position:absolute;
+top:-6px;
+right:14px;
 
-<style>
+border-width:6px;
+border-style:solid;
+border-color:transparent transparent #111 transparent;
+}
+
+/* show state */
+.guide-hint.show{
+opacity:1;
+transform:translateY(0);
+}
+
   /* Background overlay */
   .glass-alert {
     position: fixed;
@@ -692,7 +703,6 @@ body {
     border-radius: 5px;
     padding: 25px 30px;
     text-align: center;
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
     animation: popIn 0.4s ease;
     color: white;
     width: 240px;
@@ -832,14 +842,12 @@ body {
 /* 🧩 Better Layout Spacing */
 .plan {
   background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-radius: 5px;
   padding: 18px 14px;
   transition: all 0.3s ease;
 }
 .plan:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(22,163,74,0.15);
 }
 
 /* 🌟 Button alignment consistency */
@@ -847,41 +855,251 @@ body {
   margin-top: 8px;
 }
 
-</style>
+:root{
+  --green:#16a34a;
+  --bg:#f1f5f9;
+  --text:#0f172a;
+  --card:#ffffff;
+}
 
 
-<script>
-  // 🔥 Function to show the smooth alert
-  function showGlassAlert(title = "ERROR", message = "Something went wrong!", autoHide = true, duration = 3000) {
-    const alertBox = document.getElementById("glassAlert");
-    const alertTitle = document.getElementById("alertTitle");
-    const alertMessage = document.getElementById("alertMessage");
+:root {
+  --nav-bg: #fff;
+  --nav-text: #444;
+  --nav-border: rgba(0, 0, 0, 0.08);
+}
 
-    alertTitle.textContent = title;
-    alertMessage.textContent = message;
+[data-theme="dark"] {
+  --nav-bg: #0f0f0f;
+  --nav-text: #ccc;
+  --nav-border: rgba(255, 255, 255, 0.1);
+}
 
-    alertBox.style.display = "flex";
-    alertBox.querySelector(".alert-content").style.animation = "popIn 0.4s ease";
+/* 🔹 Navbar Base (height reduced) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--nav-bg);
+  border-top: 1px solid var(--nav-border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0; /* 👈 thinner padding */
+  z-index: 9999;
+}
 
-    // Auto hide after duration
-    if (autoHide) {
-      setTimeout(() => {
-        alertBox.querySelector(".alert-content").style.animation = "fadeOut 0.4s ease";
-        setTimeout(() => {
-          alertBox.style.display = "none";
-        }, 400);
-      }, duration);
-    }
+/* 🔹 Nav items (slimmer text + less spacing) */
+.bottom-nav .nav-item {
+  flex: 1;
+  text-align: center;
+  color: var(--nav-text);
+  text-decoration: none;
+  font-size: 10px; /* 👈 smaller text */
+  position: relative;
+  padding: 4px 0; /* 👈 less padding */
+  transition: all 0.3s ease;
+}
+
+/* 🔹 Icon (reduced size + gap) */
+.bottom-nav .nav-item i {
+  font-size: 18px; /* 👈 smaller icons (was 22px) */
+  display: block;
+  opacity: 0.75;
+  margin-bottom: 2px; /* 👈 smaller gap */
+  transition: all 0.3s ease;
+}
+
+/* 🔹 Text */
+.bottom-nav .nav-item span {
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+/* 🔹 Divider lines */
+.bottom-nav .nav-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 25%;
+  width: 1px;
+  height: 50%;
+  background: var(--nav-border);
+}
+
+/* 🔹 Active State (icons glow thoda soft) */
+.bottom-nav .nav-item.active i {
+  transform: scale(1.1);
+  opacity: 1;
+  animation: bulbGlow 1.6s ease-in-out infinite alternate;
+}
+.bottom-nav .nav-item.active span {
+  opacity: 1;
+  font-weight: 600;
+}
+
+/* Active colors */
+.bottom-nav .nav-item:nth-child(1).active i { color: #00c853; }
+.bottom-nav .nav-item:nth-child(2).active i { color: #ffc107; }
+.bottom-nav .nav-item:nth-child(3).active i { color: #ff3b30; }
+.bottom-nav .nav-item:nth-child(4).active i { color: #00bcd4; }
+
+@keyframes bulbGlow {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.6); }
+}
+
+/* 🔹 Ripple (same) */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  background: rgba(0, 200, 83, 0.15);
+}
+@keyframes ripple {
+  to { transform: scale(3); opacity: 0; }
+}
+
+/* 🔹 Responsive tuning */
+@media (max-width: 480px) {
+  .bottom-nav .nav-item i {
+    font-size: 17px;
   }
+  .bottom-nav .nav-item span {
+    font-size: 9.5px;
+  }
+}
 
-  // Close alert manually
-  document.getElementById("closeAlert").onclick = () => {
-    document.getElementById("glassAlert").style.display = "none";
-  };
-  document.getElementById("alertOk").onclick = () => {
-    document.getElementById("glassAlert").style.display = "none";
-  };
-</script>
+/* 💎 Activate Plan Box */
+.activate-plan-box{
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:10px;
+
+padding:20px;
+margin:20px 0;
+
+text-align:center;
+
+
+transition:0.3s;
+}
+
+.activate-plan-box:hover{
+transform:translateY(-3px);
+}
+
+/* title */
+.activate-plan-box h3{
+margin:0 0 8px;
+font-size:18px;
+color:#059669;
+}
+
+/* description */
+.activate-plan-box p{
+font-size:14px;
+color:#475569;
+margin-bottom:16px;
+line-height:1.5;
+}
+/* 📱 Mobile spacing fix */
+@media (max-width: 768px){
+
+.main-container{
+  padding: 0 14px 110px; /* left-right gap */
+}
+
+.card{
+  margin-top: 14px;
+  margin-bottom: 18px;
+}
+
+.activate-plan-box{
+  margin:18px 0;
+}
+
+.plans{
+  margin-top:20px;
+}
+
+}
+
+/* 🔹 Professional Guide Highlight (Bitget style) */
+
+.guide-icon-btn{
+  position:relative;
+  background:#00ff1f;
+  border-radius:6px;
+  width:28px;
+  height:28px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  cursor:pointer;
+}
+
+/* glow ring */
+.guide-icon-btn.highlight::before{
+  content:"";
+  position:absolute;
+  inset:-6px;
+
+  border-radius:8px;
+  border:2px solid rgba(239,68,68,0.6);
+
+  animation:ringPulse 1.6s infinite;
+}
+
+/* soft pulse */
+.guide-icon-btn.highlight{
+  animation:iconPulse 1.6s infinite;
+}
+
+/* ring animation */
+@keyframes ringPulse{
+  0%{
+    transform:scale(0.9);
+    opacity:0.7;
+  }
+  70%{
+    transform:scale(1.2);
+    opacity:0;
+  }
+  100%{
+    opacity:0;
+  }
+}
+
+/* icon pulse */
+@keyframes iconPulse{
+  0%{ transform:scale(1); }
+  50%{ transform:scale(1.08); }
+  100%{ transform:scale(1); }
+}
+</style>
+</head>
+
+<body>
+  <!-- 🌟 3D Auto-Hide Alert Box -->
+<div id="customAlert" class="alert-box"></div>
+
+<!-- 🌟 Glass 3D Alert Box -->
+<div id="glassAlert" class="glass-alert">
+  <div class="alert-content">
+    <span id="closeAlert" class="close-btn">×</span>
+    <h2 id="alertTitle">ERROR</h2>
+    <p id="alertMessage">Ready to Start</p>
+    <button id="alertOk">OK</button>
+  </div>
+</div>
+<div id="guideHint" class="guide-hint">
+  <span>Tap here to read the Cloud Mining Guide</span>
+</div>
 
   <div class="main-container">
 <!-- 🔹 Header with Guide Button -->
@@ -898,9 +1116,9 @@ body {
     <button class="close-btn" onclick="closeMiningGuide()">&times;</button>
     <h2><i class="fa-solid fa-circle-info"></i> Buy Hashrate Guide</h2>
 
-    <p>
-      Welcome to <b>TrustDollar Cloud Mining</b> — here’s everything you need to know before purchasing a <b>Buy Hashrate</b> plan.
-    </p>
+  <p>
+Welcome to <b>TrustDollar Cloud Mining</b> — here’s everything you need to know before purchasing a <b>Cloud Mining Advance Plan</b> through the <b>Buy Hashrate</b> system.
+</p>
 
     <div class="guide-section">
       <h3>✅ How to Buy a Plan</h3>
@@ -917,12 +1135,23 @@ body {
       <ul>
         <li>You’ll continue receiving <b>daily profit</b> and <b>commission</b> until your plan duration ends.</li>
         <li>Every 24 hours, click the <b>“Collect Profit”</b> button to transfer profit to your wallet.</li>
-        <li>After completion, your <b>investment + total profit</b> automatically returns to your wallet.</li>
+        <li>After completion, only the <b>earned profit</b> will be credited to your wallet. The <b>initial investment amount is non-refundable</b>. If you want your <b>investment returned</b>, it is available only up to <b>Plan 3</b>. Plans above this level do not include investment return.</li>
       </ul>
     </div>
+    <div class="guide-section">
+  <h3>✅ Profit Calculation (Plan 4 – Plan 13)</h3>
+  <ul>
+    <li>Plans from <b>Plan 4 to Plan 13</b> provide <b>daily profit only</b>.</li>
+    <li>The <b>initial investment amount is not returned</b> for these plans.</li>
+    <li>Your <b>daily profit percentage</b> depends on the selected plan (2.0% – 2.9%).</li>
+    <li>Profit is generated <b>every 24 hours</b> and can be collected by clicking the <b>“Collect Profit”</b> button.</li>
+    <li>You will continue earning daily profit until the <b>plan duration ends</b>.</li>
+    <li>Example: If you invest <b>$1100 in Plan 4 (2.0% daily)</b>, you will receive about <b>$22 profit per day</b> during the plan duration.</li>
+  </ul>
+</div>
 
     <div class="guide-section">
-      <h3>💰 Referral Income System (3 Levels)</h3>
+      <h3>✅ Referral Income System (3 Levels)</h3>
       <ul>
         <li><b>Level 1:</b> 17% of your direct partner’s profit.</li>
         <li><b>Level 2:</b> 8% of your second-level partner’s profit.</li>
@@ -942,12 +1171,8 @@ body {
 
     <p class="guide-footer">
       Need help? Our support is available 24/7.<br>
-      <a href="support.html" target="_blank">📩 Contact Support</a>
-    </p>
-  </div>
-</div>
-
-
+      <a href="support.html" target="_blank">📩 Contact Support</a></p></div>
+      </div>
 
 <div class="card">
   <div class="wallet">
@@ -955,19 +1180,18 @@ body {
     <div><strong>Locked:</strong> <span id="lockedBalance">$0.00</span></div>
   </div>
   
-<!-- 🌐 Professional Button -->
-<div style="text-align:center; margin: 25px 0;">
+<!-- 💎 Activate Plan Info Box -->
+<div class="activate-plan-box">
+  <h3>Activate Your Mining Plan</h3>
+  <p>
+    Start earning daily profit with our <b>Cloud Mining Advance Plans</b>.  
+    Choose your plan and activate it to begin generating mining rewards.
+  </p>
+
   <button id="openPlanBtn" class="pro-btn">
     Activate Plan
   </button>
 </div>
-
-<script>
-  // 🔹 Jab button dabaye to hashRateHistry.html same tab me open ho
-  document.getElementById("openPlanBtn").addEventListener("click", () => {
-    window.location.href = "hashratehistry.html";  // 👈 same-tab redirect
-  });
-</script>
 
 <div class="plans">
 
@@ -1129,7 +1353,6 @@ body {
   }
 </script>
 
-
   <!-- ⚡ Center Alert Message -->
   <div id="centerAlert" class="center-alert"></div>
 
@@ -1176,120 +1399,7 @@ body {
 </div>
  </div>
 
-<!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
-<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
 
-<style>
-:root {
-  --nav-bg: #fff;
-  --nav-text: #444;
-  --nav-border: rgba(0, 0, 0, 0.08);
-}
-
-[data-theme="dark"] {
-  --nav-bg: #0f0f0f;
-  --nav-text: #ccc;
-  --nav-border: rgba(255, 255, 255, 0.1);
-}
-
-/* 🔹 Navbar Base (height reduced) */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: var(--nav-bg);
-  border-top: 1px solid var(--nav-border);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 10px 0; /* 👈 thinner padding */
-  z-index: 9999;
-  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
-}
-
-/* 🔹 Nav items (slimmer text + less spacing) */
-.bottom-nav .nav-item {
-  flex: 1;
-  text-align: center;
-  color: var(--nav-text);
-  text-decoration: none;
-  font-size: 10px; /* 👈 smaller text */
-  position: relative;
-  padding: 4px 0; /* 👈 less padding */
-  transition: all 0.3s ease;
-}
-
-/* 🔹 Icon (reduced size + gap) */
-.bottom-nav .nav-item i {
-  font-size: 18px; /* 👈 smaller icons (was 22px) */
-  display: block;
-  opacity: 0.75;
-  margin-bottom: 2px; /* 👈 smaller gap */
-  transition: all 0.3s ease;
-}
-
-/* 🔹 Text */
-.bottom-nav .nav-item span {
-  opacity: 0.7;
-  transition: all 0.3s ease;
-}
-
-/* 🔹 Divider lines */
-.bottom-nav .nav-item:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 25%;
-  width: 1px;
-  height: 50%;
-  background: var(--nav-border);
-}
-
-/* 🔹 Active State (icons glow thoda soft) */
-.bottom-nav .nav-item.active i {
-  transform: scale(1.1);
-  opacity: 1;
-  animation: bulbGlow 1.6s ease-in-out infinite alternate;
-}
-.bottom-nav .nav-item.active span {
-  opacity: 1;
-  font-weight: 600;
-}
-
-/* Active colors */
-.bottom-nav .nav-item:nth-child(1).active i { color: #00c853; }
-.bottom-nav .nav-item:nth-child(2).active i { color: #ffc107; }
-.bottom-nav .nav-item:nth-child(3).active i { color: #ff3b30; }
-.bottom-nav .nav-item:nth-child(4).active i { color: #00bcd4; }
-
-@keyframes bulbGlow {
-  from { filter: brightness(1); }
-  to { filter: brightness(1.6); }
-}
-
-/* 🔹 Ripple (same) */
-.ripple {
-  position: absolute;
-  border-radius: 50%;
-  transform: scale(0);
-  animation: ripple 0.6s linear;
-  background: rgba(0, 200, 83, 0.15);
-}
-@keyframes ripple {
-  to { transform: scale(3); opacity: 0; }
-}
-
-/* 🔹 Responsive tuning */
-@media (max-width: 480px) {
-  .bottom-nav .nav-item i {
-    font-size: 17px;
-  }
-  .bottom-nav .nav-item span {
-    font-size: 9.5px;
-  }
-}
-</style>
 
 <!-- ✅ HTML Navbar -->
 <div class="bottom-nav" id="mainNav">
@@ -1566,53 +1676,60 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btn) btn.addEventListener("click", () => openModal(name, cost, days, profit, img));
   });
 });
-</script>
-<script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
+window.addEventListener("load",()=>{
+
+const hint=document.getElementById("guideHint");
+const icon=document.querySelector(".guide-icon-btn");
+
+setTimeout(()=>{
+hint.classList.add("show");
+icon.classList.add("highlight");
+},800);
+
+setTimeout(()=>{
+hint.classList.remove("show");
+icon.classList.remove("highlight");
+},5000);
+
+});
+
+// 🔥 Function to show the smooth alert
+  function showGlassAlert(title = "ERROR", message = "Something went wrong!", autoHide = true, duration = 3000) {
+    const alertBox = document.getElementById("glassAlert");
+    const alertTitle = document.getElementById("alertTitle");
+    const alertMessage = document.getElementById("alertMessage");
+
+    alertTitle.textContent = title;
+    alertMessage.textContent = message;
+
+    alertBox.style.display = "flex";
+    alertBox.querySelector(".alert-content").style.animation = "popIn 0.4s ease";
+
+    // Auto hide after duration
+    if (autoHide) {
+      setTimeout(() => {
+        alertBox.querySelector(".alert-content").style.animation = "fadeOut 0.4s ease";
+        setTimeout(() => {
+          alertBox.style.display = "none";
+        }, 400);
+      }, duration);
     }
+  }
+
+  // Close alert manually
+  document.getElementById("closeAlert").onclick = () => {
+    document.getElementById("glassAlert").style.display = "none";
+  };
+  document.getElementById("alertOk").onclick = () => {
+    document.getElementById("glassAlert").style.display = "none";
+  };
+
+    // 🔹 Jab button dabaye to hashRateHistry.html same tab me open ho
+  document.getElementById("openPlanBtn").addEventListener("click", () => {
+    window.location.href = "hashratehistry.html";  // 👈 same-tab redirect
   });
-
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
-
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
-
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
 </script>
+
 </body>
 </html>
