@@ -3,10 +3,18 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Withdrawal — TrustDollar</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 <style>
+
+  *{
+box-sizing:border-box;
+}
 :root {
   --green: #00c853;
   --orange: #ff9800;
@@ -21,8 +29,12 @@ body {
   background: var(--bg);
   margin: 0;
   color: #222;
+  overflow-x: hidden;
 }
 
+body{
+overflow-x:hidden;
+}
 /* HEADER */
 .header {
   background: linear-gradient(145deg, #00c853, #00bfa5);
@@ -53,22 +65,24 @@ body {
   position: sticky;
   top: 60px;
   z-index: 9;
-  display: flex;
-  gap: 10px;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
   background: #fff;
-  padding: 12px;
+  padding: 10px;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
   border-radius: 10px;
   max-width: 700px;
-  margin: 20px auto;
+  width: calc(100% - 20px);
+  margin: 15px auto;
 }
+
 .filter-bar select,
 .filter-bar input {
   flex: 1;
   padding: 8px 10px;
-  font-size: 14px;
-  border-radius: 8px;
+  font-size: 10px;
+  border-radius: 5px;
   border: 1px solid #ccc;
   outline: none;
   font-family: 'Poppins';
@@ -76,7 +90,7 @@ body {
 
 /* CARD STYLING */
 .container {
-  padding: 20px 14px;
+  padding: 20px 12px 90px;
   max-width: 700px;
   margin: 0 auto;
 }
@@ -173,6 +187,31 @@ body {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
 }
+
+.loader-box{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:40px 0;
+  color:#777;
+  font-size:14px;
+}
+
+.spinner{
+  width:40px;
+  height:40px;
+  border:4px solid #eee;
+  border-top:4px solid #00c853;
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+  margin-bottom:10px;
+}
+
+@keyframes spin{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
 </style>
 </head>
 <body>
@@ -188,18 +227,35 @@ body {
 <!-- Sticky Filter -->
 <div class="filter-bar">
   <select id="filterStatus">
-    <option value="All">All</option>
+    <option value="All">All Status</option>
     <option value="Complete">Complete</option>
     <option value="Pending">Pending</option>
     <option value="Processing">Processing</option>
     <option value="Rejected">Rejected</option>
     <option value="Cancel">Cancel</option>
   </select>
+
   <input type="date" id="filterDate">
+
+  <select id="quickDate">
+    <option value="">Quick</option>
+    <option value="today">Today</option>
+    <option value="yesterday">Yesterday</option>
+    <option value="7days">Last 7 Days</option>
+  </select>
 </div>
 
 <!-- Center Popup -->
 <div id="copyAlert" class="copy-alert">Copied!</div>
+
+
+<!-- Center Popup -->
+<div id="copyAlert" class="copy-alert">Copied!</div>
+
+<div id="loader" class="loader-box">
+  <div class="spinner"></div>
+  <p>Loading withdrawal history...</p>
+</div>
 
 <div class="container">
   <div id="depositList"></div>
@@ -318,6 +374,24 @@ body {
     font-size: 9.5px;
   }
 }
+
+.admin-note {
+  background: #f1f3f6;
+  color: #5f6b7a;
+  padding: 14px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  border: 1px solid #e2e6ea;
+}
+.admin-note strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #3d4a5c;
+  font-weight: 600;
+}
+
 </style>
 
 <!-- ✅ HTML Navbar -->
@@ -404,7 +478,8 @@ const emptyMsg = document.getElementById("emptyMsg");
 const countEl = document.getElementById("count");
 const filterStatus = document.getElementById("filterStatus");
 const filterDate = document.getElementById("filterDate");
-
+const quickDate = document.getElementById("quickDate");
+const loader = document.getElementById("loader");
 let allWithdrawals = [];
 
 function formatDate(data) {
@@ -421,37 +496,71 @@ onAuthStateChanged(auth, (user) => {
   onSnapshot(q, (snapshot) => {
     allWithdrawals = [];
     snapshot.forEach(doc => allWithdrawals.push({ id: doc.id, ...doc.data() }));
+    loader.style.display = "none";
     renderWithdrawals(true);
   });
 });
 
-function renderWithdrawals(forceAll = false) {
+function renderWithdrawals() {
+
   const selectedStatus = filterStatus.value;
   const selectedDate = filterDate.value;
+  const quick = quickDate.value;
+
   let filtered = allWithdrawals.filter(d => {
+
     const status = (d.status || "Pending").toLowerCase();
-    let matchStatus = selectedStatus === "All" || status === selectedStatus.toLowerCase();
+    const rawDate = d.date || d.createdAt;
+
+    const docDate = rawDate?.seconds
+      ? new Date(rawDate.seconds * 1000)
+      : new Date(rawDate);
+
+    let matchStatus =
+      selectedStatus === "All" ||
+      status === selectedStatus.toLowerCase();
+
     let matchDate = true;
+
     if (selectedDate) {
-      const docDate = new Date(d.date?.seconds ? d.date.seconds * 1000 : d.date);
       const selDate = new Date(selectedDate);
       matchDate = docDate.toDateString() === selDate.toDateString();
     }
+
+    if (quick === "today") {
+      const today = new Date();
+      matchDate = docDate.toDateString() === today.toDateString();
+    }
+
+    if (quick === "yesterday") {
+      const y = new Date();
+      y.setDate(y.getDate() - 1);
+      matchDate = docDate.toDateString() === y.toDateString();
+    }
+
+    if (quick === "7days") {
+      const last7 = new Date();
+      last7.setDate(last7.getDate() - 7);
+      matchDate = docDate >= last7;
+    }
+
     return matchStatus && matchDate;
+
   });
 
-  if (forceAll || selectedStatus === "All") filtered = allWithdrawals;
-
   depositList.innerHTML = "";
+
   if (filtered.length === 0) {
     emptyMsg.style.display = "block";
     countEl.textContent = "0";
     return;
   }
+
   emptyMsg.style.display = "none";
   countEl.textContent = filtered.length;
 
   filtered.forEach(data => {
+
     const amount = data.amount || 0;
     const dateStr = formatDate(data.date || data.createdAt);
     const order = data.orderId || data.orderNumber || data.id;
@@ -466,31 +575,55 @@ function renderWithdrawals(forceAll = false) {
 
     const card = document.createElement("div");
     card.className = "deposit-card";
-    card.innerHTML = `
-      <div class="deposit-header">
-        <div class="left">Withdrawal</div>
-        <div class="right ${statusClass}">${data.status || "Pending"}</div>
-      </div>
-      <div class="detail-row">
-        <span class="label">Amount</span>
-        <span class="value amount">₮${parseFloat(amount).toLocaleString()}</span>
-      </div>
-      <div class="detail-row">
-        <span class="label">Method</span>
-        <span class="value">₮${method}</span>
-      </div>
-      <div class="detail-row">
-        <span class="label">Time</span>
-        <span class="value">${dateStr}</span>
-      </div>
-      <div class="detail-row">
-        <span class="label">Order number</span>
-        <span class="value">${order}
-          <button class="copy-btn" data-order="${order}" title="Copy"><i class='bx bx-copy'></i></button>
-        </span>
-      </div>
-    `;
 
+card.innerHTML = `
+
+  ${data.adminNote ? `
+    <div class="admin-note">
+      <strong>Admin Message</strong>
+      ${data.adminNote}
+    </div>
+  ` : ""}
+
+  <div class="deposit-header">
+    <div class="left">Withdrawal</div>
+    <div class="right ${statusClass}">
+      ${data.status || "Pending"}
+    </div>
+  </div>
+
+  <div class="detail-row">
+    <span class="label">Amount</span>
+    <span class="value amount">
+      ₮${parseFloat(amount).toLocaleString()}
+    </span>
+  </div>
+
+  <div class="detail-row">
+    <span class="label">Method</span>
+    <span class="value">
+      ${method}
+    </span>
+  </div>
+
+  <div class="detail-row">
+    <span class="label">Time</span>
+    <span class="value">
+      ${dateStr}
+    </span>
+  </div>
+
+  <div class="detail-row">
+    <span class="label">Order number</span>
+    <span class="value">
+      ${order}
+      <button class="copy-btn" data-order="${order}" title="Copy">
+        <i class='bx bx-copy'></i>
+      </button>
+    </span>
+  </div>
+
+`;
     const copyBtn = card.querySelector(".copy-btn");
     copyBtn.addEventListener("click", async (e) => {
       const val = e.currentTarget.dataset.order;
@@ -521,10 +654,9 @@ function renderWithdrawals(forceAll = false) {
   });
 }
 
-filterStatus.addEventListener("change", () => renderWithdrawals());
-filterDate.addEventListener("change", () => renderWithdrawals());
-filterStatus.addEventListener("click", () => renderWithdrawals(filterStatus.value === "All"));
-filterDate.addEventListener("click", () => renderWithdrawals(filterStatus.value === "All"));
+filterStatus.addEventListener("change", renderWithdrawals);
+filterDate.addEventListener("change", renderWithdrawals);
+quickDate.addEventListener("change", renderWithdrawals);
 
 function showCopyAlert(message = "Copied!", color = "#00c853") {
   const alertBox = document.getElementById("copyAlert");
@@ -533,54 +665,8 @@ function showCopyAlert(message = "Copied!", color = "#00c853") {
   alertBox.classList.add("show");
   setTimeout(() => alertBox.classList.remove("show"), 1500);
 }
+
 </script>
-  <script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  });
-
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
-
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
-
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
-    
-</script>
 </body>
 </html>
