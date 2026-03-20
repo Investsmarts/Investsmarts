@@ -1081,6 +1081,16 @@ line-height:1.5;
   50%{ transform:scale(1.08); }
   100%{ transform:scale(1); }
 }
+
+.glass-alert {
+  position: fixed;
+  z-index: 999999 !important;
+}
+
+.modal {
+  position: fixed;
+  z-index: 5000;
+}
 </style>
 </head>
 
@@ -1571,7 +1581,18 @@ window.openModal = function (name, cost, days, profit, imgSrc = "") {
   confirmBtn.replaceWith(confirmBtn.cloneNode(true));
   const newConfirmBtn = document.getElementById("mConfirm");
 
+
+
+
   newConfirmBtn.onclick = async () => {
+
+  // ❌ TEMP BLOCK (baad me hata dena)
+  showGlassAlert(
+    "All Hashrate Sold Out",
+    "Due to high demand, all hashrate slots are currently full. Please wait until Monday to try again."
+  );
+  return;
+
     if (walletBalance < cost) {
       document.getElementById("mError").style.display = "flex";
       showBalanceAlert();
