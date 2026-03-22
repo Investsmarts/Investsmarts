@@ -592,18 +592,18 @@ submitBtn.onclick = async () => {
   const ticketID = generateTicketID();
 
   try {
-    await addDoc(collection(db, "user_support_tickets"), {
-      name,
-      email,
-      subject,
-      message,
-      status: "Pending",
-      reply: "",
-      ticketCustomID: ticketID,
-      adminSeen: false,
-      time: Date.now()
-    });
-
+await addDoc(collection(db, "user_support_tickets"), {
+  name,
+  email,
+  subject,
+  message,
+  orderId: orderIdInput.value || "",
+  status: "Pending",
+  reply: "",
+  ticketCustomID: ticketID,
+  adminSeen: false,
+  time: Date.now()
+});
     showAlert("✅ Message sent successfully!");
     statusBox.style.display = "block";
     statusBox.innerHTML = `Status: <span>Pending</span><br>Ticket ID: <b>${ticketID}</b>`;
