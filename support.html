@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -14,27 +14,31 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", sans-serif; }
 
-    body {
-      background: #f5f7fa;
-      display: flex; justify-content: center; align-items: flex-start;
-      min-height: 100vh; padding: 40px 20px;
-    }
-
-    .support-container {
-      width: 100%;
-      max-width: 420px;
-      background: #fff;
-      border-radius: 4px;
+   body {
+       font-family: 'Poppins', sans-serif;
       
-      padding: 24px 20px;
-      border: 1px solid #e2e2e2;
-    }
+      margin: 0;
+      padding: 10px;
+      padding-bottom: 90px;
+      color: #333;
+
+     padding-top: 7px; /* ✅ यह लाइन add करो */
+     }
+
+.support-container {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 0;
+  background: #fff;
+}
 
     .support-container h2 {
       text-align: center;
       color: #28a745;
       font-size: 22px;
       margin-bottom: 16px;
+    margin: 30px auto;   /* ye space dega */
+
     }
 
     label { display:block; font-size:14px; margin:10px 0 6px; color:#333; }
@@ -226,9 +230,151 @@
 .ticket-history::-webkit-scrollbar-thumb:hover {
   background: #999;
 }
+
+.support-header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e2e2;
+  text-align: center;
+  padding: 8px 10px;   /* pehle 18px tha */
+  z-index: 999;
+}
+
+.support-header h1{
+  font-size: 18px;   /* pehle 22px tha */
+  color: #28a745;
+  margin-bottom: 2px;
+}
+
+.typing-text{
+  font-size: 12px;   /* pehle 13px tha */
+  color: #666;
+}
+/* Form ko header ke niche shift karo */
+body{
+  padding-top: 35px;
+}
+
+.ticket-loader{
+  text-align:center;
+  padding:20px;
+  color:#777;
+}
+
+.loader{
+  width:25px;
+  height:25px;
+  border:3px solid #ddd;
+  border-top:3px solid #28a745;
+  border-radius:50%;
+  margin:auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin{
+  0%{ transform:rotate(0deg); }
+  100%{ transform:rotate(360deg); }
+}
+
+.no-ticket{
+  text-align:center;
+  padding:25px 15px;
+  background:#f8fff9;
+  border:1px solid #d8f5dc;
+  border-radius:8px;
+  color:#555;
+  margin-top:10px;
+}
+
+.no-ticket i{
+  font-size:30px;
+  color:#28a745;
+  margin-bottom:8px;
+  display:block;
+}
+
+.no-ticket .title{
+  font-size:15px;
+  font-weight:600;
+  color:#333;
+  margin-bottom:4px;
+}
+
+.no-ticket .sub{
+  font-size:13px;
+  color:#777;
+}
+
+.btn-row{
+  display:flex;
+  gap:10px;
+  margin-top:18px;
+}
+
+.btn-row button{
+  flex:1;
+  margin-top:0;
+}
+
+.ticket-title{
+  margin-top:18px;
+  font-size:14px;
+  font-weight:600;
+  color:#444;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.ticket-title i{
+  color:#28a745;
+}
+
+.ticket-title{
+  margin-top:20px;
+  margin-bottom:10px;
+  font-size:15px;
+  font-weight:600;
+  color:#333;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding-bottom:6px;
+  border-bottom:1px solid #e5e5e5;
+}
+
+.ticket-title i{
+  color:#28a745;
+  font-size:16px;
+}
+
+/* optional premium effect */
+.ticket-title::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:#e5e5e5;
+  margin-left:10px;
+}
+
   </style>
 </head>
 <body>
+
+
+<div class="support-header">
+
+  <h1>Support Center</h1>
+
+  <p class="typing-text">
+    <span id="typing"></span>
+  </p>
+
+</div>
+
 
 
   <div class="alert" id="alertBox"></div>
@@ -260,12 +406,31 @@
     <label for="message">Your Message</label>
     <textarea id="message" placeholder="Type your issue or question..."></textarea>
 
-    <button id="submitBtn"><i class="fa-solid fa-paper-plane"></i> Submit Request</button>
-    <button class="refresh-btn" id="refreshBtn"><i class="fa-solid fa-rotate"></i> Refresh Tickets</button>
+   <div class="btn-row">
+  <button id="submitBtn">
+    <i class="fa-solid fa-paper-plane"></i> Submit
+  </button>
 
-    <div id="statusBox" class="status-box" style="display:none;"></div>
-    <div class="ticket-history" id="ticketHistory"></div>
+  <button class="refresh-btn" id="refreshBtn">
+    <i class="fa-solid fa-rotate"></i> Refresh
+  </button>
+</div>
+
+<div class="ticket-title">
+  <i class="fa-solid fa-ticket"></i> Your Support Tickets
+</div>
+
+<div id="statusBox" class="status-box" style="display:none;"></div>
+
+<div class="ticket-history" id="ticketHistory">
+
+  <div class="ticket-loader" id="ticketLoader">
+    <div class="loader"></div>
+    <p>Loading your tickets...</p>
   </div>
+
+</div>
+
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -289,54 +454,115 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+let unsubscribeTickets = null;
 // ✅ PEHLE input elements lo
 const nameInput = document.getElementById("name");
 const emailInput = document.getElementById("email");
+
 nameInput.classList.add("loading");
 emailInput.classList.add("loading");
+
 const subjectInput = document.getElementById("subject");
 const msgInput = document.getElementById("message");
 const submitBtn = document.getElementById("submitBtn");
 const refreshBtn = document.getElementById("refreshBtn");
 const alertBox = document.getElementById("alertBox");
 const statusBox = document.getElementById("statusBox");
+
 const ticketHistory = document.getElementById("ticketHistory");
+
 const orderBox = document.getElementById("orderBox");
 const orderIdInput = document.getElementById("orderId");
+
+const ticketLoader = document.getElementById("ticketLoader");
+
+// loader start me show
+ticketLoader.style.display = "block";
+
+
 // ✅ AB auth wala code lagao
+// ✅ Auth state check
 onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    try {
-      const userRef = doc(db, "users", user.uid);
-      const userSnap = await getDoc(userRef);
 
-    if (userSnap.exists()) {
-  const userData = userSnap.data();
 
-  // loading remove
+  // 🔴 Agar user login nahi hai
+if (!user) {
+
   nameInput.classList.remove("loading");
   emailInput.classList.remove("loading");
 
-  // fill data
-  nameInput.value = userData.name || "User";
-  emailInput.value = userData.email || user.email;
+  nameInput.value = "You are not logged in";
+  emailInput.value = "Please login or refresh";
 
-  // enable inputs (optional)
   nameInput.readOnly = true;
   emailInput.readOnly = true;
 
-  localStorage.setItem("userName", nameInput.value);
-  localStorage.setItem("userEmail", emailInput.value);
+  // loader stop
+  ticketLoader.style.display = "none";
 
-  loadUserTickets();
+  // ticket area message
+ticketHistory.innerHTML = `
+<div class="no-ticket">
+  <i class="fa-solid fa-user-lock"></i>
+  <div class="title">Login Required</div>
+  <div class="sub">Please login first to view your support tickets</div>
+</div>`;
 
-      }
-    } catch (err) {
-      console.error("Error fetching user:", err);
+  return;
+}
+
+  try {
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+
+      const userData = userSnap.data();
+
+      // loading remove
+      nameInput.classList.remove("loading");
+      emailInput.classList.remove("loading");
+
+      // fill data
+      nameInput.value = userData.name || "User";
+      emailInput.value = userData.email || user.email;
+
+      nameInput.readOnly = true;
+      emailInput.readOnly = true;
+
+      localStorage.setItem("userName", nameInput.value);
+      localStorage.setItem("userEmail", emailInput.value);
+      userNameDynamic = nameInput.value;
+      loadUserTickets();
+
+    } else {
+
+      // 🔴 Agar Firestore me user data nahi mila
+      nameInput.classList.remove("loading");
+      emailInput.classList.remove("loading");
+
+      nameInput.value = "User data not found";
+      emailInput.value = "Please contact support";
+
     }
+
+  } catch (err) {
+
+    console.error("Error fetching user:", err);
+
+    // 🔴 Error case
+    nameInput.classList.remove("loading");
+    emailInput.classList.remove("loading");
+
+    nameInput.value = "Error loading user";
+    emailInput.value = "Please refresh page";
+
   }
+
 });
 let currentTicketId = null;
+
+
 
 // 🟢 Show Alert Centered
 function showAlert(msg, color = "#28a745") {
@@ -394,10 +620,16 @@ submitBtn.onclick = async () => {
   }
 };
 
+
 // 🟢 Load User Tickets
-function loadUserTickets() {
+      function loadUserTickets() {
+
   const email = localStorage.getItem("userEmail");
   if (!email) return;
+
+ticketLoader.style.display = "block";
+ticketHistory.innerHTML = "";
+ticketHistory.appendChild(ticketLoader);
 
   const q = query(
     collection(db, "user_support_tickets"),
@@ -405,58 +637,71 @@ function loadUserTickets() {
     orderBy("time", "desc")
   );
 
-  onSnapshot(q, (snap) => {
-    ticketHistory.innerHTML = "";
+  // 🟢 old listener stop (important)
+  if (unsubscribeTickets) {
+    unsubscribeTickets();
+  }
+
+  unsubscribeTickets = onSnapshot(q, (snap) => {
+
+    ticketLoader.style.display = "none";
+
     if (snap.empty) {
-      ticketHistory.innerHTML = `<p style="text-align:center; opacity:0.7;">No previous tickets found</p>`;
+      ticketHistory.innerHTML =
+        `<div class="no-ticket">You have no tickets yet</div>`;
       return;
     }
 
+    ticketHistory.innerHTML = "";
+
     snap.forEach((doc) => {
+
       const d = doc.data();
       const card = document.createElement("div");
       card.className = "ticket-card";
 
       const date = new Date(d.time).toLocaleString();
 
-   card.innerHTML = `
-  <div class="ticket-row">
-    <span class="label">Status</span>
-    <span class="value status ${d.status.toLowerCase()}">${d.status}</span>
-  </div>
+      card.innerHTML = `
+      <div class="ticket-row">
+        <span class="label">Status</span>
+        <span class="value status ${d.status.toLowerCase()}">${d.status}</span>
+      </div>
 
-  <div class="ticket-row">
-    <span class="label">Date</span>
-    <span class="value">${date}</span>
-  </div>
+      <div class="ticket-row">
+        <span class="label">Date</span>
+        <span class="value">${date}</span>
+      </div>
 
-  <div class="ticket-row">
-    <span class="label">Ticket ID</span>
-    <span class="value">${d.ticketCustomID || "N/A"}</span>
-  </div>
+      <div class="ticket-row">
+        <span class="label">Ticket ID</span>
+        <span class="value">${d.ticketCustomID || "N/A"}</span>
+      </div>
 
-  <div class="ticket-row">
-    <span class="label">Subject</span>
-    <span class="value">${d.subject}</span>
-  </div>
+      <div class="ticket-row">
+        <span class="label">Subject</span>
+        <span class="value">${d.subject}</span>
+      </div>
 
-  <div class="ticket-row message-row">
-    <span class="label">Message</span>
-    <span class="value">${d.message}</span>
-  </div>
+      <div class="ticket-row message-row">
+        <span class="label">Message</span>
+        <span class="value">${d.message}</span>
+      </div>
 
-  ${d.reply ? `
-    <div class="ticket-row reply-row">
-      <span class="label">Reply</span>
-      <span class="value">${d.reply}</span>
-    </div>
-  ` : ""}
-`;
+      ${d.reply ? `
+      <div class="ticket-row reply-row">
+        <span class="label">Reply</span>
+        <span class="value">${d.reply}</span>
+      </div>` : ""}
+      `;
+
       ticketHistory.appendChild(card);
-    });
-  });
-}
 
+    });
+
+  });
+
+}
 // 🟢 Refresh Button
 refreshBtn.onclick = () => {
   showAlert("🔄 Refreshing ticket list...");
@@ -523,6 +768,85 @@ async function fetchLatest(type) {
     orderIdInput.value = "Error fetching data";
   }
 }
+
+const text = "Submit your issue and our support team will assist you shortly.";
+let i = 0;
+let typingElement = document.getElementById("typing");
+
+function typeEffect() {
+
+  if (i < text.length) {
+    typingElement.innerHTML += text.charAt(i);
+    i++;
+    setTimeout(typeEffect, 40);
+  } else {
+
+    setTimeout(() => {
+      typingElement.innerHTML = "";
+      i = 0;
+      typeEffect();
+    }, 2000);
+
+  }
+
+}
+
+typeEffect();
+
+let userNameDynamic = localStorage.getItem("userName") || "User";
+
+const msgText = `Hello ${userNameDynamic}, enter your issue or question...`;
+let j = 0;
+let typingActive = true;
+
+const msgBox = document.getElementById("message");
+
+function typePlaceholder() {
+
+  if (!typingActive) return;
+
+  if (j < msgText.length) {
+
+    msgBox.placeholder = msgText.substring(0, j + 1);
+    j++;
+
+    setTimeout(typePlaceholder, 40);
+
+  } else {
+
+    setTimeout(() => {
+      if (typingActive) {
+        j = 0;
+        msgBox.placeholder = "";
+        typePlaceholder();
+      }
+    }, 2000);
+
+  }
+
+}
+
+typePlaceholder();
+
+
+// 🟢 User click kare → typing band
+msgBox.addEventListener("focus", () => {
+  typingActive = false;
+  msgBox.placeholder = "";
+});
+
+// 🟢 User bahar click kare
+msgBox.addEventListener("blur", () => {
+
+  if (msgBox.value.trim() === "") {
+
+    typingActive = true;
+    j = 0;
+    typePlaceholder();
+
+  }
+
+});
 </script>
 <script>
 document.addEventListener("contextmenu", e => e.preventDefault());
