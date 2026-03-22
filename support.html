@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
   <title>Support | Smart Mining</title>
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
@@ -20,8 +24,8 @@
       width: 100%;
       max-width: 420px;
       background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      border-radius: 4px;
+      
       padding: 24px 20px;
       border: 1px solid #e2e2e2;
     }
@@ -38,7 +42,7 @@
     input, textarea, select {
       width: 100%;
       padding: 10px 12px;
-      border-radius: 10px;
+      border-radius: 5px;
       border: 1px solid #ccc;
       font-size: 15px;
       transition: 0.2s;
@@ -60,7 +64,7 @@
       color: #fff;
       font-weight: bold;
       border: none;
-      border-radius: 10px;
+      border-radius: 5px;
       font-size: 16px;
       cursor: pointer;
       transition: 0.3s;
@@ -80,7 +84,7 @@
     .status-box {
       background: #f8fff9;
       border: 1px solid #cdeccf;
-      border-radius: 10px;
+      border-radius: 5px;
       padding: 10px 12px;
       margin-top: 16px;
       font-size: 13px;
@@ -97,7 +101,7 @@
       background: #28a745;
       color: white;
       padding: 14px 22px;
-      border-radius: 12px;
+      border-radius: 5px;
       box-shadow: 0 4px 14px rgba(0,0,0,0.25);
       font-weight: bold;
       text-align: center;
@@ -121,7 +125,7 @@
     .ticket-card {
       background: #fff;
       border: 1px solid #e0e0e0;
-      border-radius: 10px;
+      border-radius: 5px;
       padding: 10px 12px;
       margin-bottom: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
@@ -131,31 +135,112 @@
     .ticket-card .reply {
       background: #e9fce9;
       border-left: 4px solid #28a745;
-      border-radius: 8px;
+      border-radius: 5px;
       padding: 8px 10px;
       margin-top: 6px;
       color: #1e7e34;
       font-size: 13px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      
     }
 
     .ticket-card .status {
       color: #28a745;
       font-weight: bold;
     }
+
+    .loading {
+  color: #999;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+.ticket-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: 13px;
+  margin-bottom: 6px;
+  gap: 10px;
+}
+
+.label {
+  width: 90px;
+  font-weight: bold;
+  color: #555;
+}
+
+.value {
+  flex: 1;
+  text-align: right;
+  color: #222;
+  word-break: break-word;
+}
+
+/* Message & Reply ko thoda alag look */
+.message-row .value,
+.reply-row .value {
+  text-align: left;
+}
+
+.reply-row {
+  background: #e9fce9;
+  border-left: 4px solid #28a745;
+  padding: 8px;
+  border-radius: 6px;
+  margin-top: 6px;
+}
+
+/* Status colors */
+.status.pending {
+  color: orange;
+}
+
+.status.verifying {
+  color: #007bff;
+}
+
+.status.completed {
+  color: #28a745;
+}
+.ticket-history {
+  max-height: 250px;   /* height control */
+  overflow-y: auto;    /* scroll enable */
+  padding-right: 4px;
+}
+
+/* Smooth scrollbar (optional 🔥) */
+.ticket-history::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ticket-history::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.ticket-history::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
   </style>
 </head>
 <body>
+
+
   <div class="alert" id="alertBox"></div>
 
   <div class="support-container">
     <h2><i class="fa-solid fa-headset"></i> Contact Support</h2>
 
-    <label for="name">Full Name</label>
-    <input type="text" id="name" placeholder="Enter your full name">
+   <label for="name">Full Name</label>
+<input type="text" id="name" value="Loading..." readonly>
 
-    <label for="email">Email Address</label>
-    <input type="email" id="email" placeholder="Enter your email">
+<label for="email">Email Address</label>
+<input type="email" id="email" value="Loading..." readonly>
 
     <label for="subject">Subject</label>
     <select id="subject">
@@ -167,6 +252,10 @@
       <option>Account Access Problem</option>
       <option>Other</option>
     </select>
+   <div id="orderBox" style="display:none; margin-top:10px;">
+  <label>Order ID</label>
+  <input type="text" id="orderId" placeholder="Fetching..." readonly>
+  </div>
 
     <label for="message">Your Message</label>
     <textarea id="message" placeholder="Type your issue or question..."></textarea>
@@ -183,6 +272,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import {
   getFirestore, collection, addDoc, query, where, orderBy, onSnapshot
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
@@ -196,9 +287,13 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
+// ✅ PEHLE input elements lo
 const nameInput = document.getElementById("name");
 const emailInput = document.getElementById("email");
+nameInput.classList.add("loading");
+emailInput.classList.add("loading");
 const subjectInput = document.getElementById("subject");
 const msgInput = document.getElementById("message");
 const submitBtn = document.getElementById("submitBtn");
@@ -206,7 +301,41 @@ const refreshBtn = document.getElementById("refreshBtn");
 const alertBox = document.getElementById("alertBox");
 const statusBox = document.getElementById("statusBox");
 const ticketHistory = document.getElementById("ticketHistory");
+const orderBox = document.getElementById("orderBox");
+const orderIdInput = document.getElementById("orderId");
+// ✅ AB auth wala code lagao
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
 
+    if (userSnap.exists()) {
+  const userData = userSnap.data();
+
+  // loading remove
+  nameInput.classList.remove("loading");
+  emailInput.classList.remove("loading");
+
+  // fill data
+  nameInput.value = userData.name || "User";
+  emailInput.value = userData.email || user.email;
+
+  // enable inputs (optional)
+  nameInput.readOnly = true;
+  emailInput.readOnly = true;
+
+  localStorage.setItem("userName", nameInput.value);
+  localStorage.setItem("userEmail", emailInput.value);
+
+  loadUserTickets();
+
+      }
+    } catch (err) {
+      console.error("Error fetching user:", err);
+    }
+  }
+});
 let currentTicketId = null;
 
 // 🟢 Show Alert Centered
@@ -253,8 +382,8 @@ submitBtn.onclick = async () => {
     statusBox.style.display = "block";
     statusBox.innerHTML = `Status: <span>Pending</span><br>Ticket ID: <b>${ticketID}</b>`;
 
-    nameInput.value = "";
-    emailInput.value = "";
+    //nameInput.value = "";
+    //emailInput.value = "";
     subjectInput.value = "";
     msgInput.value = "";
 
@@ -290,15 +419,39 @@ function loadUserTickets() {
 
       const date = new Date(d.time).toLocaleString();
 
-      card.innerHTML = `
-        <b>${d.name}</b> — <span class="status">${d.status}</span><br>
-        <small>${date}</small><br>
-        <div><b>Ticket ID:</b> ${d.ticketCustomID || "N/A"}</div>
-        <div><b>Subject:</b> ${d.subject}</div>
-        <div style="margin-top:4px;">${d.message}</div>
-        ${d.reply ? `<div class="reply">${d.reply}</div>` : ""}
-      `;
+   card.innerHTML = `
+  <div class="ticket-row">
+    <span class="label">Status</span>
+    <span class="value status ${d.status.toLowerCase()}">${d.status}</span>
+  </div>
 
+  <div class="ticket-row">
+    <span class="label">Date</span>
+    <span class="value">${date}</span>
+  </div>
+
+  <div class="ticket-row">
+    <span class="label">Ticket ID</span>
+    <span class="value">${d.ticketCustomID || "N/A"}</span>
+  </div>
+
+  <div class="ticket-row">
+    <span class="label">Subject</span>
+    <span class="value">${d.subject}</span>
+  </div>
+
+  <div class="ticket-row message-row">
+    <span class="label">Message</span>
+    <span class="value">${d.message}</span>
+  </div>
+
+  ${d.reply ? `
+    <div class="ticket-row reply-row">
+      <span class="label">Reply</span>
+      <span class="value">${d.reply}</span>
+    </div>
+  ` : ""}
+`;
       ticketHistory.appendChild(card);
     });
   });
@@ -320,53 +473,66 @@ if (localStorage.getItem("userEmail")) {
   emailInput.value = localStorage.getItem("userEmail");
   loadUserTickets();
 }
+subjectInput.addEventListener("change", () => {
+  orderBox.style.display = "none";
+  orderIdInput.value = "Fetching...";
+
+  if (subjectInput.value === "Deposit Not Showing") {
+    fetchLatest("deposits");
+  } 
+  else if (subjectInput.value === "Withdrawal Pending") {
+    fetchLatest("withdrawals");
+  }
+});
+
+async function fetchLatest(type) {
+  try {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    let colRef;
+
+    // ✅ correct path (subcollection)
+    if (type === "deposits") {
+      colRef = collection(db, "users", user.uid, "deposits");
+    } else {
+      colRef = collection(db, "users", user.uid, "withdrawals");
+    }
+
+    const q = query(
+      colRef,
+      where("status", "==", "Pending"),
+      orderBy("date", "desc") // ⚠️ tere DB me "date" hai
+    );
+
+    onSnapshot(q, (snap) => {
+      orderBox.style.display = "block";
+
+      if (!snap.empty) {
+        const data = snap.docs[0].data();
+        orderIdInput.value = data.orderId || "Order ID not found";
+        orderIdInput.style.color = "#28a745";
+      } else {
+        orderIdInput.value = "No pending order here";
+        orderIdInput.style.color = "#dc3545";
+      }
+    });
+
+  } catch (err) {
+    console.error(err);
+    orderIdInput.value = "Error fetching data";
+  }
+}
 </script>
 <script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("selectstart", e => e.preventDefault());
+document.addEventListener("dragstart", e => e.preventDefault());
+["copy","paste","cut"].forEach(evt =>
+  document.addEventListener(evt, e => e.preventDefault())
+);
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  });
-
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
-
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
-
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
+setInterval(() => console.clear(), 500);
 </script>
 
 </body>
