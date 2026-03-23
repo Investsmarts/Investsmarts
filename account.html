@@ -4,7 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" 
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Account — TrustDollar</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
@@ -24,15 +26,16 @@
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: var(--bg);
-  padding-bottom: 120px; /* navbar ke liye space */
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;  padding-top: 20px;    
-}
+ body {
+       font-family: 'Poppins', sans-serif;
+      
+      margin: 0;
+      padding: 0px;
+      padding-bottom: 90px;
+      color: #333;
 
+     padding-top: 50px; /* ✅ यह लाइन add करो */
+     }
 
 /* RIGHT SIDE INFO (no internal boxes) */
 .profile-info {
@@ -275,7 +278,7 @@ body {
 /* 🔹 Ripple (same) */
 .ripple {
   position: absolute;
-  border-radius: 50%;
+  border-radius: 5%;
   transform: scale(0);
   animation: ripple 0.6s linear;
   background: rgba(0, 200, 83, 0.15);
@@ -347,10 +350,9 @@ body {
 
 .fb-profile-header {
   background: #fff;
-  border-radius: 16px;
-  margin: 14px;
+  border-radius: 0 0 16px 16px;
+  margin: 0;
   overflow: hidden;
- 
 }
 
 /* Cover */
@@ -368,11 +370,9 @@ body {
 .fb-profile-row {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 0 18px 18px;
-  margin-top: -40px;
+  padding: 0 16px 16px;
+  margin-top: -45px;
 }
-
 /* Avatar */
 .fb-avatar {
   position: relative;
@@ -380,7 +380,7 @@ body {
   height: 90px;
   background: #fff;
   padding: 4px;
-  border-radius: 50%;
+  border-radius: 5%;
   
 }
 
@@ -492,7 +492,7 @@ body {
 .image-viewer img {
   max-width: 90%;
   max-height: 90%;
-  border-radius: 12px;
+  border-radius: 5px;
 }
 
 .image-viewer.show {
@@ -501,14 +501,14 @@ body {
 }
 
 
-/* ===== USER INFO ATTACHED BOX (FINAL FIX) ===== */
+
 /* ===== USER INFO CARD (NEW LAYOUT) ===== */
 
 .user-info-box {
   margin: -12px 14px 14px;
   padding: 16px 18px;
   background: #ffffff;
-  border-radius: 0 0 16px 16px;
+  border-radius: 0 0 5px 5px;
   border: 1px solid rgba(15, 23, 42, 0.08);
 }
 
@@ -562,7 +562,7 @@ body {
   width: 8px;
   height: 8px;
   background: #16a34a;
-  border-radius: 50%;
+  border-radius: 5%;
   animation: pulseLive 1.2s infinite ease-in-out;
 }
 
@@ -627,7 +627,7 @@ body {
   max-width: 380px;
 
   background: #ffffff;
-  border-radius: 14px;
+  border-radius: 4px;
 
   box-shadow: 0 30px 70px rgba(0,0,0,0.28);
 
@@ -883,15 +883,11 @@ body {
    BODY SAFETY
 ================================ */
 
-body {
-  margin: 0;
-  background: #f9fafb;
-  font-family: 'Poppins', sans-serif;
-}
+
 .simple-info {
   padding: 16px 18px;
   background: #ffffff;
-  border-radius: 0 0 16px 16px;
+  border-radius: 0 0 5px 5px;
   border: 1px solid rgba(15, 23, 42, 0.08);
 }
 
@@ -949,7 +945,7 @@ body {
   width: 8px;
   height: 8px;
   background: #16a34a;
-  border-radius: 50%;
+  border-radius: 5%;
   animation: pulseLive 1.2s infinite ease-in-out;
 }
 
@@ -957,7 +953,7 @@ body {
   width: 8px;
   height: 8px;
   background: #16a34a;
-  border-radius: 50%;
+  border-radius: 5%;
   animation: pulseLive 1.2s infinite ease-in-out;
 }
 
@@ -972,7 +968,7 @@ body {
   background: #ffffff;
   margin: 12px 16px 16px;
   padding: 14px 16px;
-  border-radius: 12px;
+  border-radius: 5px;
   border: 1px solid rgba(15, 23, 42, 0.08);
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
 }
@@ -1012,6 +1008,80 @@ body {
   color: #16a34a;
 }
 
+
+.fb-avatar{
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  overflow:hidden;
+  border:4px solid white;
+  padding:0;   /* ✅ padding hata diya */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.fb-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:contain;   /* ✅ pura logo fit hoga */
+  display:block;
+}
+
+#profileImage{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position: 55% center;
+  transform:scale(1.25);   /* 👈 logo bada */
+}
+
+/* logo */
+.fb-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:5%;
+  position:absolute;
+  transition:all .6s ease;
+}
+
+/* text */
+.logo-text{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:600;
+  font-size:14px;
+  color:#16a34a;
+  background:#fff;
+  text-align:center;
+  padding:6px;
+  line-height:1.2;
+  opacity:0;
+  transform:translateY(100%);
+  transition:all .6s ease;
+}
+
+/* logo hide animation */
+.fb-avatar.hide-logo img{
+  transform:translateY(100%);
+  opacity:0;
+}
+
+/* text show */
+.fb-avatar.show-text .logo-text{
+  transform:translateY(0);
+  opacity:1;
+}
+
+/* text hide */
+.fb-avatar.hide-text .logo-text{
+  transform:translateY(-100%);
+  opacity:0;
+}
 </style>
 
 </head>
@@ -1035,21 +1105,33 @@ body {
 <!-- 🔷 Premium Profile Header -->
 <div class="fb-profile-header">
 
-  <!-- Cover Slider -->
-  <div class="fb-cover" id="coverSlider">
-    <img src="https://picsum.photos/900/400?1" class="cover-img active">
-    <img src="https://picsum.photos/900/400?2" class="cover-img">
-    <img src="https://picsum.photos/900/400?3" class="cover-img">
+<!-- Cover Slider -->
+<div class="fb-cover" id="coverSlider">
+
+<img src="https://images.unsplash.com/photo-1518770660439-4636190af475" class="cover-img active">
+<img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31" class="cover-img">
+<img src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7" class="cover-img">
+<img src="https://images.unsplash.com/photo-1597852074816-d933c7d2b988" class="cover-img">
+<img src="https://images.unsplash.com/photo-1600267175161-cfaa711b4a81" class="cover-img">
+<img src="https://images.unsplash.com/photo-1621416894569-0f39ed31d247" class="cover-img">
+<img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c" class="cover-img">
+<img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" class="cover-img">
+<img src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc" class="cover-img">
+<img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b" class="cover-img">
+
+</div>
+
+<!-- Profile Row -->
+<!-- Profile Row -->
+<div class="fb-profile-row">
+
+  <div class="fb-avatar" id="profileAvatar">
+    <img id="profileImage" src="https://trustdollar.online/myphoto/trustlogo.png">
+    <span class="logo-text">Welcome to TrustDollar</span>
   </div>
 
-  <!-- Profile Row -->
-  <div class="fb-profile-row">
-    <div class="fb-avatar" id="profileAvatar">
-      <img id="profileImage" src="https://i.pravatar.cc/300">
-    </div>
+</div>
 
-   
-  </div>
 </div>
 
 <!-- Fullscreen Image Viewer -->
@@ -1248,7 +1330,7 @@ const joinDateEl = document.getElementById("joinDate");
 const notifyDot = document.getElementById("notifyDot");
 const newNotifAlert = document.getElementById("newNotifAlert");
 
-profileImage.src = `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70) + 1}`;
+
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) return;
@@ -1554,6 +1636,28 @@ document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
     setTimeout(() => ripple.remove(), 500);
   });
 });
+
+const avatar = document.getElementById("profileAvatar");
+
+setInterval(()=>{
+
+  avatar.classList.add("hide-logo");
+
+  setTimeout(()=>{
+    avatar.classList.remove("hide-logo");
+    avatar.classList.add("show-text");
+  },600);
+
+  setTimeout(()=>{
+    avatar.classList.remove("show-text");
+    avatar.classList.add("hide-text");
+  },2000);
+
+  setTimeout(()=>{
+    avatar.classList.remove("hide-text");
+  },2600);
+
+},4000);
 </script>
 
 <script>
@@ -1573,7 +1677,6 @@ document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
   });
 })();
 </script>
-
 <script>
 document.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("selectstart", e => e.preventDefault());
@@ -1582,7 +1685,7 @@ document.addEventListener("dragstart", e => e.preventDefault());
   document.addEventListener(evt, e => e.preventDefault())
 );
 
-setInterval(() => console.clear(), 1500);
+setInterval(() => console.clear(), 500);
 </script>
 
 </body>
