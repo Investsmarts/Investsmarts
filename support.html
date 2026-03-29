@@ -121,11 +121,23 @@
       transform: translate(-50%, -50%) scale(1);
     }
 
-    /* 🧾 Ticket History */
-    .ticket-history {
-      margin-top: 20px;
-    }
+.ticket-history {
+  width: 100%;
+  padding-right: 4px;
+}
 
+body{
+  padding-top: 35px;
+  overflow-y: auto;
+}
+
+.support-container{
+  width:100%;
+  max-width:100%;
+  border-radius:0;
+  background:#fff;
+  min-height:100vh;
+}
     .ticket-card {
       background: #fff;
       border: 1px solid #e0e0e0;
@@ -211,24 +223,10 @@
 .status.completed {
   color: #28a745;
 }
+
 .ticket-history {
-  max-height: 250px;   /* height control */
-  overflow-y: auto;    /* scroll enable */
+  width: 100%;
   padding-right: 4px;
-}
-
-/* Smooth scrollbar (optional 🔥) */
-.ticket-history::-webkit-scrollbar {
-  width: 6px;
-}
-
-.ticket-history::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 10px;
-}
-
-.ticket-history::-webkit-scrollbar-thumb:hover {
-  background: #999;
 }
 
 .support-header{
@@ -254,9 +252,6 @@
   color: #666;
 }
 /* Form ko header ke niche shift karo */
-body{
-  padding-top: 35px;
-}
 
 .ticket-loader{
   text-align:center;
@@ -657,6 +652,10 @@ ticketHistory.appendChild(ticketLoader);
     snap.forEach((doc) => {
 
       const d = doc.data();
+
+      // 2 din se purane tickets hide
+const twoDays = 2 * 24 * 60 * 60 * 1000; // milliseconds
+if (Date.now() - d.time > twoDays) return;
       const card = document.createElement("div");
       card.className = "ticket-card";
 
