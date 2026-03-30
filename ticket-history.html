@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ticket History</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:#f5f7fb;
+padding-top:60px;
+}
+
+/* HEADER */
+
+.header{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+background:#fff;
+border-bottom:1px solid #e6e6e6;
+padding:12px;
+display:flex;
+align-items:center;
+gap:10px;
+z-index:1000;
+}
+
+.header i{
+font-size:18px;
+cursor:pointer;
+color:#28a745;
+}
+
+.header h2{
+font-size:17px;
+color:#333;
+}
+
+/* CONTAINER */
+
+.container{
+padding:12px;
+}
+
+/* TICKET CARD */
+
+.ticket-card{
+background:#fff;
+border-radius:8px;
+padding:12px;
+margin-bottom:12px;
+box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+
+.ticket-row{
+display:flex;
+justify-content:space-between;
+margin-bottom:6px;
+font-size:13px;
+}
+
+.label{
+color:#666;
+font-weight:600;
+}
+
+.value{
+color:#333;
+text-align:right;
+}
+
+/* MESSAGE */
+
+.message{
+margin-top:6px;
+font-size:13px;
+color:#333;
+}
+
+/* ADMIN REPLY */
+
+.reply{
+margin-top:8px;
+background:#e9fce9;
+border-left:1px solid #28a745;
+padding:10px;
+border-radius:5px;
+font-size:13px;
+color:#000000;
+line-height:1; /* 👈 text ke beech spacing */
+}
+
+.reply b{
+display:block;
+margin-bottom:6px; /* 👈 title aur message ke beech gap */
+}
+/* STATUS */
+
+/* STATUS */
+
+.status{
+font-weight:bold;
+}
+
+.pending{
+color:#ff9800; /* 🟠 Orange */
+}
+
+.verifying{
+color:#ffc107; /* 🟡 Yellow */
+}
+
+.success{
+color:#28a745; /* 🟢 Green */
+}
+/* NO TICKET */
+
+.no-ticket{
+text-align:center;
+padding:40px 10px;
+color:#777;
+}
+
+.no-ticket i{
+font-size:40px;
+color:#28a745;
+margin-bottom:10px;
+}
+
+.reply-row .value{
+  text-align:left;
+  margin-top:6px;   /* 👈 yaha space aa jayega */
+}
+
+.issue-title{
+margin-top:8px;
+font-weight:600;
+color:#555;
+font-size:13px;
+}
+
+.issue-text{
+margin-top:4px;
+font-size:13px;
+color:#333;
+line-height:1.5;
+}
+
+.divider{
+margin:10px 0;
+border-top:1px solid #f50000;
+}
+
+.popup{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%, -50%);
+background:#333;
+color:#fff;
+padding:10px 16px;
+border-radius:6px;
+font-size:13px;
+opacity:0;
+transition:0.4s;
+z-index:9999;
+}
+
+.popup.show{
+opacity:1;
+}
+</style>
+</head>
+
+<body>
+
+
+<!-- HEADER -->
+
+<div class="header">
+<i class="fa-solid fa-arrow-left" onclick="goBack()"></i>
+<h2>Your Ticket History</h2>
+</div>
+
+
+<div id="autoDeletePopup" class="popup">
+Your support ticket will be automatically deleted after 2 days.
+</div>
+
+<!-- CONTENT -->
+
+<div class="container">
+<div id="ticketHistory"></div>
+</div>
+
+<!-- FIREBASE -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+
+/* 🔥 Firebase config */
+
+const firebaseConfig = {
+apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
+authDomain: "btcinvest-c0e25.firebaseapp.com",
+projectId: "btcinvest-c0e25",
+storageBucket: "btcinvest-c0e25.firebasestorage.app",
+messagingSenderId: "204937458487",
+appId: "1:204937458487:web:cc27ece1249999279f60b2",
+measurementId: "G-HG0Q8ZHT6G"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+
+/* USER CHECK */
+
+firebase.auth().onAuthStateChanged(user=>{
+
+if(!user){
+
+window.location.href="login.html";
+return;
+
+}
+
+loadTickets(user.email);
+
+});
+
+/* LOAD TICKETS */
+
+function loadTickets(email){
+
+const history = document.getElementById("ticketHistory");
+
+db.collection("user_support_tickets")
+.where("email","==",email)
+.orderBy("time","desc")
+.get()
+.then((querySnapshot)=>{
+
+if(querySnapshot.empty){
+
+history.innerHTML=`
+<div class="no-ticket">
+<i class="fa-solid fa-ticket"></i>
+<p>No tickets found</p>
+</div>
+`;
+
+return;
+
+}
+
+querySnapshot.forEach(doc=>{
+
+const data = doc.data();
+
+let statusClass="pending";
+
+if(data.status=="Verifying") statusClass="verifying";
+if(data.status=="Success") statusClass="success";
+
+history.innerHTML+=`
+
+<div class="ticket-card">
+
+
+<div class="ticket-row">
+<div class="label">Status</div>
+<div class="value status ${statusClass}">${data.status}</div>
+</div>
+
+
+<div class="ticket-row">
+<div class="label">Ticket ID</div>
+<div class="value">${data.ticketCustomID || "-"}</div>
+</div>
+
+<div class="ticket-row">
+<div class="label">Subject</div>
+<div class="value">${data.subject}</div>
+</div>
+
+
+<div class="ticket-row">
+<div class="label">Date</div>
+<div class="value">${new Date(data.time).toLocaleString()}</div>
+</div>
+
+<div class="issue-title">Your Issue</div>
+<div class="issue-text">
+${data.message}
+</div>
+
+<div class="divider"></div>
+
+${data.reply ? `
+<div class="reply">
+<b>Message from TrustDollar Support:</b><br>
+${data.reply}
+</div>
+` : ""}
+
+</div>
+
+`;
+
+});
+
+});
+
+}
+
+/* BACK BUTTON */
+
+function goBack(){
+
+window.history.back();
+
+}
+
+function showAutoDeletePopup(){
+
+const popup=document.getElementById("autoDeletePopup");
+
+popup.classList.add("show");
+
+setTimeout(()=>{
+popup.classList.remove("show");
+},2000);
+
+}
+
+showAutoDeletePopup();
+
+</script>
+
+</body>
+</html>
