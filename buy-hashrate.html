@@ -1587,10 +1587,10 @@ window.openModal = function (name, cost, days, profit, imgSrc = "") {
   newConfirmBtn.onclick = async () => {
 
   // ❌ TEMP BLOCK (baad me hata dena)
-  showGlassAlert(
-    "All Hashrate Sold Out",
-    "Due to high demand, all hashrate slots are currently full. Please wait until today ofter 9 pm to try again."
-  );
+showGlassAlert(
+  "All Hashrate Slots Sold Out",
+  "Due to high demand, all hashrate slots are currently full. Please try again after some time."
+);
   return;
 
     if (walletBalance < cost) {
