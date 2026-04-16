@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Withdraw</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  
+  <!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
   <style>
     /* General Reset */
     html, body {
@@ -18,8 +19,8 @@
     }
 
     * {
-      box-sizing: border-box;   /* ✅ border/padding overflow fix */
-      max-width: 100%;          /* ✅ kisi element ko overflow karne se rokta hai */
+       box-sizing: border-box;  /* ✅ border/padding overflow fix */
+               /* ✅ kisi element ko overflow karne se rokta hai */
     }
 
     body {
@@ -48,19 +49,22 @@
       color: #ff00d9;
     }
 
-    .info-text-box {
-      border: 1.8px solid #28a745;
-      background: #f9fffa;
-      color: #28a745;
-      padding: 12px 14px;
-      border-radius: 5px;
-      font-size: 14px;
-      font-weight: 500;
-      margin: 12px 0 18px 0;
-      text-align: center;
-      line-height: 1.5;
-    }
+     
+      .info-text-box {
+  background: transparent;
+  border: none;
+  box-shadow: none;
 
+  padding: 8px 4px;
+  margin: 12px 0 18px 0;
+
+  font-size: 13px;     /* 👈 size chhota */
+  line-height: 1.6;    /* 👈 readable */
+  text-align: center;
+
+  color: #111;
+  font-weight: 400;    /* 👈 light premium feel */
+} 
     /* Button */
     .btn-withdraw {
       background: #28a745;
@@ -113,18 +117,7 @@
     }
     .refresh-btn:hover { background: #138496; }
 
-    /* Popup Overlay */
-    .popup-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      overflow-x: hidden;  /* ✅ popup me bhi horizontal scroll off */
-    }
+
     .popup {
       background: #fff;
       border-radius: 5px;
@@ -138,10 +131,7 @@
       flex-direction: column;
       align-items: center;
     }
-    @keyframes fadeIn {
-      from {opacity: 0; transform: scale(0.9);}
-      to {opacity: 1; transform: scale(1);}
-    }
+    
 
     .popup label {
       font-size: 13px;
@@ -161,25 +151,7 @@
       text-align: center;
     }
 
-    /* Action Buttons */
-    .action-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 14px;
-      width: 100%;
-    }
-    .action-buttons button {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 13px;
-      color: #fff;
-    }
-    .close-btn { background: #dc3545; }
-    .submit-btn { background: #28a745; }
+
 
 /* ✅ Success & Error Popups (Always on Top of Modal) */
 .thankyou-popup, .error-popup {
@@ -424,12 +396,8 @@ input::placeholder { color: #888; }
 }
 .dropdown-list li:hover { background: #f0f0f0; }
 
-.action-buttons { display: flex; margin-top: 18px; }
-.action-buttons button {
-  flex: 1; padding: 14px; border: none; border-radius: 8px;
-  cursor: pointer; font-weight: bold; font-size: 15px; color: #fff;
-  transition: 0.3s; background: #007bff;
-}
+
+
 .action-buttons button:hover { background: #0069d9; }
 
 #message {
@@ -440,10 +408,6 @@ input::placeholder { color: #888; }
   font-size: 15px; font-weight: 600; display: none;
   z-index: 9999; max-width: 80%; text-align: center;
   animation: fadeIn 0.3s ease;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translate(-50%, -60%); }
-  to { opacity: 1; transform: translate(-50%, -50%); }
 }
 
 .info-box {
@@ -583,50 +547,7 @@ input::placeholder { color: #888; }
   color: #2563eb;
 }
 
-/* 🧾 Labels + Inputs */
-.popup-withdraw label {
-  display: block;
-  width: 100%;
-  text-align: left;
-  margin: 10px 0 5px;
-  font-weight: 600;
-  color: #374151;
-  font-size: 0.9rem;
-}
 
-.popup-withdraw input,
-.popup-withdraw select {
-  width: 100%;
-  padding: 10px 14px;
-  font-size: 15px;
-  border: 1.8px solid #d1d5db;
-  border-radius: 5px;
-  background: #f9fafb;
-  color: #111827;
-  transition: all 0.25s ease;
-}
-
-.popup-withdraw input:focus,
-.popup-withdraw select:focus {
-  border-color: #16a34a;
-  background: #ffffff;
-  box-shadow: 0 0 8px rgba(22, 163, 74, 0.25);
-  outline: none;
-}
-
-.popup-withdraw {
-  z-index: 99999; /* ⬆️ Popup ko sabse upar le aayega */
-  position: fixed; /* absolute se fixed karo for layering */
-}
-
-/* 🟩 Buttons Section */
-.action-buttons {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  gap: 10px;
-  margin-top: 18px;
-}
 
 .action-buttons button {
   flex: 1;
@@ -640,25 +561,7 @@ input::placeholder { color: #888; }
   transition: all 0.25s ease;
 }
 
-/* ❌ Cancel Button */
-.close-btn {
-  background: #dc2626;
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
-}
-.close-btn:hover {
-  background: #b91c1c;
-  transform: scale(1.05);
-}
 
-/* ✅ Submit Button */
-.submit-btn {
-  background: linear-gradient(90deg, #16a34a, #22c55e);
-  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
-}
-.submit-btn:hover {
-  background: linear-gradient(90deg, #22c55e, #16a34a);
-  transform: scale(1.05);
-}
 
 /* ✨ Animation */
 @keyframes fadeIn {
@@ -672,32 +575,15 @@ input::placeholder { color: #888; }
   }
 }
 
-/* 📱 Responsive Design */
-@media (max-width: 480px) {
-  .popup-withdraw {
-    max-width: 95%;
-    padding: 18px;
-    border-radius: 5px;
-  }
 
-  .popup-info-box {
-    font-size: 14px;
-    padding: 10px;
-  }
-
-  .popup-withdraw input {
-    font-size: 14px;
-  }
-
-  .action-buttons {
-    flex-direction: column;
-  }
-
-  .action-buttons button {
-    width: 100%;
-  }
+/* 🟩 Buttons Section */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+  margin-top: 18px;
 }
-
 
 /* Refresh Loader */
 #refreshLoader {
@@ -877,138 +763,190 @@ input::placeholder { color: #888; }
   }
 }
 
-</style>
+/* 📄 Clean Content Area */
+#contentArea {
+  padding: 15px 10px;
+  margin: 10px 0;
+  min-height: 80px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+  font-size: 15px;     /* 👈 chhota kiya */
+  color: #777;         /* 👈 light grey (premium feel) */
+  font-weight: 400;
+}
+
+#contentArea::before {
+  content: "⬆️";
+  font-size: 26px;
+  margin-bottom: 8px;
+  animation: bounceUp 1.2s infinite;
+}
+
+/* 🔥 Animation */
+@keyframes bounceUp {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.clean-ui {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  width: 90%;
+  max-width: 380px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  animation: fadeIn 0.25s ease;
+}
+
+.clean-ui h2 {
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+/* Labels */
+.clean-ui label {
+  font-size: 13px;
+  color: #666;
+  margin-top: 10px;
+  display: block;
+}
+
+/* Inputs */
+.clean-ui input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-top: 5px;
+}
+
+/* Select */
+.select-box {
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Amount */
+.amount-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 5px;
+  padding: 5px;
+}
+
+.amount-box input {
+  border: none;
+  flex: 1;
+  outline: none;
+}
+
+.coin {
+  font-size: 13px;
+  margin-right: 6px;
+  color: #555;
+}
+
+.max-btn {
+  background: #f0b90b;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* Available */
+.available {
+  font-size: 12px;
+  color: #777;
+  margin-top: 8px;
+}
 
 
-</style>
+/* 🔴 Cancel Button (Premium Red) */
+.close-btn {
+  flex: 1;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+  border: none;
+  padding: 13px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(220,38,38,0.3);
+  transition: all 0.25s ease;
+}
 
-</head>
-<body>
-  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+/* Hover */
+.close-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 20px rgba(220,38,38,0.4);
+}
 
-  <div class="dashboard">
-
-
-<!-- ✅ TrustDollar Popup -->
-<div id="withdrawalPopup" class="popup-overlay">
-  <div class="popup-box">
-    <h2>✅ Withdrawal Request Submitted!</h2>
-    <p>
-      <span class="green">Thank you!</span> Your withdrawal request has been received.<br><br>
-      <span class="red">⚠ Please do not submit multiple withdrawals.</span><br>
-      Our system is securely processing your transaction.<br>
-      You’ll receive a confirmation email shortly.
-    </p>
-    <button id="closePopupBtn">OK</button>
-  </div>
-</div>
-
-    <!-- ✅ Withdrawal Card -->
-   <div class="balance-card">
-    <div class="balance-icon">
-      <i class='bx bx-up-arrow-circle'></i>
-    </div>
-    <div class="balance-info">
-      <h3>Total Withdrawal (USDT)</h3>
-      <p class="amount">$<span id="totalWithdraw">0.00</span></p>
-      <small id="withdrawLevel">“Timing: / Not Ready”</small>
-    </div>
-  </div>
+/* Click effect */
+.close-btn:active {
+  transform: scale(0.95);
+}
 
 
-  <!-- ✅ Buttons Row -->
-  <div class="clean-buttons">
-    <div class="clean-btn" onclick="loadPage('primary.html')">
-      <i class='bx bx-star'></i>
-      <p>Primary </p>
-    </div>
-    <div class="clean-btn" onclick="loadPage('add-multiple.html')">
-      <i class='bx bx-plus-circle'></i>
-      <p> Multiple</p>
-    </div>
-    <div class="clean-btn" onclick="loadPage('records.html')">
-      <i class='bx bx-book'></i>
-      <p> Record</p>
-    </div>
-  </div>
+/* 🟢 Submit Button (Premium Green) */
+.submit-btn {
+  flex: 1;
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: #fff;
+  border: none;
+  padding: 13px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(22,163,74,0.3);
+  transition: all 0.25s ease;
+}
 
-  <!-- ✅ Content Area -->
-  <div id="contentArea">📄 Select a menu above to load content</div>
+/* Hover */
+.submit-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 20px rgba(22,163,74,0.4);
+}
 
-  <!-- Withdrawal Info Card -->
-  <div class="info-card">
-    <h3>Withdrawal Section</h3>
+/* Click effect */
+.submit-btn:active {
+  transform: scale(0.95);
+}
 
-    <!-- Green info box -->
-    <div class="info-text-box">
-      Click below to <b>Withdraw Funds</b> securely.
-    </div>
+#receiverAmountBox {
+  background: #f9fafb;
+  border: 1px dashed #16a34a;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 8px;
+}
 
-    <!-- Withdraw Button -->
-    <button class="btn-withdraw" onclick="openPopup()">
-      <i class='bx bx-up-arrow-circle'></i> Request Withdrawal
-    </button>
-  </div>
+/* 🔴 Insufficient Balance UI */
+.input-error {
+  border: 1.5px solid #dc3545 !important;
+  background: #fff5f5;
+}
 
-  <!-- Withdrawal History -->
-  <div class="history-section">
-    <div class="history-header-box">
-      <span class="title"> History</span>
-      <button class="refresh-btn" onclick="manualRefresh()">🔄 Refresh</button>
-    </div>
-    <div id="withdrawHistoryList">
-      <p style="text-align:center; color:#666;">Loading...</p>
-    </div>
-  </div>
+.max-disabled {
+  background: #ccc !important;
+  cursor: not-allowed;
+}
 
-</div>
-
-<!-- Refresh Loader -->
-<div id="refreshLoader">
-  <div class="loader-wrapper">
-    <div class="loader-ring"></div>
-    <div class="loader-logo">
-      <img src="myphoto/trustlogo.png" alt="Logo">
-    </div>
-  </div>
-</div>
-
-<!-- Popup -->
-<div class="popup-overlay" id="popupOverlay">
-  <div class="popup-withdraw">
-    <h2>Withdraw Funds</h2>
-
-    <!-- Info Box for Min + Balance -->
-    <div class="popup-info-box">
-      <p>Minimum withdrawal: <b style="color:#28a745;">$20</b></p>
-      <p>Available balance: <b id="popupBalance" style="color:#007bff;">0.00</b></p>
-    </div>
-
-    <label>Amount ($)</label>
-    <input type="number" id="withdrawAmount" class="amount-input" placeholder="Enter withdrawal amount">
-
-    <label>Type</label>
-    <input type="text" value="USDT (BEP20)" disabled class="address-input">
-
-    <label>Your Wallet Address</label>
-    <input type="text" id="withdrawAddress" class="address-input" placeholder="Set your primary address first" readonly>
-
-    <!-- Buttons -->
-    <div class="action-buttons">
-      <button class="close-btn" onclick="cancelWithdraw()">Cancel</button>
-      <button class="submit-btn" onclick="submitWithdraw()">Submit</button>
-    </div>
-  </div>
-</div>
-
-
-<div class="thankyou-popup" id="thankyouPopup">Withdrawal Requested</div>
-<div class="error-popup" id="errorPopup">Enter valid details</div>
-
-<!-- ✅ BTCInvest Auto Smart Bottom Navbar -->
-<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
-
-<style>
 :root {
   --nav-bg: #fff;
   --nav-text: #444;
@@ -1118,7 +1056,218 @@ input::placeholder { color: #888; }
     font-size: 9.5px;
   }
 }
+
+/* 🟢 Sent & Received Green Style */
+.withdraw-status.sent {
+  color: #16a34a;   /* premium green */
+  font-weight: 600;
+}
+
+.withdraw-status.received {
+  color: #22c55e;   /* thoda light green */
+  font-weight: 600;
+}
+
+/* Badge bhi green kar dete hain */
+.withdraw-card-header .badge.sent {
+  background: #16a34a;
+  color: #fff;
+}
+
+.withdraw-card-header .badge.received {
+  background: #22c55e;
+  color: #fff;
+}
+
 </style>
+</head>
+<body>
+<div id="errorPopup" class="error-popup"></div>
+<div id="thankyouPopup" class="thankyou-popup"></div>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+  <div class="dashboard">
+
+
+<!-- ✅ TrustDollar Popup -->
+<div id="withdrawalPopup" class="popup-overlay">
+  <div class="popup-box">
+    <h2>✅ Withdrawal Request Submitted!</h2>
+    <p>
+      <span class="green">Thank you!</span> Your withdrawal request has been received.<br><br>
+      <span class="red">⚠ Please do not submit multiple withdrawals.</span><br>
+      Our system is securely processing your transaction.<br>
+      You’ll receive a confirmation email shortly.
+    </p>
+    <button id="closePopupBtn">OK</button>
+  </div>
+</div>
+
+    <!-- ✅ Withdrawal Card -->
+   <div class="balance-card">
+    <div class="balance-icon">
+      <i class='bx bx-up-arrow-circle'></i>
+    </div>
+    <div class="balance-info">
+      <h3>Total Withdrawal (USDT)</h3>
+      <p class="amount">$<span id="totalWithdraw">0.00</span></p>
+      <small id="withdrawLevel">“Timing: / Not Ready”</small>
+    </div>
+  </div>
+
+
+  <!-- ✅ Buttons Row -->
+  <div class="clean-buttons">
+    <div class="clean-btn" onclick="loadPage('primary.html')">
+      <i class='bx bx-star'></i>
+      <p>Primary </p>
+    </div>
+    <div class="clean-btn" onclick="loadPage('add-multiple.html')">
+      <i class='bx bx-plus-circle'></i>
+      <p> Multiple</p>
+    </div>
+    <div class="clean-btn" onclick="loadPage('records.html')">
+      <i class='bx bx-book'></i>
+      <p> Record</p>
+    </div>
+  </div>
+  <!-- ✅ Content Area --> <div id="contentArea">📄 Select a menu above to load content</div>
+
+  <div class="info-card">
+  
+
+<div class="info-text-box">
+  <b>Secure Withdrawal Options</b><br><br>
+
+  🔹 Withdraw funds directly to your personal wallet<br>
+  🔹 Send funds instantly to your friend's wallet<br><br>
+
+     👇Choose your preferred option below 👇
+</div>
+<div style="display:flex; gap:10px;">
+  
+  <!-- ✅ Manual -->
+  <button class="btn-withdraw" onclick="openPopup()" style="flex:1;">
+    <i class='bx bx-up-arrow-circle'></i> Withdraw
+  </button>
+
+  <!-- ✅ Friend -->
+  <button class="btn-withdraw" onclick="openFriendPopup()" style="flex:1; background:#007bff;">
+    <i class='bx bx-user'></i> Friend
+  </button>
+
+</div>
+</div>
+
+<div id="withdrawHistoryList"></div>
+
+<!-- Popup -->
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup-withdraw clean-ui">
+
+    <h2>Transfer USDT to Your Wallet</h2>
+
+    <!-- Address -->
+    
+    <label style="font-size:13px; color:#555; font-weight:600;">
+  Your Wallet Address
+  </label>
+    <input 
+      type="text" 
+      id="withdrawAddress" 
+      placeholder="Your wallet address"
+      readonly
+    >
+
+    <!-- Network -->
+    <label>Network</label>
+    <div class="select-box">
+      <span>USDT (BEP20)</span>
+      
+    </div>
+
+    <!-- Amount -->
+    <label>Withdrawal Amount</label>
+    <div class="amount-box">
+      <input 
+        type="number" 
+        id="withdrawAmount" 
+        placeholder="Minimum $20"
+      >
+      <span class="coin">USDT</span>
+      <button class="max-btn" onclick="setWithdrawMax()">MAX</button>
+    </div>
+
+    
+ <div class="available">
+  Available for withdrawal: 
+  <span id="popupBalance">0.00</span> USDT
+</div>
+
+    <!-- Buttons -->
+    <div class="action-buttons">
+      <button class="close-btn" onclick="cancelWithdraw()">Cancel</button>
+      <button class="submit-btn" onclick="submitWithdraw()">Submit</button>
+    </div>
+
+  </div>
+</div>
+<div class="popup-overlay" id="friendPopup">
+  <div class="popup-withdraw clean-ui">
+
+  <h2>Transfer to Another User</h2>
+<p style="font-size:12px; color:#777;">
+  Instant & secure transfer within the platform
+</p>
+
+<!-- Receiver UID -->
+
+<small>Enter the recipient’s valid Account Identifier to proceed</small>
+<input type="text" id="receiverUID" placeholder="Enter Account Identifier">
+
+<!-- ✅ YAHAN AAYEGA NAME -->
+<div id="receiverName" style="margin-top:6px; font-size:13px;"></div>
+
+
+<!-- Your UID -->
+<label>Your Account Identifier</label>
+<div class="amount-box">
+  <input type="text" id="myUID" readonly placeholder="Loading Your Account Identifier">
+  <button class="max-btn" onclick="copyUID()">Copy</button>
+</div>
+
+    <!-- Amount -->
+    <label>Amount (USDT)</label>
+    <div class="amount-box">
+      <input type="number" id="friendAmount" placeholder="Enter amount">
+      <span class="coin">USDT</span>
+      <button class="max-btn" onclick="setFriendMax()">MAX</button>
+    </div>
+
+    <!-- ✅ YAHAN ADD KARNA HAI -->
+<div class="available">
+  Current Fee: <span id="feePercent">10</span>%
+</div>
+
+    <!-- ✅ Receiver gets (ALAG rakho) -->
+    <div class="available" id="receiverAmountBox">
+      Receiver gets: <span id="receiverAmount">0.00</span> USDT  
+      <small style="color:#dc2626;">(10% fee applied)</small>
+    </div>
+
+    <!-- Available -->
+    <div class="available">
+      Available: <span id="popupBalanceFriend">0.00</span> USDT
+    </div>
+
+    <!-- Buttons -->
+    <div class="action-buttons">
+      <button class="close-btn" onclick="closeFriendPopup()">Cancel</button>
+      <button class="submit-btn" onclick="submitFriendWithdraw()">Send</button>
+    </div>
+
+  </div>
+</div>
 
 <!-- ✅ HTML Navbar -->
 <div class="bottom-nav" id="mainNav">
@@ -1143,100 +1292,13 @@ input::placeholder { color: #888; }
   </a>
 </div>
 
-<script>
-/* 🌗 Auto theme detect */
-function detectTheme() {
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  document.documentElement.setAttribute("data-theme", prefersDark ? "dark" : "light");
-}
-detectTheme();
-window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", detectTheme);
-
-/* 💡 Auto highlight based on page URL */
-const currentPage = window.location.pathname.split("/").pop().toLowerCase();
-document.querySelectorAll(".bottom-nav .nav-item").forEach(item => {
-  const href = item.getAttribute("href")?.toLowerCase();
-  if (currentPage === href) item.classList.add("active");
-});
-
-/* 🌊 Ripple effect + manual highlight */
-document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
-  item.addEventListener("click", (e) => {
-    // highlight
-    document.querySelector(".bottom-nav .nav-item.active")?.classList.remove("active");
-    item.classList.add("active");
-
-    // ripple
-    const ripple = document.createElement("span");
-    ripple.classList.add("ripple");
-    const rect = item.getBoundingClientRect();
-    ripple.style.left = `${e.clientX - rect.left}px`;
-    ripple.style.top = `${e.clientY - rect.top}px`;
-    item.appendChild(ripple);
-    setTimeout(() => ripple.remove(), 500);
-  });
-});
-</script>
-
-
-
-
-<script>
-  // 🔥 Bottom nav auto-active highlight logic
-  const navLinks = document.querySelectorAll(".bottom-nav a");
-
-  // current page ka URL filename nikalta hai (e.g., mining.html)
-  const currentPage = window.location.pathname.split("/").pop();
-
-  navLinks.forEach(link => {
-    const linkPage = link.getAttribute("href");
-
-    if (linkPage === currentPage) {
-      link.classList.add("active"); // ✅ Active highlight add karega
-    } else {
-      link.classList.remove("active");
-    }
-
-    // Optional: click par bhi active ho turant
-    link.addEventListener("click", () => {
-      navLinks.forEach(nav => nav.classList.remove("active"));
-      link.classList.add("active");
-    });
-  });
-</script>
-
-
-<script>
-  // ✅ Show popup
-  function showPopup() {
-    const popup = document.getElementById("withdrawalPopup");
-    popup.style.display = "flex";
-
-    // ✅ (Optional) auto-close after 3 seconds
-    // setTimeout(closePopup, 3000);
-  }
-
-  // ✅ Close popup
-  function closePopup() {
-    const popup = document.getElementById("withdrawalPopup");
-    popup.style.display = "none";
-  }
-
-  // ✅ Ensure close button works (bind event after DOM loaded)
-  document.addEventListener("DOMContentLoaded", () => {
-    const closeBtn = document.getElementById("closePopupBtn");
-    if (closeBtn) {
-      closeBtn.addEventListener("click", closePopup);
-    }
-  });
-</script>
-
-
 <!-- ✅ Firebase + Logic -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-  import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy, doc, updateDoc, getDoc, onSnapshot } 
+  from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  import { runTransaction } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
@@ -1261,6 +1323,7 @@ document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
   let currentUserId = null;
   let userBalance = 0;
   let userWalletAddress = "";
+  let sendCount = 0;
 
   function showError(msg) {
     errorPopup.textContent = msg;
@@ -1279,167 +1342,216 @@ document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
     return "WDBHGR" + randomNum + "G";
   }
 
-  async function loadUserProfile(uid) {
-    const ref = doc(db, "users", uid);
-    const snap = await getDoc(ref);
+
+  function loadUserProfile(uid) {
+  const ref = doc(db, "users", uid);
+
+  onSnapshot(ref, (snap) => {
     if (snap.exists()) {
       const data = snap.data();
-      userBalance = data.walletBalance || 0;
+
+      userBalance = parseFloat(data.walletBalance || 0);
       userWalletAddress = data.primaryAddress || "";
 
       // ✅ Balance update
-      if (popupBalance) popupBalance.textContent = userBalance.toFixed(2);
-
-      // ✅ Address input logic
-      if (userWalletAddress) {
-        addressInput.value = userWalletAddress;
-      } else {
-        addressInput.value = "";
-        addressInput.placeholder = "Set your primary address first";
+      if (popupBalance) {
+        popupBalance.textContent = Math.max(0, userBalance).toFixed(2);
       }
 
-      // ✅ Lifetime withdrawal show
-      if (data.lifetimeWithdrawal !== undefined) {
-        document.getElementById("totalWithdraw").textContent = data.lifetimeWithdrawal.toFixed(2);
-      } else {
-        document.getElementById("totalWithdraw").textContent = "0.00";
+      // ✅ Address auto update (🔥 main fix)
+      if (addressInput) {
+        if (userWalletAddress) {
+          addressInput.value = userWalletAddress;
+        } else {
+          addressInput.value = "";
+          addressInput.placeholder = "Set your primary address first";
+        }
       }
+
+      // ✅ Lifetime withdrawal
+      document.getElementById("totalWithdraw").textContent =
+        (data.lifetimeWithdrawal || 0).toFixed(2);
     }
-  }
+  });
+}
 
-  window.openPopup = function () {
-    popupOverlay.style.display = "flex";
-    document.getElementById("withdrawAmount").value = "";
-    addressInput.value = userWalletAddress || "";
-  };
+   window.openPopup = function () {
+  popupOverlay.style.display = "flex";
+
+  const amountInput = document.getElementById("withdrawAmount");
+
+  amountInput.value = "";
+
+  const balance = Math.max(0, userBalance || 0);
+
+  // ✅ 👉 YE LINE ADD KAR (IMPORTANT)
+  document.getElementById("popupBalance").textContent = balance.toFixed(2);
+
+  amountInput.max = balance;
+
+  addressInput.value = userWalletAddress || "";
+
+  const maxBtn = document.querySelector(".max-btn");
+
+if (balance <= 0) {
+  amountInput.classList.add("input-error");
+  amountInput.placeholder = "Insufficient balance";
+
+  if (maxBtn) maxBtn.classList.add("max-disabled");
+} else {
+  amountInput.classList.remove("input-error");
+
+  if (maxBtn) maxBtn.classList.remove("max-disabled");
+}
+
+};
+
 
   window.cancelWithdraw = function () {
     popupOverlay.style.display = "none";
   };
 
+
 // witrowal 
 window.submitWithdraw = async function () {
+
+  const btn = document.querySelector("#popupOverlay button.submit-btn");
+    btn.disabled = true;
+
   const amount = parseFloat(document.getElementById("withdrawAmount").value) || 0;
   const address = addressInput.value.trim();
 
+  // ✅ Validation
   if (amount < 20) {
     showError("Minimum withdrawal is $20");
+    btn.disabled = false;
     return;
   }
+
   if (amount > userBalance) {
     showError("Insufficient balance");
+    btn.disabled = false;
     return;
   }
+
   if (!address || address.length < 20) {
     showError("Please set your primary address first");
+    btn.disabled = false;
     return;
   }
 
   const orderId = generateOrderId();
 
-  if (currentUserId) {
-    const ref = doc(db, "users", currentUserId);
-
-    // 1️⃣ Add withdrawal record
-    await addDoc(collection(db, "users", currentUserId, "withdrawals"), {
-      amount: amount,
-      type: "USDT (BEP20)",
-      address: address,
-      date: serverTimestamp(),
-      status: "Pending",
-      orderId: orderId
-    });
-    
-// ✅ Universal Withdrawal Email Notification (Mobile + Desktop both)
-async function sendWithdrawalEmail(name, email, amount, currency, status, txid, note) {
   try {
-    const TRUSTDOLLAR_API =
-      "https://script.google.com/macros/s/AKfycbzufpP7RI3jAWgge0H2NLKfUowVZeIHW7FXAF8PWFBQHsUn7hsADg0r0CdbgwGY9zcI/exec";
 
-    // ✅ Build the data payload
-    const payload = {
-      name: name || "User",
-      email: email || "trustdollarteam@gmail.com",
-      amount: amount || "0",
-      currency: currency || "USDT",
-      status: status || "requested",
-      txid: txid || "TX0000",
-      note: note || "No note",
-      time: new Date().toLocaleString(),
-    };
+    if (currentUserId) {
+      const ref = doc(db, "users", currentUserId);
 
-    // ✅ Make GET request (safe for mobile + desktop)
-    const response = await fetch(
-      `${TRUSTDOLLAR_API}?data=${encodeURIComponent(JSON.stringify(payload))}`,
-      {
-        method: "GET",
-        mode: "no-cors", // mobile browsers ke liye safe
-        cache: "no-cache",
+      function generateToken(){
+        const randomNum = Math.floor(10000000 + Math.random() * 90000000);
+        const randomChar = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+        return "WDRL" + randomNum + randomChar;
       }
-    );
 
-    // ✅ Optional: success message for user
-    showPopup("✅ Withdrawal request sent! Check your email for confirmation.");
+      const token = generateToken();
 
-    console.log("📤 Withdrawal email request sent:", payload);
-  } catch (err) {
-    console.error("❌ Email Error:", err);
-    alert("⚠️ Something went wrong while sending the email. Try again.");
+      // ✅ 1. Add withdrawal
+      await addDoc(collection(db, "users", currentUserId, "withdrawals"), {
+        amount: amount,
+        type: "USDT (BEP20)",
+        address: address,
+        date: serverTimestamp(),
+        status: "pending",
+        orderId: orderId,
+        verifyToken: token,
+        verified: false
+      });
+
+   // ✅ 2. Deduct balance (SAFE TRANSACTION)
+try {
+  await runTransaction(db, async (transaction) => {
+
+    const userDoc = await transaction.get(ref);
+
+    // ❌ User check
+    if (!userDoc.exists()) {
+      throw new Error("User not found");
+    }
+
+    const data = userDoc.data();
+
+    // 🔐 Safe balance read
+    const currentBalance = parseFloat(data.walletBalance || 0);
+
+    // ❌ Invalid amount check
+    if (!amount || amount <= 0) {
+      throw new Error("Invalid amount");
+    }
+
+    // ❌ Balance check
+    if (amount > currentBalance) {
+      throw new Error("Insufficient balance");
+    }
+
+    // 🔥 Optional: minimum withdraw check
+    if (amount < 20) {
+      throw new Error("Minimum withdrawal is $20");
+    }
+
+    // 🔥 Deduct balance safely
+    const newBalance = currentBalance - amount;
+
+    // ❌ Extra safety (kabhi negative na ho)
+    if (newBalance < 0) {
+      throw new Error("Balance error");
+    }
+
+    transaction.update(ref, {
+      walletBalance: newBalance,
+      lastUpdated: new Date() // optional logging
+    });
+
+  });
+
+} catch (err) {
+
+  console.error("❌ Transaction Error:", err);
+
+  // 🔥 clean error message
+  if (err.message) {
+    showError(err.message);
+  } else {
+    showError("Transaction failed");
+  }
+
+  btn.disabled = false;
+  return;
+}
+
+// ✅ 3. Ensure lifetimeWithdrawal exists
+const userSnap = await getDoc(ref);
+if (userSnap.exists()) {
+  const data = userSnap.data();
+  if (data.lifetimeWithdrawal === undefined) {
+    await updateDoc(ref, { lifetimeWithdrawal: 0 });
   }
 }
 
-    // ✅ CALL EMAIL FUNCTION RIGHT HERE 🔥
-    sendWithdrawalEmail(
-      auth.currentUser.displayName || "User",
-      auth.currentUser.email,
-      amount,
-      "USDT",
-      "requested",
-      orderId,
-      "Withdrawal Request Initiated"
-    );
+// ✅ 4. Refresh UI
+await loadWithdrawHistory(currentUserId);
 
-    // 2️⃣ Deduct from balance
-    await updateDoc(ref, { walletBalance: userBalance - amount });
+popupOverlay.style.display = "none";
+showSuccess("Withdrawal Requested ✅");
 
-    // 3️⃣ Ensure lifetimeWithdrawal exists
-    const userSnap = await getDoc(ref);
-    if (userSnap.exists()) {
-      const data = userSnap.data();
-      if (data.lifetimeWithdrawal === undefined) {
-        await updateDoc(ref, { lifetimeWithdrawal: 0 });
-      }
-    }
+}
+} catch (err) {
+  console.error(err);
+  showError("Something went wrong");
+}
 
-    // 4️⃣ Refresh UI
-    loadWithdrawHistory(currentUserId);
-    loadUserProfile(currentUserId);
-  }
-
-  popupOverlay.style.display = "none";
-  showSuccess("Withdrawal Requested!");
+// ✅ button end me enable hoga (IMPORTANT)
+btn.disabled = false;
 };
-
-
-window.manualRefresh = function () {
-  const historyList = document.getElementById("withdrawHistoryList");
-
-  // 🔹 Show loader
-  document.getElementById("refreshLoader").style.display = "flex";
-
-  // Refresh logic
-  historyList.innerHTML = "<p style='text-align:center; color:#666;'>Refreshing...</p>";
-  if (currentUserId) {
-    loadWithdrawHistory(currentUserId).then(() => {
-      // 🔹 Hide loader after done
-      document.getElementById("refreshLoader").style.display = "none";
-    });
-  } else {
-    historyList.innerHTML = "<p style='text-align:center; color:red;'>User not logged in!</p>";
-    document.getElementById("refreshLoader").style.display = "none";
-  }
-};
-
 
   async function loadWithdrawHistory(userId) {
     const historyList = document.getElementById("withdrawHistoryList");
@@ -1457,20 +1569,102 @@ window.manualRefresh = function () {
         const dateStr = data.date ? new Date(data.date.seconds * 1000).toLocaleString() : "-";
         const statusClass = (data.status || "Pending").toLowerCase();
 
-        historyList.innerHTML += `
-        <div class="withdraw-card">
-        <div class="withdraw-card-header">
-        <span class="badge">Withdraw</span>
-        <span class="withdraw-status ${statusClass}">${data.status || "Pending"}</span>
-        </div>
-        <div class="withdraw-row"><span class="label">Balance</span><span class="value">$${data.amount || 0}</span></div>
-        <div class="withdraw-row"><span class="label">Type</span><small>${data.type || "USDT (BEP20)"}</small></div>
-        <div class="withdraw-row"><span class="label">Time</span><small>${dateStr}</small></div>
-        <div class="withdraw-row"><span class="label">OrderId</span>
-        <span><small>${data.orderId || docSnap.id}</small>
-        <button class="copy-btn" onclick="copyOrderId('${data.orderId || docSnap.id}')">Copy</button></span>
-        </div>
-        </div>`;
+historyList.innerHTML += `
+<div class="withdraw-card">
+
+<div class="withdraw-card-header">
+  <span class="badge ${
+    data.mode === "sent" ? "sent" :
+    data.mode === "received" ? "received" :
+    ""
+  }">
+    ${
+      data.mode === "sent" ? "Sent" :
+      data.mode === "received" ? "Received" :
+      "Withdraw"
+    }
+  </span>
+
+  <span class="withdraw-status ${
+    data.mode === "sent" ? "sent" :
+    data.mode === "received" ? "received" :
+    statusClass
+  }">
+    ${
+      data.mode === "sent" ? "Sent" :
+      data.mode === "received" ? "Received" :
+      (data.status || "Pending")
+    }
+  </span>
+</div>
+
+  <div class="withdraw-row">
+    <span class="label">Amount</span>
+    <span class="value">$${data.amount || 0}</span>
+  </div>
+
+  <div class="withdraw-row">
+    <span class="label">Type</span>
+    <small>${data.type || "USDT (BEP20)"}</small>
+  </div>
+
+  ${data.mode === "received" ? `
+  <div class="withdraw-row">
+    <span class="label">From</span>
+    <small>${data.fromName || data.from}</small>
+  </div>
+
+  <!-- ✅ RECEIVER FEE -->
+  <div class="withdraw-row">
+    <span class="label">Fee Deducted</span>
+    <small style="color:#dc3545;">
+      ${data.feePercent || 0}% (-$${(data.feeAmount || 0).toFixed(2)})
+    </small>
+  </div>
+
+  <div class="withdraw-row">
+    <span class="label">Original Amount</span>
+    <small>$${(data.originalAmount || data.amount || 0).toFixed(2)}</small>
+  </div>
+  ` : ""}
+
+  ${data.mode === "sent" ? `
+  <div class="withdraw-row">
+    <span class="label">To</span>
+    <small>${data.toName || data.to}</small>
+  </div>
+
+  <!-- ✅ SENDER FEE -->
+  <div class="withdraw-row">
+    <span class="label">Fee</span>
+    <small style="color:#dc3545;">
+      ${data.feePercent || 0}% (-$${(data.feeAmount || 0).toFixed(2)})
+    </small>
+  </div>
+
+  <div class="withdraw-row">
+    <span class="label">Receiver Got</span>
+    <small style="color:#28a745;">
+      $${(data.finalAmount || 0).toFixed(2)}
+    </small>
+  </div>
+  ` : ""}
+
+  <div class="withdraw-row">
+    <span class="label">Time</span>
+    <small>${dateStr}</small>
+  </div>
+
+  <div class="withdraw-row">
+    <span class="label">OrderId</span>
+    <span>
+      <small>${data.orderId || docSnap.id}</small>
+      <button class="copy-btn" onclick="copyOrderId('${data.orderId || docSnap.id}')">Copy</button>
+    </span>
+  </div>
+
+</div>
+`;
       });
     } catch (err) {
       console.error("Error:", err);
@@ -1478,10 +1672,15 @@ window.manualRefresh = function () {
     }
   }
 
-  window.copyOrderId = function (orderId) {
-    navigator.clipboard.writeText(orderId);
-    showError("Order ID copied!");
-  };
+window.copyOrderId = function (orderId) {
+  navigator.clipboard.writeText(orderId)
+    .then(() => {
+      showSuccess("Order ID copied!");
+    })
+    .catch(() => {
+      showError("Copy failed!");
+    });
+};
 
   onAuthStateChanged(auth, (user) => {
     if (!user) window.location.href = "login.html";
@@ -1556,7 +1755,7 @@ window.loadPage = function (page) {
   window.scrollTo(0, 0);
 
   // 🔹 Loading placeholder
-  content.innerHTML = "<p style='text-align:center; color:#28a745;'>⏳ Loading...</p>";
+    content.innerHTML = "";
 
   fetch(page)
     .then(res => res.text())
@@ -1588,103 +1787,367 @@ window.loadPage = function (page) {
     });
 };
 
-// Pull-to-refresh detection
-const loader = document.getElementById("refreshLoader");
 
-// 🔹 Page load hone par loader dikhana (default refresh me)
-window.addEventListener("load", () => {
-  loader.style.display = "flex";
-  setTimeout(() => {
-    loader.style.display = "none";
-  }, 1500); // 1.5 sec baad hide
-});
+// ❌ Close Popup
+window.closeFriendPopup = function () {
+  document.getElementById("friendPopup").style.display = "none";
+};
 
-// 🔹 Manual Refresh Trigger (button ke liye)
-function triggerCustomRefresh() {
-  if (!loader) return;
+// 🔥 Open Friend Popup (ONLY ONE VERSION)
+window.openFriendPopup = function () {
 
-  loader.style.display = "flex";
+  document.getElementById("friendPopup").style.display = "flex";
 
-  if (typeof manualRefresh === "function") {
-    manualRefresh(); // ✅ tumhara function chalega
+  // ✅ UID auto fill
+  document.getElementById("myUID").value = currentUserId || "";
+
+  // ✅ Balance show
+  const balance = Math.max(0, userBalance || 0);
+  document.getElementById("popupBalanceFriend").textContent = balance.toFixed(2);
+
+  // ✅ Reset fields
+  document.getElementById("friendAmount").value = "";
+  document.getElementById("receiverAmount").textContent = "0.00";
+  document.getElementById("receiverUID").value = "";
+  document.getElementById("receiverName").textContent = "";
+
+    // 🔥 YAHAN ADD KAR 👇
+  document.getElementById("feePercent").textContent = 10;
+
+  // 🔥 IMPORTANT: Send button disabled by default
+  const sendBtn = document.querySelector("#friendPopup .submit-btn");
+  if (sendBtn) sendBtn.disabled = true;
+};
+
+
+// 🚀 Submit Friend Withdraw
+window.submitFriendWithdraw = async function () {
+ const btn = document.querySelector("#friendPopup .submit-btn");
+  btn.disabled = true;
+
+  const uid = document.getElementById("receiverUID").value.trim();
+  const amount = parseFloat(document.getElementById("friendAmount").value) || 0;
+
+  if (!currentUserId) {
+    btn.disabled = false;
+    return showError("Login required");
   }
 
-  setTimeout(() => {
-    loader.style.display = "none";
-    isPulled = false;
-  }, 2000);
+  if (!uid) {
+    btn.disabled = false;
+    return showError("Enter receiver UID");
+  }
+
+  if (uid === currentUserId) {
+    btn.disabled = false;
+    return showError("You can't send to yourself");
+  }
+
+  if (amount < 20) {
+    btn.disabled = false;
+    return showError("Minimum $20");
+  }
+
+  if (amount > userBalance) {
+    btn.disabled = false;
+    return showError("Insufficient balance");
+  }
+
+
+  try {
+    const senderRef = doc(db, "users", currentUserId);
+    const receiverRef = doc(db, "users", uid);
+    const senderSnap = await getDoc(senderRef);
+
+    const now = Date.now();
+
+const lastSend = senderSnap.data().lastSendTime || 0;
+  sendCount = senderSnap.data().sendCount24h || 0;
+
+// 🔄 24h reset logic
+if (now - lastSend > 86400000) {
+  sendCount = 0;
 }
 
-// 🔹 Pull-to-refresh detection (mobile)
-let startY = 0;
-let isPulled = false;
+  const feePercent = 10 + (sendCount * 10);
+const fee = amount * (feePercent / 100);
+const finalAmount = amount - fee;
 
-window.addEventListener("touchstart", (e) => {
-  if (window.scrollY === 0) {
-    startY = e.touches[0].clientY;
+// UI update
+
+const orderId = generateOrderId();
+
+   const senderName = senderSnap.data().name || "User";
+
+    const receiverSnap = await getDoc(receiverRef);
+    if (!receiverSnap.exists()) {
+      btn.disabled = false;
+      return showError("User not found");
+    }
+
+    const receiverBalance = parseFloat(receiverSnap.data().walletBalance || 0);
+    const receiverLifetimeDeposit = parseFloat(receiverSnap.data().lifetimeDeposit || 0);
+
+// Sender history (FIXED)
+await addDoc(collection(db, "users", currentUserId, "withdrawals"), {
+  amount,
+  type: "User to User",
+  to: uid,
+  toName: receiverSnap.data().name || "User",
+  date: serverTimestamp(),
+  status: "completed",
+  orderId,
+  mode: "sent",
+
+  // 🔥 NEW
+  feePercent: feePercent,
+  feeAmount: fee,
+  finalAmount: finalAmount
+});
+    // Receiver history
+await addDoc(collection(db, "users", uid, "withdrawals"), {
+  status: "completed",
+  amount: finalAmount,
+  type: "User to User",
+  from: currentUserId,
+  fromName: senderName,
+  date: serverTimestamp(),
+  orderId,
+  mode: "received",
+
+  // 🔥 NEW
+  feePercent: feePercent,
+  feeAmount: fee,
+  originalAmount: amount
+});
+    // Balance update
+   await updateDoc(senderRef, {
+  walletBalance: Math.max(0, userBalance - amount),
+  lastSendTime: now,
+  sendCount24h: sendCount + 1
+});
+   await updateDoc(receiverRef, {
+  walletBalance: receiverBalance + finalAmount,
+  lifetimeDeposit: receiverLifetimeDeposit + finalAmount
+});
+
+    await loadWithdrawHistory(currentUserId);
+    await loadUserProfile(currentUserId);
+
+    closeFriendPopup();
+    showSuccess("Sent Successfully ✅");
+
+  } catch (err) {
+    console.error(err);
+    showError("Something went wrong");
   }
-});
 
-window.addEventListener("touchmove", (e) => {
-  let currentY = e.touches[0].clientY;
-  if (window.scrollY === 0 && currentY - startY > 70 && !isPulled) {
-    isPulled = true;
-    triggerCustomRefresh();
+  btn.disabled = false;
+};
+
+// 🔹 Withdraw MAX
+window.setWithdrawMax = function () {
+  const balance = Math.max(0, userBalance || 0);
+
+  if (balance <= 0) {
+    showError("Insufficient balance");
+    return;
   }
+
+  const input = document.getElementById("withdrawAmount");
+  if (!input) return;
+
+  input.value = balance;
+  input.dispatchEvent(new Event("input"));
+};
+
+// 🔹 Copy UID
+window.copyUID = function () {
+  const uid = document.getElementById("myUID").value;
+  if (!uid) return;
+
+  navigator.clipboard.writeText(uid);
+  showSuccess("UID Copied ✅");
+};
+
+// 🔹 Friend MAX (SAFE + VALIDATION)
+window.setFriendMax = function () {
+  const balance = Math.max(0, userBalance || 0);
+
+  const input = document.getElementById("friendAmount");
+  if (!input) return;
+
+  // ❌ No balance case
+  if (balance <= 0) {
+    showError("Insufficient balance");
+
+    input.classList.add("input-error");
+    input.placeholder = "Insufficient balance";
+    input.value = "";
+
+    document.getElementById("receiverAmount").textContent = "0.00";
+    return;
+  }
+
+  // ✅ Normal case
+  input.classList.remove("input-error");
+  input.value = balance;
+
+  // 🔥 trigger calculation
+  input.dispatchEvent(new Event("input"));
+};
+
+
+// 🔥 LIVE 10% CALCULATION (SAFE VERSION)
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById("friendAmount");
+  const output = document.getElementById("receiverAmount");
+
+  if (!input || !output) return;
+
+  input.addEventListener("input", function () {
+    let amount = parseFloat(this.value);
+
+    // ❌ invalid / negative fix
+    if (isNaN(amount) || amount <= 0) {
+      output.textContent = "0.00";
+      return;
+    }
+
+  
+    // ❌ user balance se zyada
+if (amount > userBalance) {
+  this.classList.add("input-error");
+  output.textContent = "0.00";
+  document.getElementById("feePercent").textContent = 10; // 👈 default reset
+  return;
+} else {
+  this.classList.remove("input-error");
+}
+
+// 🔥 dynamic fee
+const feePercent = 10 + (sendCount * 10);
+
+// 👇 YAHI LINE TU PUCH RAHA THA
+document.getElementById("feePercent").textContent = feePercent;
+
+// 💰 calculation
+const fee = amount * (feePercent / 100);
+const finalAmount = amount - fee;
+
+// ✅ output
+output.textContent = finalAmount.toFixed(2);
+
+  });
 });
 
-window.addEventListener("touchend", () => {
-  isPulled = false;
-});
 
+let lastUID = "";
 
+const uidInput = document.getElementById("receiverUID");
+
+if (uidInput) {
+  uidInput.addEventListener("input", async function () {
+
+    const uid = this.value.trim();
+    const nameBox = document.getElementById("receiverName");
+    const sendBtn = document.querySelector("#friendPopup .submit-btn");
+
+    if (!nameBox || !sendBtn) return;
+
+    lastUID = uid;
+
+    // ❌ empty input
+    if (uid === "") {
+      nameBox.textContent = "";
+      sendBtn.disabled = true;
+      return;
+    }
+
+    nameBox.textContent = "Checking user...";
+    nameBox.style.color = "#666";
+
+    try {
+      const snap = await getDoc(doc(db, "users", uid));
+
+      // 🔥 race condition protection
+      if (uid !== lastUID) return;
+
+      if (snap.exists()) {
+        nameBox.textContent = "✅ " + (snap.data().name || "Verified User");
+        nameBox.style.color = "#16a34a";
+        sendBtn.disabled = false;
+      } else {
+        nameBox.textContent = "❌ User not found";
+        nameBox.style.color = "#dc2626";
+        sendBtn.disabled = true;
+      }
+
+    } catch {
+      nameBox.textContent = "";
+      sendBtn.disabled = true;
+    }
+
+  });
+}
 </script>
 <script>
-  // 🚫 Disable right click, select, drag
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("selectstart", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
+/* 🌗 Auto theme detect */
+function detectTheme() {
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.setAttribute("data-theme", prefersDark ? "dark" : "light");
+}
+detectTheme();
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", detectTheme);
 
-  // 🚫 Disable keyboard shortcuts (copy, paste, inspect, etc.)
-  document.addEventListener("keydown", e => {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "C" || e.key === "X" || e.key === "V" || e.key === "S"))
-    ) {
-      e.preventDefault();
-      return false;
+/* 💡 Auto highlight based on page URL */
+const currentPage = window.location.pathname.split("/").pop().toLowerCase();
+document.querySelectorAll(".bottom-nav .nav-item").forEach(item => {
+  const href = item.getAttribute("href")?.toLowerCase();
+  if (currentPage === href) item.classList.add("active");
+});
+
+/* 🌊 Ripple effect + manual highlight */
+document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
+  item.addEventListener("click", (e) => {
+    // highlight
+    document.querySelector(".bottom-nav .nav-item.active")?.classList.remove("active");
+    item.classList.add("active");
+
+    // ripple
+    const ripple = document.createElement("span");
+    ripple.classList.add("ripple");
+    const rect = item.getBoundingClientRect();
+    ripple.style.left = `${e.clientX - rect.left}px`;
+    ripple.style.top = `${e.clientY - rect.top}px`;
+    item.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 500);
+  });
+});
+</script>
+<script>
+  // ✅ Show popup
+  function showPopup() {
+    const popup = document.getElementById("withdrawalPopup");
+    popup.style.display = "flex";
+
+    // ✅ (Optional) auto-close after 3 seconds
+    // setTimeout(closePopup, 3000);
+  }
+
+  // ✅ Close popup
+  function closePopup() {
+    const popup = document.getElementById("withdrawalPopup");
+    popup.style.display = "none";
+  }
+
+  // ✅ Ensure close button works (bind event after DOM loaded)
+  document.addEventListener("DOMContentLoaded", () => {
+    const closeBtn = document.getElementById("closePopupBtn");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", closePopup);
     }
   });
-
-  // 🔒 Silent DevTools detection (no popup)
-  (function() {
-    const devtools = /./;
-    devtools.toString = function() {
-      return ""; // no alert or console log
-    };
-    console.log("%c", devtools);
-  })();
-
-  // 🔐 Detect DevTools using resize trick (no popup)
-  setInterval(() => {
-    const threshold = 160;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    if (widthDiff || heightDiff) {
-      // Optional: silently redirect or blank the page
-      document.body.innerHTML = "";
-    }
-  }, 1000);
-
-  // 🧱 Disable copy/paste/cut
-  ["copy", "paste", "cut"].forEach(evt =>
-    document.addEventListener(evt, e => e.preventDefault())
-  );
-
-  // 🔁 Freeze console methods silently
-  Object.freeze(console);
-  Object.freeze(window.console);
 </script>
 </body>
 </html>
