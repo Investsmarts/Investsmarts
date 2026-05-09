@@ -1487,7 +1487,6 @@ fetch("network.html")
   import { runTransaction } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyDEQYPJFxQv8yFHptrTqoLHOn2L0PpgVhc",
   authDomain: "btcinvest-c0e25.firebaseapp.com",
@@ -2434,6 +2433,108 @@ function openUplinePage() {
 
 
 </script>
+<style>
+.holiday-bar{
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 24px);
+  max-width: 520px;
 
+  padding: 14px 18px;
+  border-radius: 18px;
+
+  background: rgba(220, 38, 38, 0.92);
+  backdrop-filter: blur(12px);
+
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+
+  box-shadow:
+    0 10px 30px rgba(220,38,38,0.35),
+    inset 0 1px 1px rgba(255,255,255,0.15);
+
+  z-index: 999999;
+
+  animation: holidaySlide 0.4s ease;
+}
+
+@keyframes holidaySlide{
+  from{
+    opacity:0;
+    transform:translateX(-50%) translateY(-20px);
+  }
+  to{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+  }
+}
+</style>
+
+<script>
+function isHoliday() {
+  const day = new Date().getDay();
+
+  // Saturday = 6, Sunday = 0
+  return day === 0 || day === 6;
+}
+
+function applyHolidayMode() {
+
+  const allButtons = document.querySelectorAll("button");
+
+  if (isHoliday()) {
+
+    allButtons.forEach(btn => {
+
+      // ❌ Skip important buttons
+      if (
+        btn.classList.contains("close-btn") ||
+        btn.id === "closePopupBtn"
+      ) return;
+
+      btn.disabled = true;
+
+      // 🔒 Button style
+      btn.style.opacity = "0.6";
+      btn.style.cursor = "not-allowed";
+      btn.style.filter = "grayscale(0.2)";
+
+      // 🔥 Change text
+      if (btn.querySelector(".btn-text")) {
+        btn.querySelector(".btn-text").textContent = "Holiday";
+      }
+
+    });
+
+    // ✅ Premium Holiday Bar
+    const holidayBar = document.createElement("div");
+
+    holidayBar.className = "holiday-bar";
+
+    holidayBar.innerHTML = `
+  🔐 Withdrawal Services Unavailable<br>
+
+  <small style="
+    opacity:.9;
+    font-size:13px;
+    font-weight:500;
+  ">
+    holiday currently in effect
+  </small>
+`;
+
+    document.body.appendChild(holidayBar);
+
+  }
+
+}
+
+// 🚀 Auto run
+window.addEventListener("load", applyHolidayMode);
+</script>
 </body>
 </html>
